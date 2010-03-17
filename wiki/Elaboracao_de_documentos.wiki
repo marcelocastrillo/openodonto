@@ -25,4 +25,4 @@ O nome dos documentos seguem o padrão em que devem possuir o mesmo nome do docu
 
 || *Documento* || *Google Docs link* ||
 ||Termo_de_Abertura_LOG || http://docs.google.com/Doc?docid=0AZWMrUJYH-cCZGczejh0eGZfNGczZnRrOG1x&hl=en ||
-||Definicao_de_Requisitos_LOG|| http://docs.google.com/Doc?docid=0AZWMrUJYH-cCZGczejh0eGZfM2YyZms2cWZu&hl=en ||
+||Definicao_Requisitos_R01_Manter_Pacientes_LOG|| http://docs.google.com/Doc?docid=0AZWMrUJYH-cCZGczejh0eGZfM2YyZms2cWZu&hl=en ||
