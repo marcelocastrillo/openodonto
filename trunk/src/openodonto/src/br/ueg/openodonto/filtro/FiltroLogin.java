@@ -22,8 +22,7 @@ public class FiltroLogin implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
-		if(false){
-		//if(((HttpServletRequest)request).getSession().getAttribute("usuarioSessao") == null) {									
+		if(((HttpServletRequest)request).getSession().getAttribute("usuarioSessao") == null) {									
 			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 			httpServletResponse.sendRedirect("/openodonto/faces/login/login.jsp");			
 		}else {

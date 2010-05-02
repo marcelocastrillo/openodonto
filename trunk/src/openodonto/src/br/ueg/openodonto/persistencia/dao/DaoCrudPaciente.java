@@ -2,6 +2,8 @@ package br.ueg.openodonto.persistencia.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,7 +30,8 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 	}
 	
 	private static void initQueryMap(){
-		storedQuerysMap.put("findByKey","SELECT * FROM pacientes pa INNER JOIN pessoas pe ON pe WHERE p.codigo = ?");
+		storedQuerysMap.put("findByKey","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.`id` = ?;");
+		storedQuerysMap.put("listAll","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES'");
 	}
 	
 	@Override
@@ -127,18 +130,46 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 	}
 
 	@Override
-	public List<Paciente> listar(Object key) throws Exception {
+	public List<Paciente> listar(Object key) throws Exception {		
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Paciente> listar() {
-		return null;
+		List<Paciente> pList = new ArrayList<Paciente>();
+		try{
+			ResultSet rs = super.executeQuery(
+					DaoCrudPaciente.storedQuerysMap.get("findByKey"),
+					Collections.EMPTY_LIST);
+			while(rs.next()) {
+				Paciente paciente = this.parseEntry(rs);
+				pList.add(paciente);
+			}			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pList;
 	}
 
 	@Override
-	public Paciente pesquisar(Object key) {		
-		return null;
+	public Paciente pesquisar(Object key) {
+		Paciente paciente = null;
+		try {
+			if (key != null) {
+				List<Object> params = new ArrayList<Object>();
+				params.add(key);
+				ResultSet rs = super.executeQuery(
+						DaoCrudPaciente.storedQuerysMap.get("findByKey"),
+						params);
+				if (rs.next()) {
+					paciente = this.parseEntry(rs);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return paciente;
 	}
 
 	@Override
