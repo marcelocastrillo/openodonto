@@ -3,9 +3,13 @@
  */
 package br.ueg.openodonto.dominio;
 
+import java.io.Serializable;
+
 import br.ueg.openodonto.dominio.constante.TiposTelefone;
 
-public class Telefone{	
+public class Telefone implements Serializable{	
+
+	private static final long serialVersionUID = 77367905036522189L;
 
 	private Long codigo;
 

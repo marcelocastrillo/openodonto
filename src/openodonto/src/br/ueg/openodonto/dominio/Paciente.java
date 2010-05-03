@@ -3,7 +3,9 @@ package br.ueg.openodonto.dominio;
 import java.sql.Date;
 
 public class Paciente extends Pessoa{
-	
+
+	private static final long serialVersionUID = -8543328508793753975L;
+
 	private String      cpf;	
 	
 	private Date        dataInicioTratamento;
@@ -84,7 +86,14 @@ public class Paciente extends Pessoa{
 		this.observacao = observacao;
 	}
 
-
-	
+	@Override
+	public String toString() {
+		return super.toString() + "Paciente [cpf=" + cpf + ", dataInicioTratamento="
+				+ dataInicioTratamento + ", dataNascimento=" + dataNascimento
+				+ ", dataRetorno=" + dataRetorno + ", dataTerminoTratamento="
+				+ dataTerminoTratamento + ", observacao=" + observacao
+				+ ", referencia=" + referencia + ", responsavel=" + responsavel
+				+ "]";
+	}	
 	
 }
