@@ -1,13 +1,16 @@
 package br.ueg.openodonto.dominio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.ueg.openodonto.dominio.constante.TiposUF;
 
 
-public abstract class Pessoa {
+public abstract class Pessoa implements Serializable{
  
+	private static final long serialVersionUID = -7734113332277720024L;
+
 	private Long           codigo;
 	 
 	private String         email;
@@ -82,7 +85,13 @@ public abstract class Pessoa {
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Pessoa [cidade=" + cidade + ", codigo=" + codigo + ", email="
+				+ email + ", endereco=" + endereco + ", estado=" + estado
+				+ ", nome=" + nome + ", telefone=" + telefone + "]";
+	}	
 	
 }
  

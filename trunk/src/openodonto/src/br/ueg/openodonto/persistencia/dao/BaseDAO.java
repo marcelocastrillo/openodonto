@@ -44,8 +44,13 @@ public abstract class BaseDAO<T> implements Serializable {
 		return ConnectionFactory.getInstance();
 	}
 
-	public Connection getConnection() throws Exception {
-		return this.getConnectionFactory().getConnection();
+	public Connection getConnection(){
+		try {
+			return this.getConnectionFactory().getConnection();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
     
 	public void closeConnection() {
