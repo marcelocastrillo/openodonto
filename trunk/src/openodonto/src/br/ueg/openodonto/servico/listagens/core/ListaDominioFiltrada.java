@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.persistencia.EntityManagerIF;
+import br.ueg.openodonto.persistencia.dao.DaoFactory;
 
 
 /**
@@ -27,11 +28,10 @@ public class ListaDominioFiltrada<T> extends AbstractLista<T>{
 		this(classe,null,null);
 	}
 	
-	@SuppressWarnings("null")
 	public List<T> getDominio(){
 		if(params == null || query == null)
 			return new ArrayList<T>();
-		EntityManagerIF<T> daoDominio = null; //TODO definir implementacao
+		EntityManagerIF<T> daoDominio = DaoFactory.getInstance().getDao(getClasse());
 		List<T> lista = new ArrayList<T>();
 		lista = daoDominio.executarQuery(query, params);
 		return lista;

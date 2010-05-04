@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ueg.openodonto.persistencia.EntityManagerIF;
+import br.ueg.openodonto.persistencia.dao.DaoFactory;
 
 
 /**
@@ -17,9 +18,8 @@ public class ListaDominio<T> extends AbstractLista<T>{
 		super(classe);
 	}
 	
-	@SuppressWarnings("null")
 	public List<T> getDominio(){
-		EntityManagerIF<T> daoDominio = null; //TODO definir implementação new DaoIMPL<T>(classe);
+		EntityManagerIF<T> daoDominio = DaoFactory.getInstance().getDao(getClasse());
 		List<T> lista = new ArrayList<T>();
 		try {
 			lista = daoDominio.listar();

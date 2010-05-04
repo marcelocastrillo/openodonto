@@ -64,4 +64,9 @@ public abstract class AbstractLista<T>{
 	public void refreshDominio(ActionEvent evt){
 		mapDominio();
 	}
+	
+	public Class<T> getClasse(){
+		return classe;
+	}
+	
 }
