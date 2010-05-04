@@ -37,6 +37,11 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 		storedQuerysMap.put("insertPessoa","INSERT INTO pessoas (email, nome, endereco , estado, cidade , DTYPE) VALUES (? , ?, ?, ? , ? , ? )");
 		storedQuerysMap.put("insertPaciente","INSERT INTO pacientes (id_pessoa,cpf ,data_inicio_tratamento ,data_termino_tratamento,data_retorno, data_nascimento, responsavel, referencia, observacao ) VALUES (? , ?, ?, ?, ?, ?, ?, ? , ?)");
 		storedQuerysMap.put("listAll","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES'");
+		
+		storedQuerysMap.put("Paciente.BuscaByNome","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.nome LIKE ?");
+		storedQuerysMap.put("Paciente.BuscaByCodigo","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.id = ?");
+		storedQuerysMap.put("Paciente.BuscaByCPF","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.nome pc.cpf = ?");
+		storedQuerysMap.put("Paciente.BuscaByEmail","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.nome ps.email = ?");
 	}
 	
 	@Override
@@ -86,7 +91,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 	public void alterar(Paciente o) throws Exception {
 		Map<String , Object> params = new LinkedHashMap<String, Object>();
 		if(contem(o)){
-			Paciente cached = this.cachedSession.get(o);
+			Paciente cached = DaoCrudPaciente.cachedSession.get(o);
 			params.put("id", cached.getCodigo());
 			super.executeUpdate(o, params);
 		}else{
@@ -96,37 +101,51 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 
 	@Override
 	public boolean contem(Paciente entity) {
-		return this.cachedSession.get(entity) != null;
+		return DaoCrudPaciente.cachedSession.get(entity) != null;
 	}
 
 	@Override
-	public List<Paciente> executarQuery(String nomeQuery,
-			String nomeParametrro, Object valorParametro) throws Exception {
-		return null;
+	public List<Paciente> executarQuery(String nomeQuery,String nomeParametrro, Object valorParametro) throws Exception {
+		return executarQuery(nomeQuery , nomeParametrro , valorParametro , null);
 	}
 
 	@Override
-	public List<Paciente> executarQuery(String nomeQuery,
-			String nomeParametrro, Object valorParametro, Integer quant)
-			throws Exception {
-		return null;
+	public List<Paciente> executarQuery(String nomeQuery, String nomeParametrro, Object valorParametro, Integer quant)throws Exception {
+		Map<String , Object> params = new LinkedHashMap<String, Object>();
+		params.put(nomeParametrro, valorParametro);
+		return executarQuery(nomeQuery, params, quant);
 	}
 
 	@Override
-	public List<Paciente> executarQuery(String nomeQuery,
-			Map<String, Object> params) {
-		return null;
+	public List<Paciente> executarQuery(String nomeQuery, Map<String, Object> params) {
+		return executarQuery(nomeQuery, params, null);
 	}
 
 	@Override
-	public List<Paciente> executarQuery(String nomeQuery,
-			Map<String, Object> params, Integer quant) {
-		return null;
+	public List<Paciente> executarQuery(String nomeQuery,Map<String, Object> params, Integer quant) {
+		List<Paciente> pList = new ArrayList<Paciente>();
+		if(params == null){
+			return pList;
+		}
+		try{
+			getConnection().setReadOnly(true);
+			ResultSet rs = super.executeQuery(
+					DaoCrudPaciente.storedQuerysMap.get(nomeQuery),
+					new ArrayList<Object>(params.values()) , quant);
+			getConnection().setReadOnly(false);
+			while(rs.next()) {
+				Paciente paciente = this.parseEntry(rs);
+				pList.add(paciente);
+			}			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pList;
 	}
 
 	@Override
 	public Paciente getEntityBean() {
-		return null;
+		return cachedSession.get(managed);
 	}
 
 	@Override
@@ -177,6 +196,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 			return pList;
 		}
 		try{
+			getConnection().setReadOnly(true);
 			ResultSet rs = super.executeQuery(
 					DaoCrudPaciente.storedQuerysMap.get("findByKey"),
 					new Object[]{key});

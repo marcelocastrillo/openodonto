@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.EntityManagerIF;
+import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.servico.SubBusca;
 import br.ueg.openodonto.servico.listagens.core.codec.Encoder;
 import br.ueg.openodonto.servico.validador.AbstractValidator;
@@ -72,7 +73,7 @@ public abstract class ManageBeanGeral <T> {
 	protected void init(){		
 		this.dialogModalPanel = new DialogoConfirmacaoJSF();
 		this.backBean = fabricarNovoBean();
-		this.dao = null; //TODO setar implementação
+		this.dao = DaoFactory.getInstance().getDao(classe);
 		this.resourceBundle = ResourceBundle.getBundle("br.ueg.openodonto.visao.i18n.mensagens");
 		this.busca = new SubBusca<T>(this,"backBean");
 		this.msgBundleEstatica = new  ArrayList<MessageBundle>();

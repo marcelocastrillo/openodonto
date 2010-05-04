@@ -57,8 +57,15 @@ public abstract class BaseDAO<T> implements Serializable {
 		this.getConnectionFactory().closeConnection();
 	}
 
-	public ResultSet executeQuery(String sql, List<Object>params) throws Exception {
+	public ResultSet executeQuery(String sql, List<Object> params) throws Exception {
+		return executeQuery(sql , params, null);
+	}
+	
+	public ResultSet executeQuery(String sql, List<Object> params, Integer limit) throws Exception {
 		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql);
+		if(limit != null){
+			preparedStatement.setMaxRows(limit);
+		}
 		if(params != null){
 			int i=1;
 			for(Object object : params){
