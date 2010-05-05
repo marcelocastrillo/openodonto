@@ -201,6 +201,8 @@ public abstract class ManageBeanGeral <T> {
 			msgBundleEstatica.add(new MessageBundle(MSG_TIPO.resource,"ErroSistema", getFormularioSaida()+":output"));
 			ex.printStackTrace();
 			return;
+		}finally{
+			dao.closeConnection();
 		}
 		init();
 		exibirPopUp(this.resourceBundle.getString(alredy ? "Atualizado" : "Cadastro"));
@@ -212,8 +214,12 @@ public abstract class ManageBeanGeral <T> {
 	public void acaoRemover(ActionEvent evt) {
 		show = false;
 		Long id = Encoder.encode(classe, this.backBean);
+		try{
 		if (this.backBean == null || dao.pesquisar(id) == null)
 			return;
+		}finally{
+			dao.closeConnection();	
+		}
 		Map<String, String> values = new HashMap<String, String>();
 		values.put("yes", "Sim");
 		values.put("no", "Nao");
@@ -240,6 +246,8 @@ public abstract class ManageBeanGeral <T> {
 			exibirPopUp("Nao foi possivel remover o registro.");
 			msgBundleEstatica.add(new MessageBundle(MSG_TIPO.dinamica, "Nao foi possivel remover o registro.", formularioSaida+":output"));
 			return "fail";
+		}finally{
+			dao.closeConnection();
 		}
 		init();
 		exibirPopUp(this.resourceBundle.getString("removido"));

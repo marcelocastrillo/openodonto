@@ -19,7 +19,7 @@ public class SqlDateConverter implements Converter{
 	
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
-		if (value != null && !value.isEmpty() && value.matches("[1-3][0-9]/[0-1][0-9]/[0-9]{4}")) {
+		if (value != null && !value.isEmpty() && value.matches("[0-1][0-9]/[0-3][0-9]/[0-9]{4}")) {
 			StringBuilder sqlDateSttring = new StringBuilder();
 			String[] date = value.split("/");
 			sqlDateSttring.append(date[2]);

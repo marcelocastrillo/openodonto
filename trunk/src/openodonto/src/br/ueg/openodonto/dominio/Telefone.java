@@ -19,6 +19,12 @@ public class Telefone implements Serializable{
 
 	private TiposTelefone tipoTelefone;
 	
+	private Pessoa pessoa;
+	
+	public Telefone(Pessoa pessoa) {
+		this.pessoa = pessoa;
+	}
+	
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -49,6 +55,14 @@ public class Telefone implements Serializable{
 	public void setTipoTelefone(TiposTelefone tipoTelefone) {
 		this.tipoTelefone = tipoTelefone;
 	}	
+	
+	public Pessoa getPessoa() {
+		return pessoa;
+	}
+
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
+	}
 
 	public String toString(){
 		return this.numero;

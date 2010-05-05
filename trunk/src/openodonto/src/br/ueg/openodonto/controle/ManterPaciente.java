@@ -52,7 +52,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	protected List<AbstractValidator> getCamposObrigatorios() {
 		List<AbstractValidator> obrigatorios = new ArrayList<AbstractValidator>();
 		obrigatorios.add(new ValidadorPadrao("nome", "entradaNome"));	
-		obrigatorios.add(new ValidadorPadrao("email", "entradaEmail"));
+		obrigatorios.add(new ValidadorPadrao("cpf", "entradaCpf"));
 		return obrigatorios;
 	}
 
@@ -119,6 +119,8 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		}catch(Exception ex){
 			ex.printStackTrace();
 			this.adicionarMensagemJSF("ErroSistema", "formModalPaciente:buscar");
+		}finally{
+			dao.closeConnection();
 		}
 		getBusca().getParams().put("param", null);
 		getBusca().getParams().put("opcao", null);
