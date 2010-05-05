@@ -36,5 +36,7 @@ public interface EntityManagerIF<T> {
 	T getEntityBean();
 	
 	boolean contem(T entity);
+	
+	void closeConnection();
 
 }

@@ -13,12 +13,6 @@
 function exibirMensagem(msg){
 	alert(msg);
 }
-function limparCep(cep){
-	cep = cep.replace(/-/,"");
-	cep = cep.replace(/_/,"");
-	cep = cep.replace(/ /,"");
-	return cep;
-}
 function limparCPF(cpf){
 	cpf = cpf.replace(/-/g,"");
 	cpf = cpf.replace(/[.]/g,"");

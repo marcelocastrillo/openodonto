@@ -36,12 +36,14 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 		storedQuerysMap.put("removePaciente","DELETE FROM pacientes WHERE id_pessoa =  ?");
 		storedQuerysMap.put("insertPessoa","INSERT INTO pessoas (email, nome, endereco , estado, cidade , DTYPE) VALUES (? , ?, ?, ? , ? , ? )");
 		storedQuerysMap.put("insertPaciente","INSERT INTO pacientes (id_pessoa,cpf ,data_inicio_tratamento ,data_termino_tratamento,data_retorno, data_nascimento, responsavel, referencia, observacao ) VALUES (? , ?, ?, ?, ?, ?, ?, ? , ?)");
+		storedQuerysMap.put("updatePessoa","UPDATE pessoas SET email = ? , nome = ? , endereco = ? , estado = ? , cidade = ? WHERE id = ?");
+		storedQuerysMap.put("updatePaciente","UPDATE pacientes SET cpf = ? ,data_inicio_tratamento = ? ,data_termino_tratamento = ?,data_retorno = ?, data_nascimento = ?, responsavel = ?, referencia = ?, observacao = ? WHERE id_pessoa = ?");
 		storedQuerysMap.put("listAll","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES'");
 		
 		storedQuerysMap.put("Paciente.BuscaByNome","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.nome LIKE ?");
 		storedQuerysMap.put("Paciente.BuscaByCodigo","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.id = ?");
-		storedQuerysMap.put("Paciente.BuscaByCPF","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.nome pc.cpf = ?");
-		storedQuerysMap.put("Paciente.BuscaByEmail","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.nome ps.email = ?");
+		storedQuerysMap.put("Paciente.BuscaByCPF","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE pc.cpf = ?");
+		storedQuerysMap.put("Paciente.BuscaByEmail","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.email = ?");
 	}
 	
 	@Override
@@ -89,19 +91,52 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 	
 	@Override
 	public void alterar(Paciente o) throws Exception {
-		Map<String , Object> params = new LinkedHashMap<String, Object>();
-		if(contem(o)){
-			Paciente cached = DaoCrudPaciente.cachedSession.get(o);
-			params.put("id", cached.getCodigo());
-			super.executeUpdate(o, params);
-		}else{
+		if(o != null && o.getCodigo() != null &&  pesquisar(o.getCodigo()) != null){
+			Savepoint save = null;
+			try{
+				if(o == null){
+					managed = null;
+					return;
+				}
+				getConnection().setAutoCommit(false);
+				save = getConnection().setSavepoint("Before Update Paciente - Savepoint"); 
+				Map<String , Object> paramsMap = format(o);
+				Object[] pessoaParams = {paramsMap.get("email"),
+						paramsMap.get("nome"),
+						paramsMap.get("endereco"),
+						paramsMap.get("estado"),
+						paramsMap.get("cidade"),
+						paramsMap.get("id"),};
+				super.execute(DaoCrudPaciente.storedQuerysMap.get("updatePessoa"), pessoaParams);
+				Object[] pacienteParams = {
+						paramsMap.get("cpf"),
+						paramsMap.get("data_inicio_tratamento"),
+						paramsMap.get("data_termino_tratamento"),
+						paramsMap.get("data_retorno"),
+						paramsMap.get("data_nascimento"),
+						paramsMap.get("responsavel"),
+						paramsMap.get("referencia"),
+						paramsMap.get("observacao"),
+						paramsMap.get("id")};				
+				super.execute(DaoCrudPaciente.storedQuerysMap.get("updatePaciente"), pacienteParams);
+				managed = o;
+				cachedSession.put(managed , Memento.deepClone(managed));
+			}catch(Exception ex){
+				ex.printStackTrace();
+				if(save != null){
+					getConnection().rollback(save);
+				}
+			}finally{
+				getConnection().setAutoCommit(true);
+			}
+		}else if(o != null){
 			inserir(o);
 		}
 	}
 
 	@Override
 	public boolean contem(Paciente entity) {
-		return DaoCrudPaciente.cachedSession.get(entity) != null;
+		return entity != null && DaoCrudPaciente.cachedSession.get(entity) != null;
 	}
 
 	@Override
@@ -200,6 +235,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 			ResultSet rs = super.executeQuery(
 					DaoCrudPaciente.storedQuerysMap.get("findByKey"),
 					new Object[]{key});
+			getConnection().setReadOnly(false);
 			while(rs.next()) {
 				Paciente paciente = this.parseEntry(rs);
 				pList.add(paciente);
@@ -234,21 +270,22 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 	public Paciente pesquisar(Object key) {
 		Paciente paciente = null;
 		try {
-			getConnection().setReadOnly(true);
 			if (key != null) {
+				getConnection().setReadOnly(true);
 				List<Object> params = new ArrayList<Object>();
 				params.add(key);
 				ResultSet rs = super.executeQuery(
 						DaoCrudPaciente.storedQuerysMap.get("findByKey"),
 						params);
+				getConnection().setReadOnly(false);
 				if (rs.next()) {
 					paciente = this.parseEntry(rs);
 				}
 			}
-			getConnection().setReadOnly(true);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}		return paciente;
+		}
+		return paciente;
 	}
 
 	@Override
@@ -273,17 +310,6 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 		}finally{
 			getConnection().setAutoCommit(true);
 		}
-	}
-	
-	public static void main(String[] args) {
-		Paciente paciente = new Paciente();
-		paciente.setCodigo(4l);
-		EntityManagerIF<Paciente> entityManager = new DaoCrudPaciente();
-		try {
-			System.out.println(entityManager.pesquisar(paciente.getCodigo()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	}	
 
 }
