@@ -19,10 +19,9 @@ public class Telefone implements Serializable{
 
 	private TiposTelefone tipoTelefone;
 	
-	private Pessoa pessoa;
+	private Long id_pessoa;
 	
-	public Telefone(Pessoa pessoa) {
-		this.pessoa = pessoa;
+	public Telefone() {
 	}
 	
 	public Long getCodigo() {
@@ -55,18 +54,17 @@ public class Telefone implements Serializable{
 	public void setTipoTelefone(TiposTelefone tipoTelefone) {
 		this.tipoTelefone = tipoTelefone;
 	}	
-	
-	public Pessoa getPessoa() {
-		return pessoa;
+
+	public Long getId_pessoa() {
+		return id_pessoa;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
+	public void setId_pessoa(Long idPessoa) {
+		id_pessoa = idPessoa;
 	}
 
 	public String toString(){
 		return this.numero;
-	}	
-
+	}
 		
 }

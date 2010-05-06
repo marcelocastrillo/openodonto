@@ -64,7 +64,7 @@ CREATE INDEX `fk_usuarios_pessoas1` ON `openodonto`.`usuarios` (`id_pessoa` ASC)
 DROP TABLE IF EXISTS `openodonto`.`telefones` ;
 
 CREATE  TABLE IF NOT EXISTS `openodonto`.`telefones` (
-  `id` INT(10) NOT NULL ,
+  `id` INT(10) NOT NULL AUTO_INCREMENT ,
   `ddd` VARCHAR(3) NULL ,
   `numero` VARCHAR(15) NULL ,
   `tipo` INT(1) NULL ,
