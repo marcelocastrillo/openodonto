@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.ConnectionFactory;
 
 
@@ -79,7 +81,7 @@ public abstract class BaseDAO<T> implements Serializable {
 		return preparedStatement.executeQuery();
 	}
 
-	public ResultSet executeQuery(String sql, Object[] params) throws Exception {
+	public ResultSet executeQuery(String sql, Object... params) throws Exception {
 		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql);
 		if(params != null){
 			for(int i=1 ; i < params.length+1; i++){
@@ -116,6 +118,19 @@ public abstract class BaseDAO<T> implements Serializable {
 			}
 		}
 		return objects;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<T> listar() throws Exception{
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT * FROM ");
+		query.append(getTableName());
+		List<T> lista = new ArrayList<T>();
+		ResultSet rs = executeQuery(query.toString() , Collections.EMPTY_LIST);
+		while(rs.next()){
+			lista.add(parseEntry(rs));
+		}
+		return lista;
 	}
 	
 	public Map<String,Object> executeInsert(T entry) throws Exception{
@@ -165,7 +180,7 @@ public abstract class BaseDAO<T> implements Serializable {
 				query.append(", ");
 			}
 		}
-		if(whereParams != null && whereParams.size() > 1){
+		if(whereParams != null && whereParams.size() > 0){
 		    iterator = whereParams.keySet().iterator();
 		    query.append(" WHERE ");
 		    while(iterator.hasNext()){
@@ -203,5 +218,7 @@ public abstract class BaseDAO<T> implements Serializable {
 	protected abstract String getTableName();
 	
 	protected abstract Map<String , Object> format(T entry);
+	
+	protected abstract T parseEntry(ResultSet rs) throws SQLException;
 
 }
