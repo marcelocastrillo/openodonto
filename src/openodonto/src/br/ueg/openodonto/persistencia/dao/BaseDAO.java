@@ -200,7 +200,7 @@ public abstract class BaseDAO<T> implements Serializable {
 		List<Object> params = new ArrayList<Object>();
 		query.append("DELETE FROM ");
 		query.append(getTableName());
-		if(whereParams != null && whereParams.size() > 1){
+		if(whereParams != null && whereParams.size() > 0){
 		    Iterator<String> iterator = whereParams.keySet().iterator();
 		    query.append(" WHERE ");
 		    while(iterator.hasNext()){
