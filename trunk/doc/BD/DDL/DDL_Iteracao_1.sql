@@ -17,7 +17,6 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`pessoas` (
   `endereco` VARCHAR(150) NULL ,
   `cidade` VARCHAR(45) NULL ,
   `estado` INT(2) NULL ,
-  `DTYPE` ENUM('PACIENTES','USUARIOS') NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
