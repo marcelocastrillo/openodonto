@@ -50,7 +50,7 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManagerI
 	protected Telefone parseEntry(ResultSet rs) throws SQLException{
 		Telefone telefone = new Telefone();
 		telefone.setCodigo(rs.getLong("id"));
-		telefone.setCodigo(rs.getLong("id_pessoa"));
+		telefone.setId_pessoa(rs.getLong("id_pessoa"));
 		telefone.setDdd(rs.getString("ddd"));
 		telefone.setNumero(rs.getString("numero"));
 		telefone.setTipoTelefone(TiposTelefone.parse(rs.getInt("tipo")));		

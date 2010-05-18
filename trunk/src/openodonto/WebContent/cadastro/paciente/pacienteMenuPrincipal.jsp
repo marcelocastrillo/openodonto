@@ -10,75 +10,71 @@
 <center>
 <h:panelGrid id="gridPrincipal">
 
-		<h:panelGrid columns="8">
+		<h:panelGrid columns="3">
 			<h:panelGrid columns="1">
 				<h:outputLabel value="Estado" for="selectMenuEstado" />
-				<h:selectOneMenu immediate="true" id="selectMenuEstado" value="#{manterPaciente.jsfEstado.selecaoSimples}" converter="javax.faces.Long" style="width : 128px">
+				<h:selectOneMenu immediate="true" id="selectMenuEstado" value="#{manterPaciente.jsfEstado.selecaoSimples}" converter="javax.faces.Long" style="width : 200px">
 					<f:selectItem itemLabel="-- Selecione --" itemValue="0" />
 					<f:selectItems id="itemsEstado" value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposUF'].labelMap}" />
 				</h:selectOneMenu>
 			</h:panelGrid>
-			<rich:spacer width="8" />
 			<h:panelGrid columns="1">
 				<h:outputLabel value="Cidade" for="entradaCidade" />
-				<h:inputText id="entradaCidade"	value="#{manterPaciente.paciente.cidade}" style="width : 140px"/>
+				<h:inputText id="entradaCidade"	value="#{manterPaciente.paciente.cidade}" style="width : 180px"/>
 			</h:panelGrid>
-			<rich:spacer width="8px" />
 			<h:panelGrid columns="1">
 				<h:outputLabel value="Endereco" for="entradaEndereco" />
 				<h:inputText id="entradaEndereco" value="#{manterPaciente.paciente.endereco}"
-					style=" width : 300px;position : relative;z-index : 2" />
+					style=" width : 300px;" />
 			</h:panelGrid>
-		</h:panelGrid>
 
 
-<h:panelGrid columns="5">
 	<h:panelGrid columns="1">
 		<h:outputLabel value="Responsável" for="entradaResponavel" />
 		<h:inputText id="entradaResponavel"	value="#{manterPaciente.paciente.responsavel}"  style=" width : 200px;"/>
 	</h:panelGrid>
-	<rich:spacer width="8" />
+	
 	<h:panelGrid columns="1">
 		<h:outputLabel value="E-mail" for="entradaEmail" />
-		<h:inputText id="entradaEmail" value="#{manterPaciente.paciente.email}" style=" width : 145px;" />
+		<h:inputText id="entradaEmail" value="#{manterPaciente.paciente.email}" style=" width : 180px;" />
 	</h:panelGrid>
-	<rich:spacer width="8" />
+	
 	<h:panelGrid columns="1">
 		<h:outputLabel value="Referencia ( Quem indicou )" for="entradaReferencia" />
-		<h:inputText id="entradaReferencia" value="#{manterPaciente.paciente.referencia}" style="width : 220px;"/>
+		<h:inputText id="entradaReferencia" value="#{manterPaciente.paciente.referencia}" style="width : 300px;"/>
 	</h:panelGrid>
-</h:panelGrid>
 
-<h:panelGrid columns="5">
+
+
 				<h:panelGrid columns="1">
 				    <h:panelGrid columns="3">				
 					    <h:outputLabel value="Data Termino Tratamento" for="dataInicioTratamento" />
 	                    <rich:spacer width="8" />
 	                    <rich:message id="messageDataTerminoTratamento" for="dataTerminoTratamento" style="color : red ;FONT-WEIGHT : bold;font-size : 12px" />
 	                </h:panelGrid>
-					<rich:calendar id="dataTerminoTratamento" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataTerminoTratamento}" >
+					<rich:calendar id="dataTerminoTratamento" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataTerminoTratamento}" inputStyle="width : 180px;" >
 						<f:converter converterId="SqlDateConverter" />
 					</rich:calendar>
 				</h:panelGrid>
-				<rich:spacer width="72" />
+
 				<h:panelGrid columns="1">
 				    <h:panelGrid columns="3">				
 					    <h:outputLabel value="Data Retorno" for="dataInicioTratamento" />
 	                    <rich:spacer width="8" />
 	                    <rich:message id="messageDataRetorno" for="dataRetorno" style="color : red ;FONT-WEIGHT : bold;font-size : 12px" />
 	                </h:panelGrid>
-					<rich:calendar id="dataRetorno" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataRetorno}" >
+					<rich:calendar id="dataRetorno" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataRetorno}" inputStyle="width : 160px;" >
 						<f:converter converterId="SqlDateConverter" />
 					</rich:calendar>
 				</h:panelGrid>
-				<rich:spacer width="72" />
+
 				<h:panelGrid columns="1">
 				    <h:panelGrid columns="3">				
 					    <h:outputLabel value="Data Nascimento" for="dataInicioTratamento" />
 	                    <rich:spacer width="8" />
 	                    <rich:message id="messageDataNascimento" for="dataNascimento" style="color : red ;FONT-WEIGHT : bold;font-size : 12px" />
 	                </h:panelGrid>
-					<rich:calendar id="dataNascimento" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataNascimento}" >
+					<rich:calendar id="dataNascimento" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataNascimento}" inputStyle="width : 280px;" >
 						<f:converter converterId="SqlDateConverter" />
 					</rich:calendar>
 				</h:panelGrid>

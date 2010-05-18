@@ -43,6 +43,8 @@ public class Telefone implements Serializable{
 	public String getNumero() {
 		return this.numero;
 	}
+	
+
 	public void setNumero(String numero) {
 		this.numero = numero;
 	}
@@ -63,6 +65,38 @@ public class Telefone implements Serializable{
 		id_pessoa = idPessoa;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result
+				+ ((id_pessoa == null) ? 0 : id_pessoa.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Telefone other = (Telefone) obj;
+		if (codigo == null) {
+			if (other.codigo != null)
+				return false;
+		} else if (!codigo.equals(other.codigo))
+			return false;
+		if (id_pessoa == null) {
+			if (other.id_pessoa != null)
+				return false;
+		} else if (!id_pessoa.equals(other.id_pessoa))
+			return false;
+		return true;
+	}	
+	
 	public String toString(){
 		return this.numero;
 	}

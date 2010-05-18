@@ -43,12 +43,12 @@ function limparCPF(cpf){
 				<center>
 				<h:panelGrid columns="1">			
 			
-			<h:panelGrid columns="3">
+			<h:panelGrid columns="2">
 				<h:panelGrid columns="1">
 					<h:outputLabel value="Codigo" for="codigoPaciente" />
-					<h:inputText id="codigoPaciente" readonly="true" disabled="true" value="#{manterPaciente.paciente.codigo}" style=" width : 102px;" />
+					<h:inputText id="codigoPaciente" readonly="true" disabled="true" value="#{manterPaciente.paciente.codigo}" style=" width : 160px;" />
 				</h:panelGrid>
-				<rich:spacer width="16px"></rich:spacer>
+
 				<h:panelGrid columns="1">
 				    <h:panelGrid columns="3">				
 					    <h:outputLabel value="Nome" for="entradaNome"  style="color : red" />
@@ -57,35 +57,30 @@ function limparCPF(cpf){
 	                </h:panelGrid>
 					<h:inputText id="entradaNome" value="#{manterPaciente.paciente.nome}" style="width : 310px;"	/>
 				</h:panelGrid>
-			</h:panelGrid>			
-			
-			
-           <h:panelGrid columns="8">
+
+           
 				<h:panelGrid columns="1">
-					<h:outputLabel value="Tipo de Pessoa" for="tipoPessoa" />
-					<h:selectOneRadio id="tipoPessoa">
-						<f:selectItem itemLabel=" Fisica " itemValue="0" />
-					</h:selectOneRadio>					
-				</h:panelGrid>
-				<rich:spacer width="16px"></rich:spacer>				
-				<h:panelGrid columns="1">
-      			    <h:outputLabel value="CPF" for="entradaCpf"  style="color : red" />
+				    <h:panelGrid columns="3">				
+					    <h:outputLabel value="CPF" for="entradaCpf" style="color : red"/>
+	                    <rich:spacer width="8" />
+	                    <rich:message id="messageEntradaCpf" for="entradaCpf" style="color : red ;FONT-WEIGHT : bold" />
+	                </h:panelGrid>
 					<h:inputText value="#{manterPaciente.paciente.cpf}" id="entradaCpf" style="width : 160px;">
 						<rich:jQuery selector="#entradaCpf" query="mask('999.999.999-99')" timing="onload" />
 					</h:inputText>
-                    <rich:message id="messageEntradaCpf" for="entradaCpf" style="color : red ;FONT-WEIGHT : bold" />
 				</h:panelGrid>
-				<rich:spacer width="16px"></rich:spacer>
+				
 				<h:panelGrid columns="1">
 				    <h:panelGrid columns="3">				
 					    <h:outputLabel value="Data Inicio Tratamento" for="dataInicioTratamento" />
 	                    <rich:spacer width="8" />
 	                    <rich:message id="messageDataInicioTratamento" for="dataInicioTratamento" style="color : red ;FONT-WEIGHT : bold" />
 	                </h:panelGrid>
-					<rich:calendar id="dataInicioTratamento" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataInicioTratamento}" >
+					<rich:calendar id="dataInicioTratamento" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataInicioTratamento}" inputStyle="width : 290px;" >
 						<f:converter converterId="SqlDateConverter" />
 					</rich:calendar>
 				</h:panelGrid>
+				
 			</h:panelGrid>
 			
 			
@@ -117,7 +112,7 @@ function limparCPF(cpf){
 				<rich:spacer width="16"/>
 				<a4j:commandButton image="/helt/pesquisar.png" id="botaoBuscar" onclick="#{rich:component('painelBuscaPaciente')}.show()" reRender="formModalPaciente" style="position : relative;z-index : 2"/>
 				<rich:spacer width="16"/>
-				<a4j:commandButton image="/helt/excluir.png" id="botaoExcluir"  actionListener="#{manterPaciente.acaoRemover}" reRender="formDialog,titleDialog" oncomplete="if(#{manterPaciente.show}){#{rich:component('modalConfirmDialog')}.show();}" />
+				<a4j:commandButton image="/helt/excluir.png" id="botaoExcluir"  action="#{manterPaciente.acaoRemoverSim}" reRender="formPaciente" oncomplete="if(#{manterPaciente.showPopUp}){popUp()}" />
 				<rich:spacer width="16"/>
 				<a4j:commandButton image="/helt/cancelar.png"  actionListener="#{manterPaciente.acaoAtualizar}" reRender="formPaciente" />												
             </h:panelGroup>			

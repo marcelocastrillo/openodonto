@@ -32,19 +32,19 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 	}
 	
 	private static void initQueryMap(){
-		storedQuerysMap.put("findByKey","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.`id` = ?");
+		storedQuerysMap.put("findByKey","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE ps.`id` = ?");
 		storedQuerysMap.put("removePessoa","DELETE FROM pessoas WHERE id = ?");
 		storedQuerysMap.put("removePaciente","DELETE FROM pacientes WHERE id_pessoa =  ?");
-		storedQuerysMap.put("insertPessoa","INSERT INTO pessoas (email, nome, endereco , estado, cidade , DTYPE) VALUES (? , ?, ?, ? , ? , ? )");
+		storedQuerysMap.put("insertPessoa","INSERT INTO pessoas (email, nome, endereco , estado, cidade) VALUES (? , ?, ?, ? , ? )");
 		storedQuerysMap.put("insertPaciente","INSERT INTO pacientes (id_pessoa,cpf ,data_inicio_tratamento ,data_termino_tratamento,data_retorno, data_nascimento, responsavel, referencia, observacao ) VALUES (? , ?, ?, ?, ?, ?, ?, ? , ?)");
 		storedQuerysMap.put("updatePessoa","UPDATE pessoas SET email = ? , nome = ? , endereco = ? , estado = ? , cidade = ? WHERE id = ?");
 		storedQuerysMap.put("updatePaciente","UPDATE pacientes SET cpf = ? ,data_inicio_tratamento = ? ,data_termino_tratamento = ?,data_retorno = ?, data_nascimento = ?, responsavel = ?, referencia = ?, observacao = ? WHERE id_pessoa = ?");
-		storedQuerysMap.put("listAll","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES'");
+		storedQuerysMap.put("listAll","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id");
 		
-		storedQuerysMap.put("Paciente.BuscaByNome","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.nome LIKE ?");
-		storedQuerysMap.put("Paciente.BuscaByCodigo","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.id = ?");
-		storedQuerysMap.put("Paciente.BuscaByCPF","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE pc.cpf = ?");
-		storedQuerysMap.put("Paciente.BuscaByEmail","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id AND ps.`DTYPE` = 'PACIENTES' WHERE ps.email = ?");
+		storedQuerysMap.put("Paciente.BuscaByNome","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE ps.nome LIKE ?");
+		storedQuerysMap.put("Paciente.BuscaByCodigo","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE ps.id = ?");
+		storedQuerysMap.put("Paciente.BuscaByCPF","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE pc.cpf = ?");
+		storedQuerysMap.put("Paciente.BuscaByEmail","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE ps.email = ?");
 	}
 	
 	@Override
@@ -122,9 +122,16 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 				super.execute(DaoCrudPaciente.storedQuerysMap.get("updatePaciente"), pacienteParams);
 				if(o.getTelefone() != null){
 					EntityManagerIF<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+					List<Telefone> todos = getTelefonesFromCliente(o.getCodigo());
+					for(Telefone telefone : todos){
+						if(!o.getTelefone().contains(telefone)){
+							entityManagerTelefone.remover(telefone);
+						}
+					}
 					for(Telefone telefone : o.getTelefone()){
 						telefone.setId_pessoa(o.getCodigo());
 						entityManagerTelefone.alterar(telefone);
+						getConnection().setAutoCommit(false);
 					}
 				}
 				managed = o;
@@ -217,8 +224,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 					paramsMap.get("nome"),
 					paramsMap.get("endereco"),
 					paramsMap.get("estado"),
-					paramsMap.get("cidade"),
-					"PACIENTES"};
+					paramsMap.get("cidade")};
 			Map<String, Object> generated = super.execute(DaoCrudPaciente.storedQuerysMap.get("insertPessoa"), pessoaParams);
 			o.setCodigo((Long)generated.values().iterator().next());
 			Object[] pacienteParams = {o.getCodigo(),
