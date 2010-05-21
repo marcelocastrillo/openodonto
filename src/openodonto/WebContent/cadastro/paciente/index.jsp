@@ -110,9 +110,9 @@ function limparCPF(cpf){
             <h:panelGroup>
 				<a4j:commandButton id="botaoSalvar" image="/helt/salvar.png" oncomplete="if(#{manterPaciente.showPopUp}){popUp()}" actionListener="#{manterPaciente.acaoAlterar}" value="salvar" reRender="formPaciente" focus="output" />
 				<rich:spacer width="16"/>
-				<a4j:commandButton image="/helt/pesquisar.png" id="botaoBuscar" onclick="#{rich:component('painelBuscaPaciente')}.show()" reRender="formModalPaciente" style="position : relative;z-index : 2"/>
+				<a4j:commandButton image="/helt/pesquisar.png" id="botaoBuscar" onclick="#{rich:component('painelBuscaPaciente')}.show()" reRender="formModalPaciente"/>
 				<rich:spacer width="16"/>
-				<a4j:commandButton image="/helt/excluir.png" id="botaoExcluir"  action="#{manterPaciente.acaoRemoverSim}" reRender="formPaciente" oncomplete="if(#{manterPaciente.showPopUp}){popUp()}" />
+				<a4j:commandButton image="/helt/excluir.png" id="botaoExcluir"  actionListener="#{manterPaciente.acaoRemoverSim}" onclick="if(!confirm('Deseja realmente excluir o registro ?')){return false}" reRender="formPaciente" oncomplete="if(#{manterPaciente.showPopUp}){popUp()}" />
 				<rich:spacer width="16"/>
 				<a4j:commandButton image="/helt/cancelar.png"  actionListener="#{manterPaciente.acaoAtualizar}" reRender="formPaciente" />												
             </h:panelGroup>			
