@@ -8,8 +8,7 @@ import org.richfaces.component.html.HtmlModalPanel;
 
 public interface DialogoConfirmacaoIF {
 
-	public abstract void renderConfirmDialog(Map<String, String> params,
-			Map<String, String> values);
+	public abstract void renderConfirmDialog(Map<String, String> params, Map<String, String> values);
 
 	public abstract HtmlModalPanel getModal();
 
@@ -17,8 +16,7 @@ public interface DialogoConfirmacaoIF {
 
 	public abstract Map<String, MethodExpression> getActionsForDialogModal();
 
-	public abstract void setActionsForDialogModal(
-			Map<String, MethodExpression> actionsForDialogModal);
+	public abstract void setActionsForDialogModal(Map<String, MethodExpression> actionsForDialogModal);
 
 	public abstract String getForm();
 

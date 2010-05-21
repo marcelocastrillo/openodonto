@@ -70,7 +70,12 @@ public abstract class ManageBeanGeral <T> {
 	
 	protected abstract void initExtra();
 	
-	protected void init(){		
+	@SuppressWarnings("unchecked")
+	protected void init(){
+		Object keepAliveManageBean = getRequest().getAttribute(managebeanName);		
+		if(keepAliveManageBean != null){
+			setDialogModalPanel(((ManageBeanGeral<T>)keepAliveManageBean).dialogModalPanel);			
+		}
 		this.dialogModalPanel = new DialogoConfirmacaoJSF();
 		this.backBean = fabricarNovoBean();
 		this.dao = DaoFactory.getInstance().getDao(classe);
@@ -211,6 +216,7 @@ public abstract class ManageBeanGeral <T> {
 	
 	public void acaoSalvarExtra(ActionEvent evt){}
 
+	@SuppressWarnings("unchecked")
 	public void acaoRemover(ActionEvent evt) {
 		show = false;
 		Long id = Encoder.encode(classe, this.backBean);
@@ -220,6 +226,7 @@ public abstract class ManageBeanGeral <T> {
 		}finally{
 			dao.closeConnection();	
 		}
+		ManageBeanGeral<T> manageBean = (ManageBeanGeral<T>) getRequest().getAttribute(managebeanName);
 		Map<String, String> values = new HashMap<String, String>();
 		values.put("yes", "Sim");
 		values.put("no", "Nao");
@@ -227,32 +234,24 @@ public abstract class ManageBeanGeral <T> {
 		values.put("message", "Deseja realmente excluir o registro ?");
 		values.put("acaoYes", "removerBean");
 		values.put("reRenderWhenOk", getFormularioSaida());
-		this.dialogModalPanel.setActionsForDialogModal(getActionForModal());
-		this.dialogModalPanel.renderConfirmDialog(null, values);
+		manageBean.dialogModalPanel.setActionsForDialogModal(getActionForModal());
+		manageBean.dialogModalPanel.renderConfirmDialog(null, values);
 		show = true;
 	}
 	
-	public String acaoRemoverSim() {
+	public void acaoRemoverSim(ActionEvent evt) {
 		try {
-			if(!dao.contem(this.backBean))
-				try {
-					dao.alterar(this.backBean);
-					this.backBean = dao.getEntityBean();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			this.dao.remover(this.backBean);
 		} catch (Exception e) {
 			exibirPopUp("Nao foi possivel remover o registro.");
 			msgBundleEstatica.add(new MessageBundle(MSG_TIPO.dinamica, "Nao foi possivel remover o registro.", formularioSaida+":output"));
-			return "fail";
+			return;
 		}finally{
 			dao.closeConnection();
 		}
 		init();
 		exibirPopUp(this.resourceBundle.getString("removido"));
 		msgBundleEstatica.add(new MessageBundle(MSG_TIPO.resource, "removido", formularioSaida+":output"));
-		return "ok";
 	}
 	
 	public void acaoAtualizar(ActionEvent evt){
@@ -372,7 +371,7 @@ public abstract class ManageBeanGeral <T> {
 		this.managebeanName = managebeanName;
 	}
 
-	public DialogoConfirmacaoIF getDialogModalPanel() {
+	public DialogoConfirmacaoIF getDialogModalPanel() {		
 		return dialogModalPanel;
 	}
 
