@@ -216,28 +216,6 @@ public abstract class ManageBeanGeral <T> {
 	
 	public void acaoSalvarExtra(ActionEvent evt){}
 
-	@SuppressWarnings("unchecked")
-	public void acaoRemover(ActionEvent evt) {
-		show = false;
-		Long id = Encoder.encode(classe, this.backBean);
-		try{
-		if (this.backBean == null || dao.pesquisar(id) == null)
-			return;
-		}finally{
-			dao.closeConnection();	
-		}
-		ManageBeanGeral<T> manageBean = (ManageBeanGeral<T>) getRequest().getAttribute(managebeanName);
-		Map<String, String> values = new HashMap<String, String>();
-		values.put("yes", "Sim");
-		values.put("no", "Nao");
-		values.put("title", "Remover registro");
-		values.put("message", "Deseja realmente excluir o registro ?");
-		values.put("acaoYes", "removerBean");
-		values.put("reRenderWhenOk", getFormularioSaida());
-		manageBean.dialogModalPanel.setActionsForDialogModal(getActionForModal());
-		manageBean.dialogModalPanel.renderConfirmDialog(null, values);
-		show = true;
-	}
 	
 	public void acaoRemoverSim(ActionEvent evt) {
 		try {
