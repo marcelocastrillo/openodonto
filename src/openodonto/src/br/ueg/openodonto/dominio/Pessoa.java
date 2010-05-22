@@ -5,24 +5,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ueg.openodonto.dominio.constante.TiposUF;
+import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.Entity;
+import br.ueg.openodonto.persistencia.orm.EntityBase;
+import br.ueg.openodonto.persistencia.orm.Table;
 
-
-public abstract class Pessoa implements Serializable{
+@Table(name="pessoas")
+public abstract class Pessoa<T> extends EntityBase<T> implements Serializable,Entity<T>{
  
 	private static final long serialVersionUID = -7734113332277720024L;
 
+	@Column(name="id")
 	private Long           codigo;
 	 
+	@Column(name="email")
 	private String         email;
 	 
+	@Column(name="nome")
 	private String         nome;
 	 
 	private List<Telefone> telefone;
 	
+	@Column(name="endereco")
 	private String         endereco;
-	
+
+	@Column(name="cidade")
 	private String         cidade;
 	
+	@Column(name="estado")
 	private TiposUF        estado;
 	 
 	public Pessoa() {
