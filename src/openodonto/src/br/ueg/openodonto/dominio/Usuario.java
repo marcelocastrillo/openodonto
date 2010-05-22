@@ -5,7 +5,7 @@ import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.util.PalavrasFormatadas;
 
 @Table(name="usuarios")
-public class Usuario extends Pessoa{
+public class Usuario extends Pessoa<Usuario>{
 
 	private static final long serialVersionUID = -8779459291420609676L;
 
@@ -14,10 +14,6 @@ public class Usuario extends Pessoa{
 	
 	@Column(name="senha")
 	private String senha;
-
-	public Usuario() {
-		super(Usuario.class);
-	}
 	
 	public String getUser() {
 		return user;
