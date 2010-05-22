@@ -2,24 +2,36 @@ package br.ueg.openodonto.dominio;
 
 import java.sql.Date;
 
-public class Paciente extends Pessoa{
+import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.Table;
+
+@Table(name="pacientes")
+public class Paciente extends Pessoa<Paciente>{
 
 	private static final long serialVersionUID = -8543328508793753975L;
 
+	@Column(name="cpf")
 	private String      cpf;	
 	
+	@Column(name="data_inicio_tratamento")
 	private Date        dataInicioTratamento;
 	
+	@Column(name="data_termino_treinamento")
 	private Date        dataTerminoTratamento;
 	
+	@Column(name="data_retorno")
 	private Date        dataRetorno;
 	
+	@Column(name="data_nascimento")
 	private Date        dataNascimento;
 	
+	@Column(name="responsavel")
 	private String      responsavel;
 	
+	@Column(name="referencia")
 	private String      referencia;
 	
+	@Column(name="observacao")
 	private String      observacao;
 
 	public String getCpf() {

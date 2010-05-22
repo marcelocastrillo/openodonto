@@ -1,13 +1,24 @@
 package br.ueg.openodonto.dominio;
 
+import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.util.PalavrasFormatadas;
 
+@Table(name="usuarios")
 public class Usuario extends Pessoa{
 
+	private static final long serialVersionUID = -8779459291420609676L;
+
+	@Column(name="user")
 	private String user;
 	
+	@Column(name="senha")
 	private String senha;
 
+	public Usuario() {
+		super(Usuario.class);
+	}
+	
 	public String getUser() {
 		return user;
 	}
