@@ -11,7 +11,7 @@ import br.ueg.openodonto.persistencia.orm.EntityBase;
 import br.ueg.openodonto.persistencia.orm.Table;
 
 @Table(name="pessoas")
-public abstract class Pessoa<T> extends EntityBase<T> implements Serializable,Entity<T>{
+public abstract class Pessoa extends EntityBase implements Serializable,Entity{
  
 	private static final long serialVersionUID = -7734113332277720024L;
 

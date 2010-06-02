@@ -2,9 +2,9 @@ package br.ueg.openodonto.persistencia.orm;
 
 import java.util.Map;
 
-public interface Entity<T> {
+public interface Entity{
 
-	Map<String , Object> parse();
+	Map<String , Object> format();
 
-	T format(Map<String , Object> values);
+	void parse(Map<String , Object> values);
 }
