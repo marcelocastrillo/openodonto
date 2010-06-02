@@ -251,25 +251,5 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManagerI
 		}
 	}
 	
-	public static void main(String[] args) {
-		EntityManagerIF<Telefone> entityManager = DaoFactory.getInstance().getDao(Telefone.class);
-		Telefone telefone = new Telefone();
-		telefone.setDdd("62");
-		telefone.setId_pessoa(1L);
-		telefone.setNumero("9987-0873");
-		telefone.setTipoTelefone(TiposTelefone.CELULAR);
-
-		Map<String , Object> params = new HashMap<String, Object>();
-		params.put("id_pessoa", 1);
-		System.out.println(entityManager.executarQuery("findByPessoa", params));
-		
-		try {
-			//entityManager.inserir(telefone);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
-
 
 }

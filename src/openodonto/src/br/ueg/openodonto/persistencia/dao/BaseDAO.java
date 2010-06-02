@@ -19,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.ConnectionFactory;
 
 
