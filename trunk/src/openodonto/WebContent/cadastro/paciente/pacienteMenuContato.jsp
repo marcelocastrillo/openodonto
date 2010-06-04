@@ -3,6 +3,7 @@
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
 <%@ taglib prefix="rich" uri="http://richfaces.org/rich"%>
 <%@ taglib prefix="a4j" uri="http://richfaces.org/a4j"%>
+<%@ taglib prefix="t"  uri="http://myfaces.apache.org/tomahawk"%>
 
 	<center>
 	<rich:panel style="background-color : white;width : 90%">
@@ -10,8 +11,8 @@
 		<h:panelGrid columns="4" id="gridAddTel">
 			<h:panelGrid columns="1">
 				<h:outputLabel value="Tipo telefone" for="tipoTelefoneContato" />
-				<h:selectOneMenu id="tipoTelefoneContato" value="#{manterPaciente.manageTelefone.jsfTiposTelefone.selecaoSimples}" converter="javax.faces.Long">
-					<f:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].labelMap}"/>
+				<h:selectOneMenu id="tipoTelefoneContato" value="#{manterPaciente.manageTelefone.telefone.tipoTelefone}" converter="simpleEntityConverter">
+					<t:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].dominio}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
 				</h:selectOneMenu>
 			</h:panelGrid>
 			<rich:spacer width="16"/>

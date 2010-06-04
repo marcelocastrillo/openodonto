@@ -4,8 +4,12 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
  <converter>
   <converter-id>SqlDateConverter</converter-id>
-  <converter-class>br.ueg.openodonto.servico.converter.SqlDateConverter</converter-class>
+  <converter-class>br.ueg.openodonto.visao.converter.SqlDateConverter</converter-class>
  </converter>
+ <converter>
+  <converter-id>simpleEntityConverter</converter-id>
+  <converter-class>br.ueg.openodonto.visao.converter.SimpleIndexConverter</converter-class>
+ </converter> 
  <managed-bean>
   <managed-bean-name>manterPaciente</managed-bean-name>
   <managed-bean-class>br.ueg.openodonto.controle.ManterPaciente</managed-bean-class>

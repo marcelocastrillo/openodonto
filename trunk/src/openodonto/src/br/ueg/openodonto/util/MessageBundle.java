@@ -23,40 +23,27 @@ public class MessageBundle {
 		this.outComponent = outComponent;
 	}
 	
-	public String getMensagem() {
-	
+	public String getMensagem() {	
 		return this.mensagem;
-	}
+	}	
 	
-	
-	public void setMensagem(String mensagem) {
-	
+	public void setMensagem(String mensagem) {	
 		this.mensagem = mensagem;
 	}
-
 	
-	public String getOutComponent() {
-	
+	public String getOutComponent() {	
 		return this.outComponent;
 	}
-
 	
-	public void setOutComponent(String outComponent) {
-	
+	public void setOutComponent(String outComponent) {	
 		this.outComponent = outComponent;
 	}
-
-
 	
-	public MSG_TIPO getTipo() {
-	
+	public MSG_TIPO getTipo() {	
 		return this.tipo;
 	}
-
-
 	
-	public void setTipo(MSG_TIPO tipo) {
-	
+	public void setTipo(MSG_TIPO tipo) {	
 		this.tipo = tipo;
 	}
 	

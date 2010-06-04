@@ -16,8 +16,8 @@
 				<h:panelGrid columns="3">
 					<h:panelGrid columns="1">
 						<h:outputLabel value="Tipo telefone" for="tipoTelefonePainel" />
-						 <h:selectOneMenu id="tipoTelefonePainel" value="#{manterPaciente.manageTelefone.jsfTiposTelefone.selecaoSimples}"  converter="javax.faces.Long">
-							<f:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].labelMap}" />
+						 <h:selectOneMenu id="tipoTelefonePainel" value="#{manterPaciente.manageTelefone.telefone.tipoTelefone}"  converter="simpleEntityConverter">
+							<f:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].dominio}" />
 						</h:selectOneMenu>
 					</h:panelGrid>
 					<h:panelGrid columns="1">

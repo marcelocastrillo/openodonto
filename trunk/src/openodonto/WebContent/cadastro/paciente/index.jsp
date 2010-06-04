@@ -123,9 +123,6 @@ function limparCPF(cpf){
 	<jsp:include page="/footer.jsp" />
    <jsp:include page="modalAlterarContato.jsp" />
    <jsp:include page="modalBuscarPaciente.jsp" />
-   <jsp:include page="modalDialog.jsp" />
-   
-   
 	
 	</a4j:region>
 	

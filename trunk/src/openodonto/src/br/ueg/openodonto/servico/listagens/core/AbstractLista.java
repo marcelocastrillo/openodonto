@@ -1,5 +1,6 @@
 package br.ueg.openodonto.servico.listagens.core;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.Map;
 
 import javax.faces.event.ActionEvent;
 
-import br.ueg.openodonto.servico.listagens.core.codec.Encoder;
+import org.apache.commons.beanutils.PropertyUtils;
 
 
 /**
@@ -47,7 +48,15 @@ public abstract class AbstractLista<T>{
 		List<T> values = getDominio();
 		Map<Long, T> novoDominio = Collections.synchronizedMap(new LinkedHashMap<Long, T>());
 		for(T value : values)
-			novoDominio.put(Encoder.encode(classe, value),value);
+			try {
+				novoDominio.put((Long)PropertyUtils.getNestedProperty(value, "codigo"),value);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			}
 		this.dominioMap = novoDominio;
 	}
 	
