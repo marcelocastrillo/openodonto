@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.dominio.Paciente;
+import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.constante.TiposUF;
 import br.ueg.openodonto.persistencia.EntityManagerIF;
@@ -88,6 +89,14 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 		format.put("referencia", paciente.getReferencia());
 		format.put("responsavel", paciente.getResponsavel());
 		return format;
+	}
+	
+	public static void main(String[] args) {
+		Paciente paciente = new Paciente();
+		paciente.setCodigo(5L);
+		paciente.setCpf("02594287142");
+		Pessoa pessoa = (Pessoa)paciente;
+		System.out.println(pessoa.format());
 	}
 	
 	@Override

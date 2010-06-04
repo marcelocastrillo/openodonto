@@ -10,6 +10,8 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
+import br.ueg.openodonto.persistencia.orm.value.EnumValue;
+
 public class EntityBase{
 
 	public Map<String , Object> format(){
@@ -18,10 +20,10 @@ public class EntityBase{
 		for(Field field : fields){
 			Column column;
 			if((column = field.getAnnotation(Column.class)) != null){
-				map.put(column.name(), getBeanValue(field.getName()));
+				map.put(column.name(), getBeanValue(field));
 			}else{
 				if(!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())){
-				    map.put(field.getName(), getBeanValue(field.getName()));
+				    map.put(field.getName(), getBeanValue(field));
 				}
 			}
 		}
@@ -39,15 +41,13 @@ public class EntityBase{
 	            fields = getAllFields(fields, type.getSuperclass());
 		    }
 	    }
-
 	    return fields;
 	}
-
 	
 	public void parse(Map<String , Object> values){
 		List<Field> fields = getAllFields(new LinkedList<Field>(), this.getClass());
 		for(String column : values.keySet()){
-			setBeanValue(findFieldByAnnotation(column, fields).getName(), values.get(column));
+			setBeanValue(findFieldByAnnotation(column, fields), values.get(column));
 		}
 	}
 	
@@ -65,9 +65,17 @@ public class EntityBase{
 		return null;
 	}
 	
-	private void setBeanValue(String name , Object value){
+	private void setBeanValue(Field field , Object value){
 		try {
-			PropertyUtils.setNestedProperty(this, name, value);
+			if(Enum.class.isAssignableFrom(field.getType()) &&
+					field.isAnnotationPresent(Enumerator.class)){
+				value = reTypeSyncEnum(value, field, field.getAnnotation(Enumerator.class).type());
+			}else if(Number.class.isAssignableFrom(field.getType())){
+				value = reTypeSyncNumber(value, field.getType());
+			}else if(String.class.isAssignableFrom(field.getType())){
+				value = reTypeSyncString(value);
+			}
+			PropertyUtils.setNestedProperty(this, field.getName(), value);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -77,15 +85,89 @@ public class EntityBase{
 		}
 	}
 	
-	private Object getBeanValue(String name){		
+	private String reTypeSyncString(Object value){
+		return String.valueOf(value);
+	}
+	
+	public Number reTypeSyncNumber(Object value, Class<?> type){
+		Number num = (Number)value;
+		if(type.isAssignableFrom(Integer.class)){
+			return num.intValue();
+		}else if(type.isAssignableFrom(Long.class)){
+			return num.longValue();
+		}else if(type.isAssignableFrom(Short.class)){
+			return num.shortValue();
+		}else if(type.isAssignableFrom(Byte.class)){
+			return num.byteValue();
+		}else if(type.isAssignableFrom(Double.class)){
+			return num.doubleValue();
+		}else if(type.isAssignableFrom(Float.class)){
+			return num.floatValue();
+		}
+		return num;
+	}
+	
+	private Object reTypeSyncEnum(Object value,Field field, EnumValue type){
+		if(type == null){
+			return null;
+		}
+		if(((type == EnumValue.ORDINAL && value instanceof Number) ||
+				(type == EnumValue.NAME && value instanceof String))
+				&& field.getType().isEnum()){
+			if(type == EnumValue.ORDINAL){
+				Object[] values = field.getType().getEnumConstants();			
+				Number index = (Number)value;
+				if(index.intValue() >= 0 || index.intValue() < values.length){
+					return values[index.intValue()];
+				}
+			}else if(type == EnumValue.NAME){		
+				try {
+					return field.getType().getDeclaredField(String.valueOf(value)).get(null);
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;		
+	}
+	
+	private Object getBeanValue(Field field){
 	    try {
-			return PropertyUtils.getNestedProperty(this, name);
+	    	Object value = PropertyUtils.getNestedProperty(this, field.getName());
+			if(Enum.class.isAssignableFrom(field.getType()) &&
+					field.isAnnotationPresent(Enumerator.class)){
+				return getEnumValue(value , field.getAnnotation(Enumerator.class).type());
+			}
+			return value; 
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private Object getEnumValue(Object value , EnumValue type){
+		if(type == null){
+			return null;
+		}
+		if(value instanceof Enum<?>){
+			Enum<?> enumBean = (Enum<?>)value;
+			if(type == EnumValue.ORDINAL){
+				return enumBean.ordinal();
+			}else if(type == EnumValue.NAME){
+				return enumBean.name();
+			}else{
+				return null;
+			}
 		}
 		return null;
 	}
