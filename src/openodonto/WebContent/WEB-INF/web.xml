@@ -13,6 +13,28 @@
 	<servlet-name>Faces Servlet</servlet-name>
 	<url-pattern>/faces/*</url-pattern>
 </servlet-mapping>  
+ 
+<!-- Filtro dos componentes JSF myfaces -->
+<filter>
+	<filter-name>MyFacesExtensionsFilter</filter-name>
+	<filter-class>org.apache.myfaces.webapp.filter.ExtensionsFilter</filter-class>
+    <init-param>
+        <param-name>uploadMaxFileSize</param-name>
+        <param-value>20m</param-value>
+    </init-param>
+</filter>
+
+<!-- Mapeamento do filtro dos componentes JSF myfaces -->
+<filter-mapping>
+    <filter-name>MyFacesExtensionsFilter</filter-name>
+    <servlet-name>Faces Servlet</servlet-name>
+</filter-mapping>
+
+<filter-mapping>
+    <filter-name>MyFacesExtensionsFilter</filter-name>
+    <url-pattern>/faces/myFacesExtensionResource/*</url-pattern>
+</filter-mapping>
+
   
 <!-- Configurando o skin "Blue Sky" no projeto -->
 <context-param>

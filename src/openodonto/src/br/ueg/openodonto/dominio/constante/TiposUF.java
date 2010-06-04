@@ -46,6 +46,10 @@ public enum TiposUF {
 		return this.descricao;
 	}
 	
+	public String getDescricao(){
+		return descricao;
+	}
+	
 	public static TiposUF parse(int index){
 		TiposUF[] values = TiposUF.values();
 		if(index >= 0 || index < values.length){

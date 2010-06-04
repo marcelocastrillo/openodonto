@@ -1,4 +1,4 @@
-package br.ueg.openodonto.servico.converter;
+package br.ueg.openodonto.visao.converter;
 
 
 import java.sql.Date;

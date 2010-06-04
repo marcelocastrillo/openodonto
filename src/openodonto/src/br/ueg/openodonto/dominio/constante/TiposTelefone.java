@@ -20,6 +20,10 @@ public enum TiposTelefone{
 			
 	}
 	
+	public String getDescricao(){
+		return descricao;
+	}
+	
 	public static int format(TiposTelefone tipoTelefone){
 		return tipoTelefone.ordinal();
 	}

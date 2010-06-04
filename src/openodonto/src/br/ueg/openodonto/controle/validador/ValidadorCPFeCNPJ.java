@@ -1,4 +1,4 @@
-package br.ueg.openodonto.servico.validador;
+package br.ueg.openodonto.controle.validador;
 
 
 public class ValidadorCPFeCNPJ extends AbstractValidator{

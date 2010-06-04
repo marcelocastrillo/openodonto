@@ -5,28 +5,29 @@ package br.ueg.openodonto.controle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
-import javax.faces.event.ActionEvent;
-
-import br.ueg.openodonto.dominio.constante.TiposUF;
+import br.ueg.openodonto.controle.servico.ManageTelefone;
+import br.ueg.openodonto.controle.validador.AbstractValidator;
+import br.ueg.openodonto.controle.validador.ValidadorPadrao;
 import br.ueg.openodonto.dominio.Paciente;
-import br.ueg.openodonto.servico.ManageTelefone;
-import br.ueg.openodonto.servico.listagens.core.jsf.JsfVisible;
-import br.ueg.openodonto.servico.validador.AbstractValidator;
-import br.ueg.openodonto.servico.validador.ValidadorPadrao;
 import br.ueg.openodonto.util.PalavrasFormatadas;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {
 
 	private ManageTelefone								manageTelefone;
-	private JsfVisible<TiposUF>                         jsfEstado;
 
 	public ManterPaciente() {
-		super(Paciente.class, "formPaciente", "manterPaciente");
+		super(Paciente.class);
+		Properties params = new Properties();
+		params.put("managebeanName", "manterPaciente");
+		params.put("formularioSaida", "formPaciente");
+		params.put("saidaPadrao", "formPaciente:out");
+		params.put("saidaContato","formPaciente:messageTelefone");
+		makeView(params);
 	}
 
 	protected void initExtra() {
-		this.jsfEstado = new JsfVisible<TiposUF>(TiposUF.class , this , "paciente.estado");
 		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this);
 	}
 
@@ -45,47 +46,47 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		return formatados;
 	}
 
-	public void acaoAlterar(ActionEvent evt){
-		super.acaoAlterar(evt);
+	public String acaoAlterar(){
+		return super.acaoAlterar();
 	}
 	
 	protected List<AbstractValidator> getCamposObrigatorios() {
 		List<AbstractValidator> obrigatorios = new ArrayList<AbstractValidator>();
-		obrigatorios.add(new ValidadorPadrao("nome", "entradaNome"));	
-		obrigatorios.add(new ValidadorPadrao("cpf", "entradaCpf"));
+		obrigatorios.add(new ValidadorPadrao("nome", "formPaciente:entradaNome"));	
+		obrigatorios.add(new ValidadorPadrao("cpf", "formPaciente:entradaCpf"));
 		return obrigatorios;
 	}
 
-	public void acaoPesquisar(ActionEvent evt) {
+	public String acaoPesquisar() {
 		if(this.getBusca().getParams().get("opcao").equals("cpf"))
 			this.getBusca().getParams().put("opcao" , PalavrasFormatadas.clear(PalavrasFormatadas.remover(this.getBusca().getParams().get("opcao"))).trim());
 		
 		if(this.getBusca().getParams().get("opcao") == null || this.getBusca().getParams().get("opcao").isEmpty() || this.getBusca().getParams().get("opcao").length() < 3){
-			this.adicionarMensagemDinamicaJSF("Selecine um filtro de pesquisa.", "formModalPaciente:buscar");
-			return;
+			getView().addResourceDynamicMenssage("Selecine um filtro de pesquisa.", "formModalPaciente:buscar");
+			return DEFAULT_RULE;
 		}
 		
 		if(this.getBusca().getParams().get("param") == null || this.getBusca().getParams().get("param").isEmpty()){
-			this.adicionarMensagemDinamicaJSF("Informe o parametro para pesquisa.", "formModalPaciente:buscar");
-			return;
+			getView().addResourceDynamicMenssage("Informe o parametro para pesquisa.", "formModalPaciente:buscar");
+			return DEFAULT_RULE;
 		}
 		
 		if(this.getBusca().getParams().get("opcao").equals("nome") && this.getBusca().getParams().get("param").length() < 3){
-			this.adicionarMensagemDinamicaJSF("Informe pelo menos 3 caracteres.", "formModalPaciente:buscar");
+			getView().addResourceDynamicMenssage("Informe pelo menos 3 caracteres.", "formModalPaciente:buscar");
 			getBusca().getParams().put("opcao", null);
-			return;
+			return DEFAULT_RULE;
 		}
 		
 		if(this.getBusca().getParams().get("opcao").equals("cpf") && this.getBusca().getParams().get("param").length() != 11){
-			this.adicionarMensagemDinamicaJSF("Numero de cpf invalido.", "formModalPaciente:buscar");
+			getView().addResourceDynamicMenssage("Numero de cpf invalido.", "formModalPaciente:buscar");
 			getBusca().getParams().put("opcao", null);
-			return;
+			return DEFAULT_RULE;
 		}
 		
 		if(this.getBusca().getParams().get("opcao").equals("email") && this.getBusca().getParams().get("param").length() < 5){
-			this.adicionarMensagemDinamicaJSF("O email deve ter mais que 5 caracteres.", "formModalPaciente:buscar");
+			getView().addResourceDynamicMenssage("O email deve ter mais que 5 caracteres.", "formModalPaciente:buscar");
 			getBusca().getParams().put("opcao", null);
-			return;
+			return DEFAULT_RULE;
 		}
 		
 		try{
@@ -95,10 +96,10 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 				try{
 					cod = Long.parseLong(this.getBusca().getParams().get("param"));
 				}catch(Exception ex){
-					this.adicionarMensagemDinamicaJSF("Digite Apenas numeros para esta opcao", "formModalPaciente:buscar");
+					getView().addResourceDynamicMenssage("Digite Apenas numeros para esta opcao.", "formModalPaciente:buscar");
 					getBusca().getParams().put("param", null);
 					getBusca().getParams().put("opcao", null);
-					return;
+					return DEFAULT_RULE;
 				}
 				result = dao.executarQuery("Paciente.BuscaByCodigo", "codigo", cod);
 			}
@@ -110,20 +111,21 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 			   result = dao.executarQuery("Paciente.BuscaByEmail", "email", this.getBusca().getParams().get("param"));
 		    }
 			if(result != null){
-				this.getBusca().acaoLimpar(null);
+				this.getBusca().acaoLimpar();
 				getBusca().getResultados().addAll(result);
-				this.adicionarMensagemDinamicaJSF("Foram encontrados "+result.size()+" resultados.", "formModalPaciente:buscar");
+				getView().addResourceDynamicMenssage("Foram encontrados "+result.size()+" resultados.", "formModalPaciente:buscar");
 			}
 			else
-				this.adicionarMensagemDinamicaJSF("Nao foi encontrado nenhum resultado.", "formModalPaciente:buscar");
+				getView().addResourceDynamicMenssage("Nao foi encontrado nenhum resultado." , "formModalPaciente:buscar");
 		}catch(Exception ex){
 			ex.printStackTrace();
-			this.adicionarMensagemJSF("ErroSistema", "formModalPaciente:buscar");
+			getView().addResourceMessage("ErroSistema." , "formModalPaciente:buscar");
 		}finally{
 			dao.closeConnection();
 		}
 		getBusca().getParams().put("param", null);
 		getBusca().getParams().put("opcao", null);
+		return DEFAULT_RULE;
 	}
 
 	public Paciente getPaciente() {
@@ -140,16 +142,6 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	
 	public void setManageTelefone(ManageTelefone manageTelefone) {	
 		this.manageTelefone = manageTelefone;
-	}
-
-	public JsfVisible<TiposUF> getJsfEstado() {
-		return jsfEstado;
-	}
-
-	public void setJsfEstado(JsfVisible<TiposUF> jsfEstado) {
-		this.jsfEstado = jsfEstado;
-	}
-	
-	
+	}	
 
 }

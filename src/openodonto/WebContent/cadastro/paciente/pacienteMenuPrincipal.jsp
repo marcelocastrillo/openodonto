@@ -3,6 +3,7 @@
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
 <%@ taglib prefix="rich" uri="http://richfaces.org/rich"%>
 <%@ taglib prefix="a4j" uri="http://richfaces.org/a4j"%>
+<%@ taglib uri="http://richfaces.org/rich" prefix="rich"%>
 
 
 <center>
@@ -13,9 +14,9 @@
 		<h:panelGrid columns="3">
 			<h:panelGrid columns="1">
 				<h:outputLabel value="Estado" for="selectMenuEstado" />
-				<h:selectOneMenu immediate="true" id="selectMenuEstado" value="#{manterPaciente.jsfEstado.selecaoSimples}" converter="javax.faces.Long" style="width : 200px">
-					<f:selectItem itemLabel="-- Selecione --" itemValue="0" />
-					<f:selectItems id="itemsEstado" value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposUF'].labelMap}" />
+				<h:selectOneMenu immediate="true" id="selectMenuEstado" value="#{manterPaciente.paciente.estado}" converter="simpleEntityConverter" style="width : 200px">
+					<f:selectItem itemLabel="-- Selecione --" itemValue="" />
+					<t:selectItems id="itemsEstado" value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposUF'].dominio}" var="estado" itemLabel="#{estado.descricao}" itemValue="#{estado}" />
 				</h:selectOneMenu>
 			</h:panelGrid>
 			<h:panelGrid columns="1">

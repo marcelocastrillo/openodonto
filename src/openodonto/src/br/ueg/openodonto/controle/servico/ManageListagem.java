@@ -1,4 +1,4 @@
-package br.ueg.openodonto.servico.listagens;
+package br.ueg.openodonto.controle.servico;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,13 +8,13 @@ import br.ueg.openodonto.servico.listagens.core.ListaDominio;
 import br.ueg.openodonto.servico.listagens.core.ListaTipo;
 
 
-public class ManterListagem{
+public class ManageListagem{
 	
 	private static Map<Class<?>, AbstractLista<?>> cache;	
 	
-	@SuppressWarnings("serial")
-	public ManterListagem(){
+	public ManageListagem(){
 		cache = new HashMap<Class<?>, AbstractLista<?>>(){
+			private static final long serialVersionUID = 4625686751396609699L;
 			@Override
 			public AbstractLista<?> get(Object arg) {
 				if(arg instanceof String)
@@ -43,10 +43,12 @@ public class ManterListagem{
 			else
 				lista = getListaDominio(classe);
 			cache.put(classe, lista);
-		}else
+		}else{
 			lista = (AbstractLista<T>)cache.get(classe);
-		if(lista.isOld())
+		}
+		if(lista.isOld()){
 			lista.refreshDominio(null);
+		}
 		return lista;
 	}
 	
