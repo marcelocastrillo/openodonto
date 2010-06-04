@@ -6,19 +6,35 @@ package br.ueg.openodonto.dominio;
 import java.io.Serializable;
 
 import br.ueg.openodonto.dominio.constante.TiposTelefone;
+import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.Entity;
+import br.ueg.openodonto.persistencia.orm.EntityBase;
+import br.ueg.openodonto.persistencia.orm.Enumerator;
+import br.ueg.openodonto.persistencia.orm.Id;
+import br.ueg.openodonto.persistencia.orm.Table;
+import br.ueg.openodonto.persistencia.orm.value.EnumValue;
+import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
-public class Telefone implements Serializable{	
+@Table(name="telefones")
+public class Telefone extends EntityBase implements Serializable,Entity{	
 
 	private static final long serialVersionUID = 77367905036522189L;
-
+	
+	@Column(name="id")
+	@Id(autoIncrement=IdIncrementType.IDENTITY)
 	private Long codigo;
 
+	@Column(name="ddd")
 	private String ddd;
 
+	@Column(name="numero")
 	private String numero;
 
+	@Column(name="tipo")
+	@Enumerator(type=EnumValue.ORDINAL)
 	private TiposTelefone tipoTelefone;
 	
+	@Column(name="id_pessoa")
 	private Long id_pessoa;
 	
 	public Telefone() {
@@ -95,10 +111,14 @@ public class Telefone implements Serializable{
 		} else if (!id_pessoa.equals(other.id_pessoa))
 			return false;
 		return true;
-	}	
-	
-	public String toString(){
-		return this.numero;
 	}
+
+	@Override
+	public String toString() {
+		return "Telefone [codigo=" + codigo + ", ddd=" + ddd + ", id_pessoa="
+				+ id_pessoa + ", numero=" + numero + ", tipoTelefone="
+				+ tipoTelefone + "]";
+	}
+
 		
 }

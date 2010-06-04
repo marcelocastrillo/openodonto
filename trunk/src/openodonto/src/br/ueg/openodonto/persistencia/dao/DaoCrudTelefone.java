@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.dominio.Telefone;
-import br.ueg.openodonto.dominio.constante.TiposTelefone;
 import br.ueg.openodonto.persistencia.EntityManagerIF;
 import br.ueg.openodonto.util.Memento;
 
@@ -38,22 +37,27 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManagerI
 	
 	@Override
 	protected Map<String, Object> format(Telefone entry) {
+		/*
 		Map<String, Object> format = new LinkedHashMap<String, Object>();  // TEM QUE SER UM LINKEDHASHMAP pois a ordem importa
 		//format.put("id", entry.getCodigo());
 		format.put("ddd", entry.getDdd());
 		format.put("numero", entry.getNumero());
 		format.put("tipo", TiposTelefone.format(entry.getTipoTelefone()));
 		format.put("id_pessoa" , entry.getId_pessoa());
-		return format;
+		*/
+		return entry.format();
 	}
 
 	protected Telefone parseEntry(ResultSet rs) throws SQLException{
 		Telefone telefone = new Telefone();
+		/*
 		telefone.setCodigo(rs.getLong("id"));
 		telefone.setId_pessoa(rs.getLong("id_pessoa"));
 		telefone.setDdd(rs.getString("ddd"));
 		telefone.setNumero(rs.getString("numero"));
-		telefone.setTipoTelefone(TiposTelefone.parse(rs.getInt("tipo")));		
+		telefone.setTipoTelefone(TiposTelefone.parse(rs.getInt("tipo")));
+		*/		
+		telefone.parse(super.formatResultSet(rs));
 		return telefone;
 		
 	}

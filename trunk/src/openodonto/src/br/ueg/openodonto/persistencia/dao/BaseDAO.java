@@ -110,10 +110,12 @@ public abstract class BaseDAO<T> implements Serializable {
 		preparedStatement.execute();
 		ResultSet generatedValues = preparedStatement.getGeneratedKeys();
 		Map<String,Object> objects = new LinkedHashMap<String ,Object>();
-		if(generatedValues != null){
-			int count = generatedValues.getMetaData().getColumnCount();
-			for(int i = 1; generatedValues.next() && i <= count ; i++){
-				objects.put(generatedValues.getMetaData().getColumnName(i) , generatedValues.getObject(1));
+		if (generatedValues != null) {
+			if (generatedValues.next()) {
+				int count = generatedValues.getMetaData().getColumnCount();
+				for (int i = 1; i <= count; i++) {
+					objects.put(generatedValues.getMetaData().getColumnName(i),	generatedValues.getObject(i));
+				}
 			}
 		}
 		return objects;
@@ -161,6 +163,19 @@ public abstract class BaseDAO<T> implements Serializable {
 	@SuppressWarnings("unchecked")
 	public ResultSet list() throws Exception{
 		return executeQuery(this.listQuery, Collections.EMPTY_LIST);
+	}
+	
+	public Map<String, Object> formatResultSet(ResultSet rs) throws SQLException{
+		if(rs != null){
+			Map<String,Object> objects = new LinkedHashMap<String ,Object>();
+			int count = rs.getMetaData().getColumnCount();
+			for(int i = 1; i <= count ; i++){
+				objects.put(rs.getMetaData().getColumnName(i) , rs.getObject(i));
+			}
+			return objects;
+		}
+		return null;
+		
 	}
 	
 	public Map<String,Object> executeUpdate(T entry, Map<String , Object> whereParams) throws Exception{
