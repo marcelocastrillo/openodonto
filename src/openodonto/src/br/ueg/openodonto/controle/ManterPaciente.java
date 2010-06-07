@@ -11,7 +11,7 @@ import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.validador.AbstractValidator;
 import br.ueg.openodonto.controle.validador.ValidadorPadrao;
 import br.ueg.openodonto.dominio.Paciente;
-import br.ueg.openodonto.util.PalavrasFormatadas;
+import br.ueg.openodonto.util.WordFormatter;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {
 
@@ -22,7 +22,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		Properties params = new Properties();
 		params.put("managebeanName", "manterPaciente");
 		params.put("formularioSaida", "formPaciente");
-		params.put("saidaPadrao", "formPaciente:out");
+		params.put("saidaPadrao", "formPaciente:output");
 		params.put("saidaContato","formPaciente:messageTelefone");
 		makeView(params);
 	}
@@ -59,7 +59,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 
 	public String acaoPesquisar() {
 		if(this.getBusca().getParams().get("opcao").equals("cpf"))
-			this.getBusca().getParams().put("opcao" , PalavrasFormatadas.clear(PalavrasFormatadas.remover(this.getBusca().getParams().get("opcao"))).trim());
+			this.getBusca().getParams().put("opcao" , WordFormatter.clear(WordFormatter.remover(this.getBusca().getParams().get("opcao"))).trim());
 		
 		if(this.getBusca().getParams().get("opcao") == null || this.getBusca().getParams().get("opcao").isEmpty() || this.getBusca().getParams().get("opcao").length() < 3){
 			getView().addResourceDynamicMenssage("Selecine um filtro de pesquisa.", "formModalPaciente:buscar");

@@ -2,7 +2,7 @@ package br.ueg.openodonto.persistencia.dao;
 
 import br.ueg.openodonto.controle.exception.LoginInvalidoException;
 import br.ueg.openodonto.dominio.Usuario;
-import br.ueg.openodonto.persistencia.DaoLoginIF;
+import br.ueg.openodonto.persistencia.LoginManager;
 
 
 
@@ -10,9 +10,9 @@ import br.ueg.openodonto.persistencia.DaoLoginIF;
  * @author Vinicius
  *
  */
-public class DaoLoginIMPL implements DaoLoginIF{
+public class DaoLogin implements LoginManager{
 
-	public DaoLoginIMPL() {
+	public DaoLogin() {
 	}
 	
 	public Usuario autenticar(Usuario usuario) {		

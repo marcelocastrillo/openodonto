@@ -6,7 +6,7 @@ package br.ueg.openodonto.util;
  * @author vinicius.rodrigues
  *
  */
-public  class PalavrasFormatadas {
+public  class WordFormatter {
 	
     static String acentuado = "çÇáéíóúıÁÉÍÓÚİàèìòùÀÈÌÒÙãõñäëïöüÿÄËÏÖÜÃÕÑâêîôûÂÊÎÔÛ";
     static String semAcento = "cCaeiouyAEIOUYaeiouAEIOUaonaeiouyAEIOUAONaeiouAEIOU";

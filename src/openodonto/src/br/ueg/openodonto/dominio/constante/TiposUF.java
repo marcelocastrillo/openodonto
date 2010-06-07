@@ -60,8 +60,8 @@ public enum TiposUF {
 			
 	}
 	
-	public static int format(TiposUF tiposUF){
-		return tiposUF.ordinal();
+	public long getCodigo(){
+		return ordinal();
 	}
 	
 }

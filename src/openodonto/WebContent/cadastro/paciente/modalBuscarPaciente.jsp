@@ -43,7 +43,7 @@
 					<rich:column width="100">
 						<f:facet name="header"><h:outputText value="Codigo" styleClass="headerText"/></f:facet>
 						<center>
-						<a4j:commandLink value="#{paciente.codigo}" reRender="formPaciente" actionListener="#{manterPaciente.acaoCarregarBean}" id="idPaciente"  oncomplete="#{rich:component('painelBuscaPaciente')}.hide();if(#{manterPaciente.showPopUp}){popUp()}" >
+						<a4j:commandLink value="#{paciente.codigo}" reRender="formPaciente" action="#{manterPaciente.acaoCarregarBean}" id="idPaciente"  oncomplete="#{rich:component('painelBuscaPaciente')}.hide();if(#{manterPaciente.view.displayPopUp}){popUp()}" >
 							<f:param name="index" id="codigoPaciente" value="#{index}"/>
 						</a4j:commandLink>							
 						</center>
@@ -65,8 +65,8 @@
 			</rich:panel>
 			<rich:spacer height="8" />
 			<h:panelGrid columns="2">
-				<a4j:commandButton value="Buscar" reRender="listaContat" actionListener="#{manterPaciente.acaoPesquisar}" />
-				<a4j:commandButton id="limpar" value="Limpar" actionListener="#{manterPaciente.acaoLimpar}" reRender="formModalPaciente" />
+				<a4j:commandButton value="Buscar" reRender="listaContat" action="#{manterPaciente.acaoPesquisar}" />
+				<a4j:commandButton id="limpar" value="Limpar" action="#{manterPaciente.acaoLimpar}" reRender="formModalPaciente" />
 			</h:panelGrid>			
 		</a4j:form>
 

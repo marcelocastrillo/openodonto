@@ -14,11 +14,11 @@ import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.constante.TiposUF;
-import br.ueg.openodonto.persistencia.EntityManagerIF;
-import br.ueg.openodonto.util.Memento;
+import br.ueg.openodonto.persistencia.EntityManager;
+import br.ueg.openodonto.util.MementoBuilder;
 
 @SuppressWarnings("serial")
-public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerIF<Paciente> {
+public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<Paciente> {
 
 	private static Map<String , String>      storedQuerysMap;
 	
@@ -83,7 +83,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 		format.put("data_termino_tratamento", paciente.getDataTerminoTratamento());
 		format.put("email", paciente.getEmail());
 		format.put("endereco", paciente.getEndereco());
-		format.put("estado",paciente.getEstado() != null ? TiposUF.format(paciente.getEstado()) : null);
+		format.put("estado",paciente.getEstado() != null ? paciente.getEstado().ordinal() : null);
 		format.put("nome", paciente.getNome());
 		format.put("observacao", paciente.getObservacao());
 		format.put("referencia", paciente.getReferencia());
@@ -130,7 +130,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 						paramsMap.get("id")};				
 				super.execute(DaoCrudPaciente.storedQuerysMap.get("updatePaciente"), pacienteParams);
 				if(o.getTelefone() != null){
-					EntityManagerIF<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+					EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 					List<Telefone> todos = getTelefonesFromCliente(o.getCodigo());
 					for(Telefone telefone : todos){
 						if(!o.getTelefone().contains(telefone)){
@@ -144,15 +144,16 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 					}
 				}
 				managed = o;
-				cachedSession.put(managed , Memento.deepClone(managed));
+				cachedSession.put(managed , MementoBuilder.deepClone(managed));
 			}catch(Exception ex){
 				ex.printStackTrace();
 				if(save != null){
+					getConnection().setAutoCommit(false);
 					getConnection().rollback(save);
 				}
-			}finally{
-				getConnection().setAutoCommit(true);
+				throw ex;
 			}
+			getConnection().setAutoCommit(true);
 		}else if(o != null){
 			inserir(o);
 		}
@@ -184,7 +185,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 		List<Telefone> telefones = new ArrayList<Telefone>();
 		Map<String , Object> paramsTel = new HashMap<String, Object>();
 		paramsTel.put("id_pessoa", id);
-		EntityManagerIF<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 		telefones.addAll(entityManagerTelefone.executarQuery("findByPessoa", paramsTel));
 		return telefones;
 	}
@@ -247,22 +248,22 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 					paramsMap.get("observacao")};			
 			super.execute(DaoCrudPaciente.storedQuerysMap.get("insertPaciente"), pacienteParams);
 			if(o.getTelefone() != null){
-				EntityManagerIF<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+				EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 				for(Telefone telefone : o.getTelefone()){
 					telefone.setId_pessoa(o.getCodigo());
 					entityManagerTelefone.alterar(telefone);
 				}
 			}
 			managed = o;
-			cachedSession.put(managed , Memento.deepClone(managed));
+			cachedSession.put(managed , MementoBuilder.deepClone(managed));
 		}catch(Exception ex){
 			ex.printStackTrace();
 			if(save != null){
 				getConnection().rollback(save);
 			}
-		}finally{
-			getConnection().setAutoCommit(true);
+			throw ex;
 		}
+		getConnection().setAutoCommit(true);
 	}
 
 	@Override
@@ -344,7 +345,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 			}
 			getConnection().setAutoCommit(false);
 			save = getConnection().setSavepoint("Before Remove Paciente - Savepoint");
-			EntityManagerIF<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 			for(Telefone telefone : o.getTelefone()){
 				entityManagerTelefone.remover(telefone);
 			}		
@@ -355,9 +356,9 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManagerI
 			if(save != null){
 				getConnection().rollback(save);
 			}
-		}finally{
-			getConnection().setAutoCommit(true);
+			throw ex;
 		}
+		getConnection().setAutoCommit(true);
 	}	
 
 }

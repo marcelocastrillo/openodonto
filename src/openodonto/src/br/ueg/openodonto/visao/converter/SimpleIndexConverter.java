@@ -21,7 +21,7 @@ public class SimpleIndexConverter implements Converter {
 
 	public Object getAsObject(FacesContext ctx, UIComponent component, String value) {
 
-		SelectItem selectedItem = this.getSelectedItemByIndex(component, Integer.parseInt(value));
+		SelectItem selectedItem = this.getSelectedItemByIndex(component, value == null || value.isEmpty() ? -1 : Integer.parseInt(value));
 		if (selectedItem != null)
 			return selectedItem.getValue();
 

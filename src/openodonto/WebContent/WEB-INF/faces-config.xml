@@ -9,7 +9,7 @@
  <converter>
   <converter-id>simpleEntityConverter</converter-id>
   <converter-class>br.ueg.openodonto.visao.converter.SimpleIndexConverter</converter-class>
- </converter> 
+ </converter>
  <managed-bean>
   <managed-bean-name>manterPaciente</managed-bean-name>
   <managed-bean-class>br.ueg.openodonto.controle.ManterPaciente</managed-bean-class>
@@ -17,7 +17,7 @@
  </managed-bean>
  <managed-bean>
   <managed-bean-name>manterListagem</managed-bean-name>
-  <managed-bean-class>br.ueg.openodonto.servico.listagens.ManterListagem</managed-bean-class>
+  <managed-bean-class>br.ueg.openodonto.controle.servico.ManageListagem</managed-bean-class>
   <managed-bean-scope>application</managed-bean-scope>
  </managed-bean>
  <managed-bean>

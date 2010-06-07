@@ -6,7 +6,7 @@ import br.ueg.openodonto.dominio.Usuario;
  * @author Vinicius
  *
  */
-public interface DaoLoginIF {
+public interface LoginManager {
 
 	Usuario autenticar(Usuario usuario);
 	

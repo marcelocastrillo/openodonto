@@ -2,7 +2,7 @@ package br.ueg.openodonto.persistencia.dao;
 
 import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Telefone;
-import br.ueg.openodonto.persistencia.EntityManagerIF;
+import br.ueg.openodonto.persistencia.EntityManager;
 
 public class DaoFactory {
 
@@ -20,11 +20,11 @@ public class DaoFactory {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T>EntityManagerIF<T> getDao(Class<T> modelo){
+	public <T>EntityManager<T> getDao(Class<T> modelo){
 		if(modelo.equals(Paciente.class)){
-			return (EntityManagerIF<T>)new DaoCrudPaciente();
+			return (EntityManager<T>)new DaoCrudPaciente();
 		}else if(modelo.equals(Telefone.class)){
-			return (EntityManagerIF<T>)new DaoCrudTelefone();
+			return (EntityManager<T>)new DaoCrudTelefone();
 		}else{
 			return null;
 		}

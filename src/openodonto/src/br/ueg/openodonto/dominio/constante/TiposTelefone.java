@@ -10,22 +10,12 @@ public enum TiposTelefone{
 		this.descricao = descricao;			
 	}
 	
-	public static TiposTelefone parse(int index){
-		TiposTelefone[] values = TiposTelefone.values();
-		if(index >= 0 || index < values.length){
-			return values[index];
-		}else{
-			return null;
-		}
-			
-	}
-	
 	public String getDescricao(){
 		return descricao;
 	}
 	
-	public static int format(TiposTelefone tipoTelefone){
-		return tipoTelefone.ordinal();
+	public long getCodigo(){
+		return ordinal();
 	}
 	
 	public String toString(){

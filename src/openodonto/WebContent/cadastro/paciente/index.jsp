@@ -29,7 +29,7 @@ function limparCPF(cpf){
 <jsp:include page="/cabecalho.jsp" />
 <jsp:include page="/Loading.jsp" />
 <a4j:form ajaxSubmit="true" id="formPaciente">
-<a4j:jsFunction name="popUp" actionListener="#{manterPaciente.acaoShowed}" oncomplete="exibirMensagem('#{manterPaciente.msgBundle}')"/>
+<a4j:jsFunction name="popUp" action="#{manterPaciente.acaoShowed}" oncomplete="exibirMensagem('#{manterPaciente.view.popUpMsg}')"/>
 	<h:panelGrid>
 		<rich:message id="output" for="output" style=" width : 100%;"/>
 	</h:panelGrid>	
@@ -108,13 +108,13 @@ function limparCPF(cpf){
 			<rich:spacer height="16"/>	
 			<center>			
             <h:panelGroup>
-				<a4j:commandButton id="botaoSalvar" image="/helt/salvar.png" oncomplete="if(#{manterPaciente.showPopUp}){popUp()}" actionListener="#{manterPaciente.acaoAlterar}" value="salvar" reRender="formPaciente" focus="output" />
+				<a4j:commandButton id="botaoSalvar" image="/helt/salvar.png" oncomplete="if(#{manterPaciente.view.displayPopUp}){popUp()}" action="#{manterPaciente.acaoAlterar}" value="salvar" reRender="formPaciente" focus="output" />
 				<rich:spacer width="16"/>
 				<a4j:commandButton image="/helt/pesquisar.png" id="botaoBuscar" onclick="#{rich:component('painelBuscaPaciente')}.show()" reRender="formModalPaciente"/>
 				<rich:spacer width="16"/>
-				<a4j:commandButton image="/helt/excluir.png" id="botaoExcluir"  actionListener="#{manterPaciente.acaoRemoverSim}" onclick="if(!confirm('Deseja realmente excluir o registro ?')){return false}" reRender="formPaciente" oncomplete="if(#{manterPaciente.showPopUp}){popUp()}" />
+				<a4j:commandButton image="/helt/excluir.png" id="botaoExcluir"  action="#{manterPaciente.acaoRemoverSim}" onclick="if(!confirm('Deseja realmente excluir o registro ?')){return false}" reRender="formPaciente" oncomplete="if(#{manterPaciente.view.displayPopUp}){popUp()}" />
 				<rich:spacer width="16"/>
-				<a4j:commandButton image="/helt/cancelar.png"  actionListener="#{manterPaciente.acaoAtualizar}" reRender="formPaciente" />												
+				<a4j:commandButton image="/helt/cancelar.png"  action="#{manterPaciente.acaoAtualizar}" reRender="formPaciente" />												
             </h:panelGroup>			
 			</center>
 

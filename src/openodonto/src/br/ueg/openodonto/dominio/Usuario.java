@@ -2,7 +2,7 @@ package br.ueg.openodonto.dominio;
 
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Table;
-import br.ueg.openodonto.util.PalavrasFormatadas;
+import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name="usuarios")
 public class Usuario extends Pessoa{
@@ -32,7 +32,7 @@ public class Usuario extends Pessoa{
 	}	
 	
 	public String getNomeApresentacao(){
-		return PalavrasFormatadas.formatarNome(getNome());
+		return WordFormatter.formatarNome(getNome());
 	}
 	
 }

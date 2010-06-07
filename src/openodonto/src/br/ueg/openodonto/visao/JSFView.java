@@ -113,12 +113,12 @@ public class JSFView implements ApplicationView{
 	}
 
 	@Override
-	public boolean displayMessages() {		
+	public boolean getDisplayMessages() {		
 		return show;
 	}
 
 	@Override
-	public boolean displayPopUp() {
+	public boolean getDisplayPopUp() {
 		return showPopUp;
 	}
 
@@ -127,5 +127,9 @@ public class JSFView implements ApplicationView{
 		return msgPopUp;
 	}
 
+	@Override
+	public Properties getParams() {
+		return params;
+	}
 
 }
