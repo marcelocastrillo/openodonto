@@ -4,12 +4,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
+import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 
 public class OrmResolver {
@@ -19,6 +21,21 @@ public class OrmResolver {
 	
 	public OrmResolver(Object target){
 		this.target = target;
+		inheritanceMap = new LinkedHashMap<Class<?>, Class<?>>();
+		configureInheritance();
+	}
+	
+	private void configureInheritance(){
+		Class<?> classe = target.getClass();
+		while(classe.getSuperclass() != null){
+			inheritanceMap.put(classe, classe.getSuperclass());
+			classe = classe.getSuperclass();
+		}		
+	}
+	
+	public static void main(String[] args) {
+		OrmResolver orm = new OrmResolver(new Paciente());
+		System.out.println(orm.inheritanceMap);
 	}
 	
 	public Map<String , Object> format(){
