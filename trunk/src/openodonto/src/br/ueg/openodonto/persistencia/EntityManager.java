@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @param <T>
  */
-public interface EntityManagerIF<T> {
+public interface EntityManager<T> {
 
 	void inserir(T o) throws Exception;
 

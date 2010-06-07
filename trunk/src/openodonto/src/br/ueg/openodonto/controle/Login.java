@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.ueg.openodonto.controle.exception.LoginInvalidoException;
 import br.ueg.openodonto.dominio.Usuario;
-import br.ueg.openodonto.persistencia.DaoLoginIF;
-import br.ueg.openodonto.persistencia.dao.DaoLoginIMPL;
+import br.ueg.openodonto.persistencia.LoginManager;
+import br.ueg.openodonto.persistencia.dao.DaoLogin;
 
 
 /**
@@ -21,12 +21,12 @@ import br.ueg.openodonto.persistencia.dao.DaoLoginIMPL;
 public class Login  {
 
 	private Usuario usuario;
-	private DaoLoginIF loginDao;
+	private LoginManager loginDao;
 	
 	public Login() {
 		super();
 		this.usuario = new Usuario();
-		this.loginDao = new DaoLoginIMPL();
+		this.loginDao = new DaoLogin();
 	}
 
 	

@@ -9,6 +9,7 @@ import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.EntityBase;
 import br.ueg.openodonto.persistencia.orm.Id;
+import br.ueg.openodonto.persistencia.orm.Relationship;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
@@ -27,6 +28,7 @@ public abstract class Pessoa extends EntityBase implements Serializable,Entity{
 	@Column(name="nome")
 	private String         nome;
 	 
+	@Relationship
 	private List<Telefone> telefone;
 	
 	@Column(name="endereco")

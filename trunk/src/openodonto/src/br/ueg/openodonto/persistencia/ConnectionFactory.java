@@ -33,7 +33,7 @@ public class ConnectionFactory implements Serializable {
 	public Connection getConnection() throws Exception {
 		if(this.connection == null || this.connection.isClosed()){
             Properties p = new Properties();
-            p.load(getClass().getResourceAsStream("/resources/agenda-ds.properties"));
+            p.load(getClass().getResourceAsStream("/resources/openodonto-ds.properties"));
             Class.forName(p.getProperty("driver-class"));
 			this.connection = DriverManager.getConnection(p.getProperty("connection-url") ,
                     p.getProperty("user-name") ,

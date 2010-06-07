@@ -12,8 +12,15 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 
-public class EntityBase{
+public class OrmResolver {
 
+	private Object target;
+	private Map<Class<?> , Class<?>> inheritanceMap;
+	
+	public OrmResolver(Object target){
+		this.target = target;
+	}
+	
 	public Map<String , Object> format(){
 		Map<String , Object> map = new HashMap<String, Object>();
 		List<Field> fields = getAllFields(new LinkedList<Field>(), this.getClass());

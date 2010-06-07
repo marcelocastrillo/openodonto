@@ -3,7 +3,7 @@ package br.ueg.openodonto.servico.listagens.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.ueg.openodonto.persistencia.EntityManagerIF;
+import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
 
 
@@ -19,7 +19,7 @@ public class ListaDominio<T> extends AbstractLista<T>{
 	}
 	
 	public List<T> getDominio(){
-		EntityManagerIF<T> daoDominio = DaoFactory.getInstance().getDao(getClasse());
+		EntityManager<T> daoDominio = DaoFactory.getInstance().getDao(getClasse());
 		List<T> lista = new ArrayList<T>();
 		try {
 			lista = daoDominio.listar();

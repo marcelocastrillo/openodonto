@@ -11,9 +11,9 @@ import br.ueg.openodonto.controle.context.OpenOdontoContext;
 import br.ueg.openodonto.controle.servico.ManageSearch;
 import br.ueg.openodonto.controle.validador.AbstractValidator;
 import br.ueg.openodonto.dominio.Usuario;
-import br.ueg.openodonto.persistencia.EntityManagerIF;
+import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
-import br.ueg.openodonto.util.PalavrasFormatadas;
+import br.ueg.openodonto.util.WordFormatter;
 import br.ueg.openodonto.visao.ApplicationView;
 import br.ueg.openodonto.visao.ApplicationViewFactory;
 import br.ueg.openodonto.visao.ApplicationViewFactory.ViewHandler;
@@ -27,11 +27,11 @@ import br.ueg.openodonto.visao.ApplicationViewFactory.ViewHandler;
 
 public abstract class ManageBeanGeral <T> {
 	
-	public static final String DEFAULT_RULE = "";
+	public static final String DEFAULT_RULE = null;
 
 	private T                        backBean;	
 	private Class<T>                 classe;	
-	protected EntityManagerIF<T>     dao;	
+	protected EntityManager<T>     dao;	
 	private ApplicationContext       context;	
 	private ApplicationView          view;
 	protected ResourceBundle         resourceBundle;	
@@ -66,7 +66,7 @@ public abstract class ManageBeanGeral <T> {
 	}
 	
 	public String acaoShowed(){
-		getView().showOut();
+		getView().showAction();
 		return DEFAULT_RULE;
 	}
 	
@@ -95,7 +95,7 @@ public abstract class ManageBeanGeral <T> {
 			else
 				continue;
 			if(!campoParaFormatar.isEmpty()){
-				String atributoFormatado = PalavrasFormatadas.clear(PalavrasFormatadas.remover(campoParaFormatar)).toUpperCase(); 
+				String atributoFormatado = WordFormatter.clear(WordFormatter.remover(campoParaFormatar)).toUpperCase(); 
 				PropertyUtils.setNestedProperty(getBackBean(), path, atributoFormatado);
 			}
 		}

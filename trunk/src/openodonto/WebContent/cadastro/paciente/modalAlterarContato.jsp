@@ -3,6 +3,7 @@
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
 <%@ taglib uri="http://richfaces.org/a4j" prefix="a4j"%>
 <%@ taglib uri="http://richfaces.org/rich" prefix="rich"%>
+<%@ taglib prefix="t"  uri="http://myfaces.apache.org/tomahawk"%>
 
 
 	<rich:modalPanel id="painelAlterarTelefone" autosized="true" width="300" height="100" >
@@ -17,7 +18,7 @@
 					<h:panelGrid columns="1">
 						<h:outputLabel value="Tipo telefone" for="tipoTelefonePainel" />
 						 <h:selectOneMenu id="tipoTelefonePainel" value="#{manterPaciente.manageTelefone.telefone.tipoTelefone}"  converter="simpleEntityConverter">
-							<f:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].dominio}" />
+							<t:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].dominio}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
 						</h:selectOneMenu>
 					</h:panelGrid>
 					<h:panelGrid columns="1">
@@ -25,11 +26,10 @@
 						<h:inputText id="numeroTelefonePainel" value="#{manterPaciente.manageTelefone.telefone.numero}" />
 					</h:panelGrid>
 					<h:panelGrid columns="3">
-						<a4j:commandButton id="btnAlterar" actionListener="#{manterPaciente.manageTelefone.acaoAlterarTelefone}" reRender="listaTelefones" value="Alterar" oncomplete="#{rich:component('painelAlterarTelefone')}.hide();return false" />
-						<a4j:commandButton id="btnCancelar" actionListener="#{manterPaciente.manageTelefone.acaoAlterarTelefone}"  value="Cancelar"></a4j:commandButton>
+						<a4j:commandButton id="btnAlterar" action="#{manterPaciente.manageTelefone.acaoAlterarTelefone}" reRender="listaTelefones" value="Alterar" oncomplete="#{rich:component('painelAlterarTelefone')}.hide();return false" />
+						<a4j:commandButton id="btnCancelar" onclick="#{rich:component('painelAlterarTelefone')}..hide()" value="Cancelar"></a4j:commandButton>
 					</h:panelGrid>
 				</h:panelGrid>
-				<rich:componentControl for="painelAlterarTelefone" attachTo="btnCancelar" event="onclick" operation="hide" />
 			</rich:panel>
 			</a4j:form>
 			

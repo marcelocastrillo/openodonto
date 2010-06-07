@@ -32,7 +32,8 @@ public class ManageTelefone {
 				this.getTelefone().getNumero() == null ||
 				this.getTelefone().getNumero().isEmpty() ||
 				this.getTelefone().getTipoTelefone() == null){
-			this.backBean.getView().addLocalDynamicMenssage("Preencha o campo para adicionar.", "saidaContato", true);
+			this.backBean.getView().addResourceDynamicMenssage("Preencha o campo para adicionar.",
+					this.backBean.getView().getParams().getProperty("saidaContato"));
 			return DEFAULT_RULE;
 		}
 		getTelefones().add(this.getTelefone());

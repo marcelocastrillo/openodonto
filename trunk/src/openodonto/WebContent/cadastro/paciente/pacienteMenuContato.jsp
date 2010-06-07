@@ -23,9 +23,9 @@
 			<h:panelGrid columns="1">
 				<rich:spacer height="8"></rich:spacer>
 				<h:panelGrid columns="3">
-					<a4j:commandButton actionListener="#{manterPaciente.manageTelefone.acaoInserirTelefone}" image="/helt/add.jpg" reRender="listaTelefones,gridAddTel" value="Inserir" />
+					<a4j:commandButton action="#{manterPaciente.manageTelefone.acaoInserirTelefone}" image="/helt/add.jpg" reRender="listaTelefones,gridAddTel" value="Inserir" />
 					<rich:spacer width="16"/>
-					<rich:message id="messageTelefone" for="messageTelefone" style=" width : 120px;font-weight:bold; font-size:10;color:red"/>
+					<rich:message id="messageTelefone" for="messageTelefone" style=" width : 120px;font-weight:bold; font-size:12;color:red"/>
 				</h:panelGrid>
 			</h:panelGrid>
 		</h:panelGrid>
@@ -57,7 +57,7 @@
 							<h:outputText value="Alterar" />
 						</f:facet>
 						<center>
-						<a4j:commandButton value="Alterar" id="alterarTelefone" actionListener="#{manterPaciente.manageTelefone.acaoCarregarTelefone}"  oncomplete="#{rich:component('painelAlterarTelefone')}.show();" reRender="formAlterarTelefone" image="/helt/edit-19x19.jpg">
+						<a4j:commandButton value="Alterar" id="alterarTelefone" action="#{manterPaciente.manageTelefone.acaoCarregarTelefone}"  oncomplete="#{rich:component('painelAlterarTelefone')}.show();" reRender="formAlterarTelefone" image="/helt/edit-19x19.jpg">
 							<f:param name="index" id="indexAlterar" value="#{index}"/>
 						</a4j:commandButton>
 						</center>						
@@ -67,7 +67,7 @@
 							<h:outputText value="Remover" />
 						</f:facet>
 						<center>
-							<a4j:commandButton value="Excluir" actionListener="#{manterPaciente.manageTelefone.acaoRemoverTelefone}" reRender="listaTelefones" image="/helt/minus.jpg">
+							<a4j:commandButton value="Excluir" action="#{manterPaciente.manageTelefone.acaoRemoverTelefone}" reRender="listaTelefones" image="/helt/minus.jpg">
 								<f:param name="index" id="indexRemover" value="#{index}"/>
 							</a4j:commandButton>
 						</center>

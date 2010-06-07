@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class Memento {
+public class MementoBuilder {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T deepClone(T objeto){

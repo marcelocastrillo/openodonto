@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.dominio.Telefone;
-import br.ueg.openodonto.persistencia.EntityManagerIF;
-import br.ueg.openodonto.util.Memento;
+import br.ueg.openodonto.persistencia.EntityManager;
+import br.ueg.openodonto.util.MementoBuilder;
 
-public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManagerIF<Telefone> {
+public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManager<Telefone> {
 
 	private static final long serialVersionUID = -8028356632411640718L;
 
@@ -82,15 +82,15 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManagerI
 				params.put("id", o.getCodigo());
 				super.executeUpdate(o, params);
 				managed = o;
-				cachedSession.put(managed , Memento.deepClone(managed));
+				cachedSession.put(managed , MementoBuilder.deepClone(managed));
 			}catch(Exception ex){
 				ex.printStackTrace();
 				if(save != null){
 					getConnection().rollback(save);
 				}
-			}finally{
-				getConnection().setAutoCommit(true);
+				throw ex;
 			}
+			getConnection().setAutoCommit(true);
 		}else if(o != null){
 			inserir(o);
 		}
@@ -162,15 +162,15 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManagerI
 				Map<String, Object> generated = super.executeInsert(o);
 				o.setCodigo((Long) generated.values().iterator().next());
 				managed = o;
-				cachedSession.put(managed, Memento.deepClone(managed));
+				cachedSession.put(managed, MementoBuilder.deepClone(managed));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				if (save != null) {
 					getConnection().rollback(save);
 				}
-			} finally {
-				getConnection().setAutoCommit(true);
+				throw ex;
 			}
+			getConnection().setAutoCommit(true);
 		}
 	}
 
@@ -250,9 +250,9 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManagerI
 			if(save != null){
 				getConnection().rollback(save);
 			}
-		}finally{
-			getConnection().setAutoCommit(true);
+			throw ex;
 		}
+		getConnection().setAutoCommit(true);
 	}
 	
 

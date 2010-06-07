@@ -3,7 +3,7 @@
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
 <%@ taglib prefix="rich" uri="http://richfaces.org/rich"%>
 <%@ taglib prefix="a4j" uri="http://richfaces.org/a4j"%>
-<%@ taglib uri="http://richfaces.org/rich" prefix="rich"%>
+<%@ taglib prefix="t"  uri="http://myfaces.apache.org/tomahawk"%>
 
 
 <center>
