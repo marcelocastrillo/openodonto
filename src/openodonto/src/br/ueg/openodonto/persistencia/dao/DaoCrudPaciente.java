@@ -47,10 +47,9 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		storedQuerysMap.put("Paciente.BuscaByCPF","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE pc.cpf = ?");
 		storedQuerysMap.put("Paciente.BuscaByEmail","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE ps.email = ?");
 	}
-	
-	@Override
-	protected String getTableName() {
-		return "pacientes";
+
+	public DaoCrudPaciente() {
+		super(Paciente.class);
 	}
 	
 	protected Paciente parseEntry(ResultSet rs) throws SQLException{

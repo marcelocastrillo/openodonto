@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.util.MementoBuilder;
@@ -23,11 +24,20 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManager<
 	
 	private Telefone                         managed;
 	
+	public static void main(String[] args) {
+		DaoCrudPaciente dao = new DaoCrudPaciente();
+		System.out.println(dao.getSelectRoot(new Paciente(), "*"));
+	}
+	
 	static{		
 		storedQuerysMap = new HashMap<String, String>();
 		cachedSession = new HashMap<Telefone, Telefone>();
 		initQuerymap();
 		
+	}
+	
+	public DaoCrudTelefone() {
+		super(Telefone.class);
 	}
 	
 	private static void initQuerymap(){
@@ -37,36 +47,16 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManager<
 	
 	@Override
 	protected Map<String, Object> format(Telefone entry) {
-		/*
-		Map<String, Object> format = new LinkedHashMap<String, Object>();  // TEM QUE SER UM LINKEDHASHMAP pois a ordem importa
-		//format.put("id", entry.getCodigo());
-		format.put("ddd", entry.getDdd());
-		format.put("numero", entry.getNumero());
-		format.put("tipo", TiposTelefone.format(entry.getTipoTelefone()));
-		format.put("id_pessoa" , entry.getId_pessoa());
-		*/
 		return entry.format();
 	}
 
 	protected Telefone parseEntry(ResultSet rs) throws SQLException{
 		Telefone telefone = new Telefone();
-		/*
-		telefone.setCodigo(rs.getLong("id"));
-		telefone.setId_pessoa(rs.getLong("id_pessoa"));
-		telefone.setDdd(rs.getString("ddd"));
-		telefone.setNumero(rs.getString("numero"));
-		telefone.setTipoTelefone(TiposTelefone.parse(rs.getInt("tipo")));
-		*/		
 		telefone.parse(super.formatResultSet(rs));
 		return telefone;
 		
 	}
 	
-	@Override
-	protected String getTableName() {
-		return "telefones";
-	}
-
 	@Override
 	public void alterar(Telefone o) throws Exception {		
 		if(o != null && o.getCodigo() != null &&  pesquisar(o.getCodigo()) != null){

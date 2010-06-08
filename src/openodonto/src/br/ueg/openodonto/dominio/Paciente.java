@@ -1,7 +1,6 @@
 package br.ueg.openodonto.dominio;
 
 import java.sql.Date;
-import java.util.Arrays;
 
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
@@ -14,14 +13,6 @@ public class Paciente extends Pessoa{
 
 	private static final long serialVersionUID = -8543328508793753975L;
 
-	public static void main(String[] args) throws Exception {
-		Paciente paciente = new Paciente();
-		paciente.setCidade("Goiania");
-		paciente.setCpf("02549287142");
-		paciente.setEmail("viiniiciius@gmail.com");
-		System.out.println(Arrays.asList(paciente.getClass().getSuperclass().getDeclaredFields()));
-	}
-	
 	@Column(name="cpf")
 	private String      cpf;	
 	
