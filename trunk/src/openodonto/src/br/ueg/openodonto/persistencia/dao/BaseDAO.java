@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -20,6 +21,14 @@ import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.persistencia.ConnectionFactory;
+import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.Entity;
+import br.ueg.openodonto.persistencia.orm.ForwardKey;
+import br.ueg.openodonto.persistencia.orm.Inheritance;
+import br.ueg.openodonto.persistencia.orm.MaskResolver;
+import br.ueg.openodonto.persistencia.orm.OrmResolver;
+import br.ueg.openodonto.persistencia.orm.ResultMask;
+import br.ueg.openodonto.persistencia.orm.Table;
 
 
 /**
@@ -27,18 +36,63 @@ import br.ueg.openodonto.persistencia.ConnectionFactory;
  * @author Vinicius
  */
 
-public abstract class BaseDAO<T> implements Serializable {
+public abstract class BaseDAO<T extends Entity> implements Serializable {
 
     private static final long serialVersionUID = 186038189036166890L;
     
-    private String listQuery;
+    private Class<T> classe;
     
-    public BaseDAO() {
+    public BaseDAO(Class<T> classe) {
+    	this.classe = classe;
     	init();
 	}
 
     private void init(){
-    	listQuery = "SELECT * FROM " + getTableName();
+    }
+    
+    public String getSelectRoot(Entity entity,String... fields){
+    	StringBuilder stb = new StringBuilder();
+    	stb.append("SELECT ");
+    	Iterator<String> iterator = null;
+    	if((fields.length == 1) && (fields[0].equals("*"))){
+    		
+    		
+    		iterator = entity.format().keySet().iterator();
+    	}else{
+    		iterator = Arrays.asList(fields).iterator();
+    	}
+		while(iterator.hasNext()){
+			stb.append(iterator.next());
+			if(iterator.hasNext()){
+				stb.append(",");
+			}
+		}
+		stb.append(" FROM ");
+		stb.append(getTableName());
+		stb.append(" ");
+		if(classe.isAnnotationPresent(Inheritance.class)){
+			stb.append(getFromJoin());
+		}
+    	return stb.toString();
+    }
+    
+    public String getFromJoin(){
+    	StringBuilder stb = new StringBuilder();
+    	Class<?> type = classe;
+    	Class<?> superType = classe.getSuperclass();
+    	String typeColumnName = getTableName();
+    	String superTypeColumnName = superType.getAnnotation(Table.class).name();
+    	stb.append("LEFT JOIN ");
+    	stb.append(superTypeColumnName);
+    	stb.append(" ");
+    	for(ForwardKey fk : type.getAnnotation(Inheritance.class).joinFields()){
+    		stb.append("ON ");
+    		stb.append(typeColumnName).append(".").append(fk.tableField());
+    		stb.append(" = ");
+    		stb.append(superTypeColumnName).append(".").append(fk.foreginField());
+			stb.append(" ");
+    	}
+    	return stb.toString();
     }
     
 	public ConnectionFactory getConnectionFactory() {
@@ -162,7 +216,7 @@ public abstract class BaseDAO<T> implements Serializable {
 	
 	@SuppressWarnings("unchecked")
 	public ResultSet list() throws Exception{
-		return executeQuery(this.listQuery, Collections.EMPTY_LIST);
+		return executeQuery(getSelectRoot(null, "*"), Collections.EMPTY_LIST);
 	}
 	
 	public Map<String, Object> formatResultSet(ResultSet rs) throws SQLException{
@@ -229,7 +283,9 @@ public abstract class BaseDAO<T> implements Serializable {
 		execute(query.toString(), params.toArray());
 	}
 	
-	protected abstract String getTableName();
+	public String getTableName(){
+		return classe.getAnnotation(Table.class).name();
+	}
 	
 	protected abstract Map<String , Object> format(T entry);
 	
