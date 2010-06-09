@@ -2,7 +2,6 @@ package br.ueg.openodonto.persistencia.orm;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -53,12 +52,9 @@ public class OrmResolver {
 			if (field.isAnnotationPresent(Relationship.class)) {
 				//TODO tratar relacionamentos
 			} else {
-				Column column;
-				if ((column = field.getAnnotation(Column.class)) != null) {
-					map.put(column.name(), getBeanValue(field));
-				} else if (!Modifier.isFinal(field.getModifiers())
-						&& !Modifier.isStatic(field.getModifiers())) {
-					map.put(field.getName(), getBeanValue(field));
+				String column = translator.getColumn(field);
+				if(column != null){
+				    map.put(column , getBeanValue(field));
 				}
 			}
 		}
@@ -79,7 +75,7 @@ public class OrmResolver {
 		return disjoinMap;
 	}
 	
-	public List<Field> getAllFields(List<Field> fields, Class<?> type, boolean deep) {
+	public static List<Field> getAllFields(List<Field> fields, Class<?> type, boolean deep) {
 	    for (Field field: type.getDeclaredFields()) {
 	        fields.add(field);
 	    }
@@ -95,28 +91,15 @@ public class OrmResolver {
 	
 	public void parse(Map<String , Object> values,Class<?> classe){
 		List<Field> fields = getAllFields(new LinkedList<Field>(), classe.getClass(),true);
+		OrmTranslator translator = new OrmTranslator(fields);
 		for(String column : values.keySet()){
-			Field field = findFieldByAnnotation(column, fields);
+			Field field = translator.getField(column);
 			if(field.isAnnotationPresent(Relationship.class)){
 			    //TODO tratar relacionamentos
 			}else{
 			    setBeanValue(field, values.get(column));
 			}
 		}
-	}
-	
-	public Field findFieldByAnnotation(String column,List<Field> fields){
-		for(Field field : fields){
-			Column colAnott;
-			if((colAnott = field.getAnnotation(Column.class)) != null){
-				if(colAnott.name().equals(column)){
-					return field;
-				}
-			}else if(field.getName().equals(column)){
-				return field;
-			}
-		}
-		return null;
 	}
 	
 	private void setBeanValue(Field field , Object value){
