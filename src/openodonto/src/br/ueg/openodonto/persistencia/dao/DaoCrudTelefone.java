@@ -9,7 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.util.MementoBuilder;
@@ -25,8 +24,8 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManager<
 	private Telefone                         managed;
 	
 	public static void main(String[] args) {
-		DaoCrudPaciente dao = new DaoCrudPaciente();
-		System.out.println(dao.getSelectRoot(new Paciente(), "*"));
+		DaoCrudTelefone dao = new DaoCrudTelefone();
+		System.out.println(dao.getSelectRoot("ddd", "numero"));
 	}
 	
 	static{		
@@ -50,6 +49,7 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManager<
 		return entry.format();
 	}
 
+	@Override
 	protected Telefone parseEntry(ResultSet rs) throws SQLException{
 		Telefone telefone = new Telefone();
 		telefone.parse(super.formatResultSet(rs));

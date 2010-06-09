@@ -6,27 +6,28 @@
 package br.ueg.openodonto.persistencia.dao;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.persistencia.ConnectionFactory;
-import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Inheritance;
 import br.ueg.openodonto.persistencia.orm.MaskResolver;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
+import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.persistencia.orm.ResultMask;
 import br.ueg.openodonto.persistencia.orm.Table;
 
@@ -41,6 +42,8 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
     private static final long serialVersionUID = 186038189036166890L;
     
     private Class<T> classe;
+    //private String   listAllQuery;
+    //private String   findByKeyQuery;
     
     public BaseDAO(Class<T> classe) {
     	this.classe = classe;
@@ -50,17 +53,19 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
     private void init(){
     }
     
-    public String getSelectRoot(Entity entity,String... fields){
+    public String getSelectRoot(String... fields){
     	StringBuilder stb = new StringBuilder();
     	stb.append("SELECT ");
-    	Iterator<String> iterator = null;
+    	OrmTranslator translator = null;
     	if((fields.length == 1) && (fields[0].equals("*"))){
-    		
-    		
-    		iterator = entity.format().keySet().iterator();
+    		List<Field> allFields = OrmResolver.getAllFields(new LinkedList<Field>(), classe, true);
+    		translator = new OrmTranslator(allFields);
+
     	}else{
-    		iterator = Arrays.asList(fields).iterator();
-    	}
+    		ResultMask mask = new MaskResolver(classe, fields);
+    		translator = new OrmTranslator(mask.getResultMask());
+    	}		
+		Iterator<String> iterator = translator.getColumnsMap().keySet().iterator();
 		while(iterator.hasNext()){
 			stb.append(iterator.next());
 			if(iterator.hasNext()){

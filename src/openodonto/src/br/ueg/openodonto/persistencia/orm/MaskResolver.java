@@ -9,48 +9,44 @@ import java.util.List;
 
 public class MaskResolver implements ResultMask{
 
-	private OrmResolver    ormResolver;
+	private Class<?>       classe;
 	private List<String>   fields;
 	
-	public MaskResolver(OrmResolver ormResolver,String... fields){
-		this.ormResolver = ormResolver;
+	public MaskResolver(Class<?> classe,String... fields){
+		this.classe = classe;
 		this.fields = Arrays.asList(fields);
+	}
+	
+	public MaskResolver(Class<?> classe,List<String> fields){
+		this.classe = classe;
+		this.fields = fields;
 	}
 	
 	@Override
 	public List<Field> getResultMask() {
-		List<Field> list = ormResolver.getAllFields(new LinkedList<Field>(),ormResolver.getTarget().getClass() ,true);
+		List<Field> list = OrmResolver.getAllFields(new LinkedList<Field>(),classe ,true);
 		return filterFields(list);
 	}
 
 	@Override
 	public List<Field> getResultMask(Class<?> classe) {
-		List<Field> list = ormResolver.getAllFields(new LinkedList<Field>(),classe ,false);
+		List<Field> list = OrmResolver.getAllFields(new LinkedList<Field>(),classe ,false);
 		return filterFields(list);
 	}
 	
 	public List<Field> filterFields(List<Field> list) {
-		List<Integer> remove = new ArrayList<Integer>();
+		List<Field> remove = new ArrayList<Field>();
 		Iterator<Field> iterator = list.iterator();
 		while(iterator.hasNext()){
 			Field field = iterator.next();
-			if(!contains(field)){
-				remove.add(list.indexOf(field));
+			if(!fields.contains(field.getName())){
+				remove.add(field);
 			}
 		}
-		for(Integer index : remove){
-			list.remove(index);
+		for(Field field : remove){
+			list.remove(field);
 		}
 		return list;
-	}
-	
-	private boolean contains(Field field){
-		for(String name : fields){
-			if(field.getName().equals(name)){
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public List<String> getFields() {

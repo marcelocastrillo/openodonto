@@ -19,7 +19,7 @@ public class Paciente extends Pessoa{
 	@Column(name="data_inicio_tratamento")
 	private Date        dataInicioTratamento;
 	
-	@Column(name="data_termino_treinamento")
+	@Column(name="data_termino_tratamento")
 	private Date        dataTerminoTratamento;
 	
 	@Column(name="data_retorno")
