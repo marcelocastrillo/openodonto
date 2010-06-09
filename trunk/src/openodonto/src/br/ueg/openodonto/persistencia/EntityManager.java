@@ -1,42 +1,29 @@
 package br.ueg.openodonto.persistencia;
 
 import java.util.List;
-import java.util.Map;
+
+import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
+import br.ueg.openodonto.persistencia.orm.Entity;
 
 /**
  * @author vinicius.rodrigues
  *
  * @param <T>
  */
-public interface EntityManager<T> {
+public interface EntityManager<T extends  Entity> {
 
 	void inserir(T o) throws Exception;
 
 	void alterar(T o) throws Exception;
 
-	List<T> executarQuery(String nomeQuery, String nomeParametrro,
-			Object valorParametro) throws Exception;
-
-	List<T> executarQuery(String nomeQuery, String nomeParametrro,
-			Object valorParametro, Integer quant) throws Exception;
-
-	public List<T> executarQuery(String nomeQuery, Map<String, Object> params);
-
-	public List<T> executarQuery(String nomeQuery, Map<String, Object> params,
-			Integer quant);
-
 	void remover(T o) throws Exception;
 
-	List<T> listar(Object o) throws Exception;
-	
-	List<T> listar();
+    List<T> listar();
 	
 	T pesquisar(Object key);
 	
-	T getEntityBean();
-	
-	boolean contem(T entity);
-	
+	SqlExecutor<T> getSqlExecutor();
+
 	void closeConnection();
 
 }

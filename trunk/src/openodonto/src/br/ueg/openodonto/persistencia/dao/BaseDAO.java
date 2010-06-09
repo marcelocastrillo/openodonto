@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package br.ueg.openodonto.persistencia.dao;
 
@@ -15,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -40,6 +37,11 @@ import br.ueg.openodonto.persistencia.orm.Table;
 public abstract class BaseDAO<T extends Entity> implements Serializable {
 
     private static final long serialVersionUID = 186038189036166890L;
+    private static Map<String , String>      storedQuerysMap;
+    
+    static{
+    	storedQuerysMap = new HashMap<String, String>();
+    }
     
     private Class<T> classe;
     //private String   listAllQuery;
@@ -284,16 +286,24 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 					query.append(", ");
 				}
 	    	}
-		}	
+		}
 		execute(query.toString(), params.toArray());
 	}
 	
 	public String getTableName(){
 		return classe.getAnnotation(Table.class).name();
+	}	
+	
+	public static Map<String, String> getStoredQuerysMap() {
+		return storedQuerysMap;
+	}
+
+	public static void setStoredQuerysMap(Map<String, String> storedQuerysMap) {
+		BaseDAO.storedQuerysMap = storedQuerysMap;
 	}
 	
-	protected abstract Map<String , Object> format(T entry);
+	public abstract Map<String , Object> format(T entry);
 	
-	protected abstract T parseEntry(ResultSet rs) throws SQLException;
+	public abstract T parseEntry(ResultSet rs) throws SQLException;
 
 }

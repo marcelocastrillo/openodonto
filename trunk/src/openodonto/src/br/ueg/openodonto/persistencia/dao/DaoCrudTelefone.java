@@ -45,12 +45,12 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManager<
 	}
 	
 	@Override
-	protected Map<String, Object> format(Telefone entry) {
+	public Map<String, Object> format(Telefone entry) {
 		return entry.format();
 	}
 
 	@Override
-	protected Telefone parseEntry(ResultSet rs) throws SQLException{
+	public Telefone parseEntry(ResultSet rs) throws SQLException{
 		Telefone telefone = new Telefone();
 		telefone.parse(super.formatResultSet(rs));
 		return telefone;
