@@ -20,84 +20,42 @@ import br.ueg.openodonto.util.MementoBuilder;
 @SuppressWarnings("serial")
 public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<Paciente> {
 
-	private static Map<String , String>      storedQuerysMap;
-	
-	private static Map<Paciente, Paciente>   cachedSession;
-	
-	private Paciente                         managed;
+    private Paciente                         managed;
 
-	static{
-		storedQuerysMap = new HashMap<String, String>();
-		cachedSession = new HashMap<Paciente, Paciente>();
+	static{		
 		initQueryMap();
 	}
 	
-	private static void initQueryMap(){
-		storedQuerysMap.put("findByKey","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE ps.`id` = ?");
-		storedQuerysMap.put("removePessoa","DELETE FROM pessoas WHERE id = ?");
-		storedQuerysMap.put("removePaciente","DELETE FROM pacientes WHERE id_pessoa =  ?");
-		storedQuerysMap.put("insertPessoa","INSERT INTO pessoas (email, nome, endereco , estado, cidade) VALUES (? , ?, ?, ? , ? )");
-		storedQuerysMap.put("insertPaciente","INSERT INTO pacientes (id_pessoa,cpf ,data_inicio_tratamento ,data_termino_tratamento,data_retorno, data_nascimento, responsavel, referencia, observacao ) VALUES (? , ?, ?, ?, ?, ?, ?, ? , ?)");
-		storedQuerysMap.put("updatePessoa","UPDATE pessoas SET email = ? , nome = ? , endereco = ? , estado = ? , cidade = ? WHERE id = ?");
-		storedQuerysMap.put("updatePaciente","UPDATE pacientes SET cpf = ? ,data_inicio_tratamento = ? ,data_termino_tratamento = ?,data_retorno = ?, data_nascimento = ?, responsavel = ?, referencia = ?, observacao = ? WHERE id_pessoa = ?");
-		storedQuerysMap.put("listAll","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id");
+	public static void initQueryMap(){
+		BaseDAO.getStoredQuerysMap().put("Paciente.findByKey","WHERE ps.`id` = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.removePessoa","DELETE FROM pessoas WHERE id = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.removePaciente","DELETE FROM pacientes WHERE id_pessoa =  ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.insertPessoa","INSERT INTO pessoas (email, nome, endereco , estado, cidade) VALUES (? , ?, ?, ? , ? )");
+		BaseDAO.getStoredQuerysMap().put("Paciente.insertPaciente","INSERT INTO pacientes (id_pessoa,cpf ,data_inicio_tratamento ,data_termino_tratamento,data_retorno, data_nascimento, responsavel, referencia, observacao ) VALUES (? , ?, ?, ?, ?, ?, ?, ? , ?)");
+		BaseDAO.getStoredQuerysMap().put("Paciente.updatePessoa","UPDATE pessoas SET email = ? , nome = ? , endereco = ? , estado = ? , cidade = ? WHERE id = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.updatePaciente","UPDATE pacientes SET cpf = ? ,data_inicio_tratamento = ? ,data_termino_tratamento = ?,data_retorno = ?, data_nascimento = ?, responsavel = ?, referencia = ?, observacao = ? WHERE id_pessoa = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.listAll","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id");
 		
-		storedQuerysMap.put("Paciente.BuscaByNome","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE ps.nome LIKE ?");
-		storedQuerysMap.put("Paciente.BuscaByCodigo","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE ps.id = ?");
-		storedQuerysMap.put("Paciente.BuscaByCPF","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE pc.cpf = ?");
-		storedQuerysMap.put("Paciente.BuscaByEmail","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id WHERE ps.email = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE ps.nome LIKE ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCodigo","WHERE ps.id = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCPF","WHERE pc.cpf = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByEmail","WHERE ps.email = ?");
 	}
 
 	public DaoCrudPaciente() {
 		super(Paciente.class);
 	}
 	
-	protected Paciente parseEntry(ResultSet rs) throws SQLException{
+	public Paciente parseEntry(ResultSet rs) throws SQLException{
 		Paciente paciente = new Paciente();
-		paciente.setCidade(rs.getString("cidade"));
-		paciente.setCodigo(rs.getLong("id"));
-		paciente.setCpf(rs.getString("cpf"));
-		paciente.setDataInicioTratamento(rs.getDate("data_inicio_tratamento"));
-		paciente.setDataNascimento(rs.getDate("data_nascimento"));
-		paciente.setDataRetorno(rs.getDate("data_retorno"));
-		paciente.setDataTerminoTratamento(rs.getDate("data_termino_tratamento"));
-		paciente.setEmail(rs.getString("email"));
-		paciente.setEndereco(rs.getString("endereco"));
-		paciente.setEstado(TiposUF.parse(rs.getInt("estado")));
-		paciente.setNome(rs.getString("nome"));
-		paciente.setObservacao(rs.getString("observacao"));
-		paciente.setReferencia(rs.getString("referencia"));
-		paciente.setResponsavel(rs.getString("responsavel"));
+		paciente.parse(formatResultSet(rs));
 		return paciente; 
 	}
 	
-	protected Map<String , Object> format(Paciente paciente){
-		Map<String, Object> format = new LinkedHashMap<String, Object>();  // TEM QUE SER UM LINKEDHASHMAP pois a ordem importa
-		format.put("cidade", paciente.getCidade());
-		format.put("id", paciente.getCodigo());
-		format.put("cpf", paciente.getCpf());
-		format.put("data_inicio_tratamento", paciente.getDataInicioTratamento());
-		format.put("data_nascimento", paciente.getDataNascimento());
-		format.put("data_retorno", paciente.getDataRetorno());
-		format.put("data_termino_tratamento", paciente.getDataTerminoTratamento());
-		format.put("email", paciente.getEmail());
-		format.put("endereco", paciente.getEndereco());
-		format.put("estado",paciente.getEstado() != null ? paciente.getEstado().ordinal() : null);
-		format.put("nome", paciente.getNome());
-		format.put("observacao", paciente.getObservacao());
-		format.put("referencia", paciente.getReferencia());
-		format.put("responsavel", paciente.getResponsavel());
-		return format;
+	public Map<String , Object> format(Paciente paciente){
+		return paciente.format();
 	}
-	
-	public static void main(String[] args) {
-		Paciente paciente = new Paciente();
-		paciente.setCodigo(5L);
-		paciente.setCpf("02594287142");
-		Pessoa pessoa = (Pessoa)paciente;
-		System.out.println(pessoa.format());
-	}
-	
+
 	@Override
 	public void alterar(Paciente o) throws Exception {
 		if(o != null && o.getCodigo() != null &&  pesquisar(o.getCodigo()) != null){
@@ -265,6 +223,27 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		getConnection().setAutoCommit(true);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Paciente> listar() {
+		List<Paciente> pList = new ArrayList<Paciente>();
+		try{
+			getConnection().setReadOnly(true);
+			ResultSet rs = super.executeQuery(
+					DaoCrudPaciente.storedQuerysMap.get("listAll"),
+					Collections.EMPTY_LIST);
+			getConnection().setReadOnly(false);
+			while(rs.next()) {
+				Paciente paciente = this.parseEntry(rs);
+				paciente.setTelefone(getTelefonesFromCliente(paciente.getCodigo()));
+				pList.add(paciente);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pList;
+	}
+	
 	@Override
 	public List<Paciente> listar(Object key) throws Exception {		
 		List<Paciente> pList = new ArrayList<Paciente>();
@@ -282,27 +261,6 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 				paciente.setTelefone(getTelefonesFromCliente(paciente.getCodigo()));
 				pList.add(paciente);
 			}			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return pList;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Paciente> listar() {
-		List<Paciente> pList = new ArrayList<Paciente>();
-		try{
-			getConnection().setReadOnly(true);
-			ResultSet rs = super.executeQuery(
-					DaoCrudPaciente.storedQuerysMap.get("listAll"),
-					Collections.EMPTY_LIST);
-			getConnection().setReadOnly(false);
-			while(rs.next()) {
-				Paciente paciente = this.parseEntry(rs);
-				paciente.setTelefone(getTelefonesFromCliente(paciente.getCodigo()));
-				pList.add(paciente);
-			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
