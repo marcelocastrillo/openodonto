@@ -1,6 +1,8 @@
 package br.ueg.openodonto.dominio;
 
 import java.sql.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
@@ -12,7 +14,7 @@ import br.ueg.openodonto.persistencia.orm.Table;
 public class Paciente extends Pessoa{
 
 	private static final long serialVersionUID = -8543328508793753975L;
-
+	
 	@Column(name="cpf")
 	private String      cpf;	
 	

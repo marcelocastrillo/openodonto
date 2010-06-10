@@ -8,8 +8,8 @@ public class OrmFormat{
 	
 	private OrmResolver ormResolver;
 	
-	public OrmFormat() {
-		this.ormResolver = new OrmResolver(this);
+	public OrmFormat(Object target) {
+		this.ormResolver = new OrmResolver(target);
 	}
 
 	public Map<String , Object> format(){

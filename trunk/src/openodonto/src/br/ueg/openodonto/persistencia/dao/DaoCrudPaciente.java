@@ -17,6 +17,7 @@ import br.ueg.openodonto.dominio.constante.TiposUF;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.util.MementoBuilder;
 
 @SuppressWarnings("serial")
@@ -26,6 +27,33 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 	
 	static{		
 		initQueryMap();
+	}
+	
+	public static void main(String[] args) {
+		
+		DaoCrudTelefone daoCrudTelefone = new DaoCrudTelefone();
+		Telefone telefnoe = new Telefone();
+		try {
+			daoCrudTelefone.insert(telefnoe);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		DaoCrudPaciente dao = new DaoCrudPaciente();
+		Paciente paciente = new Paciente();
+		paciente.setCidade("Goiania");
+		paciente.setCpf("02549287142");
+		paciente.setDataInicioTratamento(new java.sql.Date(System.currentTimeMillis()));
+		paciente.setEmail("viiniiciius@gmail.com");
+		paciente.setEndereco("Av C-162");
+		paciente.setEstado(TiposUF.GO);
+		paciente.setNome("Vinicius Gardenio Guimaraes Rodrigues");
+		paciente.setTelefone(new ArrayList<Telefone>());
+		try {
+			dao.insert(paciente);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void initQueryMap(){
@@ -49,15 +77,10 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		sqlExecutor = new QueryExecutor<Paciente>(this);
 	}
 	
-	public Paciente parseEntry(ResultSet rs) throws SQLException{
-		Paciente paciente = new Paciente();
-		paciente.parse(formatResultSet(rs));
-		return paciente; 
-	}
-	
-	public Map<String , Object> format(Paciente paciente){
-		return paciente.format();
-	}
+	@Override
+    public Paciente getNewEntity(){
+    	return new Paciente();
+    }
 
 	@Override
 	public void alterar(Paciente o) throws Exception {
@@ -69,7 +92,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 				}
 				getConnection().setAutoCommit(false);
 				save = getConnection().setSavepoint("Before Update Paciente - Savepoint");
-				Map<String , Object> paramsMap = format(o);
+				Map<String , Object> paramsMap = null;//format(o); TODO Arrumar aqui
 				Object[] pessoaParams = {paramsMap.get("email"),
 						paramsMap.get("nome"),
 						paramsMap.get("endereco"),
@@ -121,7 +144,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		Map<String , Object> paramsTel = new HashMap<String, Object>();
 		paramsTel.put("id_pessoa", id);
 		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-		telefones.addAll(entityManagerTelefone.executarQuery("findByPessoa", paramsTel));
+		//telefones.addAll(entityManagerTelefone.executarQuery("findByPessoa", paramsTel));TODO Arrumar aqui
 		return telefones;
 	}
 
@@ -135,13 +158,13 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 			}
 			getConnection().setAutoCommit(false);
 			save = getConnection().setSavepoint("Before Insert Paciente - Savepoint"); 
-			Map<String , Object> paramsMap = format(o);
+			Map<String , Object> paramsMap = null;//format(o);TODO Arrumar aqui
 			Object[] pessoaParams = {paramsMap.get("email"),
 					paramsMap.get("nome"),
 					paramsMap.get("endereco"),
 					paramsMap.get("estado"),
 					paramsMap.get("cidade")};
-			Map<String, Object> generated = super.execute(BaseDAO.getStoredQuerysMap().get("insertPessoa"), pessoaParams);
+			Map<String, Object> generated = null;//super.execute(BaseDAO.getStoredQuerysMap().get("insertPessoa"), pessoaParams);TODO Arrumar aqui
 			o.setCodigo((Long)generated.values().iterator().next());
 			Object[] pacienteParams = {o.getCodigo(),
 					paramsMap.get("cpf"),
@@ -181,7 +204,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 					Collections.EMPTY_LIST);
 			getConnection().setReadOnly(false);
 			while(rs.next()) {
-				Paciente paciente = this.parseEntry(rs);
+				Paciente paciente = this.parseEntity(rs);
 				paciente.setTelefone(getTelefonesFromCliente(paciente.getCodigo()));
 				pList.add(paciente);
 			}
@@ -204,7 +227,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 						params);
 				getConnection().setReadOnly(false);
 				if (rs.next()) {
-					paciente = this.parseEntry(rs);
+					paciente = this.parseEntity(rs);
 					paciente.setTelefone(getTelefonesFromCliente(paciente.getCodigo()));
 				}
 			}
