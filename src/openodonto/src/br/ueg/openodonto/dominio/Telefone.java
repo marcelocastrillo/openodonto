@@ -8,7 +8,7 @@ import java.io.Serializable;
 import br.ueg.openodonto.dominio.constante.TiposTelefone;
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
-import br.ueg.openodonto.persistencia.orm.EntityBase;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.Enumerator;
 import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Table;
@@ -16,7 +16,7 @@ import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Table(name="telefones")
-public class Telefone extends EntityBase implements Serializable,Entity{	
+public class Telefone extends OrmFormat implements Serializable,Entity{	
 
 	private static final long serialVersionUID = 77367905036522189L;
 	

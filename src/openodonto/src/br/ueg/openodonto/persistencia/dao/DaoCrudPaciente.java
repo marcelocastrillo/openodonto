@@ -15,13 +15,15 @@ import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.constante.TiposUF;
 import br.ueg.openodonto.persistencia.EntityManager;
+import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
+import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 import br.ueg.openodonto.util.MementoBuilder;
 
 @SuppressWarnings("serial")
 public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<Paciente> {
 
-    private Paciente                         managed;
-
+	private SqlExecutor<Paciente>     sqlExecutor;
+	
 	static{		
 		initQueryMap();
 	}
@@ -44,6 +46,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 
 	public DaoCrudPaciente() {
 		super(Paciente.class);
+		sqlExecutor = new QueryExecutor<Paciente>(this);
 	}
 	
 	public Paciente parseEntry(ResultSet rs) throws SQLException{
@@ -62,11 +65,10 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 			Savepoint save = null;
 			try{
 				if(o == null){
-					managed = null;
 					return;
 				}
 				getConnection().setAutoCommit(false);
-				save = getConnection().setSavepoint("Before Update Paciente - Savepoint"); 
+				save = getConnection().setSavepoint("Before Update Paciente - Savepoint");
 				Map<String , Object> paramsMap = format(o);
 				Object[] pessoaParams = {paramsMap.get("email"),
 						paramsMap.get("nome"),
@@ -74,7 +76,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 						paramsMap.get("estado"),
 						paramsMap.get("cidade"),
 						paramsMap.get("id"),};
-				super.execute(DaoCrudPaciente.storedQuerysMap.get("updatePessoa"), pessoaParams);
+				super.execute(BaseDAO.getStoredQuerysMap().get("updatePessoa"), pessoaParams);
 				Object[] pacienteParams = {
 						paramsMap.get("cpf"),
 						paramsMap.get("data_inicio_tratamento"),
@@ -85,7 +87,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 						paramsMap.get("referencia"),
 						paramsMap.get("observacao"),
 						paramsMap.get("id")};				
-				super.execute(DaoCrudPaciente.storedQuerysMap.get("updatePaciente"), pacienteParams);
+				super.execute(BaseDAO.getStoredQuerysMap().get("updatePaciente"), pacienteParams);
 				if(o.getTelefone() != null){
 					EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 					List<Telefone> todos = getTelefonesFromCliente(o.getCodigo());
@@ -100,8 +102,6 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 						getConnection().setAutoCommit(false);
 					}
 				}
-				managed = o;
-				cachedSession.put(managed , MementoBuilder.deepClone(managed));
 			}catch(Exception ex){
 				ex.printStackTrace();
 				if(save != null){
@@ -116,28 +116,6 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		}
 	}
 
-	@Override
-	public boolean contem(Paciente entity) {
-		return entity != null && DaoCrudPaciente.cachedSession.get(entity) != null;
-	}
-
-	@Override
-	public List<Paciente> executarQuery(String nomeQuery,String nomeParametrro, Object valorParametro) throws Exception {
-		return executarQuery(nomeQuery , nomeParametrro , valorParametro , null);
-	}
-
-	@Override
-	public List<Paciente> executarQuery(String nomeQuery, String nomeParametrro, Object valorParametro, Integer quant)throws Exception {
-		Map<String , Object> params = new LinkedHashMap<String, Object>();
-		params.put(nomeParametrro, valorParametro);
-		return executarQuery(nomeQuery, params, quant);
-	}
-
-	@Override
-	public List<Paciente> executarQuery(String nomeQuery, Map<String, Object> params) {
-		return executarQuery(nomeQuery, params, null);
-	}
-	
 	private List<Telefone> getTelefonesFromCliente(Long id){
 		List<Telefone> telefones = new ArrayList<Telefone>();
 		Map<String , Object> paramsTel = new HashMap<String, Object>();
@@ -147,41 +125,12 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		return telefones;
 	}
 
-	@Override
-	public List<Paciente> executarQuery(String nomeQuery,Map<String, Object> params, Integer quant) {
-		List<Paciente> pList = new ArrayList<Paciente>();
-		if(params == null){
-			return pList;
-		}
-		try{
-			getConnection().setReadOnly(true);
-			ResultSet rs = super.executeQuery(
-					DaoCrudPaciente.storedQuerysMap.get(nomeQuery),
-					new ArrayList<Object>(params.values()) , quant);
-			getConnection().setReadOnly(false);
-			while(rs.next()) {
-				Paciente paciente = this.parseEntry(rs);
-				paciente.setTelefone(getTelefonesFromCliente(paciente.getCodigo()));
-				pList.add(paciente);
-			}
-			getConnection().setReadOnly(false);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return pList;
-	}
-
-	@Override
-	public Paciente getEntityBean() {
-		return cachedSession.get(managed);
-	}
 
 	@Override
 	public void inserir(Paciente o) throws Exception {
 		Savepoint save = null;
 		try{
 			if(o == null){
-				managed = null;
 				return;
 			}
 			getConnection().setAutoCommit(false);
@@ -192,7 +141,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 					paramsMap.get("endereco"),
 					paramsMap.get("estado"),
 					paramsMap.get("cidade")};
-			Map<String, Object> generated = super.execute(DaoCrudPaciente.storedQuerysMap.get("insertPessoa"), pessoaParams);
+			Map<String, Object> generated = super.execute(BaseDAO.getStoredQuerysMap().get("insertPessoa"), pessoaParams);
 			o.setCodigo((Long)generated.values().iterator().next());
 			Object[] pacienteParams = {o.getCodigo(),
 					paramsMap.get("cpf"),
@@ -203,7 +152,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 					paramsMap.get("responsavel"),
 					paramsMap.get("referencia"),
 					paramsMap.get("observacao")};			
-			super.execute(DaoCrudPaciente.storedQuerysMap.get("insertPaciente"), pacienteParams);
+			super.execute(BaseDAO.getStoredQuerysMap().get("insertPaciente"), pacienteParams);
 			if(o.getTelefone() != null){
 				EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 				for(Telefone telefone : o.getTelefone()){
@@ -211,8 +160,6 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 					entityManagerTelefone.alterar(telefone);
 				}
 			}
-			managed = o;
-			cachedSession.put(managed , MementoBuilder.deepClone(managed));
 		}catch(Exception ex){
 			ex.printStackTrace();
 			if(save != null){
@@ -230,7 +177,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		try{
 			getConnection().setReadOnly(true);
 			ResultSet rs = super.executeQuery(
-					DaoCrudPaciente.storedQuerysMap.get("listAll"),
+					BaseDAO.getStoredQuerysMap().get("listAll"),
 					Collections.EMPTY_LIST);
 			getConnection().setReadOnly(false);
 			while(rs.next()) {
@@ -245,29 +192,6 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 	}
 	
 	@Override
-	public List<Paciente> listar(Object key) throws Exception {		
-		List<Paciente> pList = new ArrayList<Paciente>();
-		if(key == null){
-			return pList;
-		}
-		try{
-			getConnection().setReadOnly(true);
-			ResultSet rs = super.executeQuery(
-					DaoCrudPaciente.storedQuerysMap.get("findByKey"),
-					new Object[]{key});
-			getConnection().setReadOnly(false);
-			while(rs.next()) {
-				Paciente paciente = this.parseEntry(rs);
-				paciente.setTelefone(getTelefonesFromCliente(paciente.getCodigo()));
-				pList.add(paciente);
-			}			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return pList;
-	}
-
-	@Override
 	public Paciente pesquisar(Object key) {
 		Paciente paciente = null;
 		try {
@@ -276,7 +200,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 				List<Object> params = new ArrayList<Object>();
 				params.add(key);
 				ResultSet rs = super.executeQuery(
-						DaoCrudPaciente.storedQuerysMap.get("findByKey"),
+						BaseDAO.getStoredQuerysMap().get("findByKey"),
 						params);
 				getConnection().setReadOnly(false);
 				if (rs.next()) {
@@ -306,8 +230,8 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 			for(Telefone telefone : o.getTelefone()){
 				entityManagerTelefone.remover(telefone);
 			}		
-			super.execute(DaoCrudPaciente.storedQuerysMap.get("removePaciente"), params);
-			super.execute(DaoCrudPaciente.storedQuerysMap.get("removePessoa"), params);
+			super.execute(BaseDAO.getStoredQuerysMap().get("removePaciente"), params);
+			super.execute(BaseDAO.getStoredQuerysMap().get("removePessoa"), params);
 		}catch(Exception ex){
 			ex.printStackTrace();
 			if(save != null){
@@ -316,6 +240,17 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 			throw ex;
 		}
 		getConnection().setAutoCommit(true);
+	}
+
+	@Override
+	public SqlExecutor<Paciente> getSqlExecutor() {
+		return sqlExecutor;
+	}
+
+	public void setSqlExecutor(SqlExecutor<Paciente> sqlExecutor) {
+		this.sqlExecutor = sqlExecutor;
 	}	
 
+	
+	
 }

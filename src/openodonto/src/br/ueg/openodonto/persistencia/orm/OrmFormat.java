@@ -4,11 +4,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-public class EntityBase{
+public class OrmFormat{
 	
 	private OrmResolver ormResolver;
 	
-	public EntityBase() {
+	public OrmFormat() {
 		this.ormResolver = new OrmResolver(this);
 	}
 

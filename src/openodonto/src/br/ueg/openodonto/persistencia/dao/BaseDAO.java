@@ -44,63 +44,11 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
     }
     
     private Class<T> classe;
-    //private String   listAllQuery;
-    //private String   findByKeyQuery;
     
     public BaseDAO(Class<T> classe) {
     	this.classe = classe;
-    	init();
 	}
 
-    private void init(){
-    }
-    
-    public String getSelectRoot(String... fields){
-    	StringBuilder stb = new StringBuilder();
-    	stb.append("SELECT ");
-    	OrmTranslator translator = null;
-    	if((fields.length == 1) && (fields[0].equals("*"))){
-    		List<Field> allFields = OrmResolver.getAllFields(new LinkedList<Field>(), classe, true);
-    		translator = new OrmTranslator(allFields);
-
-    	}else{
-    		ResultMask mask = new MaskResolver(classe, fields);
-    		translator = new OrmTranslator(mask.getResultMask());
-    	}		
-		Iterator<String> iterator = translator.getColumnsMap().keySet().iterator();
-		while(iterator.hasNext()){
-			stb.append(iterator.next());
-			if(iterator.hasNext()){
-				stb.append(",");
-			}
-		}
-		stb.append(" FROM ");
-		stb.append(getTableName());
-		stb.append(" ");
-		if(classe.isAnnotationPresent(Inheritance.class)){
-			stb.append(getFromJoin());
-		}
-    	return stb.toString();
-    }
-    
-    public String getFromJoin(){
-    	StringBuilder stb = new StringBuilder();
-    	Class<?> type = classe;
-    	Class<?> superType = classe.getSuperclass();
-    	String typeColumnName = getTableName();
-    	String superTypeColumnName = superType.getAnnotation(Table.class).name();
-    	stb.append("LEFT JOIN ");
-    	stb.append(superTypeColumnName);
-    	stb.append(" ");
-    	for(ForwardKey fk : type.getAnnotation(Inheritance.class).joinFields()){
-    		stb.append("ON ");
-    		stb.append(typeColumnName).append(".").append(fk.tableField());
-    		stb.append(" = ");
-    		stb.append(superTypeColumnName).append(".").append(fk.foreginField());
-			stb.append(" ");
-    	}
-    	return stb.toString();
-    }
     
 	public ConnectionFactory getConnectionFactory() {
 		return ConnectionFactory.getInstance();
@@ -155,7 +103,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		return preparedStatement.executeQuery();
 	}
 
-	public Map<String,Object> execute(String sql, Object[] params) throws Exception {
+	public List<Object> execute(String sql, Object[] params) throws Exception {
 		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql , Statement.RETURN_GENERATED_KEYS);
 		if(params != null){
 			for(int i=1 ; i < params.length+1; i++){
@@ -170,18 +118,30 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		}
 		preparedStatement.execute();
 		ResultSet generatedValues = preparedStatement.getGeneratedKeys();
-		Map<String,Object> objects = new LinkedHashMap<String ,Object>();
-		if (generatedValues != null) {
-			if (generatedValues.next()) {
-				int count = generatedValues.getMetaData().getColumnCount();
-				for (int i = 1; i <= count; i++) {
-					objects.put(generatedValues.getMetaData().getColumnName(i),	generatedValues.getObject(i));
-				}
+		List<Object> generatedKeys = new LinkedList<Object>();
+		if(generatedValues != null){
+			while(generatedValues.next()){
+			int count = generatedValues.getMetaData().getColumnCount();
+			for(int i = 1; i <= count ; i++){
+				generatedKeys.add(generatedValues.getObject(i));
+			}
 			}
 		}
-		return objects;
+		return generatedKeys;
 	}
 	
+	public Map<String, Object> formatResultSet(ResultSet rs) throws SQLException{
+		if(rs != null){
+			Map<String,Object> objects = new LinkedHashMap<String ,Object>();
+			int count = rs.getMetaData().getColumnCount();
+			for(int i = 1; i <= count ; i++){
+				objects.put(rs.getMetaData().getColumnName(i) , rs.getObject(i));
+			}
+			return objects;
+		}
+		return null;		
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<T> listar() throws Exception{
 		StringBuilder query = new StringBuilder();
@@ -195,100 +155,9 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		return lista;
 	}
 	
-	public Map<String,Object> executeInsert(T entry) throws Exception{
-		StringBuilder query = new StringBuilder();
-		StringBuilder values = new StringBuilder();
-		List<Object> params = new ArrayList<Object>();
-		values.append(" VALUES ( ");
-		query.append("INSERT INTO ");
-		query.append(getTableName());
-		Map<String , Object> fields = format(entry);
-		Iterator<String> iterator = fields.keySet().iterator();
-		query.append("(");
-		while(iterator.hasNext()){
-			String field = iterator.next();
-			query.append(field);
-			params.add(fields.get(field));
-			values.append("?");
-			if(iterator.hasNext()){
-				query.append(", ");
-				values.append(", ");
-			}
-		}
-		values.append(")");
-		query.append(")");
-		query.append(values);
-		return execute(query.toString(), params.toArray());
-	}
-	
-	@SuppressWarnings("unchecked")
 	public ResultSet list() throws Exception{
-		return executeQuery(getSelectRoot(null, "*"), Collections.EMPTY_LIST);
-	}
-	
-	public Map<String, Object> formatResultSet(ResultSet rs) throws SQLException{
-		if(rs != null){
-			Map<String,Object> objects = new LinkedHashMap<String ,Object>();
-			int count = rs.getMetaData().getColumnCount();
-			for(int i = 1; i <= count ; i++){
-				objects.put(rs.getMetaData().getColumnName(i) , rs.getObject(i));
-			}
-			return objects;
-		}
-		return null;
-		
-	}
-	
-	public Map<String,Object> executeUpdate(T entry, Map<String , Object> whereParams) throws Exception{
-		StringBuilder query = new StringBuilder();
-		List<Object> params = new ArrayList<Object>();
-		query.append("UPDATE ");
-		query.append(getTableName());
-		query.append(" SET ");
-		Map<String , Object> fields = format(entry);
-		Iterator<String> iterator = fields.keySet().iterator();
-		while(iterator.hasNext()){
-			String field = iterator.next();
-			query.append(field + " = ?");
-			params.add(fields.get(field));
-			if(iterator.hasNext()){
-				query.append(", ");
-			}
-		}
-		if(whereParams != null && whereParams.size() > 0){
-		    iterator = whereParams.keySet().iterator();
-		    query.append(" WHERE ");
-		    while(iterator.hasNext()){
-			    String field = iterator.next();
-			    query.append(field + " = ?");
-			    params.add(whereParams.get(field));
-				if(iterator.hasNext()){
-					query.append(", ");
-				}
-	    	}
-		}		
-		return execute(query.toString(), params.toArray());
-	}
-	
-	public void executeRemove(Map<String , Object> whereParams) throws Exception{
-		StringBuilder query = new StringBuilder();
-		List<Object> params = new ArrayList<Object>();
-		query.append("DELETE FROM ");
-		query.append(getTableName());
-		if(whereParams != null && whereParams.size() > 0){
-		    Iterator<String> iterator = whereParams.keySet().iterator();
-		    query.append(" WHERE ");
-		    while(iterator.hasNext()){
-			    String field = iterator.next();
-			    query.append(field + " = ?");
-			    params.add(whereParams.get(field));
-				if(iterator.hasNext()){
-					query.append(", ");
-				}
-	    	}
-		}
-		execute(query.toString(), params.toArray());
-	}
+		return null;//return executeQuery(getSelectRoot(null, "*"), Collections.EMPTY_LIST);
+	}	
 	
 	public String getTableName(){
 		return classe.getAnnotation(Table.class).name();
@@ -296,10 +165,6 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 	
 	public static Map<String, String> getStoredQuerysMap() {
 		return storedQuerysMap;
-	}
-
-	public static void setStoredQuerysMap(Map<String, String> storedQuerysMap) {
-		BaseDAO.storedQuerysMap = storedQuerysMap;
 	}
 	
 	public abstract Map<String , Object> format(T entry);
