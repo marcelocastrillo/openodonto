@@ -31,7 +31,7 @@ public abstract class ManageBeanGeral <T> {
 
 	private T                        backBean;	
 	private Class<T>                 classe;	
-	protected EntityManager<T>     dao;	
+	protected EntityManager<T>       dao;	
 	private ApplicationContext       context;	
 	private ApplicationView          view;
 	protected ResourceBundle         resourceBundle;	

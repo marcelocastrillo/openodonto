@@ -26,8 +26,10 @@ public class OrmResolver {
 	
 	private void mapInheritance(){
 		Class<?> classe = target.getClass();
-		while(classe.getSuperclass() != null && classe.getSuperclass().isAnnotationPresent(Table.class)){
-			inheritanceMap.put(classe, (classe = classe.getSuperclass()));
+		while(classe.getSuperclass() != null &&
+				(classe.getSuperclass().isAnnotationPresent(Table.class) ||
+						classe.getSuperclass().equals(Object.class))){			
+			inheritanceMap.put(classe, classe = classe.getSuperclass());
 		}		
 	}
 	

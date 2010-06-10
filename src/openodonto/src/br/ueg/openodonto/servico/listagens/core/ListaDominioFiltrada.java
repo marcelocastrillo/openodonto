@@ -6,6 +6,7 @@ import java.util.Map;
 
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
+import br.ueg.openodonto.persistencia.orm.Entity;
 
 
 /**
@@ -13,7 +14,7 @@ import br.ueg.openodonto.persistencia.dao.DaoFactory;
  *
  * @param <T>
  */
-public class ListaDominioFiltrada<T> extends AbstractLista<T>{
+public class ListaDominioFiltrada<T extends Entity> extends AbstractLista<T>{
 
 	private Map<String , Object> params;
 	private String query;
@@ -33,7 +34,7 @@ public class ListaDominioFiltrada<T> extends AbstractLista<T>{
 			return new ArrayList<T>();
 		EntityManager<T> daoDominio = DaoFactory.getInstance().getDao(getClasse());
 		List<T> lista = new ArrayList<T>();
-		lista = daoDominio.executarQuery(query, params);
+		//lista = daoDominio.executarQuery(query, params); 		// TODO Auto-generated method stub
 		return lista;
 	}
 

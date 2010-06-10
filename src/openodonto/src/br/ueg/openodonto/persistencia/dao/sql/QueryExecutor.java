@@ -62,7 +62,7 @@ public class QueryExecutor<T extends Entity> implements SqlExecutor<T>{
 					new ArrayList<Object>(params.values()) , quant);
 			dao.getConnection().setReadOnly(false);
 			while(rs.next()) {
-				T entity = dao.parseEntry(rs);
+				T entity = dao.parseEntity(rs);
 				pList.add(entity);
 			}
 		}catch (Exception e) {

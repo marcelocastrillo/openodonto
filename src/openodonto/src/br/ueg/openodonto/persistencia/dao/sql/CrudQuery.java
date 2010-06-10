@@ -17,32 +17,27 @@ import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.persistencia.orm.ResultMask;
 import br.ueg.openodonto.persistencia.orm.Table;
 
-public class CrudQuery<T extends Entity>{
+public class CrudQuery{
 	
-	private Class<T> classe;
-
-	public CrudQuery(Class<T> classe) {
-		this.classe = classe;
-	}
 	
     @SuppressWarnings("unchecked")
-	public Query getListQuery(){
-    	return new Query(getSelectRoot("*") , Collections.EMPTY_LIST);
+	public static <T extends Entity>Query getListQuery(Class<T> classe,String... fields){
+    	return new Query(getSelectRoot(classe,fields) , Collections.EMPTY_LIST);
     }
 	
-	public Query getInsertQuery(Map<String , Object> fields,String table) throws Exception{
+	public static Query getInsertQuery(Map<String , Object> object,String table){
 		StringBuilder query = new StringBuilder();
 		StringBuilder values = new StringBuilder();
 		List<Object> params = new ArrayList<Object>();
 		values.append(" VALUES ( ");
 		query.append("INSERT INTO ");
 		query.append(table);
-		Iterator<String> iterator = fields.keySet().iterator();
+		Iterator<String> iterator = object.keySet().iterator();
 		query.append("(");
 		while(iterator.hasNext()){
 			String field = iterator.next();
 			query.append(field);
-			params.add(fields.get(field));
+			params.add(object.get(field));
 			values.append("?");
 			if(iterator.hasNext()){
 				query.append(", ");
@@ -57,17 +52,17 @@ public class CrudQuery<T extends Entity>{
 	
 
     
-	public Query getQueryUpdate(Map<String , Object> fields, Map<String , Object> whereParams,String table) throws Exception{
+	public static Query getUpdateQuery(Map<String , Object> object, Map<String , Object> whereParams,String table){
 		StringBuilder query = new StringBuilder();
 		List<Object> params = new ArrayList<Object>();
 		query.append("UPDATE ");
 		query.append(table);
 		query.append(" SET ");
-		Iterator<String> iterator = fields.keySet().iterator();
+		Iterator<String> iterator = object.keySet().iterator();
 		while(iterator.hasNext()){
 			String field = iterator.next();
 			query.append(field + " = ?");
-			params.add(fields.get(field));
+			params.add(object.get(field));
 			if(iterator.hasNext()){
 				query.append(", ");
 			}
@@ -87,7 +82,7 @@ public class CrudQuery<T extends Entity>{
 		return new Query(query.toString(), params);
 	}
 	
-	public Query getRemoveQuery(Map<String , Object> whereParams,String table) throws Exception{
+	public static Query getRemoveQuery(Map<String , Object> whereParams,String table){
 		StringBuilder query = new StringBuilder();
 		List<Object> params = new ArrayList<Object>();
 		query.append("DELETE FROM ");
@@ -107,7 +102,7 @@ public class CrudQuery<T extends Entity>{
 		return new Query(query.toString(), params);
 	}	
 
-    public String getSelectRoot(String... fields){
+    public static <T extends Entity>String getSelectRoot(Class<T> classe,String... fields){
     	StringBuilder stb = new StringBuilder();
     	stb.append("SELECT ");
     	OrmTranslator translator = null;
@@ -127,19 +122,19 @@ public class CrudQuery<T extends Entity>{
 			}
 		}
 		stb.append(" FROM ");
-		stb.append(getTableName(getClasse()));
+		stb.append(getTableName(classe));
 		stb.append(" ");
 		if(classe.isAnnotationPresent(Inheritance.class)){
-			stb.append(getFromJoin());
+			stb.append(getFromJoin(classe));
 		}
     	return stb.toString();
     }
     
-    public String getFromJoin(){
+    public static <T extends Entity>String getFromJoin(Class<T> classe){
     	StringBuilder stb = new StringBuilder();
-    	Class<?> type = getClasse();
+    	Class<?> type = classe;
     	Class<?> superType = type.getSuperclass();
-    	String typeColumnName = getTableName(getClasse());
+    	String typeColumnName = getTableName(classe);
     	String superTypeColumnName = getTableName(superType);
     	stb.append("LEFT JOIN ");
     	stb.append(superTypeColumnName);
@@ -154,12 +149,8 @@ public class CrudQuery<T extends Entity>{
     	return stb.toString();
     }
     
-    private String getTableName(Class<?> clazz){
+    private static String getTableName(Class<?> clazz){
     	return clazz.getAnnotation(Table.class).name();
-    }
-    
-    private Class<T> getClasse(){
-    	return classe;
     }
     
 }

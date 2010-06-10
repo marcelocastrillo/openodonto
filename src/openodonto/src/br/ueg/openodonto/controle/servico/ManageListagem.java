@@ -3,6 +3,7 @@ package br.ueg.openodonto.controle.servico;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.servico.listagens.core.AbstractLista;
 import br.ueg.openodonto.servico.listagens.core.ListaDominio;
 import br.ueg.openodonto.servico.listagens.core.ListaTipo;
@@ -30,12 +31,12 @@ public class ManageListagem{
 		return new ListaTipo<T>(classe);
 	}
 	
-	private static <T> AbstractLista<T> getListaDominio(Class<T> classe){		
+	private static <T extends Entity> AbstractLista<T> getListaDominio(Class<T> classe){		
 		return new ListaDominio<T>(classe);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> AbstractLista<T> getLista(Class<T> classe){
+	public static <T extends Entity> AbstractLista<T> getLista(Class<T> classe){
 		AbstractLista<T> lista = null;
 		if(cache.get(classe) == null){
 			if(classe.isEnum())
@@ -53,8 +54,9 @@ public class ManageListagem{
 	}
 	
 	
-	public static AbstractLista<?> getLista(String className){
-		Class<?> classe = resolveClass(className);
+	@SuppressWarnings("unchecked")
+	public static <T extends Entity>AbstractLista<?> getLista(String className){
+		Class<T> classe = (Class<T>)resolveClass(className);
 		return getLista(classe);
 	}
 	

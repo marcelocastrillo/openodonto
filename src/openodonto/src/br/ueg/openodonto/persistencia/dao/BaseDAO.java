@@ -2,7 +2,6 @@
 package br.ueg.openodonto.persistencia.dao;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,13 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.persistencia.ConnectionFactory;
+import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
+import br.ueg.openodonto.persistencia.dao.sql.Query;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Inheritance;
-import br.ueg.openodonto.persistencia.orm.MaskResolver;
-import br.ueg.openodonto.persistencia.orm.OrmResolver;
-import br.ueg.openodonto.persistencia.orm.OrmTranslator;
-import br.ueg.openodonto.persistencia.orm.ResultMask;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.Table;
 
 
@@ -36,7 +34,7 @@ import br.ueg.openodonto.persistencia.orm.Table;
 
 public abstract class BaseDAO<T extends Entity> implements Serializable {
 
-    private static final long serialVersionUID = 186038189036166890L;
+    private static final long                serialVersionUID = 186038189036166890L;
     private static Map<String , String>      storedQuerysMap;
     
     static{
@@ -67,11 +65,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		this.getConnectionFactory().closeConnection();
 	}
 
-	public ResultSet executeQuery(String sql, List<Object> params) throws Exception {
-		return executeQuery(sql , params, null);
-	}
-	
-	public ResultSet executeQuery(String sql, List<Object> params, Integer limit) throws Exception {
+	public ResultSet executeQuery(String sql, List<Object> params, Integer limit) throws SQLException {
 		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql);
 		if(limit != null){
 			preparedStatement.setMaxRows(limit);
@@ -89,7 +83,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		return preparedStatement.executeQuery();
 	}
 
-	public ResultSet executeQuery(String sql, Object... params) throws Exception {
+	public ResultSet executeQuery(String sql, Object... params) throws SQLException {
 		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql);
 		if(params != null){
 			for(int i=1 ; i < params.length+1; i++){
@@ -103,7 +97,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		return preparedStatement.executeQuery();
 	}
 
-	public List<Object> execute(String sql, Object[] params) throws Exception {
+	public List<Object> execute(String sql, Object[] params) throws SQLException {
 		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql , Statement.RETURN_GENERATED_KEYS);
 		if(params != null){
 			for(int i=1 ; i < params.length+1; i++){
@@ -117,17 +111,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 			}
 		}
 		preparedStatement.execute();
-		ResultSet generatedValues = preparedStatement.getGeneratedKeys();
-		List<Object> generatedKeys = new LinkedList<Object>();
-		if(generatedValues != null){
-			while(generatedValues.next()){
-			int count = generatedValues.getMetaData().getColumnCount();
-			for(int i = 1; i <= count ; i++){
-				generatedKeys.add(generatedValues.getObject(i));
-			}
-			}
-		}
-		return generatedKeys;
+		return getGeneratedValues(preparedStatement);
 	}
 	
 	public Map<String, Object> formatResultSet(ResultSet rs) throws SQLException{
@@ -142,24 +126,77 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		return null;		
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<T> listar() throws Exception{
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT * FROM ");
-		query.append(getTableName());
+	private List<Object> getGeneratedValues(PreparedStatement preparedStatement) throws SQLException{
+		ResultSet generatedValues = preparedStatement.getGeneratedKeys();
+		List<Object> generatedKeys = new LinkedList<Object>();
+		if (generatedValues != null) {
+			while (generatedValues.next()) {
+				int count = generatedValues.getMetaData().getColumnCount();
+				for (int i = 1; i <= count; i++) {
+					generatedKeys.add(generatedValues.getObject(i));
+				}
+			}
+		}
+		return generatedKeys;
+	}
+	
+	public List<T> listar(String... fields) throws SQLException{
 		List<T> lista = new ArrayList<T>();
-		ResultSet rs = executeQuery(query.toString() , Collections.EMPTY_LIST);
+		Query query = CrudQuery.getListQuery(classe,fields);
+		ResultSet rs = executeQuery(query.getQuery(), query.getParams());
 		while(rs.next()){
-			lista.add(parseEntry(rs));
+			lista.add(parseEntity(rs));
 		}
 		return lista;
 	}
 	
-	public ResultSet list() throws Exception{
-		return null;//return executeQuery(getSelectRoot(null, "*"), Collections.EMPTY_LIST);
-	}	
+	public void update(T entity,Map<String , Object> whereParams) throws SQLException{
+		Class<?> type = entity.getClass();
+		OrmFormat format = new OrmFormat(entity);
+		Map<Class<?> , Map<String , Object>> object = format.formatDisjoin();
+		while(type.isAnnotationPresent(Table.class)){
+			Map<String , Object> localParams = disjoinWhereParams(object , whereParams, type);
+			Query query = CrudQuery.getUpdateQuery(object.get(type), localParams, getTableName(type));
+			execute(query.getQuery(), query.getParams().toArray());
+			type = type.getSuperclass();
+		}
+	}
 	
-	public String getTableName(){
+	public void insert(T entity) throws SQLException{		
+		OrmFormat format = new OrmFormat(entity);
+		Map<Class<?> , Map<String , Object>> object = format.formatDisjoin();
+		Iterator<Class<?>> iterator = null;		
+		while(iterator.hasNext()){
+			Class<?> type = iterator.next();
+			type.isAnnotationPresent(Table.class);
+			Query query = CrudQuery.getInsertQuery(object.get(type), getTableName(type));
+			type = type.getSuperclass();
+		}
+	}
+	
+	public void remove(T entity) throws SQLException{
+		
+	}
+	
+	private Map<String , Object> disjoinWhereParams(Map<Class<?> , Map<String , Object>> object,Map<String,Object> whereParams, Class<?> type){
+		Map<String , Object> localParams = new LinkedHashMap<String, Object>();
+		Inheritance inherite = type.getAnnotation(Inheritance.class);
+		for(String key : whereParams.keySet()){
+			if(object.get(type).containsKey(key)){
+				localParams.put(key, whereParams.get(key));
+			}
+			if(inherite != null){
+				for(ForwardKey fk : inherite.joinFields()){
+					if(fk.foreginField().equals(key)){
+						localParams.put(fk.tableField(), whereParams.get(key));
+					}
+				}
+			}
+		}
+		return localParams;
+	}
+	
+	public String getTableName(Class<?> classe){
 		return classe.getAnnotation(Table.class).name();
 	}	
 	
@@ -167,8 +204,13 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		return storedQuerysMap;
 	}
 	
-	public abstract Map<String , Object> format(T entry);
+	public T parseEntity(ResultSet rs) throws SQLException{
+		T entity = getNewEntity();
+		OrmFormat format = new OrmFormat(entity);
+		format.parse(formatResultSet(rs));
+		return entity;
+	}
 	
-	public abstract T parseEntry(ResultSet rs) throws SQLException;
+	public abstract T getNewEntity();
 
 }
