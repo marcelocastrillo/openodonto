@@ -7,14 +7,14 @@ import java.util.List;
 import br.ueg.openodonto.dominio.constante.TiposUF;
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
-import br.ueg.openodonto.persistencia.orm.EntityBase;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Relationship;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Table(name="pessoas")
-public abstract class Pessoa extends EntityBase implements Serializable,Entity{
+public abstract class Pessoa extends OrmFormat implements Serializable,Entity{
  
 	private static final long serialVersionUID = -7734113332277720024L;
 
