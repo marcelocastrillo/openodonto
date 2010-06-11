@@ -111,7 +111,7 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManager<
 						params);
 				getConnection().setReadOnly(false);
 				if (rs.next()) {
-					telefone = this.parseEntry(rs);
+					telefone = this.parseEntity(rs);
 				}
 			}
 		} catch (Exception e) {

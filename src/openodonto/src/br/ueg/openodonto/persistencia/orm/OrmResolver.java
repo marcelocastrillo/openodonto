@@ -92,7 +92,7 @@ public class OrmResolver {
 	}
 	
 	public void parse(Map<String , Object> values,Class<?> classe){
-		List<Field> fields = getAllFields(new LinkedList<Field>(), classe.getClass(),true);
+		List<Field> fields = getAllFields(new LinkedList<Field>(), classe,true);
 		OrmTranslator translator = new OrmTranslator(fields);
 		for(String column : values.keySet()){
 			Field field = translator.getField(column);

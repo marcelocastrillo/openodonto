@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +23,6 @@ import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Inheritance;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
-import br.ueg.openodonto.persistencia.orm.Table;
 
 
 /**
@@ -116,7 +114,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 	
 	public Map<String, Object> formatResultSet(ResultSet rs) throws SQLException{
 		if(rs != null){
-			Map<String,Object> objects = new LinkedHashMap<String ,Object>();
+			Map<String,Object> objects = new HashMap<String ,Object>();
 			int count = rs.getMetaData().getColumnCount();
 			for(int i = 1; i <= count ; i++){
 				objects.put(rs.getMetaData().getColumnName(i) , rs.getObject(i));
@@ -151,26 +149,27 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 	}
 	
 	public void update(T entity,Map<String , Object> whereParams) throws SQLException{
-		Class<?> type = entity.getClass();
 		OrmFormat format = new OrmFormat(entity);
 		Map<Class<?> , Map<String , Object>> object = format.formatDisjoin();
-		while(type.isAnnotationPresent(Table.class)){
+		LinkedList<Class<?>> sortedSet = new LinkedList<Class<?>>(object.keySet());
+		Iterator<Class<?>> iterator = sortedSet.iterator();
+		while(iterator.hasNext()){
+			Class<?> type = iterator.next();
 			Map<String , Object> localParams = disjoinWhereParams(object , whereParams, type);
-			Query query = CrudQuery.getUpdateQuery(object.get(type), localParams, getTableName(type));
+			Query query = CrudQuery.getUpdateQuery(object.get(type), localParams, CrudQuery.getTableName(type));
 			execute(query.getQuery(), query.getParams().toArray());
-			type = type.getSuperclass();
 		}
 	}
 	
 	public void insert(T entity) throws SQLException{		
 		OrmFormat format = new OrmFormat(entity);
 		Map<Class<?> , Map<String , Object>> object = format.formatDisjoin();
-		Iterator<Class<?>> iterator = null;		
+		LinkedList<Class<?>> sortedSet = new LinkedList<Class<?>>(object.keySet());
+		Iterator<Class<?>> iterator = sortedSet.descendingIterator();
 		while(iterator.hasNext()){
 			Class<?> type = iterator.next();
-			type.isAnnotationPresent(Table.class);
-			Query query = CrudQuery.getInsertQuery(object.get(type), getTableName(type));
-			type = type.getSuperclass();
+			Query query = CrudQuery.getInsertQuery(object.get(type), CrudQuery.getTableName(type));
+			System.out.println(query.getQuery() + " " + query.getParams());
 		}
 	}
 	
@@ -195,10 +194,6 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		}
 		return localParams;
 	}
-	
-	public String getTableName(Class<?> classe){
-		return classe.getAnnotation(Table.class).name();
-	}	
 	
 	public static Map<String, String> getStoredQuerysMap() {
 		return storedQuerysMap;
