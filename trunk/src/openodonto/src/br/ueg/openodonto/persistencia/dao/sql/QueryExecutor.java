@@ -1,6 +1,7 @@
 package br.ueg.openodonto.persistencia.dao.sql;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,39 +19,21 @@ public class QueryExecutor<T extends Entity> implements SqlExecutor<T>{
 	}
 	
 	
-    public List<T> executarQuery(String query,String nomeParametrro, Object valorParametro) throws Exception {
+    public List<T> executarQuery(String query,String nomeParametrro, Object valorParametro) throws SQLException {
 		return executarQuery(query , nomeParametrro , valorParametro , null);
 	}
 
-	public List<T> executarQuery(String query, String nomeParametrro, Object valorParametro, Integer quant)throws Exception {
+	public List<T> executarQuery(String query, String nomeParametrro, Object valorParametro, Integer quant)throws SQLException {
 		Map<String , Object> params = new LinkedHashMap<String, Object>();
 		params.put(nomeParametrro, valorParametro);
 		return executarQuery(query, params, quant);
 	}
 
-	public List<T> executarQuery(String query, Map<String, Object> params) {
+	public List<T> executarQuery(String query, Map<String, Object> params) throws SQLException{
 		return executarQuery(query, params, null);
-	}
-	
-    public List<T> executarPrefixQuery(String name,String nomeParametrro, Object valorParametro) throws Exception {
-		return executarQuery(BaseDAO.getStoredQuerysMap().get(name) , nomeParametrro , valorParametro , null);
-	}
+	}	
 
-	public List<T> executarPrefixQuery(String name, String nomeParametrro, Object valorParametro, Integer quant)throws Exception {
-		Map<String , Object> params = new LinkedHashMap<String, Object>();
-		params.put(nomeParametrro, valorParametro);
-		return executarQuery(BaseDAO.getStoredQuerysMap().get(name), params, quant);
-	}
-
-	public List<T> executarPrefixQuery(String name, Map<String, Object> params) {
-		return executarQuery(BaseDAO.getStoredQuerysMap().get(name), params, null);
-	}
-	
-	public List<T> executarPrefixQuery(String name,Map<String, Object> params, Integer quant) {
-		return executarQuery(BaseDAO.getStoredQuerysMap().get(name), params , quant);
-	}
-	
-	public List<T> executarQuery(String query,Map<String, Object> params, Integer quant) {
+	public List<T> executarQuery(String query,Map<String, Object> params, Integer quant) throws SQLException{
 		List<T> pList = new ArrayList<T>();
 		if(params == null){
 			return pList;

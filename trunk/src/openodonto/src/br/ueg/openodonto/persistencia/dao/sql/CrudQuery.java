@@ -149,7 +149,7 @@ public class CrudQuery{
     	return stb.toString();
     }
     
-    private static String getTableName(Class<?> clazz){
+    public static String getTableName(Class<?> clazz){
     	return clazz.getAnnotation(Table.class).name();
     }
     

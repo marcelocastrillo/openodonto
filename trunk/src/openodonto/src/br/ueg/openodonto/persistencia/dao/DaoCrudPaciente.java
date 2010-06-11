@@ -15,6 +15,7 @@ import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.constante.TiposUF;
 import br.ueg.openodonto.persistencia.EntityManager;
+import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
@@ -33,37 +34,47 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		
 		DaoCrudTelefone daoCrudTelefone = new DaoCrudTelefone();
 		Telefone telefnoe = new Telefone();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", 1L);
+		/*
 		try {
-			daoCrudTelefone.insert(telefnoe);
+			daoCrudTelefone.update(telefnoe, params);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
+		*/
 		
+		long start = System.currentTimeMillis();
 		DaoCrudPaciente dao = new DaoCrudPaciente();
+		/*
 		Paciente paciente = new Paciente();
+		paciente.setCodigo(1L);
 		paciente.setCidade("Goiania");
 		paciente.setCpf("02549287142");
 		paciente.setDataInicioTratamento(new java.sql.Date(System.currentTimeMillis()));
 		paciente.setEmail("viiniiciius@gmail.com");
-		paciente.setEndereco("Av C-162");
+		paciente.setEndereco("Jardin America");
 		paciente.setEstado(TiposUF.GO);
 		paciente.setNome("Vinicius Gardenio Guimaraes Rodrigues");
 		paciente.setTelefone(new ArrayList<Telefone>());
+		params = new HashMap<String, Object>();
+		params.put("id", 1L);
+		*/
 		try {
-			dao.insert(paciente);
+			String sql = CrudQuery.getSelectRoot(Paciente.class, "*") + BaseDAO.getStoredQuerysMap().get("Paciente.findByKey");
+			System.out.println(dao.getSqlExecutor().executarQuery(sql, "id", 1L));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		System.out.println(System.currentTimeMillis() - start);
 	}
 	
 	public static void initQueryMap(){
-		BaseDAO.getStoredQuerysMap().put("Paciente.findByKey","WHERE ps.`id` = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.findByKey","WHERE id = ?");
 		BaseDAO.getStoredQuerysMap().put("Paciente.removePessoa","DELETE FROM pessoas WHERE id = ?");
 		BaseDAO.getStoredQuerysMap().put("Paciente.removePaciente","DELETE FROM pacientes WHERE id_pessoa =  ?");
 		BaseDAO.getStoredQuerysMap().put("Paciente.insertPessoa","INSERT INTO pessoas (email, nome, endereco , estado, cidade) VALUES (? , ?, ?, ? , ? )");
 		BaseDAO.getStoredQuerysMap().put("Paciente.insertPaciente","INSERT INTO pacientes (id_pessoa,cpf ,data_inicio_tratamento ,data_termino_tratamento,data_retorno, data_nascimento, responsavel, referencia, observacao ) VALUES (? , ?, ?, ?, ?, ?, ?, ? , ?)");
-		BaseDAO.getStoredQuerysMap().put("Paciente.updatePessoa","UPDATE pessoas SET email = ? , nome = ? , endereco = ? , estado = ? , cidade = ? WHERE id = ?");
-		BaseDAO.getStoredQuerysMap().put("Paciente.updatePaciente","UPDATE pacientes SET cpf = ? ,data_inicio_tratamento = ? ,data_termino_tratamento = ?,data_retorno = ?, data_nascimento = ?, responsavel = ?, referencia = ?, observacao = ? WHERE id_pessoa = ?");
 		BaseDAO.getStoredQuerysMap().put("Paciente.listAll","SELECT * FROM pacientes pc LEFT JOIN pessoas ps ON pc.id_pessoa = ps.id");
 		
 		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE ps.nome LIKE ?");
