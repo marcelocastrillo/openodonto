@@ -61,7 +61,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		params.put("id", 1L);
 		*/
 		try {
-			String sql = CrudQuery.getSelectRoot(Paciente.class, "*") + BaseDAO.getStoredQuerysMap().get("Paciente.findByKey");
+			String sql = CrudQuery.getSelectRoot(Paciente.class, "codigo","cpf") + BaseDAO.getStoredQuerysMap().get("Paciente.findByKey");
 			System.out.println(dao.getSqlExecutor().executarQuery(sql, "id", 1L));
 		} catch (SQLException e) {
 			e.printStackTrace();

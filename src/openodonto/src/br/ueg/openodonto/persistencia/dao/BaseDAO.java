@@ -5,8 +5,10 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -115,9 +117,42 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 	public Map<String, Object> formatResultSet(ResultSet rs) throws SQLException{
 		if(rs != null){
 			Map<String,Object> objects = new HashMap<String ,Object>();
+			ResultSetMetaData meta = rs.getMetaData();
 			int count = rs.getMetaData().getColumnCount();
 			for(int i = 1; i <= count ; i++){
-				objects.put(rs.getMetaData().getColumnName(i) , rs.getObject(i));
+				String columnName = meta.getColumnName(i);
+				type:
+				switch (meta.getColumnType(i)) {
+				case Types.BOOLEAN:
+					objects.put(columnName , rs.getBoolean(i));
+					break type;
+				case Types.CHAR:
+					objects.put(columnName , rs.getString(i));;
+					break type;
+				case Types.DATE:
+					objects.put(columnName , rs.getDate(i));;
+					break type;
+				case Types.DOUBLE:
+					objects.put(columnName , rs.getDouble(i));;
+					break type;
+				case Types.FLOAT:
+					objects.put(columnName , rs.getFloat(i));;
+					break type;
+				case Types.INTEGER:
+					objects.put(columnName , rs.getInt(i));;
+					break type;
+				case Types.TIME:
+					objects.put(columnName , rs.getDate(i));;
+					break type;
+				case Types.TIMESTAMP:
+					objects.put(columnName , rs.getDate(i));;
+					break type;
+				case Types.VARCHAR:
+					objects.put(columnName , rs.getString(i));;
+					break type;
+				default:
+					objects.put(columnName , rs.getObject(i));;
+				}				
 			}
 			return objects;
 		}
