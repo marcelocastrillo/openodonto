@@ -22,10 +22,10 @@ public class CrudQuery{
 	
     @SuppressWarnings("unchecked")
 	public static <T extends Entity>Query getListQuery(Class<T> classe,String... fields){
-    	return new Query(getSelectRoot(classe,fields) , Collections.EMPTY_LIST);
+    	return new Query(getSelectRoot(classe,fields) , Collections.EMPTY_LIST , getTableName(classe));
     }
 	
-	public static Query getInsertQuery(Map<String , Object> object,String table){
+	public static IQuery getInsertQuery(Map<String , Object> object,String table){
 		StringBuilder query = new StringBuilder();
 		StringBuilder values = new StringBuilder();
 		List<Object> params = new ArrayList<Object>();
@@ -47,12 +47,12 @@ public class CrudQuery{
 		values.append(")");
 		query.append(")");
 		query.append(values);
-		return new Query(query.toString(), params);
+		return new Query(query.toString(), params,table);
 	}
 	
 
     
-	public static Query getUpdateQuery(Map<String , Object> object, Map<String , Object> whereParams,String table){
+	public static IQuery getUpdateQuery(Map<String , Object> object, Map<String , Object> whereParams,String table){
 		StringBuilder query = new StringBuilder();
 		List<Object> params = new ArrayList<Object>();
 		query.append("UPDATE ");
@@ -79,10 +79,10 @@ public class CrudQuery{
 				}
 	    	}
 		}		
-		return new Query(query.toString(), params);
+		return new Query(query.toString(), params,table);
 	}
 	
-	public static Query getRemoveQuery(Map<String , Object> whereParams,String table){
+	public static IQuery getRemoveQuery(Map<String , Object> whereParams,String table){
 		StringBuilder query = new StringBuilder();
 		List<Object> params = new ArrayList<Object>();
 		query.append("DELETE FROM ");
@@ -99,7 +99,7 @@ public class CrudQuery{
 				}
 	    	}
 		}
-		return new Query(query.toString(), params);
+		return new Query(query.toString(), params,table);
 	}	
 
     public static <T extends Entity>String getSelectRoot(Class<T> classe,String... fields){
