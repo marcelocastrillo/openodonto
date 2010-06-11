@@ -6,20 +6,15 @@ import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.dominio.Paciente;
-import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.constante.TiposUF;
 import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
-import br.ueg.openodonto.util.MementoBuilder;
 
 @SuppressWarnings("serial")
 public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<Paciente> {
@@ -32,11 +27,11 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 	
 	public static void main(String[] args) {
 		
+		/*
 		DaoCrudTelefone daoCrudTelefone = new DaoCrudTelefone();
 		Telefone telefnoe = new Telefone();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", 1L);
-		/*
 		try {
 			daoCrudTelefone.update(telefnoe, params);
 		} catch (SQLException e1) {
@@ -46,9 +41,8 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		
 		long start = System.currentTimeMillis();
 		DaoCrudPaciente dao = new DaoCrudPaciente();
-		/*
+
 		Paciente paciente = new Paciente();
-		paciente.setCodigo(1L);
 		paciente.setCidade("Goiania");
 		paciente.setCpf("02549287142");
 		paciente.setDataInicioTratamento(new java.sql.Date(System.currentTimeMillis()));
@@ -57,12 +51,9 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		paciente.setEstado(TiposUF.GO);
 		paciente.setNome("Vinicius Gardenio Guimaraes Rodrigues");
 		paciente.setTelefone(new ArrayList<Telefone>());
-		params = new HashMap<String, Object>();
-		params.put("id", 1L);
-		*/
+
 		try {
-			String sql = CrudQuery.getSelectRoot(Paciente.class, "codigo","cpf") + BaseDAO.getStoredQuerysMap().get("Paciente.findByKey");
-			System.out.println(dao.getSqlExecutor().executarQuery(sql, "id", 1L));
+			dao.insert(paciente);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -110,7 +101,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 						paramsMap.get("estado"),
 						paramsMap.get("cidade"),
 						paramsMap.get("id"),};
-				super.execute(BaseDAO.getStoredQuerysMap().get("updatePessoa"), pessoaParams);
+				//super.execute(BaseDAO.getStoredQuerysMap().get("updatePessoa"), pessoaParams);
 				Object[] pacienteParams = {
 						paramsMap.get("cpf"),
 						paramsMap.get("data_inicio_tratamento"),
@@ -121,7 +112,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 						paramsMap.get("referencia"),
 						paramsMap.get("observacao"),
 						paramsMap.get("id")};				
-				super.execute(BaseDAO.getStoredQuerysMap().get("updatePaciente"), pacienteParams);
+				//super.execute(BaseDAO.getStoredQuerysMap().get("updatePaciente"), pacienteParams);
 				if(o.getTelefone() != null){
 					EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 					List<Telefone> todos = getTelefonesFromCliente(o.getCodigo());
@@ -186,7 +177,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 					paramsMap.get("responsavel"),
 					paramsMap.get("referencia"),
 					paramsMap.get("observacao")};			
-			super.execute(BaseDAO.getStoredQuerysMap().get("insertPaciente"), pacienteParams);
+			//super.execute(BaseDAO.getStoredQuerysMap().get("insertPaciente"), pacienteParams);
 			if(o.getTelefone() != null){
 				EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 				for(Telefone telefone : o.getTelefone()){
@@ -264,8 +255,8 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 			for(Telefone telefone : o.getTelefone()){
 				entityManagerTelefone.remover(telefone);
 			}		
-			super.execute(BaseDAO.getStoredQuerysMap().get("removePaciente"), params);
-			super.execute(BaseDAO.getStoredQuerysMap().get("removePessoa"), params);
+			//super.execute(BaseDAO.getStoredQuerysMap().get("removePaciente"), params);
+			//super.execute(BaseDAO.getStoredQuerysMap().get("removePessoa"), params);
 		}catch(Exception ex){
 			ex.printStackTrace();
 			if(save != null){

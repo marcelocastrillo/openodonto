@@ -20,6 +20,7 @@ import java.util.Map;
 
 import br.ueg.openodonto.persistencia.ConnectionFactory;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
+import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.dao.sql.Query;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
@@ -97,7 +98,9 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		return preparedStatement.executeQuery();
 	}
 
-	public List<Object> execute(String sql, Object[] params) throws SQLException {
+	public Map<String,Object> execute(IQuery query) throws SQLException {
+		String sql = query.getQuery();
+		Object[] params =  query.getParams().toArray();
 		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql , Statement.RETURN_GENERATED_KEYS);
 		if(params != null){
 			for(int i=1 ; i < params.length+1; i++){
@@ -111,54 +114,39 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 			}
 		}
 		preparedStatement.execute();
-		return getGeneratedValues(preparedStatement);
+		String table = query.getTable();
+		ResultSet rs = getConnection().getMetaData().getColumns(null, null, table, null);
+		List<String> names = getGeneratedNames(rs);
+		List<Object> values = getGeneratedValues(preparedStatement);
+		return getGeneratedResult(names, values);
 	}
 	
 	public Map<String, Object> formatResultSet(ResultSet rs) throws SQLException{
 		if(rs != null){
 			Map<String,Object> objects = new HashMap<String ,Object>();
 			ResultSetMetaData meta = rs.getMetaData();
-			int count = rs.getMetaData().getColumnCount();
+			int count = meta.getColumnCount();
 			for(int i = 1; i <= count ; i++){
 				String columnName = meta.getColumnName(i);
-				type:
-				switch (meta.getColumnType(i)) {
-				case Types.BOOLEAN:
-					objects.put(columnName , rs.getBoolean(i));
-					break type;
-				case Types.CHAR:
-					objects.put(columnName , rs.getString(i));;
-					break type;
-				case Types.DATE:
-					objects.put(columnName , rs.getDate(i));;
-					break type;
-				case Types.DOUBLE:
-					objects.put(columnName , rs.getDouble(i));;
-					break type;
-				case Types.FLOAT:
-					objects.put(columnName , rs.getFloat(i));;
-					break type;
-				case Types.INTEGER:
-					objects.put(columnName , rs.getInt(i));;
-					break type;
-				case Types.TIME:
-					objects.put(columnName , rs.getDate(i));;
-					break type;
-				case Types.TIMESTAMP:
-					objects.put(columnName , rs.getDate(i));;
-					break type;
-				case Types.VARCHAR:
-					objects.put(columnName , rs.getString(i));;
-					break type;
-				default:
-					objects.put(columnName , rs.getObject(i));;
-				}				
+				objects.put(columnName, getTypeSyncValue(rs, i));
 			}
 			return objects;
 		}
 		return null;		
 	}
-
+	
+	private List<String> getGeneratedNames(ResultSet rs) throws SQLException{
+		List<String> generatedNames = new ArrayList<String>();
+		while(rs.next()){
+			boolean isAutoIncrement = rs.getString("IS_AUTOINCREMENT").equals("YES");
+			if(isAutoIncrement){
+				String name = rs.getString("COLUMN_NAME");
+				generatedNames.add(name);
+			}
+		}
+		return generatedNames;
+	}
+	
 	private List<Object> getGeneratedValues(PreparedStatement preparedStatement) throws SQLException{
 		ResultSet generatedValues = preparedStatement.getGeneratedKeys();
 		List<Object> generatedKeys = new LinkedList<Object>();
@@ -166,11 +154,50 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 			while (generatedValues.next()) {
 				int count = generatedValues.getMetaData().getColumnCount();
 				for (int i = 1; i <= count; i++) {
-					generatedKeys.add(generatedValues.getObject(i));
+					generatedKeys.add(getTypeSyncValue(generatedValues,i));
 				}
 			}
 		}
 		return generatedKeys;
+	}
+	
+	private Map<String , Object> getGeneratedResult(List<String> names, List<Object> values){
+		if(names.size() != values.size()){
+			throw new RuntimeException("Erro recuperar valores gerados");
+		}
+		Map<String , Object> generateMap = new HashMap<String, Object>();
+		Iterator<String> iteratorNames = names.iterator();
+		Iterator<Object> iteratorValues = values.iterator();
+		while(iteratorNames.hasNext() && iteratorValues.hasNext()){
+			generateMap.put(iteratorNames.next(), iteratorValues.next());
+		}
+		return generateMap;
+	}
+	
+	private Object getTypeSyncValue(ResultSet rs,int i) throws SQLException{
+		ResultSetMetaData meta = rs.getMetaData();
+		switch (meta.getColumnType(i)) {
+		case Types.BOOLEAN:
+			return rs.getBoolean(i);
+		case Types.CHAR:
+			return  rs.getString(i);
+		case Types.DATE:
+			return rs.getDate(i);
+		case Types.DOUBLE:
+			return rs.getDouble(i);
+		case Types.FLOAT:
+			return rs.getFloat(i);
+		case Types.INTEGER:
+			return rs.getInt(i);
+		case Types.TIME:
+			return rs.getDate(i);
+		case Types.TIMESTAMP:
+			return rs.getDate(i);
+		case Types.VARCHAR:
+			return rs.getString(i);
+		default:
+			return rs.getObject(i);
+		}
 	}
 	
 	public List<T> listar(String... fields) throws SQLException{
@@ -190,9 +217,9 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		Iterator<Class<?>> iterator = sortedSet.iterator();
 		while(iterator.hasNext()){
 			Class<?> type = iterator.next();
-			Map<String , Object> localParams = disjoinWhereParams(object , whereParams, type);
-			Query query = CrudQuery.getUpdateQuery(object.get(type), localParams, CrudQuery.getTableName(type));
-			execute(query.getQuery(), query.getParams().toArray());
+			Map<String , Object> localParams = disjoinAttributes(object , whereParams, type);
+			IQuery query = CrudQuery.getUpdateQuery(object.get(type), localParams, CrudQuery.getTableName(type));
+			execute(query);
 		}
 	}
 	
@@ -201,10 +228,18 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		Map<Class<?> , Map<String , Object>> object = format.formatDisjoin();
 		LinkedList<Class<?>> sortedSet = new LinkedList<Class<?>>(object.keySet());
 		Iterator<Class<?>> iterator = sortedSet.descendingIterator();
+		Map<String,Object> generated = null;
 		while(iterator.hasNext()){
 			Class<?> type = iterator.next();
-			Query query = CrudQuery.getInsertQuery(object.get(type), CrudQuery.getTableName(type));
-			System.out.println(query.getQuery() + " " + query.getParams());
+			if(generated != null && !generated.isEmpty()){
+				Map<String , Object> localAttributes = disjoinAttributes(object, generated, type);
+				Map<String , Object> objectAttributes = object.get(type);
+				for(String name : localAttributes.keySet()){
+					objectAttributes.put(name, localAttributes.get(name));
+				}
+			}
+			IQuery query = CrudQuery.getInsertQuery(object.get(type), CrudQuery.getTableName(type));
+			generated = execute(query);
 		}
 	}
 	
@@ -212,17 +247,17 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		
 	}
 	
-	private Map<String , Object> disjoinWhereParams(Map<Class<?> , Map<String , Object>> object,Map<String,Object> whereParams, Class<?> type){
+	private Map<String , Object> disjoinAttributes(Map<Class<?> , Map<String , Object>> object,Map<String,Object> attributes, Class<?> type){
 		Map<String , Object> localParams = new LinkedHashMap<String, Object>();
 		Inheritance inherite = type.getAnnotation(Inheritance.class);
-		for(String key : whereParams.keySet()){
+		for(String key : attributes.keySet()){
 			if(object.get(type).containsKey(key)){
-				localParams.put(key, whereParams.get(key));
+				localParams.put(key, attributes.get(key));
 			}
 			if(inherite != null){
 				for(ForwardKey fk : inherite.joinFields()){
 					if(fk.foreginField().equals(key)){
-						localParams.put(fk.tableField(), whereParams.get(key));
+						localParams.put(fk.tableField(), attributes.get(key));
 					}
 				}
 			}
