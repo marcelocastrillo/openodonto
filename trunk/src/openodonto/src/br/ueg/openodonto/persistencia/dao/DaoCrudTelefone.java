@@ -13,7 +13,7 @@ import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 
-public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManager<Telefone> {
+public class DaoCrudTelefone extends BaseDAO<Telefone>{
 
 	private static final long serialVersionUID = -8028356632411640718L;
 
@@ -90,7 +90,7 @@ public class DaoCrudTelefone extends BaseDAO<Telefone> implements EntityManager<
 		List<Telefone> telefone = new ArrayList<Telefone>();
 		try{
 			getConnection().setReadOnly(true);
-			telefone = super.listar();
+			//telefone = super.listar();
 			getConnection().setReadOnly(false);
 		}catch (Exception e) {
             e.printStackTrace();
