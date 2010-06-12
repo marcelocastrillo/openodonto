@@ -1,6 +1,9 @@
 package br.ueg.openodonto.persistencia.orm;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -21,8 +24,20 @@ public class OrmFormat{
 	}
 	
 	public Map<String , Object> format(String... fields){
-		ResultMask mask = new MaskResolver(this.getClass(), fields);
+		ResultMask mask = new MaskResolver(ormResolver.getTarget().getClass(), fields);
 		return ormResolver.formatBase(mask.getResultMask());
+	}
+	
+	public Map<String , Object> formatNotNull(){
+		Class<?> type = getOrmResolver().getTarget().getClass();
+		List<Field> fields = ormResolver.getNotNullFields(new ArrayList<Field>(), type, true);
+		return ormResolver.formatBase(fields);
+	}
+	
+	public Map<String , Object> formatKey(){
+		Class<?> type = getOrmResolver().getTarget().getClass();
+		List<Field> fields = OrmResolver.getKeyFields(new ArrayList<Field>(), type, true);
+		return ormResolver.formatBase(fields);
 	}
 	
 	public Map<Class<?>,Map<String , Object>> formatDisjoin(String... fields){
