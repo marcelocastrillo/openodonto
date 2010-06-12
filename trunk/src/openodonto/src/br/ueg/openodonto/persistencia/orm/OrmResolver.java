@@ -2,6 +2,7 @@ package br.ueg.openodonto.persistencia.orm;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -15,8 +16,13 @@ import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 
 public class OrmResolver {
 
-	private Object                      target;
-	private Map<Class<?> , Class<?>>    inheritanceMap;
+	private Object                                    target;
+	private Map<Class<?> , Class<?>>                  inheritanceMap;
+	private static Map<Class<?> , List<Field>>        fieldsCache;
+	
+	static{
+		fieldsCache = new HashMap<Class<?>, List<Field>>();
+	}
 	
 	public OrmResolver(Object target){
 		this.target = target;
@@ -24,13 +30,22 @@ public class OrmResolver {
 		mapInheritance();
 	}
 	
-	private void mapInheritance(){
-		Class<?> classe = target.getClass();
+	public OrmResolver(Class<?> classe){
+		inheritanceMap = new LinkedHashMap<Class<?>, Class<?>>();
+		mapInheritance(classe);
+	}
+	
+	private void mapInheritance(Class<?> classe){
 		while(classe.getSuperclass() != null &&
 				(classe.getSuperclass().isAnnotationPresent(Table.class) ||
 						classe.getSuperclass().equals(Object.class))){			
 			inheritanceMap.put(classe, classe = classe.getSuperclass());
 		}		
+	}
+	
+	private void mapInheritance(){
+		Class<?> classe = target.getClass();
+		mapInheritance(classe);
 	}
 	
 	public Map<String , Object> format(){
@@ -77,15 +92,54 @@ public class OrmResolver {
 		return disjoinMap;
 	}
 	
+	public List<Field> getNotNullFields(List<Field> fields,Class<?> type,boolean deep){
+		List<Field> all = getAllFields(fields, type, deep);
+		List<Field> remove = new ArrayList<Field>();
+		OrmTranslator translator = new OrmTranslator(all);
+		for(Field field : all){
+			Object value = null;
+			try{
+				if(translator.getColumn(field) != null){
+				    value = getBeanValue(field);
+				}
+			}catch(Exception ex){}
+			if(value == null){
+				remove.add(field);
+			}
+		}
+		all.removeAll(remove);
+		return all;
+	}
+	
+	public static List<Field> getKeyFields(List<Field> fields,Class<?> type,boolean deep){
+		List<Field> all = getAllFields(fields, type, deep);
+		List<Field> remove = new ArrayList<Field>();
+		for(Field field : all){
+			if(!field.isAnnotationPresent(Id.class)){
+				remove.add(field);
+			}
+		}
+		all.removeAll(remove);
+		return all;
+	}
+	
 	public static List<Field> getAllFields(List<Field> fields, Class<?> type, boolean deep) {
-	    for (Field field: type.getDeclaredFields()) {
-	        fields.add(field);
-	    }
+		if(fieldsCache.containsKey(type)){
+			fields.addAll(fieldsCache.get(type));
+		}else{
+	        for (Field field: type.getDeclaredFields()) {
+	            fields.add(field);
+	        }
+		}
 	    Class<?> superType = type.getSuperclass();
 	    if (superType != null) {
 		    Table table = superType.getAnnotation(Table.class);
 		    if((table != null && deep) || (table == null && !deep) ){
-	            fields = getAllFields(fields, superType ,deep);
+		    	if(fieldsCache.containsKey(superType)){
+		    		fields.addAll(fieldsCache.get(superType));
+		    	}else{
+		    		fields = getAllFields(fields, superType ,deep);
+		    	}
 		    }
 	    }
 	    return fields;
@@ -180,6 +234,9 @@ public class OrmResolver {
 	}
 	
 	private Object getBeanValue(Field field){
+		if(target == null){
+			return null;
+		}
 	    try {
 	    	Object value = PropertyUtils.getNestedProperty(target, field.getName());
 			if(Enum.class.isAssignableFrom(field.getType()) &&

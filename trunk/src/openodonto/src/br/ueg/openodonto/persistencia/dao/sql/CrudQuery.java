@@ -24,6 +24,14 @@ public class CrudQuery{
 	public static <T extends Entity>Query getListQuery(Class<T> classe,String... fields){
     	return new Query(getSelectRoot(classe,fields) , Collections.EMPTY_LIST , getTableName(classe));
     }
+    
+	public static <T extends Entity>Query getSelectQuery(Class<?> classe, Map<String , Object> whereParams,String... fields){
+		StringBuilder query = new StringBuilder(getSelectRoot(classe,fields));
+		String table = getTableName(classe);
+		List<Object> params = new ArrayList<Object>();
+		makeWhereOfQuery(whereParams, params, query);
+    	return new Query(query.toString(), params, table);
+    }
 	
 	public static IQuery getInsertQuery(Map<String , Object> object,String table){
 		StringBuilder query = new StringBuilder();
@@ -67,18 +75,7 @@ public class CrudQuery{
 				query.append(", ");
 			}
 		}
-		if(whereParams != null && whereParams.size() > 0){
-		    iterator = whereParams.keySet().iterator();
-		    query.append(" WHERE ");
-		    while(iterator.hasNext()){
-			    String field = iterator.next();
-			    query.append(field + " = ?");
-			    params.add(whereParams.get(field));
-				if(iterator.hasNext()){
-					query.append(", ");
-				}
-	    	}
-		}		
+		makeWhereOfQuery(whereParams, params, query);
 		return new Query(query.toString(), params,table);
 	}
 	
@@ -87,6 +84,11 @@ public class CrudQuery{
 		List<Object> params = new ArrayList<Object>();
 		query.append("DELETE FROM ");
 		query.append(table);
+		makeWhereOfQuery(whereParams, params, query);
+		return new Query(query.toString(), params,table);
+	}
+	
+	private static void makeWhereOfQuery(Map<String , Object> whereParams,List<Object> params,StringBuilder query){
 		if(whereParams != null && whereParams.size() > 0){
 		    Iterator<String> iterator = whereParams.keySet().iterator();
 		    query.append(" WHERE ");
@@ -95,14 +97,13 @@ public class CrudQuery{
 			    query.append(field + " = ?");
 			    params.add(whereParams.get(field));
 				if(iterator.hasNext()){
-					query.append(", ");
+					query.append(" AND ");
 				}
 	    	}
 		}
-		return new Query(query.toString(), params,table);
-	}	
-
-    public static <T extends Entity>String getSelectRoot(Class<T> classe,String... fields){
+	}
+	
+    public static String getSelectRoot(Class<?> classe,String... fields){
     	StringBuilder stb = new StringBuilder();
     	stb.append("SELECT ");
     	OrmTranslator translator = null;
@@ -130,7 +131,7 @@ public class CrudQuery{
     	return stb.toString();
     }
     
-    public static <T extends Entity>String getFromJoin(Class<T> classe){
+    public static String getFromJoin(Class<?> classe){
     	StringBuilder stb = new StringBuilder();
     	Class<?> type = classe;
     	Class<?> superType = type.getSuperclass();
