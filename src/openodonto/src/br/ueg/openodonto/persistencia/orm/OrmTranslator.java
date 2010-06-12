@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class OrmTranslator {
 
-	private List<Field>  fields;
-	private Map<String, Field> columnsMap;
+	private List<Field>          fields;
+	private Map<String, Field>   columnsMap;
 	
 	public OrmTranslator(List<Field> fields){
 		this.fields = fields;

@@ -1,10 +1,13 @@
 package br.ueg.openodonto.dominio;
 
 import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.ForwardKey;
+import br.ueg.openodonto.persistencia.orm.Inheritance;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name="usuarios")
+@Inheritance(joinFields={@ForwardKey(tableField="id_pessoa",foreginField="id")})
 public class Usuario extends Pessoa{
 
 	private static final long serialVersionUID = -8779459291420609676L;
