@@ -26,6 +26,7 @@ import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Inheritance;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.ueg.openodonto.persistencia.orm.OrmResolver;
 
 
 /**
@@ -203,7 +204,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 	public List<T> listar(String... fields) throws SQLException{
 		List<T> lista = new ArrayList<T>();
 		Query query = CrudQuery.getListQuery(classe,fields);
-		ResultSet rs = executeQuery(query.getQuery(), query.getParams());
+		ResultSet rs = executeQuery(query.getQuery(), query.getParams().toArray());
 		while(rs.next()){
 			lista.add(parseEntity(rs));
 		}
@@ -228,22 +229,25 @@ public abstract class BaseDAO<T extends Entity> implements Serializable {
 		Map<Class<?> , Map<String , Object>> object = format.formatDisjoin();
 		LinkedList<Class<?>> sortedSet = new LinkedList<Class<?>>(object.keySet());
 		Iterator<Class<?>> iterator = sortedSet.descendingIterator();
-		Map<String,Object> generated = null;
 		while(iterator.hasNext()){
 			Class<?> type = iterator.next();
-			if(generated != null && !generated.isEmpty()){
-				Map<String , Object> localAttributes = disjoinAttributes(object, generated, type);
-				Map<String , Object> objectAttributes = object.get(type);
-				for(String name : localAttributes.keySet()){
-					objectAttributes.put(name, localAttributes.get(name));
+			if(type.isAnnotationPresent(Inheritance.class)){
+				ForwardKey[] fks = type.getAnnotation(Inheritance.class).joinFields();
+				for(ForwardKey fk : fks){
+					Class<?> inheriter = format.getOrmResolver().getInheritanceMap().get(type);
+					Object fkValue = object.get(inheriter).get(fk.foreginField());
+					object.get(type).put(fk.tableField(), fkValue);
 				}
 			}
 			IQuery query = CrudQuery.getInsertQuery(object.get(type), CrudQuery.getTableName(type));
-			generated = execute(query);
+			Map<String,Object> generated = execute(query);
+			for(String name : generated.keySet()){
+				object.get(type).put(name, generated.get(name));
+			}
 		}
 	}
 	
-	public void remove(T entity) throws SQLException{
+	public void remove(Map<String , Object> whereParams) throws SQLException{
 		
 	}
 	

@@ -41,7 +41,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		
 		long start = System.currentTimeMillis();
 		DaoCrudPaciente dao = new DaoCrudPaciente();
-
+		/*
 		Paciente paciente = new Paciente();
 		paciente.setCidade("Goiania");
 		paciente.setCpf("02549287142");
@@ -51,9 +51,10 @@ public class DaoCrudPaciente extends BaseDAO<Paciente> implements EntityManager<
 		paciente.setEstado(TiposUF.GO);
 		paciente.setNome("Vinicius Gardenio Guimaraes Rodrigues");
 		paciente.setTelefone(new ArrayList<Telefone>());
-
+        */
 		try {
-			dao.insert(paciente);
+			System.out.println(dao.listar("*"));
+			//dao.insert(paciente);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
