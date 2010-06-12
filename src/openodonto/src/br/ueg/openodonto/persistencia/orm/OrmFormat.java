@@ -38,5 +38,8 @@ public class OrmFormat{
     	ormResolver.parse(values);
     }
 	
+    public OrmResolver getOrmResolver() {
+		return ormResolver;
+	}
 	
 }

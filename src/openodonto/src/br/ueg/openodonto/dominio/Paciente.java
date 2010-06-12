@@ -1,8 +1,6 @@
 package br.ueg.openodonto.dominio;
 
 import java.sql.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
