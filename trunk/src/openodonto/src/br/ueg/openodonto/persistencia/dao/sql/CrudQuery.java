@@ -3,6 +3,7 @@ package br.ueg.openodonto.persistencia.dao.sql;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,19 +20,39 @@ import br.ueg.openodonto.persistencia.orm.Table;
 
 public class CrudQuery{
 	
+	private static Map<Class<?> , String> tableNameCache;
+	
+	static{
+		tableNameCache = new HashMap<Class<?>, String>();		
+	}
 	
     @SuppressWarnings("unchecked")
-	public static <T extends Entity>Query getListQuery(Class<T> classe,String... fields){
+	public static <T extends Entity>IQuery getListQuery(Class<T> classe,String... fields){
     	return new Query(getSelectRoot(classe,fields) , Collections.EMPTY_LIST , getTableName(classe));
     }
     
-	public static <T extends Entity>Query getSelectQuery(Class<?> classe, Map<String , Object> whereParams,String... fields){
+	public static <T extends Entity>IQuery getSelectQuery(Class<?> classe, Map<String , Object> whereParams,String... fields){
 		StringBuilder query = new StringBuilder(getSelectRoot(classe,fields));
 		String table = getTableName(classe);
 		List<Object> params = new ArrayList<Object>();
 		makeWhereOfQuery(whereParams, params, query);
     	return new Query(query.toString(), params, table);
     }
+	
+	public static IQuery getInheritanceConstraintQuery(String table,Map.Entry<String, Map<String , String>> entry,Map<String, Object> whereParams){
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT 1 FROM ");
+		query.append(table);
+		query.append(" INNER JOIN ").append(entry.getKey());
+		query.append(" ON ");
+		Map<String , String> joinAttributes = entry.getValue();
+		for(Map.Entry<String, String> join : joinAttributes.entrySet()){
+			query.append(table).append(".").append(join.getKey()).append(" = ").append(entry.getKey()).append(".").append(join.getValue());	
+		}
+		List<Object> params = new ArrayList<Object>();
+		makeWhereOfQuery(whereParams, params, query);
+		return new Query(query.toString(), params, table);
+	}
 	
 	public static IQuery getInsertQuery(Map<String , Object> object,String table){
 		StringBuilder query = new StringBuilder();
@@ -151,7 +172,12 @@ public class CrudQuery{
     }
     
     public static String getTableName(Class<?> clazz){
-    	return clazz.getAnnotation(Table.class).name();
+    	String tableName;
+    	if((tableName = tableNameCache.get(clazz)) == null ){
+    		tableName = clazz.getAnnotation(Table.class).name();
+    		tableNameCache.put(clazz, tableName);
+    	}
+    	return tableName;
     }
     
 }

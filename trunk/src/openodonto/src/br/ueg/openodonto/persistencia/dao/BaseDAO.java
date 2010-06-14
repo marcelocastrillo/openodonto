@@ -24,7 +24,6 @@ import br.ueg.openodonto.persistencia.ConnectionFactory;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.dao.sql.Query;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Inheritance;
@@ -216,6 +215,37 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 		}
 	}
 	
+	protected boolean hasInheritanceConstraint(Class<?> type,Map<String , Object> keyParams) throws SQLException{
+		ResultSet rs = getConnection().getMetaData().getExportedKeys(null, null, CrudQuery.getTableName(type));
+		Map<String, Map<String , String>> joinMap = new HashMap<String, Map<String , String>>();
+		Map<String , Object> whereParams = new HashMap<String, Object>();
+		String tableName = CrudQuery.getTableName(type);
+		while (rs.next()) {
+			Map<String, Object> formatedRs = formatResultSet(rs);
+			String fkTableName = formatedRs.get("FKTABLE_NAME").toString();
+			Map<String , String> joinAttributteMap = new HashMap<String, String>();
+			if((joinAttributteMap = joinMap.get(fkTableName)) == null){
+				joinAttributteMap = new HashMap<String, String>();
+				joinMap.put(fkTableName, joinAttributteMap);
+			}
+			String pk = formatedRs.get("PKCOLUMN_NAME").toString();
+			String fk = formatedRs.get("FKCOLUMN_NAME").toString();
+			if(keyParams.containsKey(pk)){
+			    whereParams.put(tableName + "." + pk, keyParams.get(pk));
+			}else{
+				throw new RuntimeException("O valor da coluna " + pk + " é obrigatório");
+			}
+			joinAttributteMap.put(pk,fk);			
+		}
+		boolean has = false;
+		for(Map.Entry<String, Map<String , String>> entry : joinMap.entrySet()){
+			IQuery query = CrudQuery.getInheritanceConstraintQuery(tableName, entry, whereParams);
+			ResultSet rsi = executeQuery(query.getQuery(), query.getParams(), 1);
+			has = has || rsi.next();
+		}		
+		return has;
+	}
+	
 	private void applyForwardKey(OrmFormat format,Class<?> type,Map<Class<?> , Map<String , Object>> object){
 		if(type.isAnnotationPresent(Inheritance.class)){
 			Class<?> inheriter = format.getOrmResolver().getInheritanceMap().get(type);
@@ -229,7 +259,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 	
 	private Map<String, Object> restoreInheritance(Class<?> type,OrmFormat format) throws SQLException{
 		Map<String, Object> whereParams = format.formatKey();
-		Query query = CrudQuery.getSelectQuery(type, whereParams, "*");
+		IQuery query = CrudQuery.getSelectQuery(type, whereParams, "*");
 		ResultSet rs = executeQuery(query.getQuery(), query.getParams(),1);
 		if(rs.next()){
 			return formatResultSet(rs);
@@ -240,7 +270,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 
 	public List<T> listar(String... fields) throws SQLException{
 		List<T> lista = new ArrayList<T>();
-		Query query = CrudQuery.getListQuery(classe,fields);
+		IQuery query = CrudQuery.getListQuery(classe,fields);
 		ResultSet rs = executeQuery(query.getQuery(), query.getParams(), null);
 		while(rs.next()){
 			lista.add(parseEntity(rs));
