@@ -36,7 +36,12 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`pacientes` (
   `responsavel` VARCHAR(150) NULL ,
   `referencia` VARCHAR(150) NULL ,
   `observacao` VARCHAR(500) NULL ,
-  PRIMARY KEY (`id_pessoa`) )
+  PRIMARY KEY (`id_pessoa`) ,
+  CONSTRAINT `fk_pacientes_pessoas`
+    FOREIGN KEY (`id_pessoa` )
+    REFERENCES `openodonto`.`pessoas` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_pacientes_pessoas` ON `openodonto`.`pacientes` (`id_pessoa` ASC) ;
@@ -51,10 +56,15 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`usuarios` (
   `id_pessoa` INT(10) NOT NULL ,
   `user` VARCHAR(45) NOT NULL ,
   `senha` VARCHAR(45) NOT NULL ,
-  PRIMARY KEY (`id_pessoa`) )
+  PRIMARY KEY (`id_pessoa`) ,
+  CONSTRAINT `fk_usuarios_pessoas`
+    FOREIGN KEY (`id_pessoa` )
+    REFERENCES `openodonto`.`pessoas` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_usuarios_pessoas1` ON `openodonto`.`usuarios` (`id_pessoa` ASC) ;
+CREATE INDEX `fk_usuarios_pessoas` ON `openodonto`.`usuarios` (`id_pessoa` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -68,7 +78,12 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`telefones` (
   `numero` VARCHAR(15) NULL ,
   `tipo` INT(1) NULL ,
   `id_pessoa` INT(10) NOT NULL ,
-  PRIMARY KEY (`id`) )
+  PRIMARY KEY (`id`) ,
+  CONSTRAINT `fk_telefones_pessoas1`
+    FOREIGN KEY (`id_pessoa` )
+    REFERENCES `openodonto`.`pessoas` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_telefones_pessoas1` ON `openodonto`.`telefones` (`id_pessoa` ASC) ;
@@ -86,7 +101,12 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`colaboradores` (
   `observacao` VARCHAR(500) NULL ,
   `cpf` VARCHAR(11) NULL ,
   `cnpj` VARCHAR(14) NULL ,
-  PRIMARY KEY (`id_pessoa`) )
+  PRIMARY KEY (`id_pessoa`) ,
+  CONSTRAINT `fk_colaboradores_pessoas1`
+    FOREIGN KEY (`id_pessoa` )
+    REFERENCES `openodonto`.`pessoas` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_colaboradores_pessoas1` ON `openodonto`.`colaboradores` (`id_pessoa` ASC) ;
@@ -102,7 +122,12 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`dentistas` (
   `cro` INT NULL ,
   `especialidade` VARCHAR(150) NULL ,
   `observacao` VARCHAR(500) NULL ,
-  PRIMARY KEY (`pessoas_id`) )
+  PRIMARY KEY (`pessoas_id`) ,
+  CONSTRAINT `fk_dentista_pessoas1`
+    FOREIGN KEY (`pessoas_id` )
+    REFERENCES `openodonto`.`pessoas` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_dentista_pessoas1` ON `openodonto`.`dentistas` (`pessoas_id` ASC) ;
@@ -120,7 +145,12 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`odontograma` (
   `face` INT(2) NOT NULL ,
   `procedimento` INT(2) NOT NULL ,
   `descricao` VARCHAR(300) NULL ,
-  PRIMARY KEY (`id`) )
+  PRIMARY KEY (`id`) ,
+  CONSTRAINT `fk_odontograam_pacientes1`
+    FOREIGN KEY (`id_pessoa` )
+    REFERENCES `openodonto`.`pacientes` (`id_pessoa` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_odontograam_pacientes1` ON `openodonto`.`odontograma` (`id_pessoa` ASC) ;
@@ -148,7 +178,17 @@ DROP TABLE IF EXISTS `openodonto`.`colaboradores_produtos` ;
 CREATE  TABLE IF NOT EXISTS `openodonto`.`colaboradores_produtos` (
   `colaboradores_id_pessoa` INT(10) NOT NULL ,
   `idproduto_servico` INT(10) NOT NULL ,
-  PRIMARY KEY (`idproduto_servico`, `colaboradores_id_pessoa`) )
+  PRIMARY KEY (`idproduto_servico`, `colaboradores_id_pessoa`) ,
+  CONSTRAINT `fk_colaboradores_has_produto_servico_colaboradores1`
+    FOREIGN KEY (`colaboradores_id_pessoa` )
+    REFERENCES `openodonto`.`colaboradores` (`id_pessoa` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_colaboradores_has_produto_servico_produto_servico1`
+    FOREIGN KEY (`idproduto_servico` )
+    REFERENCES `openodonto`.`produtos` (`idprodutos` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_colaboradores_has_produto_servico_colaboradores1` ON `openodonto`.`colaboradores_produtos` (`colaboradores_id_pessoa` ASC) ;

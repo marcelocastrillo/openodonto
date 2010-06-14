@@ -37,6 +37,13 @@ public class Paciente extends Pessoa{
 	@Column(name="observacao")
 	private String      observacao;
 
+	public Paciente() {
+	}
+	
+	public Paciente(Long codigo) {
+		setCodigo(codigo);
+	}	
+	
 	public String getCpf() {
 		return cpf;
 	}
