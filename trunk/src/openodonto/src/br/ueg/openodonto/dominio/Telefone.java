@@ -34,9 +34,13 @@ public class Telefone implements Serializable,Entity{
 	private TiposTelefone tipoTelefone;
 	
 	@Column(name="id_pessoa")
-	private Long id_pessoa;
+	private Long idPessoa;
 	
 	public Telefone() {
+	}
+	
+	public Telefone(Long idPessoa) {
+		this.idPessoa  = idPessoa;
 	}
 	
 	public Long getCodigo() {
@@ -70,14 +74,14 @@ public class Telefone implements Serializable,Entity{
 
 	public void setTipoTelefone(TiposTelefone tipoTelefone) {
 		this.tipoTelefone = tipoTelefone;
-	}	
-
-	public Long getId_pessoa() {
-		return id_pessoa;
 	}
 
-	public void setId_pessoa(Long idPessoa) {
-		id_pessoa = idPessoa;
+	public Long getIdPessoa() {
+		return idPessoa;
+	}
+
+	public void setIdPessoa(Long idPessoa) {
+		this.idPessoa = idPessoa;
 	}
 
 	@Override
@@ -86,7 +90,7 @@ public class Telefone implements Serializable,Entity{
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result
-				+ ((id_pessoa == null) ? 0 : id_pessoa.hashCode());
+				+ ((idPessoa == null) ? 0 : idPessoa.hashCode());
 		return result;
 	}
 
@@ -104,10 +108,10 @@ public class Telefone implements Serializable,Entity{
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
-		if (id_pessoa == null) {
-			if (other.id_pessoa != null)
+		if (idPessoa == null) {
+			if (other.idPessoa != null)
 				return false;
-		} else if (!id_pessoa.equals(other.id_pessoa))
+		} else if (!idPessoa.equals(other.idPessoa))
 			return false;
 		return true;
 	}
@@ -115,7 +119,7 @@ public class Telefone implements Serializable,Entity{
 	@Override
 	public String toString() {
 		return "Telefone [codigo=" + codigo + ", ddd=" + ddd + ", id_pessoa="
-				+ id_pessoa + ", numero=" + numero + ", tipoTelefone="
+				+ idPessoa + ", numero=" + numero + ", tipoTelefone="
 				+ tipoTelefone + "]";
 	}
 

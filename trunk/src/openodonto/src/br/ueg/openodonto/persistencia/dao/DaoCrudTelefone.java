@@ -29,8 +29,8 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 	}
 	
 	private static void initQuerymap(){
-		BaseDAO.getStoredQuerysMap().put("findByKey","SELECT * FROM telefones WHERE id = ?");
-		BaseDAO.getStoredQuerysMap().put("findByPessoa","SELECT * FROM telefones WHERE id_pessoa = ?");
+		BaseDAO.getStoredQuerysMap().put("findByKey","WHERE id = ?");
+		BaseDAO.getStoredQuerysMap().put("findByPessoa","WHERE id_pessoa = ?");
 	}
 	
 	@Override

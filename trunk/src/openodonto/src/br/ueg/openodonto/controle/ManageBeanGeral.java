@@ -13,6 +13,7 @@ import br.ueg.openodonto.controle.validador.AbstractValidator;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
+import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.util.WordFormatter;
 import br.ueg.openodonto.visao.ApplicationView;
 import br.ueg.openodonto.visao.ApplicationViewFactory;
@@ -25,7 +26,7 @@ import br.ueg.openodonto.visao.ApplicationViewFactory.ViewHandler;
  * @param <T>
  */
 
-public abstract class ManageBeanGeral <T> {
+public abstract class ManageBeanGeral <T extends Entity> {
 	
 	public static final String DEFAULT_RULE = null;
 
@@ -131,7 +132,6 @@ public abstract class ManageBeanGeral <T> {
 				alredy = true;
 			acaoSalvarExtra();
             this.dao.alterar(this.backBean);
-			this.backBean = dao.getEntityBean();
 		}catch(Exception ex){
 			exibirPopUp(this.resourceBundle.getString("ErroSistema"));
 			getView().addLocalMessage("ErroSistema", "saidaPadrao", true);

@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLNonTransientException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -236,7 +237,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 			return null;
 		}
 	}
-	
+
 	public List<T> listar(String... fields) throws SQLException{
 		List<T> lista = new ArrayList<T>();
 		Query query = CrudQuery.getListQuery(classe,fields);
@@ -278,13 +279,14 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 			}
 			IQuery query = CrudQuery.getInsertQuery(object.get(type), CrudQuery.getTableName(type));
 			Map<String,Object> generated = execute(query);
+			format.parse(generated);
 			for(String name : generated.keySet()){
 				object.get(type).put(name, generated.get(name));
 			}
 		}
 	}
 	
-	public void remove(Map<String , Object> whereParams) throws SQLException{
+	public void remove(Map<String , Object> whereParams,boolean permissive) throws SQLException{
 		if(whereParams == null || whereParams.isEmpty()){
 			throw new RuntimeException("Parametro WHERE obrigatorio. Caso contrario causaria remoção de todos os dados da tabela");
 		}
@@ -296,7 +298,15 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 			Set<String> keysColumns = orm.format(type, false).keySet();
 			Map<String , Object> localParams = disjoinAttributes(keysColumns, whereParams, type);
 			IQuery query = CrudQuery.getRemoveQuery(localParams, CrudQuery.getTableName(type));
-			execute(query);
+			try{
+		        execute(query);
+			}catch (SQLNonTransientException e) {
+				if(sortedSet.size() > 1 && permissive){
+					break;
+				}else{
+					throw e;
+				}
+			}
 		}
 	}
 	
