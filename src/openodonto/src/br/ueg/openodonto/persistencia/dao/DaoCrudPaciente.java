@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.dominio.Paciente;
+import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
@@ -24,6 +25,37 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 	}
 	
 
+	public static void main(String[] args) {
+		DaoCrudPaciente dao = new DaoCrudPaciente();
+		Paciente paciente = new Paciente();
+		paciente.setCodigo(1L);
+		OrmFormat orm = new OrmFormat(paciente);
+		Map<String , Object> params = orm.formatKey();
+		try {
+			System.out.println(dao.hasInheritanceConstraint(Pessoa.class, params));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	public static void main(String[] args) throws SQLException {
+		DaoCrudPaciente dao = new DaoCrudPaciente();
+		dao.listar("codigo");
+		ResultSet rs = dao.getConnection().getMetaData().getExportedKeys(null, null, "pessoas");
+		int count = rs.getMetaData().getColumnCount();
+		for(int i  = 1 ; i <= count;i++){
+			System.out.format("%20s", rs.getMetaData().getColumnName(i));
+		}
+		System.out.println();
+		while(rs.next()){
+			for(int i  = 1 ; i <= count;i++){
+				System.out.format("%20s", rs.getString(i));
+			}
+			System.out.println();
+		}
+	}
+	*/
 	public static void initQueryMap(){
 		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE ps.nome LIKE ?");
 		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCodigo","WHERE ps.id = ?");
@@ -69,8 +101,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 				getConnection().setAutoCommit(false);
 				save = getConnection().setSavepoint("Before Update Paciente - Savepoint");
 				OrmFormat orm = new OrmFormat(o);
-				Map<String , Object> params = orm.formatKey();
-				update(o, params);
+				update(o, orm.formatKey());
 				updateRelationshipTelefone(o);
 			}catch(Exception ex){
 				ex.printStackTrace();

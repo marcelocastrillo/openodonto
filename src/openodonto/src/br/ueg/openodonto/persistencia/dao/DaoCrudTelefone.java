@@ -12,6 +12,7 @@ import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
 public class DaoCrudTelefone extends BaseDAO<Telefone>{
 
@@ -42,10 +43,9 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 					return;
 				}
 				getConnection().setAutoCommit(false);
-				save = getConnection().setSavepoint("Before Update Telefoe - Savepoint"); 
-				Map<String , Object> params = new LinkedHashMap<String, Object>();
-				params.put("id", o.getCodigo());
-				//super.executeUpdate(o, params);
+				save = getConnection().setSavepoint("Before Update Telefoe - Savepoint");
+				OrmFormat orm = new OrmFormat(o);
+				update(o, orm.formatKey());
 			}catch(Exception ex){
 				ex.printStackTrace();
 				if(save != null){
