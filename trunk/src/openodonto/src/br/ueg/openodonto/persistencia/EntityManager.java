@@ -18,6 +18,8 @@ public interface EntityManager<T extends  Entity> {
 
 	void remover(T o) throws Exception;
 
+	void load(T o) throws Exception;
+	
     List<T> listar();
 	
 	T pesquisar(Object key);

@@ -5,7 +5,6 @@ import java.sql.Savepoint;
 import java.util.List;
 import java.util.Map;
 
-import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
@@ -102,7 +101,7 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 		Telefone find = new Telefone();
 		find.setCodigo(id);
 		OrmFormat orm = new OrmFormat(find);
-		IQuery query = CrudQuery.getSelectQuery(Paciente.class, orm.formatNotNull(), "*");
+		IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm.formatNotNull(), "*");
 		List<Telefone> lista;
 		try {
 			lista = getSqlExecutor().executarQuery(query.getQuery(), query.getParams(), 1);
@@ -141,6 +140,12 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 	@Override
 	public SqlExecutor<Telefone> getSqlExecutor() {
 		return sqlExecutor;
+	}
+
+	@Override
+	public void load(Telefone o) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

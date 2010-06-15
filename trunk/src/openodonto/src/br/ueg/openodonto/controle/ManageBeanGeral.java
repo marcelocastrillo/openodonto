@@ -181,6 +181,11 @@ public abstract class ManageBeanGeral <T extends Entity> {
 
 	public String acaoCarregarBean(){
 		this.busca.acaoCarregarRegistro();
+		try {
+			getDao().load(getBackBean());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		carregarExtra();
 		return DEFAULT_RULE;
 	}	
@@ -241,6 +246,10 @@ public abstract class ManageBeanGeral <T extends Entity> {
 
 	public ApplicationView getView() {
 		return view;
+	}
+	
+	public EntityManager<T> getDao() {
+		return dao;
 	}
 	
 	public void makeView(Properties params){

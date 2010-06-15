@@ -48,4 +48,10 @@ public class DaoCrudUsuario extends BaseDAO<Usuario>{
 		
 	}
 
+	@Override
+	public void load(Usuario o) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

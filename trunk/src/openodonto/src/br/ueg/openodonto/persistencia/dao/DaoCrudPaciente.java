@@ -23,39 +23,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 	static{		
 		initQueryMap();
 	}
-		
-	public static void main(String[] args) {		
-	
-		DaoCrudPaciente dao = new DaoCrudPaciente();
-		Paciente paciente = new Paciente();
-		paciente.setCodigo(1L);
-		OrmFormat orm = new OrmFormat(paciente);
-		Map<String , Object> params = orm.formatKey();
-		try {
-			System.out.println(dao.referencedConstraint(Pessoa.class, params));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/*
-	public static void main(String[] args) throws SQLException {
-		DaoCrudPaciente dao = new DaoCrudPaciente();
-		dao.listar("codigo");
-		ResultSet rs = dao.getConnection().getMetaData().getExportedKeys(null, null, "pessoas");
-		int count = rs.getMetaData().getColumnCount();
-		for(int i  = 1 ; i <= count;i++){
-			System.out.format("%20s", rs.getMetaData().getColumnName(i));
-		}
-		System.out.println();
-		while(rs.next()){
-			for(int i  = 1 ; i <= count;i++){
-				System.out.format("%20s", rs.getString(i));
-			}
-			System.out.println();
-		}
-	}
-	*/
+
 	public static void initQueryMap(){
 		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE nome LIKE ?");
 		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCodigo","WHERE id = ?");
@@ -161,11 +129,14 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 	
 	@Override
 	public Paciente pesquisar(Object key) {
-		Long id = Long.parseLong(String.valueOf(key));
-		OrmFormat orm = new OrmFormat(new Paciente(id));
-		IQuery query = CrudQuery.getSelectQuery(Paciente.class, orm.formatNotNull(), "*");
+		if(key == null){
+			return null;
+		}
 		List<Paciente> lista;
 		try {
+			Long id = Long.parseLong(String.valueOf(key));
+			OrmFormat orm = new OrmFormat(new Paciente(id));
+			IQuery query = CrudQuery.getSelectQuery(Paciente.class, orm.formatNotNull(), "*");
 			lista = getSqlExecutor().executarQuery(query.getQuery(), query.getParams(), 1);
 			if(lista.size() == 1){
 				return lista.get(0);
@@ -209,6 +180,19 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 	@Override
 	public SqlExecutor<Paciente> getSqlExecutor() {
 		return sqlExecutor;
+	}
+
+	@Override
+	public void load(Paciente o) throws SQLException {
+		if(o == null || o.getCodigo() == null){
+			throw new RuntimeException("Paciente Inválido");
+		}
+		OrmFormat orm = new OrmFormat(o);
+		List<Telefone> telefones = getTelefonesFromPaciente(o.getCodigo());
+		Paciente loaded = pesquisar(o.getCodigo());
+		OrmFormat ormLoaded = new OrmFormat(loaded);
+		orm.parse(ormLoaded.format());
+		o.setTelefone(telefones);
 	}
 	
 	
