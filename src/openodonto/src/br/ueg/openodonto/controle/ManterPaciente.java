@@ -11,6 +11,9 @@ import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.validador.AbstractValidator;
 import br.ueg.openodonto.controle.validador.ValidadorPadrao;
 import br.ueg.openodonto.dominio.Paciente;
+import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
+import br.ueg.openodonto.persistencia.dao.sql.IQuery;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.util.WordFormatter;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {
@@ -91,6 +94,8 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		
 		try{
 			List<Paciente> result = null;
+			Paciente paciente = new Paciente();
+			OrmFormat orm = new OrmFormat(paciente);
 			if(this.getBusca().getParams().get("opcao").equals("codigo")){
 				long cod = 0;
 				try{
@@ -101,14 +106,19 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 					getBusca().getParams().put("opcao", null);
 					return DEFAULT_RULE;
 				}
-				result = dao.executarQuery("Paciente.BuscaByCodigo", "codigo", cod);
+				paciente.setCodigo(cod);
+				IQuery query = CrudQuery.getSelectQuery(Paciente.class, orm.formatNotNull(), "*");
+				result = dao.getSqlExecutor().executarQuery(query.getQuery(), query.getParams(), null);
 			}
 			else if(this.getBusca().getParams().get("opcao").equals("nome")){
-				result = dao.executarQuery("Paciente.BuscaByNome", "nome", "%"+this.getBusca().getParams().get("param")+"%");
+				paciente.setNome(this.getBusca().getParams().get("param"));				
+				result = dao.getSqlExecutor().executarNamedQuery("Paciente.BuscaByNome", orm.formatNotNull().values(), "*");				
 			}else if(this.getBusca().getParams().get("opcao").equals("cpf")){
-				result = dao.executarQuery("Paciente.BuscaByCPF", "cpf", this.getBusca().getParams().get("param"));
+				paciente.setCpf(this.getBusca().getParams().get("param"));
+				result = dao.getSqlExecutor().executarNamedQuery("Paciente.BuscaByCPF", orm.formatNotNull().values(), "*");
 			}else if(this.getBusca().getParams().get("opcao").equals("email")){
-			   result = dao.executarQuery("Paciente.BuscaByEmail", "email", this.getBusca().getParams().get("param"));
+				paciente.setEmail(this.getBusca().getParams().get("param"));
+				result = dao.getSqlExecutor().executarNamedQuery("Paciente.BuscaByEmail", orm.formatNotNull().values(), "*");
 		    }
 			if(result != null){
 				this.getBusca().acaoLimpar();

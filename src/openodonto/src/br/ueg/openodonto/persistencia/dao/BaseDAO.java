@@ -11,6 +11,7 @@ import java.sql.SQLNonTransientException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -71,7 +72,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 		this.getConnectionFactory().closeConnection();
 	}
 
-	public ResultSet executeQuery(String sql, List<Object> params, Integer limit) throws SQLException {
+	public ResultSet executeQuery(String sql, Collection<Object> params, Integer limit) throws SQLException {
 		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql);
 		if(limit != null){
 			preparedStatement.setMaxRows(limit);
@@ -215,7 +216,8 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 		}
 	}
 	
-	protected boolean hasInheritanceConstraint(Class<?> type,Map<String , Object> keyParams) throws SQLException{
+	protected List<String> referencedConstraint(Class<?> type,Map<String , Object> keyParams) throws SQLException{
+		List<String> constraintList = new ArrayList<String>();
 		ResultSet rs = getConnection().getMetaData().getExportedKeys(null, null, CrudQuery.getTableName(type));
 		Map<String, Map<String , String>> joinMap = new HashMap<String, Map<String , String>>();
 		Map<String , Object> whereParams = new HashMap<String, Object>();
@@ -237,13 +239,14 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 			}
 			joinAttributteMap.put(pk,fk);			
 		}
-		boolean has = false;
 		for(Map.Entry<String, Map<String , String>> entry : joinMap.entrySet()){
 			IQuery query = CrudQuery.getInheritanceConstraintQuery(tableName, entry, whereParams);
 			ResultSet rsi = executeQuery(query.getQuery(), query.getParams(), 1);
-			has = has || rsi.next();
+			if(rsi.next()){
+				constraintList.add(entry.getKey());
+			}
 		}		
-		return has;
+		return constraintList;
 	}
 	
 	private void applyForwardKey(OrmFormat format,Class<?> type,Map<Class<?> , Map<String , Object>> object){
@@ -369,6 +372,12 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 		return entity;
 	}
 	
+	public Class<T> getClasse() {
+		return classe;
+	}
+	
 	public abstract T getNewEntity();
+	
+	
 
 }
