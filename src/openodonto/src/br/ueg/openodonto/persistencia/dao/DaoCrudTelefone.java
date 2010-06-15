@@ -135,7 +135,7 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 
 	@Override
 	public Telefone getNewEntity() {
-		return null;
+		return new Telefone();
 	}
 
 	@Override
