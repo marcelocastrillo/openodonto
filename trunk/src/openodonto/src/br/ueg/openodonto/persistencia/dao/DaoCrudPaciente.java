@@ -23,16 +23,16 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 	static{		
 		initQueryMap();
 	}
+		
+	public static void main(String[] args) {		
 	
-
-	public static void main(String[] args) {
 		DaoCrudPaciente dao = new DaoCrudPaciente();
 		Paciente paciente = new Paciente();
 		paciente.setCodigo(1L);
 		OrmFormat orm = new OrmFormat(paciente);
 		Map<String , Object> params = orm.formatKey();
 		try {
-			System.out.println(dao.hasInheritanceConstraint(Pessoa.class, params));
+			System.out.println(dao.referencedConstraint(Pessoa.class, params));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -57,10 +57,10 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 	}
 	*/
 	public static void initQueryMap(){
-		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE ps.nome LIKE ?");
-		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCodigo","WHERE ps.id = ?");
-		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCPF","WHERE pc.cpf = ?");
-		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByEmail","WHERE ps.email = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE nome LIKE ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCodigo","WHERE id = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCPF","WHERE cpf = ?");
+		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByEmail","WHERE email = ?");
 	}
 
 	public DaoCrudPaciente() {
@@ -148,7 +148,7 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 	@Override
 	public List<Paciente> listar() {
 		try{
-			List<Paciente> lista = listar();
+			List<Paciente> lista = listar("*");
 			for(Paciente paciente : lista){
 				paciente.setTelefone(getTelefonesFromPaciente(paciente.getCodigo()));
 			}
@@ -182,13 +182,20 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 		try{
 			getConnection().setAutoCommit(false);
 			save = getConnection().setSavepoint("Before Remove Paciente - Savepoint");
-			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-			for(Telefone telefone : o.getTelefone()){
-				entityManagerTelefone.remover(telefone);
-			}
 			OrmFormat orm = new OrmFormat(o);
 			Map<String , Object> params = orm.formatKey();
-			remove(params, true);
+			List<String> referencias = referencedConstraint(Pessoa.class, params);
+			if(referencias.contains(CrudQuery.getTableName(Paciente.class)) &&
+					referencias.contains(CrudQuery.getTableName(Telefone.class)) &&
+					referencias.size() == 2){
+				EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+				for(Telefone telefone : o.getTelefone()){
+					entityManagerTelefone.remover(telefone);
+				}
+				remove(params, false);
+			}else{
+				remove(params, true);
+			}
 		}catch(Exception ex){
 			ex.printStackTrace();
 			if(save != null){

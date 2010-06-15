@@ -1,15 +1,14 @@
 package br.ueg.openodonto.persistencia.dao;
 
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Telefone;
-import br.ueg.openodonto.persistencia.EntityManager;
+import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
+import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
@@ -71,8 +70,7 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 				}
 				getConnection().setAutoCommit(false);
 				save = getConnection().setSavepoint("Before Insert Telefone - Savepoint");
-				Map<String, Object> generated = null;//super.executeInsert(o);		// TODO Auto-generated method stub
-				o.setCodigo((Long) generated.values().iterator().next());
+				insert(o);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				if (save != null) {
@@ -87,10 +85,10 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 
 	@Override
 	public List<Telefone> listar() {
-		List<Telefone> telefone = new ArrayList<Telefone>();
+		List<Telefone> telefone = null;
 		try{
 			getConnection().setReadOnly(true);
-			//telefone = super.listar();
+			telefone = listar("*");
 			getConnection().setReadOnly(false);
 		}catch (Exception e) {
             e.printStackTrace();
@@ -100,40 +98,31 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 
 	@Override
 	public Telefone pesquisar(Object key) {
-		Telefone telefone = null;
+		Long id = Long.parseLong(String.valueOf(key));
+		Telefone find = new Telefone();
+		find.setCodigo(id);
+		OrmFormat orm = new OrmFormat(find);
+		IQuery query = CrudQuery.getSelectQuery(Paciente.class, orm.formatNotNull(), "*");
+		List<Telefone> lista;
 		try {
-			if (key != null) {
-				getConnection().setReadOnly(true);
-				List<Object> params = new ArrayList<Object>();
-				params.add(key);
-				ResultSet rs = super.executeQuery(
-						BaseDAO.getStoredQuerysMap().get("findByKey"),
-						params);
-				getConnection().setReadOnly(false);
-				if (rs.next()) {
-					telefone = this.parseEntity(rs);
-				}
+			lista = getSqlExecutor().executarQuery(query.getQuery(), query.getParams(), 1);
+			if(lista.size() == 1){
+				return lista.get(0);
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return telefone;
+		return null;
 	}
 
 	@Override
 	public void remover(Telefone o) throws Exception {
 		Savepoint save = null;
 		try{
-			Map<String , Object> params = null;
-			if(o != null && o.getCodigo() != null && o.getCodigo() > 0){
-				params = new HashMap<String, Object>();
-				params.put("id", o.getCodigo());
-			}else{
-				return;
-			}
-			getConnection().setAutoCommit(false);
 			save = getConnection().setSavepoint("Before Remove Telefone - Savepoint");
-			//super.executeRemove(params); 		// TODO Auto-generated method stub
+			OrmFormat orm = new OrmFormat(o);
+			Map<String , Object> params = orm.formatKey();
+			remove(params, false);
 		}catch(Exception ex){
 			ex.printStackTrace();
 			if(save != null){

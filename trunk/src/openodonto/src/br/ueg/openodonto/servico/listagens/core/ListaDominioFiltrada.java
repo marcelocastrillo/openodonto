@@ -2,7 +2,6 @@ package br.ueg.openodonto.servico.listagens.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
@@ -16,10 +15,10 @@ import br.ueg.openodonto.persistencia.orm.Entity;
  */
 public class ListaDominioFiltrada<T extends Entity> extends AbstractLista<T>{
 
-	private Map<String , Object> params;
+	private List<Object> params;
 	private String query;
 	
-	public ListaDominioFiltrada(Class<T> classe , String query , Map<String,Object> params){
+	public ListaDominioFiltrada(Class<T> classe , String query , List<Object> params){
 		super(classe);
 		this.params = params;
 		this.query = query;
@@ -33,20 +32,20 @@ public class ListaDominioFiltrada<T extends Entity> extends AbstractLista<T>{
 		if(params == null || query == null)
 			return new ArrayList<T>();
 		EntityManager<T> daoDominio = DaoFactory.getInstance().getDao(getClasse());
-		List<T> lista = new ArrayList<T>();
-		//lista = daoDominio.executarQuery(query, params); 		// TODO Auto-generated method stub
-		return lista;
+		try{
+		    return daoDominio.getSqlExecutor().executarNamedQuery(query, params, "*");
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return null;
 	}
 
-	
-	public Map<String, Object> getParams() {	
-		return this.params;
+	public List<Object> getParams() {
+		return params;
 	}
 
-	
-	public void setParams(Map<String, Object> params) {	
+	public void setParams(List<Object> params) {
 		this.params = params;
-	}	
-
+	}
 	
 }

@@ -3,6 +3,7 @@ package br.ueg.openodonto.persistencia.dao.sql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import br.ueg.openodonto.persistencia.dao.BaseDAO;
@@ -14,6 +15,19 @@ public class QueryExecutor<T extends Entity> implements SqlExecutor<T>{
 
 	public QueryExecutor(BaseDAO<T> dao){
 		this.dao = dao;
+	}
+	
+	@Override
+	public List<T> executarNamedQuery(String name, Collection<Object> params,String... fields)throws SQLException {
+		return executarNamedQuery(name,params,null,fields);
+	}
+
+	@Override
+	public List<T> executarNamedQuery(String name, Collection<Object> params,Integer quant,String... fields) throws SQLException {
+		String root = CrudQuery.getSelectRoot(dao.getClasse(), fields);
+		String where = BaseDAO.getStoredQuerysMap().get(name);
+		String sql = root + " " + where;
+		return executarQuery(sql , params , quant);
 	}
 	
 	@Override
@@ -31,11 +45,11 @@ public class QueryExecutor<T extends Entity> implements SqlExecutor<T>{
 		return executarQuery(query, params, quant);
 	}
 
-	public List<T> executarQuery(String query, List<Object> params) throws SQLException{
+	public List<T> executarQuery(String query, Collection<Object> params) throws SQLException{
 		return executarQuery(query, params, null);
 	}	
 
-	public List<T> executarQuery(String query,List<Object> params, Integer quant) throws SQLException{
+	public List<T> executarQuery(String query,Collection<Object> params, Integer quant) throws SQLException{
 		List<T> pList = new ArrayList<T>();
 		if(params == null){
 			return pList;
@@ -57,5 +71,6 @@ public class QueryExecutor<T extends Entity> implements SqlExecutor<T>{
 		}
 		return pList;
 	}
+
 	
 }
