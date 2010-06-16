@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS `openodonto`.`usuarios` ;
 CREATE  TABLE IF NOT EXISTS `openodonto`.`usuarios` (
   `id_pessoa` INT(10) NOT NULL ,
   `user` VARCHAR(45) NOT NULL ,
-  `senha` VARCHAR(45) NOT NULL ,
+  `senha` VARCHAR(32) NOT NULL ,
   PRIMARY KEY (`id_pessoa`) ,
   CONSTRAINT `fk_usuarios_pessoas`
     FOREIGN KEY (`id_pessoa` )

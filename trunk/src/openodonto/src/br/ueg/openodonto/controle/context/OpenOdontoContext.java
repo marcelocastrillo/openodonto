@@ -1,5 +1,9 @@
 package br.ueg.openodonto.controle.context;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -41,5 +45,29 @@ public class OpenOdontoContext implements ApplicationContext{
 	public String getParameter(String name) {
 		return getRequest().getParameter(name);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, Object> getAttributes() {
+		Map<String , Object> attributtes = new HashMap<String, Object>();
+		Enumeration<String> names = getRequest().getSession().getAttributeNames();
+		while(names.hasMoreElements()){
+			String name  = names.nextElement();
+			attributtes.put(name, getRequest().getSession().getAttribute(name));
+		}
+		return attributtes;
+	}
+
+	@Override
+	public void removeAttribute(String name) {
+		getRequest().getSession().removeAttribute(name);
+	}
+
+	@Override
+	public void addAttribute(String name, Object value) {
+		getRequest().getSession().setAttribute(name, value);
+	}
+	
+	
 	
 }

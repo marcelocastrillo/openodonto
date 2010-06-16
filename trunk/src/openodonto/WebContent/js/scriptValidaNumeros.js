@@ -8,18 +8,12 @@ function digitarNumero(campo, e, dec)
                
 
        if (window.event)
-
-               key = window.event.keyCode;
-
+           key = window.event.keyCode;
        else if (e)
-
-               key = e.which;
-
+           key = e.which;
        else
-
-               return true;
-
-       
+    	   return false;
+     
 
        keychar = String.fromCharCode(key);    
 

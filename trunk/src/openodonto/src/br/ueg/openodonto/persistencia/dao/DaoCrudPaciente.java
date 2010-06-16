@@ -26,7 +26,6 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 
 	public static void initQueryMap(){
 		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE nome LIKE ?");
-		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCodigo","WHERE id = ?");
 		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCPF","WHERE cpf = ?");
 		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByEmail","WHERE email = ?");
 	}

@@ -54,7 +54,7 @@ function logar(event) {
 				<tr>
 					<td>
 						<a4j:form id="LoginForm">
-						<a4j:jsFunction name="acaoLogar" actionListener="#{login.acaoAutenticarUsuario}" />
+						<a4j:jsFunction name="acaoLogar" action="#{login.acaoAutenticarUsuario}" />
 						<div align="center">
 						<table border="0" width="70%" height='100%' id="tableInput" cellspacing="0" cellpadding="0">
 							<tr>
@@ -70,7 +70,7 @@ function logar(event) {
 										<h:inputSecret id="pwd" value="#{login.usuario.senha}" onkeypress="if(logar(event)){acaoLogar();}" />
 									</h:panelGrid>									
 									<rich:spacer height="16"></rich:spacer>
-									<div align="right"><a4j:commandButton value="logar" actionListener="#{login.acaoAutenticarUsuario}" style=" width : 96px;" reRender="formShowLogin" /></div>
+									<div align="right"><a4j:commandButton value="logar" action="#{login.acaoAutenticarUsuario}" style=" width : 96px;" reRender="formShowLogin" /></div>
 									<rich:spacer height="16"></rich:spacer>
 									</td>
 								

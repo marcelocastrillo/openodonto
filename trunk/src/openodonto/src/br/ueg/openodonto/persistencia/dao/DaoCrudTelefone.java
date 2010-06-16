@@ -28,8 +28,7 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 	}
 	
 	private static void initQuerymap(){
-		BaseDAO.getStoredQuerysMap().put("findByKey","WHERE id = ?");
-		BaseDAO.getStoredQuerysMap().put("findByPessoa","WHERE id_pessoa = ?");
+		BaseDAO.getStoredQuerysMap().put("Telefone.findByPessoa","WHERE id_pessoa = ?");
 	}
 	
 	@Override
@@ -97,13 +96,16 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 
 	@Override
 	public Telefone pesquisar(Object key) {
-		Long id = Long.parseLong(String.valueOf(key));
-		Telefone find = new Telefone();
-		find.setCodigo(id);
-		OrmFormat orm = new OrmFormat(find);
-		IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm.formatNotNull(), "*");
+		if(key == null){
+			return null;
+		}
 		List<Telefone> lista;
 		try {
+			Long id = Long.parseLong(String.valueOf(key));
+			Telefone find = new Telefone();
+			find.setCodigo(id);
+			OrmFormat orm = new OrmFormat(find);
+			IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm.formatNotNull(), "*");
 			lista = getSqlExecutor().executarQuery(query.getQuery(), query.getParams(), 1);
 			if(lista.size() == 1){
 				return lista.get(0);
@@ -144,8 +146,13 @@ public class DaoCrudTelefone extends BaseDAO<Telefone>{
 
 	@Override
 	public void load(Telefone o) {
-		// TODO Auto-generated method stub
-		
+		if(o == null || o.getCodigo() == null){
+			throw new RuntimeException("Telefone Inválido");
+		}
+		OrmFormat orm = new OrmFormat(o);
+		Telefone loaded = pesquisar(o.getCodigo());
+		OrmFormat ormLoaded = new OrmFormat(loaded);
+		orm.parse(ormLoaded.format());
 	}
 	
 
