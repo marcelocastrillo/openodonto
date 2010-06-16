@@ -8,4 +8,13 @@
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#index.jsp" PATH="/index.jsp"
   SHAPE="240,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::1" SHAPE="32,129,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::1" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="::#login#login.jsp" NAME="output"
+    PATH="/login/login.jsp" TARGET="rules:#login#login.jsp"
+    TITLE="[any]" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#login#login.jsp" PATH="/login/login.jsp"
+  SHAPE="240,145,0,0" model-entity="JSFProcessGroup"/>
 </PROCESS>

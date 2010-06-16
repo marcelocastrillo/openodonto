@@ -92,7 +92,7 @@ public abstract class ManageBeanGeral <T extends Entity> {
 			Object o = PropertyUtils.getNestedProperty(getBackBean(),path);
 			String campoParaFormatar = null;
 			if(o != null)
-				campoParaFormatar = (String)o;
+				campoParaFormatar = String.valueOf(o);
 			else
 				continue;
 			if(!campoParaFormatar.isEmpty()){
@@ -243,6 +243,10 @@ public abstract class ManageBeanGeral <T extends Entity> {
 	public ApplicationContext getContext() {
 		return context;
 	}
+	
+	public void setContext(ApplicationContext context) {
+		this.context = context;
+	}
 
 	public ApplicationView getView() {
 		return view;
@@ -250,6 +254,10 @@ public abstract class ManageBeanGeral <T extends Entity> {
 	
 	public EntityManager<T> getDao() {
 		return dao;
+	}
+	
+	public void setView(ApplicationView view) {
+		this.view = view;
 	}
 	
 	public void makeView(Properties params){

@@ -6,7 +6,7 @@ import java.util.Properties;
 public class ApplicationViewFactory {
 
 	public enum ViewHandler{
-		JSF,SWING;
+		JSF,SWING,TEST;
 	}
 	
 	public static ApplicationView getViewInstance(ViewHandler handler,Properties params){

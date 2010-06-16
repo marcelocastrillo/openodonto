@@ -11,8 +11,6 @@ import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.validador.AbstractValidator;
 import br.ueg.openodonto.controle.validador.ValidadorPadrao;
 import br.ueg.openodonto.dominio.Paciente;
-import br.ueg.openodonto.dominio.Telefone;
-import br.ueg.openodonto.dominio.constante.TiposTelefone;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
@@ -22,25 +20,6 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 
 	private ManageTelefone								manageTelefone;
 
-	public static void main(String[] args) {
-		Paciente paciente = new Paciente();
-		paciente.setNome("vinicius");
-		paciente.setCpf("02549287142");
-		List<Telefone> telefones = new ArrayList<Telefone>();
-		Telefone tel = new Telefone();
-		tel.setIdPessoa(2L);
-		tel.setNumero("9987-0873");
-		tel.setTipoTelefone(TiposTelefone.CELULAR);
-		telefones.add(tel);
-		ManterPaciente mp = new ManterPaciente();
-		mp.setPaciente(paciente);
-		long start = System.currentTimeMillis();
-		for(int i = 0 ; i < 100000 ; i++){
-		    mp.acaoAlterar();
-		}
-		System.out.println(System.currentTimeMillis() - start);
-	}
-	
 	public ManterPaciente() {
 		super(Paciente.class);
 		Properties params = new Properties();

@@ -39,6 +39,12 @@ background-repeat : no-repeat;
 				</h:outputLink>
 			</rich:menuItem>
 			
+			<rich:menuItem submitMode="none" onclick="document.location.href='#{facesContext.externalContext.requestContextPath}/faces/cadastro/dentista/index.jsp'" >
+				<h:outputLink value="#{facesContext.externalContext.requestContextPath}/faces/cadastro/dentista/index.jsp">
+					<h:outputText value="Dentista" />
+				</h:outputLink>
+			</rich:menuItem>
+			
 		</rich:dropDownMenu>
 		<f:verbatim><div style="width: 2px ;background-position : top;bottom : 1px;height: 31px;vertical-align: top;position: relative;margin-left: -1px;background-image: url('/openodonto/helt/linhadupla.png');background-repeat : no-repeat;"></div></f:verbatim>
 		<rich:dropDownMenu>
@@ -62,7 +68,7 @@ background-repeat : no-repeat;
 				<h:outputLink rendered="#{empty facesContext.externalContext.sessionMap.usuarioSessao }" value="#{facesContext.externalContext.requestContextPath}/faces/login/login.jsp" style="COLOR: #f1f2f3;font-weigth : bold;font-size : 16px">Login</h:outputLink>
 				<h:graphicImage rendered="#{not empty facesContext.externalContext.sessionMap.usuarioSessao}" value="/imagens/2820_32x32.png" height="24" />
 				<h:outputText rendered="#{not emptyfacesContext.externalContext.sessionMap.usuarioSessao}" value="#{facesContext.externalContext.sessionMap.usuarioSessao.nomeApresentacao}"  style="COLOR: #f1f2f3;font-weigth : bold;font-size : 12px"/>
-				<a4j:commandLink rendered="#{not empty facesContext.externalContext.sessionMap.usuarioSessao}" value="(Sair)" actionListener="#{login.acaoLogout}" style="COLOR: #000000;font-size : 8x"/>
+				<a4j:commandLink rendered="#{not empty facesContext.externalContext.sessionMap.usuarioSessao}" value="(Sair)" action="#{login.acaoLogout}" style="COLOR: #000000;font-size : 8x"/>
 			</h:panelGrid>
             </a4j:form>		
 		<f:verbatim>
