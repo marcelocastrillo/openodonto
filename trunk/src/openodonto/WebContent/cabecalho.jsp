@@ -45,6 +45,18 @@ background-repeat : no-repeat;
 				</h:outputLink>
 			</rich:menuItem>
 			
+			<rich:menuItem submitMode="none" onclick="document.location.href='#{facesContext.externalContext.requestContextPath}/faces/cadastro/colaborador/index.jsp'" >
+				<h:outputLink value="#{facesContext.externalContext.requestContextPath}/faces/cadastro/colaborador/index.jsp">
+					<h:outputText value="Colaborador" />
+				</h:outputLink>
+			</rich:menuItem>
+			
+			<rich:menuItem submitMode="none" onclick="document.location.href='#{facesContext.externalContext.requestContextPath}/faces/cadastro/usuario/index.jsp'" >
+				<h:outputLink value="#{facesContext.externalContext.requestContextPath}/faces/cadastro/usuario/index.jsp">
+					<h:outputText value="Usuario" />
+				</h:outputLink>
+			</rich:menuItem>
+			
 		</rich:dropDownMenu>
 		<f:verbatim><div style="width: 2px ;background-position : top;bottom : 1px;height: 31px;vertical-align: top;position: relative;margin-left: -1px;background-image: url('/openodonto/helt/linhadupla.png');background-repeat : no-repeat;"></div></f:verbatim>
 		<rich:dropDownMenu>

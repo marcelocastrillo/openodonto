@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import br.ueg.openodonto.persistencia.dao.BaseDAO;
+import br.ueg.openodonto.persistencia.dao.DaoBase;
 import br.ueg.openodonto.persistencia.orm.Entity;
 
 public class QueryExecutor<T extends Entity> implements SqlExecutor<T>{
 
-	private BaseDAO<T> dao;
+	private DaoBase<T> dao;
 
-	public QueryExecutor(BaseDAO<T> dao){
+	public QueryExecutor(DaoBase<T> dao){
 		this.dao = dao;
 	}
 	
@@ -25,7 +25,7 @@ public class QueryExecutor<T extends Entity> implements SqlExecutor<T>{
 	@Override
 	public List<T> executarNamedQuery(String name, Collection<Object> params,Integer quant,String... fields) throws SQLException {
 		String root = CrudQuery.getSelectRoot(dao.getClasse(), fields);
-		String where = BaseDAO.getStoredQuerysMap().get(name);
+		String where = DaoBase.getStoredQuerysMap().get(name);
 		String sql = root + " " + where;
 		return executarQuery(sql , params , quant);
 	}
