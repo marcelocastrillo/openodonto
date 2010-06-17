@@ -48,7 +48,7 @@ function exibirMensagem(msg){
 	                    <rich:spacer width="8" />
 	                    <rich:message id="messageEntradaNome" for="entradaNome" style="color : red ;FONT-WEIGHT : bold" />
 	                </h:panelGrid>
-					<h:inputText id="entradaNome" value="#{manterDentista.dentista.nome}" style="width : 310px;"	/>
+					<h:inputText id="entradaNome" value="#{manterUsuario.usuario.nome}" style="width : 310px;"	/>
 				</h:panelGrid>
 
            
@@ -63,11 +63,11 @@ function exibirMensagem(msg){
 				
 				<h:panelGrid columns="1">
 				    <h:panelGrid columns="3">				
-					    <h:outputLabel value="Especialidade" style="color : red" for="entradaEspecialidade" />
+					    <h:outputLabel value="Senha" style="color : red" for="entradaSenha" />
 	                    <rich:spacer width="8" />
-	                    <rich:message id="messageEntradaEspecialidade" for="entradaEspecialidade" style="color : red ;FONT-WEIGHT : bold" />
+	                    <rich:message id="messageEntradaSenha" for="entradaSenha" style="color : red ;FONT-WEIGHT : bold" />
 	                </h:panelGrid>
-					<h:inputText id="entradaEspecialidade" value="#{manterDentista.dentista.especialidade}" style=" width : 310px;" />
+					<h:inputText id="entradaSenha" value="#{manterUsuario.usuario.senha}" style=" width : 310px;" />
 				</h:panelGrid>
 				
 			</h:panelGrid>
@@ -82,13 +82,13 @@ function exibirMensagem(msg){
 			<rich:spacer height="16"/>	
 			<center>			
             <h:panelGroup>
-				<a4j:commandButton id="botaoSalvar" image="/helt/salvar.png" oncomplete="if(#{manterDentista.view.displayPopUp}){popUp()}" action="#{manterDentista.acaoAlterar}" value="salvar" reRender="formDentista" focus="output" />
+				<a4j:commandButton id="botaoSalvar" image="/helt/salvar.png" oncomplete="if(#{manterUsuario.view.displayPopUp}){popUp()}" action="#{manterUsuario.acaoAlterar}" value="salvar" reRender="formUsuario" focus="output" />
 				<rich:spacer width="16"/>
-				<a4j:commandButton image="/helt/pesquisar.png" id="botaoBuscar" onclick="#{rich:component('painelBuscaDentista')}.show()" reRender="formModalDentista"/>
+				<a4j:commandButton image="/helt/pesquisar.png" id="botaoBuscar" onclick="#{rich:component('painelBuscaUsuario')}.show()" reRender="formModalUsuario"/>
 				<rich:spacer width="16"/>
-				<a4j:commandButton image="/helt/excluir.png" id="botaoExcluir"  action="#{manterDentista.acaoRemoverSim}" onclick="if(!confirm('Deseja realmente excluir o registro ?')){return false}" reRender="formDentista" oncomplete="if(#{manterDentista.view.displayPopUp}){popUp()}" />
+				<a4j:commandButton image="/helt/excluir.png" id="botaoExcluir"  action="#{manterUsuario.acaoRemoverSim}" onclick="if(!confirm('Deseja realmente excluir o registro ?')){return false}" reRender="formUsuario" oncomplete="if(#{manterUsuario.view.displayPopUp}){popUp()}" />
 				<rich:spacer width="16"/>
-				<a4j:commandButton image="/helt/cancelar.png"  action="#{manterDentista.acaoAtualizar}" reRender="formDentista" />												
+				<a4j:commandButton image="/helt/cancelar.png"  action="#{manterUsuario.acaoAtualizar}" reRender="formUsuario" />												
             </h:panelGroup>			
 			</center>
 

@@ -21,7 +21,13 @@
   <managed-bean-name>manterDentista</managed-bean-name>
   <managed-bean-class>br.ueg.openodonto.controle.ManterDentista</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
- </managed-bean> 
+ </managed-bean>
+ 
+  <managed-bean>
+  <managed-bean-name>manterUsuario</managed-bean-name>
+  <managed-bean-class>br.ueg.openodonto.controle.ManterUsuario</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
  
  <managed-bean> 
   <managed-bean-name>manterListagem</managed-bean-name>

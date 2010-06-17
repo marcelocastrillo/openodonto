@@ -13,7 +13,7 @@
         <f:facet name="controls">
             <h:panelGroup>
 				<a4j:commandButton image="/imagens/close.png" reRender="formDentista" id="hidelink3" styleClass="hidelink">
-					<rich:componentControl for="painelBuscaDentistas" attachTo="hidelink3" operation="hide" event="onclick"/>
+					<rich:componentControl for="painelBuscaDentista" attachTo="hidelink3" operation="hide" event="onclick"/>
 				</a4j:commandButton>
             </h:panelGroup>
         </f:facet>
