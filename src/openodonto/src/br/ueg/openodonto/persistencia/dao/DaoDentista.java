@@ -15,13 +15,13 @@ import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
-public class DaoCrudDentista extends BaseDAO<Dentista> {
+public class DaoDentista extends DaoBase<Dentista> {
 
 	private static final long serialVersionUID = 7872660758710684668L;
 	
 	private SqlExecutor<Dentista> sqlExecutor;
 	
-	public DaoCrudDentista() {
+	public DaoDentista() {
 		super(Dentista.class);
 		this.sqlExecutor = new QueryExecutor<Dentista>(this);
 	}
@@ -31,9 +31,9 @@ public class DaoCrudDentista extends BaseDAO<Dentista> {
 	}
 	
 	private static void initQuerymap(){
-		BaseDAO.getStoredQuerysMap().put("Dentista.findByNome","WHERE nome LIKE ?");
-		BaseDAO.getStoredQuerysMap().put("Dentista.findByCro","WHERE cro = ?");
-		BaseDAO.getStoredQuerysMap().put("Dentista.findEspecialidade","WHERE especialidade like ?");
+		DaoBase.getStoredQuerysMap().put("Dentista.findByNome","WHERE nome LIKE ?");
+		DaoBase.getStoredQuerysMap().put("Dentista.findByCro","WHERE cro = ?");
+		DaoBase.getStoredQuerysMap().put("Dentista.findEspecialidade","WHERE especialidade like ?");
 	}	
 
 	@Override

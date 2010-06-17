@@ -5,39 +5,34 @@ import java.sql.Savepoint;
 import java.util.List;
 import java.util.Map;
 
-import br.ueg.openodonto.dominio.Usuario;
+import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
-public class DaoCrudUsuario extends BaseDAO<Usuario>{
+public class DaoTelefone extends DaoBase<Telefone>{
 
-	private SqlExecutor<Usuario> sqlExecutor;
-	
-	public DaoCrudUsuario() {
-		super(Usuario.class);
-		this.sqlExecutor = new QueryExecutor<Usuario>(this);
+	private static final long serialVersionUID = -8028356632411640718L;
+
+	private SqlExecutor<Telefone> sqlExecutor;
+		
+	public DaoTelefone() {
+		super(Telefone.class);
+		sqlExecutor = new QueryExecutor<Telefone>(this);
 	}
-
+	
 	static{
 		initQuerymap();
 	}
 	
 	private static void initQuerymap(){
-		BaseDAO.getStoredQuerysMap().put("Usuario.autenticar","WHERE user = ? AND senha = ?");
+		DaoBase.getStoredQuerysMap().put("Telefone.findByPessoa","WHERE id_pessoa = ?");
 	}
 	
-	private static final long serialVersionUID = 4857838625916905656L;
-
 	@Override
-	public Usuario getNewEntity() {
-		return new Usuario();
-	}
-
-	@Override
-	public void alterar(Usuario o) throws Exception {
+	public void alterar(Telefone o) throws Exception {		
 		if(o != null && o.getCodigo() != null &&  pesquisar(o.getCodigo()) != null){
 			Savepoint save = null;
 			try{
@@ -45,7 +40,7 @@ public class DaoCrudUsuario extends BaseDAO<Usuario>{
 					return;
 				}
 				getConnection().setAutoCommit(false);
-				save = getConnection().setSavepoint("Before Update Usuario - Savepoint");
+				save = getConnection().setSavepoint("Before Update Telefoe - Savepoint");
 				OrmFormat orm = new OrmFormat(o);
 				update(o, orm.formatKey());
 			}catch(Exception ex){
@@ -62,12 +57,7 @@ public class DaoCrudUsuario extends BaseDAO<Usuario>{
 	}
 
 	@Override
-	public SqlExecutor<Usuario> getSqlExecutor() {
-		return sqlExecutor;
-	}
-
-	@Override
-	public void inserir(Usuario o) throws Exception {
+	public void inserir(Telefone o) throws Exception {
 		if (o != null && o.getCodigo() != null && pesquisar(o.getCodigo()) != null) {
 			alterar(o);
 		} else if (o != null) {
@@ -77,7 +67,7 @@ public class DaoCrudUsuario extends BaseDAO<Usuario>{
 					return;
 				}
 				getConnection().setAutoCommit(false);
-				save = getConnection().setSavepoint("Before Insert Usuario - Savepoint");
+				save = getConnection().setSavepoint("Before Insert Telefone - Savepoint");
 				insert(o);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -90,29 +80,32 @@ public class DaoCrudUsuario extends BaseDAO<Usuario>{
 		}
 	}
 
+
 	@Override
-	public List<Usuario> listar() {
-		List<Usuario> usuarios = null;
+	public List<Telefone> listar() {
+		List<Telefone> telefone = null;
 		try{
-			usuarios = listar("*");
+			getConnection().setReadOnly(true);
+			telefone = listar("*");
+			getConnection().setReadOnly(false);
 		}catch (Exception e) {
             e.printStackTrace();
 		}
-		return usuarios;
+		return telefone;
 	}
 
 	@Override
-	public Usuario pesquisar(Object key) {
+	public Telefone pesquisar(Object key) {
 		if(key == null){
 			return null;
 		}
-		List<Usuario> lista;
+		List<Telefone> lista;
 		try {
 			Long id = Long.parseLong(String.valueOf(key));
-			Usuario find = new Usuario();
+			Telefone find = new Telefone();
 			find.setCodigo(id);
 			OrmFormat orm = new OrmFormat(find);
-			IQuery query = CrudQuery.getSelectQuery(Usuario.class, orm.formatNotNull(), "*");
+			IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm.formatNotNull(), "*");
 			lista = getSqlExecutor().executarQuery(query.getQuery(), query.getParams(), 1);
 			if(lista.size() == 1){
 				return lista.get(0);
@@ -124,10 +117,10 @@ public class DaoCrudUsuario extends BaseDAO<Usuario>{
 	}
 
 	@Override
-	public void remover(Usuario o) throws Exception {
+	public void remover(Telefone o) throws Exception {
 		Savepoint save = null;
 		try{
-			save = getConnection().setSavepoint("Before Remove Usuarios - Savepoint");
+			save = getConnection().setSavepoint("Before Remove Telefone - Savepoint");
 			OrmFormat orm = new OrmFormat(o);
 			Map<String , Object> params = orm.formatKey();
 			remove(params, false);
@@ -142,14 +135,25 @@ public class DaoCrudUsuario extends BaseDAO<Usuario>{
 	}
 
 	@Override
-	public void load(Usuario o) {
+	public Telefone getNewEntity() {
+		return new Telefone();
+	}
+
+	@Override
+	public SqlExecutor<Telefone> getSqlExecutor() {
+		return sqlExecutor;
+	}
+
+	@Override
+	public void load(Telefone o) {
 		if(o == null || o.getCodigo() == null){
-			throw new RuntimeException("Usuario Inválido");
+			throw new RuntimeException("Telefone Inválido");
 		}
 		OrmFormat orm = new OrmFormat(o);
-		Usuario loaded = pesquisar(o.getCodigo());
+		Telefone loaded = pesquisar(o.getCodigo());
 		OrmFormat ormLoaded = new OrmFormat(loaded);
 		orm.parse(ormLoaded.format());
 	}
+	
 
 }

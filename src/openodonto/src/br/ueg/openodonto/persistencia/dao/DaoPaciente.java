@@ -16,7 +16,7 @@ import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
 @SuppressWarnings("serial")
-public class DaoCrudPaciente extends BaseDAO<Paciente>{
+public class DaoPaciente extends DaoBase<Paciente>{
 
 	private SqlExecutor<Paciente>     sqlExecutor;
 	
@@ -25,12 +25,12 @@ public class DaoCrudPaciente extends BaseDAO<Paciente>{
 	}
 
 	public static void initQueryMap(){
-		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE nome LIKE ?");
-		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByCPF","WHERE cpf = ?");
-		BaseDAO.getStoredQuerysMap().put("Paciente.BuscaByEmail","WHERE email = ?");
+		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE nome LIKE ?");
+		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByCPF","WHERE cpf = ?");
+		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByEmail","WHERE email = ?");
 	}
 
-	public DaoCrudPaciente() {
+	public DaoPaciente() {
 		super(Paciente.class);
 		sqlExecutor = new QueryExecutor<Paciente>(this);
 	}

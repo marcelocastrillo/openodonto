@@ -37,7 +37,7 @@ import br.ueg.openodonto.persistencia.orm.OrmResolver;
  * @author Vinicius
  */
 
-public abstract class BaseDAO<T extends Entity> implements Serializable,EntityManager<T> {
+public abstract class DaoBase<T extends Entity> implements Serializable,EntityManager<T> {
 
     private static final long                    serialVersionUID = 186038189036166890L;
     private static Map<String , String>          storedQuerysMap;
@@ -50,7 +50,7 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
     
     private Class<T> classe;
     
-    public BaseDAO(Class<T> classe) {
+    public DaoBase(Class<T> classe) {
     	this.classe = classe;
 	}
 
@@ -179,12 +179,12 @@ public abstract class BaseDAO<T extends Entity> implements Serializable,EntityMa
 	
 	private Map<String, Object> getGeneratedAutoIncremetValues(PreparedStatement ps, String table) throws SQLException{
 		List<String> names;
-		if(BaseDAO.metaTableAICache.containsKey(table)){
-			names = BaseDAO.metaTableAICache.get(table); 
+		if(DaoBase.metaTableAICache.containsKey(table)){
+			names = DaoBase.metaTableAICache.get(table); 
 		}else{
 			ResultSet rs = getConnection().getMetaData().getColumns(null, null, table, null);
 			names = getGeneratedNames(rs);
-			BaseDAO.metaTableAICache.put(table, names);
+			DaoBase.metaTableAICache.put(table, names);
 		}		
 		List<Object> values = getGeneratedValues(ps);
 		return getGeneratedResult(names, values);

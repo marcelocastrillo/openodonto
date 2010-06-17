@@ -25,13 +25,13 @@ public class DaoFactory {
 	@SuppressWarnings("unchecked")
 	public <T extends Entity>EntityManager<T> getDao(Class<T> modelo){
 		if(modelo.equals(Paciente.class)){
-			return (EntityManager<T>)new DaoCrudPaciente();
+			return (EntityManager<T>)new DaoPaciente();
 		}else if(modelo.equals(Telefone.class)){
-			return (EntityManager<T>)new DaoCrudTelefone();
+			return (EntityManager<T>)new DaoTelefone();
 		}else if(modelo.equals(Usuario.class)){
-			return (EntityManager<T>)new DaoCrudUsuario();
+			return (EntityManager<T>)new DaoUsuario();
 		}else if(modelo.equals(Dentista.class)){
-			return (EntityManager<T>)new DaoCrudDentista();
+			return (EntityManager<T>)new DaoDentista();
 		}else{
 			return null;
 		}
