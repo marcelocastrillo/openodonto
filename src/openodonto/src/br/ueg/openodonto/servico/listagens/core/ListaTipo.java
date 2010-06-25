@@ -4,21 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 /**
  * @author vinicius.rodrigues
- *
+ * 
  * @param <T>
  */
-public class ListaTipo<T> extends AbstractLista<T>{
+public class ListaTipo<T> extends AbstractLista<T> {
 
-	public ListaTipo(Class<T> classe){		
-		super(classe);
-	}
-	
-	public List<T> getDominio(){
-		List<T> lista = new ArrayList<T>();
-		lista = Arrays.asList(classe.getEnumConstants());
-		return lista;
-	}	
+    public ListaTipo(Class<T> classe) {
+	super(classe);
+    }
+
+    public List<T> getDominio() {
+	List<T> lista = new ArrayList<T>();
+	lista = Arrays.asList(classe.getEnumConstants());
+	return lista;
+    }
 }

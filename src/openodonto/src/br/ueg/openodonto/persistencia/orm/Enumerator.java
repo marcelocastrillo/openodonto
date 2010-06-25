@@ -9,10 +9,8 @@ import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-
-
 public @interface Enumerator {
 
-	EnumValue type();
-	
+    EnumValue type();
+
 }

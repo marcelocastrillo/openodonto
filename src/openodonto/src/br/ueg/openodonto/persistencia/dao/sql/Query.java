@@ -4,36 +4,41 @@ import java.util.List;
 
 public class Query implements IQuery {
 
-	private String query;
-	private List<Object>  params;
-	private String table;
-	
-	public Query(String query, List<Object> params,String table) {
-		this.query = query;
-		this.params = params;
-		this.table = table;
-	}
-	@Override
-	public String getQuery() {
-		return query;
-	}
-	public void setQuery(String query) {
-		this.query = query;
-	}
-	@Override
-	public List<Object> getParams() {
-		return params;
-	}
-	public void setParams(List<Object> params) {
-		this.params = params;
-	}
-	@Override
-	public String getTable() {
-		return table;
-	}
-	public void setTable(String table) {
-		this.table = table;
-	}
-	
-	
+    private String query;
+    private List<Object> params;
+    private String table;
+
+    public Query(String query, List<Object> params, String table) {
+	this.query = query;
+	this.params = params;
+	this.table = table;
+    }
+
+    @Override
+    public String getQuery() {
+	return query;
+    }
+
+    public void setQuery(String query) {
+	this.query = query;
+    }
+
+    @Override
+    public List<Object> getParams() {
+	return params;
+    }
+
+    public void setParams(List<Object> params) {
+	this.params = params;
+    }
+
+    @Override
+    public String getTable() {
+	return table;
+    }
+
+    public void setTable(String table) {
+	this.table = table;
+    }
+
 }

@@ -9,32 +9,32 @@ import br.ueg.openodonto.persistencia.orm.Entity;
 
 public class DaoFactory {
 
-	private static DaoFactory instance;
-	
-	private DaoFactory(){
-		
+    private static DaoFactory instance;
+
+    private DaoFactory() {
+
+    }
+
+    public static DaoFactory getInstance() {
+	if (instance == null) {
+	    instance = new DaoFactory();
 	}
-	
-	public static DaoFactory getInstance(){
-		if(instance == null){
-			instance = new DaoFactory();
-		}
-		return instance;
+	return instance;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Entity> EntityManager<T> getDao(Class<T> modelo) {
+	if (modelo.equals(Paciente.class)) {
+	    return (EntityManager<T>) new DaoPaciente();
+	} else if (modelo.equals(Telefone.class)) {
+	    return (EntityManager<T>) new DaoTelefone();
+	} else if (modelo.equals(Usuario.class)) {
+	    return (EntityManager<T>) new DaoUsuario();
+	} else if (modelo.equals(Dentista.class)) {
+	    return (EntityManager<T>) new DaoDentista();
+	} else {
+	    return null;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public <T extends Entity>EntityManager<T> getDao(Class<T> modelo){
-		if(modelo.equals(Paciente.class)){
-			return (EntityManager<T>)new DaoPaciente();
-		}else if(modelo.equals(Telefone.class)){
-			return (EntityManager<T>)new DaoTelefone();
-		}else if(modelo.equals(Usuario.class)){
-			return (EntityManager<T>)new DaoUsuario();
-		}else if(modelo.equals(Dentista.class)){
-			return (EntityManager<T>)new DaoDentista();
-		}else{
-			return null;
-		}
-	}
-	
+    }
+
 }

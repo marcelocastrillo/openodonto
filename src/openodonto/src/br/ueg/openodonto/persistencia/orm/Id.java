@@ -9,9 +9,8 @@ import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-
 public @interface Id {
 
-	IdIncrementType autoIncrement() default IdIncrementType.NONE;
-	
+    IdIncrementType autoIncrement() default IdIncrementType.NONE;
+
 }

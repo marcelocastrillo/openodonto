@@ -13,23 +13,26 @@ import javax.servlet.http.HttpServletResponse;
 
 public class FiltroLogin implements Filter {
 
-	
     public FiltroLogin() {
     }
 
-	public void destroy() {
-	}
+    public void destroy() {
+    }
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		
-		if(((HttpServletRequest)request).getSession().getAttribute("usuarioSessao") == null) {									
-			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-			httpServletResponse.sendRedirect("/openodonto/faces/login/login.jsp");			
-		}else {
-			chain.doFilter(request, response);
-		}
+    public void doFilter(ServletRequest request, ServletResponse response,
+	    FilterChain chain) throws IOException, ServletException {
+
+	if (((HttpServletRequest) request).getSession().getAttribute(
+		"usuarioSessao") == null) {
+	    HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+	    httpServletResponse
+		    .sendRedirect("/openodonto/faces/login/login.jsp");
+	} else {
+	    chain.doFilter(request, response);
 	}
-	public void init(FilterConfig fConfig) throws ServletException {
-	}
+    }
+
+    public void init(FilterConfig fConfig) throws ServletException {
+    }
 
 }

@@ -14,164 +14,162 @@ import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
-@Table(name="pessoas")
-public abstract class Pessoa implements Serializable,Entity{
- 
-	private static final long serialVersionUID = -7734113332277720024L;
+@Table(name = "pessoas")
+public abstract class Pessoa implements Serializable, Entity {
 
-	@Column(name="id")
-	@Id(autoIncrement=IdIncrementType.IDENTITY)
-	private Long           codigo;
-	 
-	@Column(name="email")
-	private String         email;
-	 
-	@Column(name="nome")
-	private String         nome;
-	 
-	@Relationship
-	private List<Telefone> telefone;
-	
-	@Column(name="endereco")
-	private String         endereco;
+    private static final long serialVersionUID = -7734113332277720024L;
 
-	@Column(name="cidade")
-	private String         cidade;
-	
-	@Column(name="estado")
-	@Enumerator(type=EnumValue.ORDINAL)
-	private TiposUF        estado;
-	 
-	public Pessoa() {
-		this.telefone = new ArrayList<Telefone>();
-	}
+    @Column(name = "id")
+    @Id(autoIncrement = IdIncrementType.IDENTITY)
+    private Long codigo;
 
-	public Long getCodigo() {
-		return codigo;
-	}
+    @Column(name = "email")
+    private String email;
 
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
-	}
+    @Column(name = "nome")
+    private String nome;
 
+    @Relationship
+    private List<Telefone> telefone;
 
-	public String getEmail() {
-		return email;
-	}
+    @Column(name = "endereco")
+    private String endereco;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    @Column(name = "cidade")
+    private String cidade;
 
-	public String getNome() {
-		return nome;
-	}
+    @Column(name = "estado")
+    @Enumerator(type = EnumValue.ORDINAL)
+    private TiposUF estado;
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public Pessoa() {
+	this.telefone = new ArrayList<Telefone>();
+    }
 
-	public List<Telefone> getTelefone() {
-		return telefone;
-	}
+    public Long getCodigo() {
+	return codigo;
+    }
 
-	public void setTelefone(List<Telefone> telefone) {
-		this.telefone = telefone;
-	}	
-	
-	public String getCidade() {
-		return cidade;
-	}
+    public void setCodigo(Long codigo) {
+	this.codigo = codigo;
+    }
 
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
+    public String getEmail() {
+	return email;
+    }
 
-	public TiposUF getEstado() {
-		return estado;
-	}
+    public void setEmail(String email) {
+	this.email = email;
+    }
 
-	public void setEstado(TiposUF estado) {
-		this.estado = estado;
-	}
-	
-	public String getEndereco() {
-		return endereco;
-	}
+    public String getNome() {
+	return nome;
+    }
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
+    public void setNome(String nome) {
+	this.nome = nome;
+    }
 
-	@Override
-	public String toString() {
-		return "Pessoa [cidade=" + cidade + ", codigo=" + codigo + ", email="
-				+ email + ", endereco=" + endereco + ", estado=" + estado
-				+ ", nome=" + nome + ", telefone=" + telefone + "]";
-	}
+    public List<Telefone> getTelefone() {
+	return telefone;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cidade == null) ? 0 : cidade.hashCode());
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result
-				+ ((endereco == null) ? 0 : endereco.hashCode());
-		result = prime * result + ((estado == null) ? 0 : estado.hashCode());
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result
-				+ ((telefone == null) ? 0 : telefone.hashCode());
-		return result;
-	}
+    public void setTelefone(List<Telefone> telefone) {
+	this.telefone = telefone;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Pessoa other = (Pessoa) obj;
-		if (cidade == null) {
-			if (other.cidade != null)
-				return false;
-		} else if (!cidade.equals(other.cidade))
-			return false;
-		if (codigo == null) {
-			if (other.codigo != null)
-				return false;
-		} else if (!codigo.equals(other.codigo))
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (endereco == null) {
-			if (other.endereco != null)
-				return false;
-		} else if (!endereco.equals(other.endereco))
-			return false;
-		if (estado == null) {
-			if (other.estado != null)
-				return false;
-		} else if (!estado.equals(other.estado))
-			return false;
-		if (nome == null) {
-			if (other.nome != null)
-				return false;
-		} else if (!nome.equals(other.nome))
-			return false;
-		if (telefone == null) {
-			if (other.telefone != null)
-				return false;
-		} else if (!telefone.equals(other.telefone))
-			return false;
-		return true;
-	}	
-	
+    public String getCidade() {
+	return cidade;
+    }
+
+    public void setCidade(String cidade) {
+	this.cidade = cidade;
+    }
+
+    public TiposUF getEstado() {
+	return estado;
+    }
+
+    public void setEstado(TiposUF estado) {
+	this.estado = estado;
+    }
+
+    public String getEndereco() {
+	return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+	this.endereco = endereco;
+    }
+
+    @Override
+    public String toString() {
+	return "Pessoa [cidade=" + cidade + ", codigo=" + codigo + ", email="
+		+ email + ", endereco=" + endereco + ", estado=" + estado
+		+ ", nome=" + nome + ", telefone=" + telefone + "]";
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((cidade == null) ? 0 : cidade.hashCode());
+	result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+	result = prime * result + ((email == null) ? 0 : email.hashCode());
+	result = prime * result
+		+ ((endereco == null) ? 0 : endereco.hashCode());
+	result = prime * result + ((estado == null) ? 0 : estado.hashCode());
+	result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+	result = prime * result
+		+ ((telefone == null) ? 0 : telefone.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Pessoa other = (Pessoa) obj;
+	if (cidade == null) {
+	    if (other.cidade != null)
+		return false;
+	} else if (!cidade.equals(other.cidade))
+	    return false;
+	if (codigo == null) {
+	    if (other.codigo != null)
+		return false;
+	} else if (!codigo.equals(other.codigo))
+	    return false;
+	if (email == null) {
+	    if (other.email != null)
+		return false;
+	} else if (!email.equals(other.email))
+	    return false;
+	if (endereco == null) {
+	    if (other.endereco != null)
+		return false;
+	} else if (!endereco.equals(other.endereco))
+	    return false;
+	if (estado == null) {
+	    if (other.estado != null)
+		return false;
+	} else if (!estado.equals(other.estado))
+	    return false;
+	if (nome == null) {
+	    if (other.nome != null)
+		return false;
+	} else if (!nome.equals(other.nome))
+	    return false;
+	if (telefone == null) {
+	    if (other.telefone != null)
+		return false;
+	} else if (!telefone.equals(other.telefone))
+	    return false;
+	return true;
+    }
+
 }
- 

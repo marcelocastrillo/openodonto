@@ -16,266 +16,273 @@ import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 
 public class OrmResolver {
 
-	private Object                                    target;
-	private Map<Class<?> , Class<?>>                  inheritanceMap;
-	private static Map<Class<?> , List<Field>>        fieldsCache;
-	
-	static{
-		fieldsCache = new HashMap<Class<?>, List<Field>>();
-	}
-	
-	public OrmResolver(Object target){
-		this.target = target;
-		inheritanceMap = new LinkedHashMap<Class<?>, Class<?>>();
-		mapInheritance();
-	}
-	
-	public OrmResolver(Class<?> classe){
-		inheritanceMap = new LinkedHashMap<Class<?>, Class<?>>();
-		mapInheritance(classe);
-	}
-	
-	private void mapInheritance(Class<?> classe){
-		while(classe.getSuperclass() != null &&
-				(classe.getSuperclass().isAnnotationPresent(Table.class) ||
-						classe.getSuperclass().equals(Object.class))){			
-			inheritanceMap.put(classe, classe = classe.getSuperclass());
-		}		
-	}
-	
-	private void mapInheritance(){
-		Class<?> classe = target.getClass();
-		mapInheritance(classe);
-	}
-	
-	public Map<String , Object> format(){
-		return format(target.getClass(), true);
-	}
-	
-    public void parse(Map<String , Object> values){
-		parse(values,target.getClass());
-	}
-	
-	public Map<String , Object> format(Class<?> classe, boolean deep){
-		List<Field> fields = getAllFields(new LinkedList<Field>(), classe,deep);
-		Map<String , Object> map = formatBase(fields);
-		return map;		
-	}
-	
-	public Map<String , Object> formatBase(List<Field> fields){
-		Map<String , Object> map = new HashMap<String, Object>();
-		OrmTranslator translator = new OrmTranslator(fields);
-		for(Field field : fields){
-			if (field.isAnnotationPresent(Relationship.class)) {
-				//TODO tratar relacionamentos
-			} else {
-				String column = translator.getColumn(field);
-				if(column != null){
-				    map.put(column , getBeanValue(field));
-				}
-			}
-		}
-		return map;		
-	}
-	
-	public Map<Class<?>,Map<String , Object>> formatDisjoin(){
-		if(inheritanceMap.isEmpty()){
-			return null;
-		}
-		Map<Class<?>,Map<String , Object>> disjoinMap = new LinkedHashMap<Class<?>, Map<String,Object>>();
-		Iterator<Class<?>> iterator = inheritanceMap.keySet().iterator();
-		while(iterator.hasNext()){
-			Class<?> key = iterator.next();
-			Map<String , Object> value = format(key, false);
-			disjoinMap.put(key, value);
-		}
-		return disjoinMap;
-	}
-	
-	public List<Field> getNotNullFields(List<Field> fields,Class<?> type,boolean deep){
-		List<Field> all = getAllFields(fields, type, deep);
-		List<Field> remove = new ArrayList<Field>();
-		OrmTranslator translator = new OrmTranslator(all);
-		for(Field field : all){
-			Object value = null;
-			try{
-				if(translator.getColumn(field) != null){
-				    value = getBeanValue(field);
-				}
-			}catch(Exception ex){}
-			if(value == null){
-				remove.add(field);
-			}
-		}
-		all.removeAll(remove);
-		return all;
-	}
-	
-	public static List<Field> getKeyFields(List<Field> fields,Class<?> type,boolean deep){
-		List<Field> all = getAllFields(fields, type, deep);
-		List<Field> remove = new ArrayList<Field>();
-		for(Field field : all){
-			if(!field.isAnnotationPresent(Id.class)){
-				remove.add(field);
-			}
-		}
-		all.removeAll(remove);
-		return all;
-	}
-	
-	public static List<Field> getAllFields(List<Field> fields, Class<?> type, boolean deep) {
-		if(fieldsCache.containsKey(type)){
-			fields.addAll(fieldsCache.get(type));
-		}else{
-	        for (Field field: type.getDeclaredFields()) {
-	            fields.add(field);
-	        }
-		}
-	    Class<?> superType = type.getSuperclass();
-	    if (superType != null) {
-		    Table table = superType.getAnnotation(Table.class);
-		    if((table != null && deep) || (table == null && !deep) ){
-		    	if(fieldsCache.containsKey(superType)){
-		    		fields.addAll(fieldsCache.get(superType));
-		    	}else{
-		    		fields = getAllFields(fields, superType ,deep);
-		    	}
-		    }
-	    }
-	    return fields;
-	}
-	
-	public void parse(Map<String , Object> values,Class<?> classe){
-		List<Field> fields = getAllFields(new LinkedList<Field>(), classe,true);
-		OrmTranslator translator = new OrmTranslator(fields);
-		for(String column : values.keySet()){
-			Field field = translator.getField(column);
-			if(field.isAnnotationPresent(Relationship.class)){
-			    //TODO tratar relacionamentos
-			}else{
-			    setBeanValue(field, values.get(column));
-			}
-		}
-	}
-	
-	private void setBeanValue(Field field , Object value){
-		try {
-			if(Enum.class.isAssignableFrom(field.getType()) &&
-					field.isAnnotationPresent(Enumerator.class)){
-				value = reTypeSyncEnum(value, field, field.getAnnotation(Enumerator.class).type());
-			}else if(Number.class.isAssignableFrom(field.getType())){
-				value = reTypeSyncNumber(value, field.getType());
-			}else if(String.class.isAssignableFrom(field.getType())){
-				value = reTypeSyncString(value);
-			}
-			PropertyUtils.setNestedProperty(target, field.getName(), value);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private String reTypeSyncString(Object value){
-		if(value == null){
-			return null;
-		}
-		return String.valueOf(value);
-	}
-	
-	public Number reTypeSyncNumber(Object value, Class<?> type){
-		Number num = (Number)value;
-		if(type.isAssignableFrom(Integer.class)){
-			return num.intValue();
-		}else if(type.isAssignableFrom(Long.class)){
-			return num.longValue();
-		}else if(type.isAssignableFrom(Short.class)){
-			return num.shortValue();
-		}else if(type.isAssignableFrom(Byte.class)){
-			return num.byteValue();
-		}else if(type.isAssignableFrom(Double.class)){
-			return num.doubleValue();
-		}else if(type.isAssignableFrom(Float.class)){
-			return num.floatValue();
-		}
-		return num;
-	}
-	
-	private Object reTypeSyncEnum(Object value,Field field, EnumValue type){
-		if(type == null){
-			return null;
-		}
-		if(((type == EnumValue.ORDINAL && value instanceof Number) ||
-				(type == EnumValue.NAME && value instanceof String))
-				&& field.getType().isEnum()){
-			if(type == EnumValue.ORDINAL){
-				Object[] values = field.getType().getEnumConstants();			
-				Number index = (Number)value;
-				if(index.intValue() >= 0 || index.intValue() < values.length){
-					return values[index.intValue()];
-				}
-			}else if(type == EnumValue.NAME){		
-				try {
-					return field.getType().getDeclaredField(String.valueOf(value)).get(null);
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (NoSuchFieldException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return null;		
-	}
-	
-	private Object getBeanValue(Field field){
-		if(target == null){
-			return null;
-		}
-	    try {
-	    	Object value = PropertyUtils.getNestedProperty(target, field.getName());
-			if(Enum.class.isAssignableFrom(field.getType()) &&
-					field.isAnnotationPresent(Enumerator.class)){
-				return getEnumValue(value , field.getAnnotation(Enumerator.class).type());
-			}
-			return value; 
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	private Object getEnumValue(Object value , EnumValue type){
-		if(type == null){
-			return null;
-		}
-		if(value instanceof Enum<?>){
-			Enum<?> enumBean = (Enum<?>)value;
-			if(type == EnumValue.ORDINAL){
-				return enumBean.ordinal();
-			}else if(type == EnumValue.NAME){
-				return enumBean.name();
-			}else{
-				return null;
-			}
-		}
-		return null;
-	}
+    private Object target;
+    private Map<Class<?>, Class<?>> inheritanceMap;
+    private static Map<Class<?>, List<Field>> fieldsCache;
 
-	public Object getTarget() {
-		return target;
+    static {
+	fieldsCache = new HashMap<Class<?>, List<Field>>();
+    }
+
+    public OrmResolver(Object target) {
+	this.target = target;
+	inheritanceMap = new LinkedHashMap<Class<?>, Class<?>>();
+	mapInheritance();
+    }
+
+    public OrmResolver(Class<?> classe) {
+	inheritanceMap = new LinkedHashMap<Class<?>, Class<?>>();
+	mapInheritance(classe);
+    }
+
+    private void mapInheritance(Class<?> classe) {
+	while (classe.getSuperclass() != null
+		&& (classe.getSuperclass().isAnnotationPresent(Table.class) || classe
+			.getSuperclass().equals(Object.class))) {
+	    inheritanceMap.put(classe, classe = classe.getSuperclass());
 	}
-	
-	public Map<Class<?>, Class<?>> getInheritanceMap() {
-		return inheritanceMap;
+    }
+
+    private void mapInheritance() {
+	Class<?> classe = target.getClass();
+	mapInheritance(classe);
+    }
+
+    public Map<String, Object> format() {
+	return format(target.getClass(), true);
+    }
+
+    public void parse(Map<String, Object> values) {
+	parse(values, target.getClass());
+    }
+
+    public Map<String, Object> format(Class<?> classe, boolean deep) {
+	List<Field> fields = getAllFields(new LinkedList<Field>(), classe, deep);
+	Map<String, Object> map = formatBase(fields);
+	return map;
+    }
+
+    public Map<String, Object> formatBase(List<Field> fields) {
+	Map<String, Object> map = new HashMap<String, Object>();
+	OrmTranslator translator = new OrmTranslator(fields);
+	for (Field field : fields) {
+	    if (field.isAnnotationPresent(Relationship.class)) {
+		// TODO tratar relacionamentos
+	    } else {
+		String column = translator.getColumn(field);
+		if (column != null) {
+		    map.put(column, getBeanValue(field));
+		}
+	    }
 	}
+	return map;
+    }
+
+    public Map<Class<?>, Map<String, Object>> formatDisjoin() {
+	if (inheritanceMap.isEmpty()) {
+	    return null;
+	}
+	Map<Class<?>, Map<String, Object>> disjoinMap = new LinkedHashMap<Class<?>, Map<String, Object>>();
+	Iterator<Class<?>> iterator = inheritanceMap.keySet().iterator();
+	while (iterator.hasNext()) {
+	    Class<?> key = iterator.next();
+	    Map<String, Object> value = format(key, false);
+	    disjoinMap.put(key, value);
+	}
+	return disjoinMap;
+    }
+
+    public List<Field> getNotNullFields(List<Field> fields, Class<?> type,
+	    boolean deep) {
+	List<Field> all = getAllFields(fields, type, deep);
+	List<Field> remove = new ArrayList<Field>();
+	OrmTranslator translator = new OrmTranslator(all);
+	for (Field field : all) {
+	    Object value = null;
+	    try {
+		if (translator.getColumn(field) != null) {
+		    value = getBeanValue(field);
+		}
+	    } catch (Exception ex) {
+	    }
+	    if (value == null) {
+		remove.add(field);
+	    }
+	}
+	all.removeAll(remove);
+	return all;
+    }
+
+    public static List<Field> getKeyFields(List<Field> fields, Class<?> type,
+	    boolean deep) {
+	List<Field> all = getAllFields(fields, type, deep);
+	List<Field> remove = new ArrayList<Field>();
+	for (Field field : all) {
+	    if (!field.isAnnotationPresent(Id.class)) {
+		remove.add(field);
+	    }
+	}
+	all.removeAll(remove);
+	return all;
+    }
+
+    public static List<Field> getAllFields(List<Field> fields, Class<?> type,
+	    boolean deep) {
+	if (fieldsCache.containsKey(type)) {
+	    fields.addAll(fieldsCache.get(type));
+	} else {
+	    for (Field field : type.getDeclaredFields()) {
+		fields.add(field);
+	    }
+	}
+	Class<?> superType = type.getSuperclass();
+	if (superType != null) {
+	    Table table = superType.getAnnotation(Table.class);
+	    if ((table != null && deep) || (table == null && !deep)) {
+		if (fieldsCache.containsKey(superType)) {
+		    fields.addAll(fieldsCache.get(superType));
+		} else {
+		    fields = getAllFields(fields, superType, deep);
+		}
+	    }
+	}
+	return fields;
+    }
+
+    public void parse(Map<String, Object> values, Class<?> classe) {
+	List<Field> fields = getAllFields(new LinkedList<Field>(), classe, true);
+	OrmTranslator translator = new OrmTranslator(fields);
+	for (String column : values.keySet()) {
+	    Field field = translator.getField(column);
+	    if (field.isAnnotationPresent(Relationship.class)) {
+		// TODO tratar relacionamentos
+	    } else {
+		setBeanValue(field, values.get(column));
+	    }
+	}
+    }
+
+    private void setBeanValue(Field field, Object value) {
+	try {
+	    if (Enum.class.isAssignableFrom(field.getType())
+		    && field.isAnnotationPresent(Enumerator.class)) {
+		value = reTypeSyncEnum(value, field, field.getAnnotation(
+			Enumerator.class).type());
+	    } else if (Number.class.isAssignableFrom(field.getType())) {
+		value = reTypeSyncNumber(value, field.getType());
+	    } else if (String.class.isAssignableFrom(field.getType())) {
+		value = reTypeSyncString(value);
+	    }
+	    PropertyUtils.setNestedProperty(target, field.getName(), value);
+	} catch (IllegalAccessException e) {
+	    e.printStackTrace();
+	} catch (InvocationTargetException e) {
+	    e.printStackTrace();
+	} catch (NoSuchMethodException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    private String reTypeSyncString(Object value) {
+	if (value == null) {
+	    return null;
+	}
+	return String.valueOf(value);
+    }
+
+    public Number reTypeSyncNumber(Object value, Class<?> type) {
+	Number num = (Number) value;
+	if (type.isAssignableFrom(Integer.class)) {
+	    return num.intValue();
+	} else if (type.isAssignableFrom(Long.class)) {
+	    return num.longValue();
+	} else if (type.isAssignableFrom(Short.class)) {
+	    return num.shortValue();
+	} else if (type.isAssignableFrom(Byte.class)) {
+	    return num.byteValue();
+	} else if (type.isAssignableFrom(Double.class)) {
+	    return num.doubleValue();
+	} else if (type.isAssignableFrom(Float.class)) {
+	    return num.floatValue();
+	}
+	return num;
+    }
+
+    private Object reTypeSyncEnum(Object value, Field field, EnumValue type) {
+	if (type == null) {
+	    return null;
+	}
+	if (((type == EnumValue.ORDINAL && value instanceof Number) || (type == EnumValue.NAME && value instanceof String))
+		&& field.getType().isEnum()) {
+	    if (type == EnumValue.ORDINAL) {
+		Object[] values = field.getType().getEnumConstants();
+		Number index = (Number) value;
+		if (index.intValue() >= 0 || index.intValue() < values.length) {
+		    return values[index.intValue()];
+		}
+	    } else if (type == EnumValue.NAME) {
+		try {
+		    return field.getType().getDeclaredField(
+			    String.valueOf(value)).get(null);
+		} catch (IllegalArgumentException e) {
+		    e.printStackTrace();
+		} catch (SecurityException e) {
+		    e.printStackTrace();
+		} catch (IllegalAccessException e) {
+		    e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+		    e.printStackTrace();
+		}
+	    }
+	}
+	return null;
+    }
+
+    private Object getBeanValue(Field field) {
+	if (target == null) {
+	    return null;
+	}
+	try {
+	    Object value = PropertyUtils.getNestedProperty(target, field
+		    .getName());
+	    if (Enum.class.isAssignableFrom(field.getType())
+		    && field.isAnnotationPresent(Enumerator.class)) {
+		return getEnumValue(value, field
+			.getAnnotation(Enumerator.class).type());
+	    }
+	    return value;
+	} catch (IllegalAccessException e) {
+	    e.printStackTrace();
+	} catch (InvocationTargetException e) {
+	    e.printStackTrace();
+	} catch (NoSuchMethodException e) {
+	    e.printStackTrace();
+	}
+	return null;
+    }
+
+    private Object getEnumValue(Object value, EnumValue type) {
+	if (type == null) {
+	    return null;
+	}
+	if (value instanceof Enum<?>) {
+	    Enum<?> enumBean = (Enum<?>) value;
+	    if (type == EnumValue.ORDINAL) {
+		return enumBean.ordinal();
+	    } else if (type == EnumValue.NAME) {
+		return enumBean.name();
+	    } else {
+		return null;
+	    }
+	}
+	return null;
+    }
+
+    public Object getTarget() {
+	return target;
+    }
+
+    public Map<Class<?>, Class<?>> getInheritanceMap() {
+	return inheritanceMap;
+    }
 }
