@@ -12,66 +12,68 @@ public class ConnectionFactory implements Serializable {
 
     private static ConnectionFactory instance;
 
-    private ConnectionFactory(){
-    	
+    private ConnectionFactory() {
+
     }
-    
-    public static ConnectionFactory getInstance(){
-        if(ConnectionFactory.instance == null){
-            ConnectionFactory.instance = new ConnectionFactory();
-        }
-        return ConnectionFactory.instance;
+
+    public static ConnectionFactory getInstance() {
+	if (ConnectionFactory.instance == null) {
+	    ConnectionFactory.instance = new ConnectionFactory();
+	}
+	return ConnectionFactory.instance;
     }
 
     private Connection connection;
 
-	/**
-	 * Cria uma nova Conexao caso o objeto connection seja null ou esteja fechado.
-	 * @return Um objeto Connection
-	 * @throws Exception
-	 */
-	public Connection getConnection() throws Exception {
-		if(this.connection == null || this.connection.isClosed()){
-            Properties p = new Properties();
-            p.load(getClass().getResourceAsStream("/resources/openodonto-ds.properties"));
-            Class.forName(p.getProperty("driver-class"));
-			this.connection = DriverManager.getConnection(p.getProperty("connection-url") ,
-                    p.getProperty("user-name"),
-                    p.getProperty("password"));
-		}
-		return connection;
+    /**
+     * Cria uma nova Conexao caso o objeto connection seja null ou esteja
+     * fechado.
+     * 
+     * @return Um objeto Connection
+     * @throws Exception
+     */
+    public Connection getConnection() throws Exception {
+	if (this.connection == null || this.connection.isClosed()) {
+	    Properties p = new Properties();
+	    p.load(getClass().getResourceAsStream(
+		    "/resources/openodonto-ds.properties"));
+	    Class.forName(p.getProperty("driver-class"));
+	    this.connection = DriverManager.getConnection(p
+		    .getProperty("connection-url"), p.getProperty("user-name"),
+		    p.getProperty("password"));
 	}
+	return connection;
+    }
 
-	/**
-	 * Define uma instancia especifica de Connection para a variavel connection. 
-	 * @param connection
-	 */
-	public void setConnection(Connection connection) {
-		this.connection = connection;
+    /**
+     * Define uma instancia especifica de Connection para a variavel connection.
+     * 
+     * @param connection
+     */
+    public void setConnection(Connection connection) {
+	this.connection = connection;
+    }
+
+    /**
+     * Fecha a conexao atual.
+     */
+    public void closeConnection() {
+	try {
+	    if (this.connection != null && !this.connection.isClosed()) {
+		this.connection.close();
+	    }
+	} catch (SQLException e) {
+	    e.printStackTrace();
 	}
+    }
 
-	
-	/**
-	 * Fecha a conexao atual.
-	 */
-	public void closeConnection() {
-		try {
-			if(this.connection != null && !this.connection.isClosed()){
-				this.connection.close();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+    public boolean isConnectionActive() {
+	try {
+	    return (this.connection != null && !this.connection.isClosed());
+	} catch (SQLException e) {
+	    e.printStackTrace();
 	}
-
-	public boolean isConnectionActive(){
-		try {
-	        return (this.connection != null && !this.connection.isClosed());
-        } catch (SQLException e) {
-	        e.printStackTrace();
-        }
-        return false;
-	}
-
+	return false;
+    }
 
 }

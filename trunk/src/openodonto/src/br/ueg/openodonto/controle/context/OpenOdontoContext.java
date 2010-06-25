@@ -11,63 +11,62 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.ueg.openodonto.dominio.Usuario;
 
-public class OpenOdontoContext implements ApplicationContext{
-	
-	protected HttpServletRequest getRequest() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		ExternalContext externalContext = facesContext.getExternalContext();
-		return (HttpServletRequest) externalContext.getRequest();
-	}
+public class OpenOdontoContext implements ApplicationContext {
 
-	protected HttpServletResponse getResponse() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		ExternalContext externalContext = facesContext.getExternalContext();
-		return (HttpServletResponse) externalContext.getResponse();
-	}
-	
-	@Override
-	public Usuario getUsuarioSessao() {
-		return getAttribute("autenticacao", Usuario.class);
-	}
+    protected HttpServletRequest getRequest() {
+	FacesContext facesContext = FacesContext.getCurrentInstance();
+	ExternalContext externalContext = facesContext.getExternalContext();
+	return (HttpServletRequest) externalContext.getRequest();
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T getAttribute(String name,Class<T> classe) {
-		Object bean = getRequest().getSession().getAttribute(name);
-		if(bean != null){
-			return (T)bean;
-		}else{
-			return  null;
-		}	
-	}
+    protected HttpServletResponse getResponse() {
+	FacesContext facesContext = FacesContext.getCurrentInstance();
+	ExternalContext externalContext = facesContext.getExternalContext();
+	return (HttpServletResponse) externalContext.getResponse();
+    }
 
-	@Override
-	public String getParameter(String name) {
-		return getRequest().getParameter(name);
-	}
+    @Override
+    public Usuario getUsuarioSessao() {
+	return getAttribute("autenticacao", Usuario.class);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Map<String, Object> getAttributes() {
-		Map<String , Object> attributtes = new HashMap<String, Object>();
-		Enumeration<String> names = getRequest().getSession().getAttributeNames();
-		while(names.hasMoreElements()){
-			String name  = names.nextElement();
-			attributtes.put(name, getRequest().getSession().getAttribute(name));
-		}
-		return attributtes;
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getAttribute(String name, Class<T> classe) {
+	Object bean = getRequest().getSession().getAttribute(name);
+	if (bean != null) {
+	    return (T) bean;
+	} else {
+	    return null;
 	}
+    }
 
-	@Override
-	public void removeAttribute(String name) {
-		getRequest().getSession().removeAttribute(name);
-	}
+    @Override
+    public String getParameter(String name) {
+	return getRequest().getParameter(name);
+    }
 
-	@Override
-	public void addAttribute(String name, Object value) {
-		getRequest().getSession().setAttribute(name, value);
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, Object> getAttributes() {
+	Map<String, Object> attributtes = new HashMap<String, Object>();
+	Enumeration<String> names = getRequest().getSession()
+		.getAttributeNames();
+	while (names.hasMoreElements()) {
+	    String name = names.nextElement();
+	    attributtes.put(name, getRequest().getSession().getAttribute(name));
 	}
-	
-	
-	
+	return attributtes;
+    }
+
+    @Override
+    public void removeAttribute(String name) {
+	getRequest().getSession().removeAttribute(name);
+    }
+
+    @Override
+    public void addAttribute(String name, Object value) {
+	getRequest().getSession().setAttribute(name, value);
+    }
+
 }

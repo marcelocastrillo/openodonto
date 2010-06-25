@@ -14,114 +14,112 @@ import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
-@Table(name="telefones")
-public class Telefone implements Serializable,Entity{	
+@Table(name = "telefones")
+public class Telefone implements Serializable, Entity {
 
-	private static final long serialVersionUID = 77367905036522189L;
-	
-	@Column(name="id")
-	@Id(autoIncrement=IdIncrementType.IDENTITY)
-	private Long codigo;
+    private static final long serialVersionUID = 77367905036522189L;
 
-	@Column(name="ddd")
-	private String ddd;
+    @Column(name = "id")
+    @Id(autoIncrement = IdIncrementType.IDENTITY)
+    private Long codigo;
 
-	@Column(name="numero")
-	private String numero;
+    @Column(name = "ddd")
+    private String ddd;
 
-	@Column(name="tipo")
-	@Enumerator(type=EnumValue.ORDINAL)
-	private TiposTelefone tipoTelefone;
-	
-	@Column(name="id_pessoa")
-	private Long idPessoa;
-	
-	public Telefone() {
-	}
-	
-	public Telefone(Long idPessoa) {
-		this.idPessoa  = idPessoa;
-	}
-	
-	public Long getCodigo() {
-		return codigo;
-	}
+    @Column(name = "numero")
+    private String numero;
 
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
-	}
+    @Column(name = "tipo")
+    @Enumerator(type = EnumValue.ORDINAL)
+    private TiposTelefone tipoTelefone;
 
-	public String getDdd() {
-		return this.ddd;
-	}
+    @Column(name = "id_pessoa")
+    private Long idPessoa;
 
-	public void setDdd(String ddd) {
-		this.ddd = ddd;
-	}
+    public Telefone() {
+    }
 
-	public String getNumero() {
-		return this.numero;
-	}
-	
+    public Telefone(Long idPessoa) {
+	this.idPessoa = idPessoa;
+    }
 
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
+    public Long getCodigo() {
+	return codigo;
+    }
 
-	public TiposTelefone getTipoTelefone() {
-		return tipoTelefone;
-	}
+    public void setCodigo(Long codigo) {
+	this.codigo = codigo;
+    }
 
-	public void setTipoTelefone(TiposTelefone tipoTelefone) {
-		this.tipoTelefone = tipoTelefone;
-	}
+    public String getDdd() {
+	return this.ddd;
+    }
 
-	public Long getIdPessoa() {
-		return idPessoa;
-	}
+    public void setDdd(String ddd) {
+	this.ddd = ddd;
+    }
 
-	public void setIdPessoa(Long idPessoa) {
-		this.idPessoa = idPessoa;
-	}
+    public String getNumero() {
+	return this.numero;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result
-				+ ((idPessoa == null) ? 0 : idPessoa.hashCode());
-		return result;
-	}
+    public void setNumero(String numero) {
+	this.numero = numero;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Telefone other = (Telefone) obj;
-		if (codigo == null) {
-			if (other.codigo != null)
-				return false;
-		} else if (!codigo.equals(other.codigo))
-			return false;
-		if (idPessoa == null) {
-			if (other.idPessoa != null)
-				return false;
-		} else if (!idPessoa.equals(other.idPessoa))
-			return false;
-		return true;
-	}
+    public TiposTelefone getTipoTelefone() {
+	return tipoTelefone;
+    }
 
-	@Override
-	public String toString() {
-		return "Telefone [codigo=" + codigo + ", ddd=" + ddd + ", id_pessoa="
-				+ idPessoa + ", numero=" + numero + ", tipoTelefone="
-				+ tipoTelefone + "]";
-	}
+    public void setTipoTelefone(TiposTelefone tipoTelefone) {
+	this.tipoTelefone = tipoTelefone;
+    }
 
-		
+    public Long getIdPessoa() {
+	return idPessoa;
+    }
+
+    public void setIdPessoa(Long idPessoa) {
+	this.idPessoa = idPessoa;
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+	result = prime * result
+		+ ((idPessoa == null) ? 0 : idPessoa.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Telefone other = (Telefone) obj;
+	if (codigo == null) {
+	    if (other.codigo != null)
+		return false;
+	} else if (!codigo.equals(other.codigo))
+	    return false;
+	if (idPessoa == null) {
+	    if (other.idPessoa != null)
+		return false;
+	} else if (!idPessoa.equals(other.idPessoa))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "Telefone [codigo=" + codigo + ", ddd=" + ddd + ", id_pessoa="
+		+ idPessoa + ", numero=" + numero + ", tipoTelefone="
+		+ tipoTelefone + "]";
+    }
+
 }

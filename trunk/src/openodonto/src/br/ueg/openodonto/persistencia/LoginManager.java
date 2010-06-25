@@ -4,10 +4,10 @@ import br.ueg.openodonto.dominio.Usuario;
 
 /**
  * @author Vinicius
- *
+ * 
  */
 public interface LoginManager {
 
-	Usuario autenticar(Usuario usuario);
-	
+    Usuario autenticar(Usuario usuario);
+
 }

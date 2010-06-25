@@ -5,8 +5,8 @@ import java.util.List;
 
 public interface ResultMask {
 
-	List<Field> getResultMask();
-	
-	List<Field> getResultMask(Class<?> classe);
-	
+    List<Field> getResultMask();
+
+    List<Field> getResultMask(Class<?> classe);
+
 }
