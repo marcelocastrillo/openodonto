@@ -152,6 +152,9 @@ public class CrudQuery {
 		stb.append(",");
 	    }
 	}
+	if(translator.getColumnsMap().isEmpty()){
+	    stb.append("1 as unknow");
+	}
 	stb.append(" FROM ");
 	stb.append(getTableName(classe));
 	stb.append(" ");

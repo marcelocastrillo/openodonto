@@ -11,6 +11,7 @@ import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 
 public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 
@@ -29,8 +30,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	if (key == null || key.size() == 0) {
 	    return false;
 	}
-	IQuery query = CrudQuery.getSelectQuery(super.getClasse(), key, key
-		.keySet().toArray(new String[key.size()]));
+	IQuery query = CrudQuery.getSelectQuery(super.getClasse(), key);
 	return getSqlExecutor().executarQuery(query.getQuery(),
 		query.getParams()).size() > 0;
     }
@@ -40,7 +40,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 
     @Override
     public void alterar(T o) throws Exception {
-	if (o != null && !exists(o)) {
+	if (o != null && exists(o)) {
 	    Savepoint save = null;
 	    try {
 		getConnection().setAutoCommit(false);
