@@ -10,19 +10,14 @@ import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
-import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
 public class DaoDentista extends DaoCrud<Dentista> {
 
     private static final long serialVersionUID = 7872660758710684668L;
 
-    private SqlExecutor<Dentista> sqlExecutor;
-
     public DaoDentista() {
 	super(Dentista.class);
-	this.sqlExecutor = new QueryExecutor<Dentista>(this);
     }
 
     static {
@@ -143,9 +138,5 @@ public class DaoDentista extends DaoCrud<Dentista> {
 	}
     }
 
-    @Override
-    public SqlExecutor<Dentista> getSqlExecutor() {
-	return sqlExecutor;
-    }
 
 }
