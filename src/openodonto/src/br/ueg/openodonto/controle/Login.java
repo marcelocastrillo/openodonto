@@ -3,7 +3,7 @@ package br.ueg.openodonto.controle;
 import java.util.Properties;
 
 import br.ueg.openodonto.controle.context.ApplicationContext;
-import br.ueg.openodonto.controle.context.OpenOdontoContext;
+import br.ueg.openodonto.controle.context.OpenOdontoWebContext;
 import br.ueg.openodonto.controle.exception.LoginInvalidoException;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.LoginManager;
@@ -28,7 +28,7 @@ public class Login {
 	super();
 	this.usuario = new Usuario();
 	this.loginDao = new DaoLogin();
-	this.context = new OpenOdontoContext();
+	this.context = new OpenOdontoWebContext();
 	Properties params = new Properties();
 	makeView(params);
     }

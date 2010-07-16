@@ -2,6 +2,7 @@ package br.ueg.openodonto.controle.servico;
 
 import static br.ueg.openodonto.controle.ManageBeanGeral.DEFAULT_RULE;
 
+import java.io.Serializable;
 import java.util.List;
 
 import br.ueg.openodonto.controle.ManageBeanGeral;
@@ -11,9 +12,11 @@ import br.ueg.openodonto.dominio.Telefone;
  * @author Vinicius
  * 
  */
-public class ManageTelefone {
+public class ManageTelefone implements Serializable{
 
-    private Telefone telefone;
+	private static final long serialVersionUID = 8556507770756119797L;
+
+	private Telefone telefone;
 
     private List<Telefone> telefones;
 

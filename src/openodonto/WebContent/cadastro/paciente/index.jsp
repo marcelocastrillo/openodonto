@@ -110,7 +110,7 @@ function limparCPF(cpf){
             <h:panelGroup>
 				<a4j:commandButton id="botaoSalvar" image="/helt/salvar.png" oncomplete="if(#{manterPaciente.view.displayPopUp}){popUp()}" action="#{manterPaciente.acaoAlterar}" value="salvar" reRender="formPaciente" focus="output" />
 				<rich:spacer width="16"/>
-				<a4j:commandButton image="/helt/pesquisar.png" id="botaoBuscar" onclick="#{rich:component('painelBuscaPaciente')}.show()" reRender="formModalPaciente"/>
+				<a4j:commandButton image="/helt/pesquisar.png" id="botaoBuscar" onclick="Richfaces.showModalPanel('painelBuscaPaciente', {top:'80px'})" reRender="formModalPaciente"/>
 				<rich:spacer width="16"/>
 				<a4j:commandButton image="/helt/excluir.png" id="botaoExcluir"  action="#{manterPaciente.acaoRemoverSim}" onclick="if(!confirm('Deseja realmente excluir o registro ?')){return false}" reRender="formPaciente" oncomplete="if(#{manterPaciente.view.displayPopUp}){popUp()}" />
 				<rich:spacer width="16"/>

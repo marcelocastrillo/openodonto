@@ -2,13 +2,18 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.ResourceBundle;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 
 import br.ueg.openodonto.controle.ManterPaciente;
 import br.ueg.openodonto.controle.context.ApplicationContext;
@@ -17,6 +22,8 @@ import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.dominio.constante.TiposTelefone;
 import br.ueg.openodonto.dominio.constante.TiposUF;
+import br.ueg.openodonto.persistencia.ConnectionFactory;
+import br.ueg.openodonto.persistencia.dao.DaoBase;
 import br.ueg.openodonto.visao.ApplicationView;
 
 
@@ -32,7 +39,7 @@ public class Main {
 	static volatile int recuperarTimes;
 	static volatile int updateTimes;
 	static volatile int deleteTimes;
-	private static int genTimes = 10; // Um milhão de vezes
+	private static int genTimes = 1; // Um milhão de vezes
 	private static int users    = 1;  // Quantidade de usuários Simulados
 	
 	
@@ -49,6 +56,8 @@ public class Main {
 	
 	public Main() {
 		manterPaciente = new ManterPaciente(){
+			private static final long serialVersionUID = -9039185309165031309L;
+
 			public void makeView(Properties params){
 				this.setView(new UnitTestView());
 			}
@@ -56,31 +65,71 @@ public class Main {
 		manterPaciente.setContext(context = new UnitTestContext());
 	}
 	
-	public static void main(String[] args) {
-		Queue<Paciente> jobData = new ConcurrentLinkedQueue<Paciente>();
+	public static void main(String[] args) throws NamingException {
+		
+		System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.fscontext.RefFSContextFactory");
+	    System.setProperty(Context.PROVIDER_URL, "file:///.");
+	    InitialContext ic = new InitialContext();
+	    Reference ref = new Reference("org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS", "org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS", null);
+	    ref.add(new StringRefAddr("driver", ConnectionFactory.config.getDriverClass()));
+	    ref.add(new StringRefAddr("url", ConnectionFactory.config.getConnectionURL()));
+	    ref.add(new StringRefAddr("user", ConnectionFactory.config.getUserName()));
+	    ref.add(new StringRefAddr("password", ConnectionFactory.config.getPassword()));	    
+	    //ref.add(new StringRefAddr("maxActive", "32"));
+	    //ref.add(new StringRefAddr("maxIdle", "15"));
+	    //ref.add(new StringRefAddr("maxWait", "-1"));
+	    ic.rebind("jdbc/openodonto", ref);
+
+
+	    Reference ref2 = new Reference("org.apache.commons.dbcp.datasources.SharedPoolDataSource", "org.apache.commons.dbcp.datasources.SharedPoolDataSourceFactory", null);
+	    ref2.add(new StringRefAddr("dataSourceName", "jdbc/openodonto"));
+	    ref2.add(new StringRefAddr("maxActive", "128"));
+	    ref2.add(new StringRefAddr("maxIdle", "30"));
+	    ref2.add(new StringRefAddr("maxWait", "-1"));
+	    ic.rebind("java:comp/env/jdbc/openodonto", ref2);
+	    
+	    
+		
 		long timeGenerateDataStart = System.currentTimeMillis();
-		for(int i = 0 ; i < genTimes ; i++){
-			jobData.add(generatePaciente());
+		List<Thread> bootUsers = new ArrayList<Thread>();
+		List<Job>      jobs = buildJob();
+		for(int i = 0 ; i < users ; i++){
+			bootUsers.add(new Thread(new Stress(jobs.get(i))));
 		}
 		timeGenerateData = System.currentTimeMillis() - timeGenerateDataStart;
-		Job job = new Job(jobData);
-		Executor pool = Executors.newCachedThreadPool();
-		List<Runnable> bootUsers = new ArrayList<Runnable>();
-		for(int i = 0 ; i < users ; i++){
-			bootUsers.add(new Stress(job));
-		}
-		Iterator<Runnable> usersIterator = bootUsers.iterator();
+		Iterator<Thread> usersIterator = bootUsers.iterator();
+		long timeStart = System.currentTimeMillis();
 		while(usersIterator.hasNext()){
-			pool.execute(usersIterator.next());
+			usersIterator.next().start();
+		}
+		usersIterator = bootUsers.iterator();
+		while(usersIterator.hasNext()){
+			try {
+				usersIterator.next().join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}		
+		printResults(timeStart,System.currentTimeMillis());
+		System.out.println(Thread.currentThread().getName() + " [TERMINOU]");
 	}
 	
+	private static List<Job> buildJob(){
+		List<Job> jobs = new ArrayList<Job>();
+		for(int i = 0 ;i  < users; i++){
+			Queue<Paciente> jobData = new LinkedList<Paciente>();
+			for(int j = 0 ; j < genTimes/users ; j++){
+				jobData.add(generatePaciente());
+			}
+			jobs.add(new Job(jobData));
+		}
+		return jobs;
+	}
 	
-	
-	public static void printResults(){
+	public static void printResults(long start, long end){
 		System.out.format("%-30s", "Operação");
 		System.out.format("%-30s", "Tempo");
-		System.out.format("%-30s", "Execuções").append("\n");
+		System.out.format("%-30s", "CRUD").append("\n");
 		
 		System.out.format("%-30s", "Criação Objetos");
 		System.out.format("%-30d", timeGenerateData);
@@ -102,11 +151,17 @@ public class Main {
 		System.out.format("%-30d", timeDelete);
 		System.out.format("%-30d", deleteTimes).append("\n");
 		
-		System.out.format("%-30s", "Total Trans. BD");
+		System.out.format("%-30s", "Total Linear BD");
 		System.out.format("%-30d", timeCreate+timeRecuperar+timeUpdate+timeDelete);
-		System.out.format("%-30d", createTimes+recuperarTimes+updateTimes+deleteTimes).append("\n");
+		System.out.format("%-30d", createTimes+recuperarTimes+updateTimes+deleteTimes).append("\n").append("\n");
 		
+		System.out.format("%-30s", "Operação");
+		System.out.format("%-30s", "Tempo");
+		System.out.format("%-30s", "Total").append("\n");
 		
+		System.out.format("%-30s","SQL : ");
+		System.out.format("%-30d",end - start);
+		System.out.format("%-30d",DaoBase.times).append("\n");	
 	}
 	
 	private static Paciente generatePaciente(){
@@ -116,7 +171,7 @@ public class Main {
 		paciente.setDataInicioTratamento(new Date(System.currentTimeMillis()));
 		paciente.setDataRetorno(new Date(System.currentTimeMillis()));
 		paciente.setDataTerminoTratamento(new Date(System.currentTimeMillis()));
-		paciente.setEmail(generateWord(5,10, 1,CONSOANTES,VOGAIS) + "@" + generateWord(5,10, 1,CONSOANTES,VOGAIS) + ".com");
+		paciente.setEmail(generateWord(5,10, 1,CONSOANTES,VOGAIS).trim() + "@" + generateWord(5,10, 1,CONSOANTES,VOGAIS).trim() + ".com");
 		paciente.setEndereco(generateWord(5,10, 1,CONSOANTES,VOGAIS) + " N " + generateWord(2,5, 1,NUMBERS));
 		paciente.setEstado(TiposUF.values()[generateNumber(MaxEstados)]);
 		paciente.setNome(generateWord(5,15,4,CONSOANTES,VOGAIS));
@@ -162,6 +217,7 @@ public class Main {
 	
 	public void create(){
 		manterPaciente.acaoAlterar();
+		manterPaciente.setContext(context);
 		createTimes++;
 	}
 	
@@ -169,8 +225,7 @@ public class Main {
 		try{
 			manterPaciente.setOpcao("codigo");
 			manterPaciente.setParamBusca(String.valueOf(id));
-			manterPaciente.acaoPesquisar();
-			
+			manterPaciente.acaoPesquisar();			
 			manterPaciente.acaoCarregarBean();
 		}finally{
 		    recuperarTimes++;
@@ -179,11 +234,13 @@ public class Main {
 	
 	public void update(){
 		manterPaciente.acaoAlterar();
+		manterPaciente.setContext(context);
 		updateTimes++;
 	}
 	
 	public void delete(){
 		manterPaciente.acaoRemoverSim();
+		manterPaciente.setContext(context);
 		deleteTimes++;
 	}
 	
@@ -206,21 +263,11 @@ class Stress implements Runnable{
 	
 	@Override
 	public void run() {
-		while(true){
-			Paciente paciente;
-			synchronized (job) {
-				if(job.hasData()){
-					paciente = job.getPaciente();
-				}else{
-					if(!Main.isPrinted){
-					    Main.printResults();
-					    Main.isPrinted = true;
-					}
-					break;
-				}
-			}
+		while(job.hasData()){
+			Paciente paciente = job.getPaciente();
 			doCrud(paciente);
 		}
+		System.out.println(Thread.currentThread().getName() + " [TERMINOU]");
 	}
 	
 	private void doCrud(Paciente paciente){
@@ -233,6 +280,7 @@ class Stress implements Runnable{
 		main.create();
 		Main.timeCreate += System.currentTimeMillis() - parcial;
 		
+		/*
 		parcial = System.currentTimeMillis();
 		main.getContext().getValues().put("index", 0);
 		main.recuperar(paciente.getCodigo());
@@ -240,11 +288,13 @@ class Stress implements Runnable{
 		
 		parcial = System.currentTimeMillis();			
 		main.update();
+		main.getManterPaciente().setBackBean(paciente);
 		Main.timeUpdate += System.currentTimeMillis() - parcial;
 		
 		parcial = System.currentTimeMillis();
 		main.delete();
-		Main.timeDelete += System.currentTimeMillis() - parcial;			
+		Main.timeDelete += System.currentTimeMillis() - parcial;
+		*/
 	}
 	
 }
@@ -252,10 +302,11 @@ class Stress implements Runnable{
 
 class UnitTestContext implements ApplicationContext{
 
+	private static final long serialVersionUID = -6670444279669734069L;
 	private Map<String , Object> values;
 	
 	public UnitTestContext() {
-		values = new HashMap<String, Object>();
+		this.values = new HashMap<String, Object>();
 	}
 	
 	public Map<String, Object> getValues() {
@@ -299,13 +350,18 @@ class UnitTestContext implements ApplicationContext{
 	@Override
 	public void addAttribute(String name, Object value) {
 		values.put(name, value);
-	}
-	
+	}	
 }
 
 
 class UnitTestView implements ApplicationView {
 
+	private static ResourceBundle resourceBundle;
+	
+	static{
+		resourceBundle = ResourceBundle.getBundle("br.ueg.openodonto.visao.i18n.mensagens");
+	}
+	
 	@Override
 	public void addLocalDynamicMenssage(String msg, String target,
 			boolean targetParam) {
@@ -366,6 +422,11 @@ class UnitTestView implements ApplicationView {
 	public void showPopUp(String msg) {
 		
 	}
+
+	@Override
+	public String getMessageFromResource(String name) {
+		return resourceBundle.getString(name);
+	}
 	
 }
 
@@ -377,13 +438,12 @@ class Job{
 		this.jobData = jobData;
 	}
 	
-	public synchronized boolean hasData(){
+	public boolean hasData(){
 		return !jobData.isEmpty();
 	}
 	
-	public synchronized Paciente getPaciente(){
+	public Paciente getPaciente(){
 		return jobData.poll();
 	}
 	
 }
-

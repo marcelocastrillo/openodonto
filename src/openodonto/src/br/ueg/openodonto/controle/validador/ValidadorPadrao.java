@@ -2,7 +2,7 @@ package br.ueg.openodonto.controle.validador;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import br.ueg.openodonto.util.PBUtil;
 
 /**
  * @author vinicius.rodrigues
@@ -15,7 +15,7 @@ public class ValidadorPadrao extends AbstractValidator {
 	    return false;
 	Object campoObrigatorio = null;
 	try {
-	    campoObrigatorio = PropertyUtils.getNestedProperty(root,
+	    campoObrigatorio = PBUtil.instance().getNestedProperty(root,
 		    getELCampo());
 	} catch (IllegalAccessException e) {
 	    e.printStackTrace();

@@ -25,6 +25,8 @@ public interface ApplicationView {
     void addLocalMessage(String key, String target, boolean targetParam);
 
     void addLocalDynamicMenssage(String msg, String target, boolean targetParam);
+    
+    String getMessageFromResource(String name);
 
     void refresh();
 

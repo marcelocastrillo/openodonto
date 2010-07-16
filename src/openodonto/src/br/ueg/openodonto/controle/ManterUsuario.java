@@ -14,7 +14,9 @@ import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
 public class ManterUsuario extends ManageBeanGeral<Usuario> {
 
-    public ManterUsuario() {
+	private static final long serialVersionUID = 2655162625494306823L;
+
+	public ManterUsuario() {
 	super(Usuario.class);
 	Properties params = new Properties();
 	params.put("managebeanName", "manterUsuario");
