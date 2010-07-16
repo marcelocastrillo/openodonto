@@ -8,87 +8,87 @@ import java.util.Map;
 
 public class OrmTranslator {
 
-    private List<Field> fields;
-    private Map<String, Field> columnsMap;
+	private List<Field> fields;
+	private Map<String, Field> columnsMap;
 
-    public OrmTranslator(List<Field> fields) {
-	this.fields = fields;
-	this.columnsMap = new HashMap<String, Field>();
-	resolveColumns();
-    }
-
-    private String resolveColumnName(Field field) {
-	Column column;
-	if ((column = field.getAnnotation(Column.class)) != null) {
-	    return column.name();
-	} else if (!Modifier.isFinal(field.getModifiers())
-		&& !Modifier.isStatic(field.getModifiers())) {
-	    return field.getName();
-	} else {
-	    return null;
+	public OrmTranslator(List<Field> fields) {
+		this.fields = fields;
+		this.columnsMap = new HashMap<String, Field>();
+		resolveColumns();
 	}
-    }
 
-    private void resolveColumns() {
-	for (Field field : fields) {
-	    if (field.isAnnotationPresent(Relationship.class)) {
-		// TODO tratar relacionamentos
-	    } else {
-		String columnName = getColumn(field);
-		if (columnName != null) {
-		    columnsMap.put(columnName, field);
+	private String resolveColumnName(Field field) {
+		Column column;
+		if ((column = field.getAnnotation(Column.class)) != null) {
+			return column.name();
+		} else if (!Modifier.isFinal(field.getModifiers())
+				&& !Modifier.isStatic(field.getModifiers())) {
+			return field.getName();
+		} else {
+			return null;
 		}
-	    }
 	}
-    }
 
-    private Field findFieldByAnnotation(String column) {
-	return columnsMap.get(column);
-    }
-
-    public String getColumn(Field field) {
-	if (field == null) {
-	    return null;
+	private void resolveColumns() {
+		for (Field field : fields) {
+			if (OrmResolver.hasAnnotation(field , Relationship.class)) {
+				// TODO tratar relacionamentos
+			} else {
+				String columnName = getColumn(field);
+				if (columnName != null) {
+					columnsMap.put(columnName, field);
+				}
+			}
+		}
 	}
-	String columnName = resolveColumnName(field);
-	return columnName;
-    }
 
-    public String getColumn(String field) {
-	for (Field f : fields) {
-	    if (f.getName().equals(field)) {
-		return getColumn(f);
-	    }
+	private Field findFieldByAnnotation(String column) {
+		return columnsMap.get(column);
 	}
-	return null;
-    }
 
-    public String getFieldName(String column) {
-	Field field = findFieldByAnnotation(column);
-	if (field != null) {
-	    return field.getName();
+	public String getColumn(Field field) {
+		if (field == null) {
+			return null;
+		}
+		String columnName = resolveColumnName(field);
+		return columnName;
 	}
-	return null;
-    }
 
-    public Field getField(String column) {
-	return findFieldByAnnotation(column);
-    }
+	public String getColumn(String field) {
+		for (Field f : fields) {
+			if (f.getName().equals(field)) {
+				return getColumn(f);
+			}
+		}
+		return null;
+	}
 
-    public List<Field> getFields() {
-	return fields;
-    }
+	public String getFieldName(String column) {
+		Field field = findFieldByAnnotation(column);
+		if (field != null) {
+			return field.getName();
+		}
+		return null;
+	}
 
-    public void setFields(List<Field> fields) {
-	this.fields = fields;
-    }
+	public Field getField(String column) {
+		return findFieldByAnnotation(column);
+	}
 
-    public Map<String, Field> getColumnsMap() {
-	return columnsMap;
-    }
+	public List<Field> getFields() {
+		return fields;
+	}
 
-    public void setColumnsMap(Map<String, Field> columnsMap) {
-	this.columnsMap = columnsMap;
-    }
+	public void setFields(List<Field> fields) {
+		this.fields = fields;
+	}
+
+	public Map<String, Field> getColumnsMap() {
+		return columnsMap;
+	}
+
+	public void setColumnsMap(Map<String, Field> columnsMap) {
+		this.columnsMap = columnsMap;
+	}
 
 }

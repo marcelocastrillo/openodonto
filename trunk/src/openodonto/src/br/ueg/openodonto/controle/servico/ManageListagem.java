@@ -1,5 +1,6 @@
 package br.ueg.openodonto.controle.servico;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,9 +9,10 @@ import br.ueg.openodonto.servico.listagens.core.AbstractLista;
 import br.ueg.openodonto.servico.listagens.core.ListaDominio;
 import br.ueg.openodonto.servico.listagens.core.ListaTipo;
 
-public class ManageListagem {
+public class ManageListagem implements Serializable{
 
-    private static Map<Class<?>, AbstractLista<?>> cache;
+	private static final long serialVersionUID = 7484584628436233933L;
+	private static Map<Class<?>, AbstractLista<?>> cache;
 
     public ManageListagem() {
 	cache = new HashMap<Class<?>, AbstractLista<?>>() {

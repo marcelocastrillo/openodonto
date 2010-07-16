@@ -1,5 +1,6 @@
 package br.ueg.openodonto.persistencia;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
@@ -20,9 +21,13 @@ public interface EntityManager<T extends Entity> {
 
     void load(T o) throws Exception;
 
+    boolean exists(T o)throws SQLException;    
+   
     List<T> listar();
+    
+    List<T> listar(boolean lazy,String... filds);
 
-    T pesquisar(Object key);
+    T pesquisar(Object key);    
 
     SqlExecutor<T> getSqlExecutor();
 

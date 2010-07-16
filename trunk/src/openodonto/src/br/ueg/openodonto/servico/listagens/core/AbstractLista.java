@@ -10,6 +10,8 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
+import br.ueg.openodonto.util.PBUtil;
+
 /**
  * @author vinicius.rodrigues
  * 
@@ -49,7 +51,7 @@ public abstract class AbstractLista<T> {
 		.synchronizedMap(new LinkedHashMap<Long, T>());
 	for (T value : values)
 	    try {
-		novoDominio.put((Long) PropertyUtils.getNestedProperty(value,
+		novoDominio.put((Long) PBUtil.instance().getNestedProperty(value,
 			"codigo"), value);
 	    } catch (IllegalAccessException e) {
 		e.printStackTrace();

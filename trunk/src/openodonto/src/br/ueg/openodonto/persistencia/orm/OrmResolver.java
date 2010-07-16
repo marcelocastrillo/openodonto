@@ -1,5 +1,6 @@
 package br.ueg.openodonto.persistencia.orm;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -10,20 +11,49 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
-
 import br.ueg.openodonto.persistencia.orm.value.EnumValue;
+import br.ueg.openodonto.util.PBUtil;
 
 public class OrmResolver {
 
     private Object target;
     private Map<Class<?>, Class<?>> inheritanceMap;
     private static Map<Class<?>, List<Field>> fieldsCache;
+    private static Map<Object, List<Class<? extends Annotation>>> annotationCache;
 
     static {
-	fieldsCache = new HashMap<Class<?>, List<Field>>();
+	    fieldsCache = new HashMap<Class<?>, List<Field>>();
+	    annotationCache = new HashMap<Object, List<Class<? extends Annotation>>>();
     }
 
+    public static List<Class<? extends Annotation>> getAnnotations(Object o){
+    	List<Class<? extends Annotation>> cache;
+    	if((cache = annotationCache.get(o)) == null){
+    		if(o instanceof Field){
+    			Field field = (Field)o;    			
+    			cache = buildCache(field.getDeclaredAnnotations());
+    		}else if(o instanceof Class<?>){
+    			Class<?> clazz = (Class<?>)o;
+    			cache = buildCache(clazz.getDeclaredAnnotations());
+    		}
+			annotationCache.put(o, cache);
+    	}
+    	return cache;
+    }
+    
+    public static boolean hasAnnotation(Object o, Class<? extends Annotation> annotation){
+    	List<Class<? extends Annotation>> cache = getAnnotations(o);
+    	return cache.contains(annotation);
+    }
+    
+    private static List<Class<? extends Annotation>> buildCache(Annotation[] annotations){
+    	List<Class<? extends Annotation>> cahce = new ArrayList<Class<? extends Annotation>>();
+		for(Annotation ann : annotations){
+			cahce.add(ann.annotationType());
+		}
+    	return cahce;
+    }
+    
     public OrmResolver(Object target) {
 	this.target = target;
 	inheritanceMap = new LinkedHashMap<Class<?>, Class<?>>();
@@ -37,7 +67,7 @@ public class OrmResolver {
 
     private void mapInheritance(Class<?> classe) {
 	while (classe.getSuperclass() != null
-		&& (classe.getSuperclass().isAnnotationPresent(Table.class) || classe
+		&& (hasAnnotation(classe.getSuperclass() , Table.class) || classe
 			.getSuperclass().equals(Object.class))) {
 	    inheritanceMap.put(classe, classe = classe.getSuperclass());
 	}
@@ -66,7 +96,7 @@ public class OrmResolver {
 	Map<String, Object> map = new HashMap<String, Object>();
 	OrmTranslator translator = new OrmTranslator(fields);
 	for (Field field : fields) {
-	    if (field.isAnnotationPresent(Relationship.class)) {
+	    if (hasAnnotation(field , Relationship.class)) {
 		// TODO tratar relacionamentos
 	    } else {
 		String column = translator.getColumn(field);
@@ -118,8 +148,8 @@ public class OrmResolver {
 	List<Field> all = getAllFields(fields, type, deep);
 	List<Field> remove = new ArrayList<Field>();
 	for (Field field : all) {
-	    if (!field.isAnnotationPresent(Id.class)) {
-		remove.add(field);
+	    if (!hasAnnotation(field , Id.class)) {
+		    remove.add(field);
 	    }
 	}
 	all.removeAll(remove);
@@ -154,7 +184,7 @@ public class OrmResolver {
 	OrmTranslator translator = new OrmTranslator(fields);
 	for (String column : values.keySet()) {
 	    Field field = translator.getField(column);
-	    if (field.isAnnotationPresent(Relationship.class)) {
+	    if (hasAnnotation(field , Relationship.class)) {
 		// TODO tratar relacionamentos
 	    } else {
 		setBeanValue(field, values.get(column));
@@ -165,7 +195,7 @@ public class OrmResolver {
     private void setBeanValue(Field field, Object value) {
 	try {
 	    if (Enum.class.isAssignableFrom(field.getType())
-		    && field.isAnnotationPresent(Enumerator.class)) {
+		    && hasAnnotation(field , Enumerator.class)) {
 		value = reTypeSyncEnum(value, field, field.getAnnotation(
 			Enumerator.class).type());
 	    } else if (Number.class.isAssignableFrom(field.getType())) {
@@ -173,7 +203,7 @@ public class OrmResolver {
 	    } else if (String.class.isAssignableFrom(field.getType())) {
 		value = reTypeSyncString(value);
 	    }
-	    PropertyUtils.setNestedProperty(target, field.getName(), value);
+	    PBUtil.instance().setNestedProperty(target, field.getName(), value);
 	} catch (IllegalAccessException e) {
 	    e.printStackTrace();
 	} catch (InvocationTargetException e) {
@@ -243,10 +273,10 @@ public class OrmResolver {
 	    return null;
 	}
 	try {
-	    Object value = PropertyUtils.getNestedProperty(target, field
+	    Object value = PBUtil.instance().getNestedProperty(target, field
 		    .getName());
 	    if (Enum.class.isAssignableFrom(field.getType())
-		    && field.isAnnotationPresent(Enumerator.class)) {
+		    && hasAnnotation(field , Enumerator.class)) {
 		return getEnumValue(value, field
 			.getAnnotation(Enumerator.class).type());
 	    }

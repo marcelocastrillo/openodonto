@@ -15,7 +15,8 @@ import br.ueg.openodonto.util.WordFormatter;
 
 public class ManterDentista extends ManageBeanGeral<Dentista> {
 
-    private ManageTelefone manageTelefone;
+	private static final long serialVersionUID = -2538516769206620892L;
+	private ManageTelefone manageTelefone;
 
     public ManterDentista() {
 	super(Dentista.class);

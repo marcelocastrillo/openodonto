@@ -1,14 +1,15 @@
 package br.ueg.openodonto.controle.context;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import br.ueg.openodonto.dominio.Usuario;
 
-public interface ApplicationContext {
+public interface ApplicationContext extends Serializable{
 
     Usuario getUsuarioSessao();
 
-    String getParameter(String name);
+    String getParameter(String name);    
 
     Map<String, Object> getAttributes();
 

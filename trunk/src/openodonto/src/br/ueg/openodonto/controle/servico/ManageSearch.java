@@ -1,23 +1,25 @@
 package br.ueg.openodonto.controle.servico;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
-
 import br.ueg.openodonto.controle.ManageBeanGeral;
+import br.ueg.openodonto.util.PBUtil;
 
 /**
  * @author vinicius.rodrigues
  * 
  * @param <T>
  */
-public class ManageSearch<T> {
+public class ManageSearch<T> implements Serializable{
 
-    private Map<String, String> params;
+	private static final long serialVersionUID = -1563000243980108012L;
+
+	private Map<String, String> params;
 
     private List<T> resultados;
 
@@ -68,7 +70,7 @@ public class ManageSearch<T> {
     public String acaoCarregarRegistro() {
 	T objeto = getRegistroParametro();
 	try {
-	    PropertyUtils.setNestedProperty(this.getBackBean(), objetoPath,
+	    PBUtil.instance().setNestedProperty(this.getBackBean(), objetoPath,
 		    objeto);
 	} catch (IllegalAccessException e) {
 	    e.printStackTrace();
