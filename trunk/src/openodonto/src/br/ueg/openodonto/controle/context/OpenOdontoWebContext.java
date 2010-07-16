@@ -22,7 +22,7 @@ public class OpenOdontoWebContext implements ApplicationContext {
 	}
 
 	protected HttpServletResponse getResponse() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
+		 FacesContext facesContext = FacesContext.getCurrentInstance();
 		ExternalContext externalContext = facesContext.getExternalContext();
 		return (HttpServletResponse) externalContext.getResponse();
 	}
