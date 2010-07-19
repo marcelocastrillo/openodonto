@@ -3,12 +3,9 @@ package br.ueg.openodonto.persistencia;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
 
 public class ConnectionFactory implements Serializable {
 
@@ -79,7 +76,7 @@ public class ConnectionFactory implements Serializable {
 	}
 
 	private Connection buildConnection() throws SQLException {
-		
+		/*
 		try {
 			Context initCtx = new InitialContext();
 			Connection connection = ((DataSource) initCtx.lookup("java:comp/env/jdbc/openodonto")).getConnection();
@@ -88,8 +85,8 @@ public class ConnectionFactory implements Serializable {
 			ex.printStackTrace();
 			return null;
 		}
-		
-		//return DriverManager.getConnection(config.getConnectionURL(),config.getUserName(), config.getPassword());
+		*/
+		return DriverManager.getConnection(config.getConnectionURL(),config.getUserName(), config.getPassword());
 	}
 
 	/**

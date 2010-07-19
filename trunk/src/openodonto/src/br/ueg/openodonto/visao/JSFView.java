@@ -16,6 +16,7 @@ import br.ueg.openodonto.util.MessageBundle.MSG_TIPO;
 
 public class JSFView implements ApplicationView {
 
+	private static final long serialVersionUID = -3828926570084560858L;
 	private Properties params;
 	private List<MessageBundle> messageBundleList;
 	private static ResourceBundle resourceBundle;

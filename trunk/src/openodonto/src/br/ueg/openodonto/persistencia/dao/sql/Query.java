@@ -1,12 +1,16 @@
 package br.ueg.openodonto.persistencia.dao.sql;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 public class Query implements IQuery {
 
-    private String query;
-    private List<Object> params;
-    private String table;
+    private String                  query;
+    private Map<String , Field>     columnsMap; // Map Nome da coluna Field
+    private Map<String, Object>     whereParams; // Map Nome da coluna valor
+    private List<Object>            params;
+    private String                  table;
 
     public Query(String query, List<Object> params, String table) {
 	this.query = query;

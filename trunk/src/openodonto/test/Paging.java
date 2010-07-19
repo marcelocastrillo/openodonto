@@ -1,21 +1,14 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.sql.rowset.CachedRowSet;
-
-import br.ueg.openodonto.persistencia.ConnectionFactory;
-
-import com.sun.rowset.CachedRowSetImpl;
+import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 
 
 public class Paging {
 
 	public static void main(String[] args) throws Exception {
-		Paging paging = new Paging();
+		Paging paging = new Paging(null);
 		paging.query();
+	}
+	
+	public Paging(IQuery query) {
 	}
 	
 	public void query() throws Exception{

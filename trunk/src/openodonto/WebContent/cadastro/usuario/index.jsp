@@ -39,7 +39,7 @@ function exibirMensagem(msg){
 			<h:panelGrid columns="2">
 				<h:panelGrid columns="1">
 					<h:outputLabel value="Codigo" for="codigoDentista" />
-					<h:inputText id="codigoDentista" readonly="true" disabled="true" value="#{manterDentista.dentista.codigo}" style=" width : 160px;" />
+					<h:inputText id="codigoDentista" readonly="true" disabled="true" value="#{manterUsuario.usuario.codigo}" style=" width : 160px;" />
 				</h:panelGrid>
 
 				<h:panelGrid columns="1">
@@ -67,7 +67,12 @@ function exibirMensagem(msg){
 	                    <rich:spacer width="8" />
 	                    <rich:message id="messageEntradaSenha" for="entradaSenha" style="color : red ;FONT-WEIGHT : bold" />
 	                </h:panelGrid>
-					<h:inputText id="entradaSenha" value="#{manterUsuario.usuario.senha}" style=" width : 310px;" />
+	                <h:panelGrid columns="3">
+					    <h:inputSecret disabled="#{manterUsuario.enableChangePassword}" valueChangeListener="#{manterUsuario.changePassword}" id="entradaSenha" value="#{manterUsuario.usuario.senha}" style=" width : 280px;" />
+					    <h:commandButton disabled="#{not manterUsuario.enableChangePassword}" value="Alterar" image="/helt/edit-19x19.jpg">
+					        <rich:toolTip value="Editar" />
+					    </h:commandButton>
+					</h:panelGrid>
 				</h:panelGrid>
 				
 			</h:panelGrid>
