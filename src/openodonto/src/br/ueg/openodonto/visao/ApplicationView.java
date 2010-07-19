@@ -1,8 +1,9 @@
 package br.ueg.openodonto.visao;
 
+import java.io.Serializable;
 import java.util.Properties;
 
-public interface ApplicationView {
+public interface ApplicationView extends Serializable{
 
     void showOut();
 

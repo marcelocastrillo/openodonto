@@ -70,8 +70,7 @@ public class ManageSearch<T> implements Serializable{
     public String acaoCarregarRegistro() {
 	T objeto = getRegistroParametro();
 	try {
-	    PBUtil.instance().setNestedProperty(this.getBackBean(), objetoPath,
-		    objeto);
+	    PBUtil.instance().setNestedProperty(this.getBackBean(), objetoPath,  objeto);
 	} catch (IllegalAccessException e) {
 	    e.printStackTrace();
 	} catch (InvocationTargetException e) {
