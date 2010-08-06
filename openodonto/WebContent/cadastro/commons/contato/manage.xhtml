@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+	<rich:panel styleClass="oo-crud-decore-panel">
+		<h:panelGrid columns="4" id="gridAddTel">
+			<h:panelGrid columns="1">
+				<h:outputLabel value="#{msg.manageContactTipo}" for="tipoTelefoneContato" />
+				<h:selectOneMenu id="tipoTelefoneContato" value="#{mBean.manageTelefone.telefone.tipoTelefone}" converter="simpleEntityConverter">
+					<t:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].dominio}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+				</h:selectOneMenu>
+			</h:panelGrid>
+			<rich:spacer width="16"/>
+			<h:panelGrid columns="1">
+				<h:outputLabel value="#{msg.manageContactTelefone}" for="telefoneNumero" />
+				<h:inputText id="telefoneNumero" value="#{mBean.manageTelefone.telefone.numero}" />
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<rich:spacer height="8"/>
+				<h:panelGrid columns="3">
+					<a4j:commandButton action="#{mBean.manageTelefone.acaoInserirTelefone}" image="/images/add.jpg" reRender="listaTelefones,gridAddTel" value="#{msg.manageContactAcaoInserir}" />
+					<rich:spacer width="16"/>
+					<rich:message id="#{mBean.view.properties.saidaContato}" for="#{mBean.view.properties.saidaContato}" styleClass="oo-validation-messages"/>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:panelGrid>
+	</rich:panel>
+	<rich:panel style="border-top: none;" styleClass="oo-crud-decore-panel">
+		<h:panelGrid columns="3">
+			<h:panelGrid columns="1">
+				<h:outputText value="#{msg.manageContact}" />
+				<rich:scrollableDataTable width="500px" height="300px" var="telefone" value="#{mBean.paciente.telefone}" id="listaTelefones" rowKeyVar="index" rows="10" >
+					<rich:column width="200px" >
+						<f:facet name="header">
+							<h:outputText value="#{msg.manageContactHeaderNumero}" />
+						</f:facet>
+						<center>
+							<h:outputText value="#{telefone.numero}" />
+						</center>
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">
+							<h:outputText value="#{msg.manageContactHeaderTipo}" />
+						</f:facet>
+						<center>
+							<h:outputText value="#{telefone.tipoTelefone}" />
+						</center>
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">
+							<h:outputText value="#{msg.manageContactAcaoAlterar}" />
+						</f:facet>
+						<center>
+						<a4j:commandButton value="#{msg.manageContactAcaoAlterar}" id="alterarTelefone" oncomplete="Richfaces.showModalPanel('painelAlterarTelefone')" reRender="formAlterarTelefone" image="/images/edit.jpg">
+							<f:setPropertyActionListener value="#{telefone}" target="#{mBean.manageTelefone.telefone}" />
+						</a4j:commandButton>
+						</center>						
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">
+							<h:outputText value="#{msg.manageContactAcaoRemover}" />
+						</f:facet>
+						<center>
+							<a4j:commandButton value="#{msg.manageContactAcaoRemover}" action="#{mBean.manageTelefone.acaoRemoverTelefone}" reRender="listaTelefones"  image="/images/remove.jpg">
+							    <f:setPropertyActionListener value="#{telefone}" target="#{mBean.manageTelefone.telefone}" />
+							</a4j:commandButton>
+						</center>
+					</rich:column>					
+				</rich:scrollableDataTable>
+			</h:panelGrid>
+		</h:panelGrid>
+	</rich:panel>
+</ui:composition>

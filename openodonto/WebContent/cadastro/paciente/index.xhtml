@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="/template/template.xhtml">
+	<ui:define name="title">
+	    <h:outputText value="#{msg.manterPacientes}" />
+	</ui:define>
+	<ui:param name="workPanel" value="#{msg.manterPacientes}" />
+	<ui:param name="mBean" value="#{manterPaciente}" />
+	<ui:param name="formName" value="#{manterPaciente.view.formName}" />
+	<ui:define name="work">
+	    <script src="#{facesContext.externalContext.request.contextPath}/js/jquery.maskedinput-1.1.4.pack.js" type="text/javascript" />
+	    <a4j:keepAlive beanName="manterPaciente"/>
+	    <a4j:jsFunction name="popUp" action="#{manterPaciente.acaoShowed}" oncomplete="exibirMensagem('#{manterPaciente.view.popUpMsg}')"/>
+	    <div align="center">
+			<rich:panel styleClass="oo-crud-decore-panel" >				
+				<center>
+					<h:panelGrid columns="1">				
+					    <h:panelGrid columns="2">
+							<h:panelGrid columns="1">
+								<h:outputLabel value="Codigo" for="codigoPaciente" />
+								<h:inputText id="codigoPaciente" readonly="true" disabled="true" value="#{manterPaciente.paciente.codigo}" style=" width : 160px;" />
+							</h:panelGrid>
+							<h:panelGrid columns="1">
+							    <h:panelGrid columns="3">				
+								    <h:outputLabel value="Nome" for="entradaNome"  style="color : red" />
+				                    <rich:spacer width="8" />
+				                    <rich:message id="messageEntradaNome" for="entradaNome" styleClass="oo-validation-messages" />
+				                </h:panelGrid>
+								<h:inputText id="entradaNome" value="#{manterPaciente.paciente.nome}" style="width : 310px;"	/>
+							</h:panelGrid>           
+							<h:panelGrid columns="1">
+							    <h:panelGrid columns="3">				
+								    <h:outputLabel value="CPF" for="entradaCpf" style="color : red"/>
+				                    <rich:spacer width="8" />
+				                    <rich:message id="messageEntradaCpf" for="entradaCpf" styleClass="oo-validation-messages" />
+				                </h:panelGrid>
+								<h:inputText value="#{manterPaciente.paciente.cpf}" id="entradaCpf" style="width : 160px;">
+									<rich:jQuery selector="#entradaCpf" query="mask('999.999.999-99')" timing="onload" />
+								</h:inputText>
+							</h:panelGrid>				
+							<h:panelGrid columns="1">
+							    <h:panelGrid columns="3">				
+								    <h:outputLabel value="Data Inicio Tratamento" for="dataInicioTratamento" />
+				                    <rich:spacer width="8" />
+				                    <rich:message id="messageDataInicioTratamento" for="dataInicioTratamento" styleClass="oo-validation-messages" />
+				                </h:panelGrid>
+								<rich:calendar id="dataInicioTratamento" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataInicioTratamento}" inputStyle="width : 290px;" >
+									<f:converter converterId="SqlDateConverter" />
+								</rich:calendar>
+							</h:panelGrid>				
+					    </h:panelGrid>			
+				    </h:panelGrid>
+				</center>
+			</rich:panel>
+	    </div>	   
+	</ui:define>
+	<ui:define name="extraContent">
+        <ui:include src="tabs.xhtml" />
+        <ui:include src="/cadastro/commons/crud/actions.xhtml"/>
+    </ui:define>
+    <ui:define name="outOfFormContent">
+        <ui:include src="/cadastro/commons/contato/edit.xhtml" />
+    </ui:define>
+</ui:composition>

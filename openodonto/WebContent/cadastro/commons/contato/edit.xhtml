@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+	<rich:modalPanel id="painelAlterarTelefone" autosized="true" width="300" height="100" >
+	    <f:facet name="header">
+		    <h:outputText value="Alterar Telefone" />
+        </f:facet>	
+		<a4j:form  id="formAlterarTelefone">
+			<rich:panel>
+				<h:panelGrid columns="3">
+					<h:panelGrid columns="1">
+						<h:outputLabel value="#{msg.manageContactTipo}" for="tipoTelefonePainel" />
+						 <h:selectOneMenu id="tipoTelefonePainel" value="#{mBean.manageTelefone.telefone.tipoTelefone}"  converter="simpleEntityConverter">
+							<t:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].dominio}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+						</h:selectOneMenu>
+					</h:panelGrid>
+					<h:panelGrid columns="1">
+						<h:outputLabel value="#{msg.manageContactTelefone}" for="numeroTelefonePainel" />
+						<h:inputText id="numeroTelefonePainel" value="#{mBean.manageTelefone.telefone.numero}" />
+					</h:panelGrid>
+					<h:panelGrid columns="2">
+						<a4j:commandButton id="btnAlterar" action="#{mBean.manageTelefone.acaoAlterarTelefone}" reRender="listaTelefones" oncomplete="Richfaces.hideModalPanel('painelAlterarTelefone')" value="#{msg.manageContactAcaoSalvar}"/>
+						<a4j:commandButton id="btnCancelar" action="#{mBean.manageTelefone.acaoAlterarTelefone}" reRender="listaTelefones" oncomplete="Richfaces.hideModalPanel('painelAlterarTelefone')" value="#{msg.manageContactAcaoCancelar}" ajaxSingle="true"/>
+				    </h:panelGrid>
+			    </h:panelGrid>
+			</rich:panel>
+			</a4j:form>
+			
+	</rich:modalPanel>
+
+</ui:composition>
