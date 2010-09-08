@@ -1,7 +1,5 @@
 package br.ueg.openodonto.controle.servico;
 
-import static br.ueg.openodonto.controle.ManageBeanGeral.DEFAULT_RULE;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -37,30 +35,27 @@ public class ManageTelefone implements Serializable {
                                this.backBean.getView().getProperties().get("saidaContato");
 	}
 	
-	public String acaoInserirTelefone() {
+	public void acaoInserirTelefone() {
 		if (this.getTelefone() == null
 				|| this.getTelefone().getNumero() == null
 				|| this.getTelefone().getNumero().isEmpty()
 				|| this.getTelefone().getTipoTelefone() == null) {
 			this.backBean.getView().addResourceDynamicMenssage("* Tipo e Numero são obrigatórios !",	getSaidaContato());
-			return DEFAULT_RULE;
+			return;
 		}
 		getTelefones().add(this.getTelefone());
 		setTelefone(new Telefone());
-		return DEFAULT_RULE;
 	}
 
-	public String acaoRemoverTelefone() {
+	public void acaoRemoverTelefone() {
 		if (this.telefone != null){
 			getTelefones().remove(this.telefone);
 			setTelefone(new Telefone());
 		}
-		return DEFAULT_RULE;
 	}
 
-	public String acaoAlterarTelefone() {
+	public void acaoAlterarTelefone() {
 		setTelefone(new Telefone());
-		return DEFAULT_RULE;
 	}
 
 	public Telefone getTelefone() {

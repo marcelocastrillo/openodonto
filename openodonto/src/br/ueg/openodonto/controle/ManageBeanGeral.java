@@ -1,17 +1,22 @@
 package br.ueg.openodonto.controle;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.controle.context.OpenOdontoWebContext;
-import br.ueg.openodonto.controle.servico.ManageSearch;
 import br.ueg.openodonto.controle.validador.AbstractValidator;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.persistencia.orm.Entity;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.ueg.openodonto.servico.busca.ResultFacade;
+import br.ueg.openodonto.servico.busca.event.AbstractSearchListener;
+import br.ueg.openodonto.servico.busca.event.SearchSelectedEvent;
 import br.ueg.openodonto.util.PBUtil;
 import br.ueg.openodonto.util.WordFormatter;
 import br.ueg.openodonto.visao.ApplicationView;
@@ -27,27 +32,23 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 
 	private static final long serialVersionUID = -6270953407778330292L;
 
-	public static final String DEFAULT_RULE = null;
-
-	private T backBean;
-	private Class<T> classe;
-	protected EntityManager<T> dao;
-	private ApplicationContext context;
-	private ApplicationView view;
-	private String msgBundle;
-	private ManageSearch<T> busca;
+	private T                   backBean;
+	private Class<T>            classe;
+	protected EntityManager<T>  dao;
+	private ApplicationContext  context;
+	private ApplicationView     view;
+	private String              msgBundle;
 
 	public ManageBeanGeral(Class<T> classe) {
 		this.classe = classe;
 		init();
 	}
 	
-	protected abstract void initExtra();
+	protected void initExtra(){}
 
 	protected void init() {
 		this.backBean = fabricarNovoBean();
 		this.dao = DaoFactory.getInstance().getDao(classe);		
-		this.busca = new ManageSearch<T>(this, "backBean");
 		this.context = new OpenOdontoWebContext();
 		initExtra();
 	}
@@ -63,9 +64,8 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		return null;
 	}
 
-	public String acaoShowed() {
+	public void acaoShowed() {
 		getView().showAction();
-		return DEFAULT_RULE;
 	}
 
 	public void exibirSaida() {
@@ -80,8 +80,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 
 	protected abstract List<String> getCamposFormatados();
 
-	protected void ValidarCamposExtras() {
-	};
+	protected void ValidarCamposExtras(){};
 
 	protected void acaoValidarCampos() throws Exception {
 		ValidarCamposExtras();
@@ -119,9 +118,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		return checarCamposObrigatoriosExtras() && returned;
 	}
 
-	public abstract String acaoPesquisar();
-
-	public String acaoAlterar() {
+	public void acaoAlterar() {
 		boolean alredy = false;
 		try {
 			acaoValidarCampos();
@@ -129,7 +126,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 				exibirPopUp("Campos obrigatorios nao preenchidos");
 				getView().addLocalDynamicMenssage(
 						"Campos obrigatorios invalidos.", "saidaPadrao", true);
-				return DEFAULT_RULE;
+				return;
 			}
 			if (dao.exists(getBackBean()))
 				alredy = true;
@@ -139,64 +136,54 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			exibirPopUp(getView().getMessageFromResource("ErroSistema"));
 			getView().addLocalMessage("ErroSistema", "saidaPadrao", true);
 			ex.printStackTrace();
-			return DEFAULT_RULE;
+			return;
 		} finally {
 			dao.closeConnection();
 		}
 		init();
-		exibirPopUp(getView().getMessageFromResource(alredy ? "Atualizado"
-				: "Cadastro"));
-		getView().addLocalMessage(alredy ? "Atualizado" : "Cadastro",
-				"saidaPadrao", true);
-		return DEFAULT_RULE;
+		exibirPopUp(getView().getMessageFromResource(alredy ? "Atualizado" : "Cadastro"));
+		getView().addLocalMessage(alredy ? "Atualizado" : "Cadastro", "saidaPadrao", true);
+	}
+	
+	protected void showTimeQuery(String formName,int size , long time){
+		StringBuilder fetchedMsg = new StringBuilder();
+		fetchedMsg.append(String.format("Foram encontrados %d resultados.",size));
+		getView().addResourceDynamicMenssage(fetchedMsg.toString(),formName + ":buscar");
+		if(time != -1){
+			StringBuilder FetchedTimeMsg = new StringBuilder();
+			double fTime = time / 1000.0;
+			FetchedTimeMsg.append(String.format("( %.3f segundos )",fTime));
+			getView().addResourceDynamicMenssage(FetchedTimeMsg.toString(), formName + ":queryTime");
+		}
 	}
 
-	public String acaoSalvarExtra() {
-		return "";
-	}
+	public void acaoSalvarExtra() {}
 
-	public String acaoRemoverSim() {
+	public void acaoRemoverSim() {
 		try {
 			this.dao.remover(this.backBean);
 		} catch (Exception e) {
 			exibirPopUp("Nao foi possivel remover o registro.");
 			getView().addLocalDynamicMenssage("Nao foi possivel remover o registro.","saidaPadrao", true);
-			return DEFAULT_RULE;
+			return;
 		} finally {
 			dao.closeConnection();
 		}
 		init();
 		exibirPopUp(getView().getMessageFromResource("removido"));
 		getView().addLocalMessage("removido", "saidaPadrao", true);
-		return DEFAULT_RULE;
 	}
 
-	public String acaoAtualizar() {
+	public void acaoAtualizar() {
 		getView().refresh();
-		return DEFAULT_RULE;
 	}
 
 	protected Usuario getUsuarioSessao() {
 		return getContext().getUsuarioSessao();
 	}
 
-	public String acaoLimpar() {
-		this.busca.acaoLimpar();
-		return DEFAULT_RULE;
-	}
 
-	public String acaoCarregarBean() {
-		this.busca.acaoCarregarRegistro();
-		try {
-			getDao().load(getBackBean());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		carregarExtra();
-		return DEFAULT_RULE;
-	}
-
-	protected abstract void carregarExtra();
+	protected void carregarExtra(){};
 
 	public T getBackBean() {
 		return this.backBean;
@@ -205,7 +192,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 	public void setBackBean(T backBean) {
 		this.backBean = backBean;
 	}
-
+	
 	public String getMsgBundle() {
 		return this.msgBundle;
 	}
@@ -213,39 +200,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 	public void setMsgBundle(String msgBundle) {
 		this.msgBundle = msgBundle;
 	}
-
-	public String getParamBusca() {
-		return this.getBusca().getParams().get("param");
-	}
-
-	public void setParamBusca(String paramBusca) {
-		this.getBusca().getParams().put("param", paramBusca);
-	}
-
-	public String getOpcao() {
-		return this.getBusca().getParams().get("opcao");
-	}
-
-	public void setOpcao(String opcao) {
-		this.getBusca().getParams().put("opcao", opcao);
-	}
-
-	public List<T> getProcurado() {
-		return this.getBusca().getResultados();
-	}
-
-	public void setProcurado(List<T> procurado) {
-		this.getBusca().setResultados(procurado);
-	}
-
-	public ManageSearch<T> getBusca() {
-		return this.busca;
-	}
-
-	public void setBusca(ManageSearch<T> busca) {
-		this.busca = busca;
-	}
-
+	
 	public ApplicationContext getContext() {
 		return context;
 	}
@@ -268,6 +223,32 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 
 	public void makeView(Map<String, String> params) {
 		this.view = ApplicationViewFactory.getViewInstance(ViewHandler.JSF,	params);
+	}
+	
+	protected List<ResultFacade> wrapResult(List<Map<String, Object>> result){
+		List<ResultFacade> resultWrap = new ArrayList<ResultFacade>(result.size());
+		Iterator<Map<String, Object>> iterator = result.iterator();
+		while(iterator.hasNext()){
+			resultWrap.add(new ResultFacadeBean(iterator.next()));
+		}
+		return resultWrap;
+	}
+	
+	public class SearchSelectedHandler extends AbstractSearchListener{
+		@Override
+		@SuppressWarnings("unchecked")
+		public void resultRequested(SearchSelectedEvent event) {
+			try{
+				T entity = (T)getBackBean().getClass().newInstance();
+				setBackBean(entity);
+				OrmFormat format = new OrmFormat(entity);
+				format.parse(event.getSelected().getValue());
+				dao.load(getBackBean());
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			carregarExtra();			
+		}
 	}
 
 }

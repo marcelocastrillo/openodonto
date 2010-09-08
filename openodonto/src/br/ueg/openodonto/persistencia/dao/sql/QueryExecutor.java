@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import br.ueg.openodonto.persistencia.dao.DaoBase;
 import br.ueg.openodonto.persistencia.orm.Entity;
@@ -55,26 +56,38 @@ public class QueryExecutor<T extends Entity> implements SqlExecutor<T> {
 		return executarQuery(query, params, null);
 	}
 
-	public List<T> executarQuery(String query, Collection<Object> params,
-			Integer quant) throws SQLException {
+	public List<T> executarQuery(String query, Collection<Object> params,Integer quant) throws SQLException {
 		List<T> pList = new ArrayList<T>();
+		executarQuery(query,params,quant,pList,true);
+		return pList;
+	}
+	
+	public List<Map<String, Object>> executarUntypedQuery(String query, Collection<Object> params,Integer quant)throws SQLException {
+		List<Map<String, Object>> pList = new ArrayList<Map<String,Object>>();
+		executarQuery(query,params,quant,pList,false);
+		return pList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected void executarQuery(String query, Collection<Object> params,Integer quant,List lista,boolean formated){
 		if (params == null) {
-			return pList;
+			return;
 		}
 		try {
-			dao.getConnection().setReadOnly(true);
 			ResultSet rs = dao.executeQuery(query, params, quant);
-			dao.getConnection().setReadOnly(false);
 			while (rs.next()) {
-				T entity = dao.parseEntity(rs);
-				pList.add(entity);
+				if(formated){
+				    T entity = dao.parseEntity(rs);
+				    lista.add(entity);
+				}else{
+					lista.add(dao.formatResultSet(rs));
+				}
 			}
 			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		return pList;
 	}
 
 }

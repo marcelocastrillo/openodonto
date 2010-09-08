@@ -8,10 +8,6 @@ import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.validador.AbstractValidator;
 import br.ueg.openodonto.controle.validador.ValidadorPadrao;
 import br.ueg.openodonto.dominio.Dentista;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
-import br.ueg.openodonto.util.WordFormatter;
 
 public class ManterDentista extends ManageBeanGeral<Dentista> {
 
@@ -28,6 +24,7 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 	makeView(null);
     }
 
+    /*
     @Override
     public String acaoPesquisar() {
 	if (this.getBusca().getParams().get("opcao").equals("cro"))
@@ -96,10 +93,8 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 		result = dao.getSqlExecutor().executarQuery(query.getQuery(),
 			query.getParams(), null);
 	    } else if (this.getBusca().getParams().get("opcao").equals("nome")) {
-		dentista.setNome(this.getBusca().getParams().get("param"));
-		result = dao.getSqlExecutor().executarNamedQuery(
-			"Dentista.findByNome", orm.formatNotNull().values(),
-			fields);
+			dentista.setNome(this.getBusca().getParams().get("param"));
+			result = dao.getSqlExecutor().executarNamedQuery("Dentista.findByNome", orm.formatNotNull().values(),fields);
 	    } else if (this.getBusca().getParams().get("opcao").equals("cro")) {
 		long cro = 0;
 		try {
@@ -146,7 +141,8 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 	getBusca().getParams().put("opcao", null);
 	return DEFAULT_RULE;
     }
-
+*/
+    
     @Override
     protected List<String> getCamposFormatados() {
 	List<String> formatados = new ArrayList<String>();

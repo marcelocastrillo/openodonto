@@ -409,9 +409,13 @@ public abstract class DaoBase<T extends Entity> implements Serializable,
 	}
 
 	public T parseEntity(ResultSet rs) throws SQLException {
+		return parseEntity(formatResultSet(rs));
+	}
+	
+	public T parseEntity(Map<String, Object> data) throws SQLException {
 		T entity = getNewEntity();
 		OrmFormat format = new OrmFormat(entity);
-		format.parse(formatResultSet(rs));
+		format.parse(data);
 		return entity;
 	}
 

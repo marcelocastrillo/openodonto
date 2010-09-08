@@ -6,11 +6,7 @@ import java.util.Properties;
 
 import br.ueg.openodonto.controle.validador.AbstractValidator;
 import br.ueg.openodonto.controle.validador.ValidadorPadrao;
-import br.ueg.openodonto.dominio.Dentista;
 import br.ueg.openodonto.dominio.Usuario;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
 public class ManterUsuario extends ManageBeanGeral<Usuario> {
 
@@ -25,7 +21,7 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		makeView(null);
 	}
 
-	
+	/*
 	@Override
 	public String acaoPesquisar() {
 		if (this.getBusca().getParams().get("opcao") == null
@@ -118,10 +114,7 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		getBusca().getParams().put("opcao", null);
 		return DEFAULT_RULE;
 	}
-
-	@Override
-	protected void carregarExtra() {
-	}
+*/
 
 	@Override
 	protected List<String> getCamposFormatados() {
@@ -130,11 +123,6 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		return formatados;
 	}
 
-	@Override
-	public String acaoAlterar() {
-		
-		return super.acaoAlterar();
-	}
 	
 	@Override
 	protected List<AbstractValidator> getCamposObrigatorios() {
@@ -153,10 +141,6 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		super.setBackBean(usuario);
 	}
 
-	@Override
-	protected void initExtra() {
-	}
-	
 	public boolean getEnableChangePassword(){
 		return getBackBean() != null && getBackBean().getCodigo() != null && getBackBean().getCodigo() != 0;
 	}

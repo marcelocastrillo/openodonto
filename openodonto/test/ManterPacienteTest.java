@@ -253,10 +253,12 @@ public class ManterPacienteTest {
 	
 	public void recuperar(Long id){
 		try{
+			/*
 			manterPaciente.setOpcao("codigo");
 			manterPaciente.setParamBusca(String.valueOf(id));
 			manterPaciente.acaoPesquisar();			
 			manterPaciente.acaoCarregarBean();
+			*/
 		}finally{
 		    recuperarTimes++;
 		}
