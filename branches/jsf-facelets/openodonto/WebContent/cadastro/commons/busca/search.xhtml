@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+	<rich:modalPanel id="painelBusca" autosized="true" resizeable="false" onshow="pesquisar()">
+	    <f:facet name="header">
+		    <h:outputText value="#{search.title}" />
+        </f:facet>
+        <f:facet name="controls">
+            <h:panelGroup>
+				<a4j:commandButton image="#{msg.imgBotaoFechar}" reRender="${formName}" id="hidelink" styleClass="hidelink">
+					<rich:componentControl for="painelBusca" attachTo="hidelink" operation="hide" event="onclick"/>
+				</a4j:commandButton>
+            </h:panelGroup>
+        </f:facet>
+        <rich:panel id="searchMasterPainel" >
+		    <a4j:form  id="formSearch">
+		        <a4j:jsFunction name="pesquisar" reRender="lista,dataScroller,buscar" action="#{search.search}"  />
+		        <rich:dataGrid value="#{search.searchable.masks}" rendered="#{not empty search.searchable.masks}" var="mask" columnClasses="oo-border-none" styleClass="oo-border-none">
+		            <rich:jQuery query="#{mask.query}" timing="onload" selector=".#{mask.seletor}" />		        
+		        </rich:dataGrid>
+				<h:panelGrid columns="1">
+			        <rich:dataGrid value="#{search.searchable.filters}" var="filter" columns="2" elements="#{search.searchable.filterlength}" width="320px" >
+			            <h:panelGrid columns="2">
+				            <h:outputText id="filterLabel" value="#{filter.label}" style="width : 80px"/>
+				            <h:panelGroup>
+				                <rich:dataGrid var="input" value="#{filter.field.inputFields}" columns="1" elements="1" columnClasses="oo-border-none" styleClass="oo-border-none">
+				                    <h:inputText value="#{input.value}" styleClass="#{input.mask.styleClass}" />
+				                </rich:dataGrid>
+				            </h:panelGroup>
+				            <!-- rich:message id="#{filter.outMessage}" for="#{filter.outMessage}" styleClass="oo-validation-messages" /-->
+			            </h:panelGrid>
+			        </rich:dataGrid>
+				</h:panelGrid>
+				<h:panelGrid style="text-align : left" columns="2">					    
+				    <rich:message id="buscar" for="buscar" style=" width : 280px;"/>
+				    <rich:message id="queryTime" for="queryTime" styleClass="oo-query-time-messages"/>
+				</h:panelGrid>
+				<rich:panel>
+					<f:facet name="header">
+						<h:outputText value="#{msg.buscaResultadosHeader}: " />
+					</f:facet>
+					<rich:dataTable width="590px" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" id="lista" columnsWidth="0*" value="#{search.results}" var="bean" rows="10">
+                	    <a4j:support event="onRowClick" reRender="${formName}"  oncomplete="#{rich:component('painelBusca')}.hide()">
+				    	    <f:setPropertyActionListener value="#{bean}" target="#{search.selected}" />
+				    	</a4j:support>
+					    <rich:columns value="#{search.searchable.facade}" var="facade" >
+					        <f:facet name="header">
+					            <h:outputText value="#{facade.colunmName}" />
+					        </f:facet>
+					        <h:outputText value="#{bean.value[facade.fieldName]}" />
+					    </rich:columns>
+				    </rich:dataTable>
+				    <rich:spacer height="8" />
+				    <rich:datascroller for="lista" maxPages="20" align="center" id="dataScroller"  />
+				</rich:panel>
+				<rich:spacer height="4" />
+				<h:panelGrid columns="3">
+					<a4j:commandButton value="#{msg.buscaAcaoBuscar}" reRender="lista,dataScroller" action="#{search.search}" />
+					<a4j:commandButton id="limpar" value="#{msg.buscaAcaoLimpar}" type="reset" reRender="formSearch" />
+				</h:panelGrid>	
+		    </a4j:form>
+		</rich:panel>
+	</rich:modalPanel>
+</ui:composition>

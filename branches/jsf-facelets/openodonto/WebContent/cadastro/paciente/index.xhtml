@@ -9,10 +9,11 @@
 	    <h:outputText value="#{msg.manterPacientes}" />
 	</ui:define>
 	<ui:param name="workPanel" value="#{msg.manterPacientes}" />
-	<ui:param name="mBean" value="#{manterPaciente}" />
-	<ui:param name="formName" value="#{manterPaciente.view.formName}" />
-	<ui:define name="work">
-	    <script src="#{facesContext.externalContext.request.contextPath}/js/jquery.maskedinput-1.1.4.pack.js" type="text/javascript" />
+	<ui:param name="mBean"     value="#{manterPaciente}" />
+	<ui:param name="formName"  value="#{manterPaciente.view.formName}" />
+	<ui:param name="search"    value="#{manterPaciente.search}" />
+	<ui:define name="work">	    
+	    <a4j:loadScript src="/js/jquery.maskedinput-1.2.2.js" />
 	    <a4j:keepAlive beanName="manterPaciente"/>
 	    <a4j:jsFunction name="popUp" action="#{manterPaciente.acaoShowed}" oncomplete="exibirMensagem('#{manterPaciente.view.popUpMsg}')"/>
 	    <div align="center">
@@ -64,5 +65,6 @@
     </ui:define>
     <ui:define name="outOfFormContent">
         <ui:include src="/cadastro/commons/contato/edit.xhtml" />
+        <ui:include src="/cadastro/commons/busca/search.xhtml" />
     </ui:define>
 </ui:composition>

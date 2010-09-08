@@ -37,3 +37,13 @@ function doEnter(event) {
     }
     return false;  
  }  
+
+function dataTabeMouseOut(row,color){
+	row.style.backgroundColor=color;
+	row.style.cursor='default';	
+}
+
+function dataTabeMouseOver(row){
+	row.style.backgroundColor='#F1F1F1';
+	row.style.cursor='pointer';	
+}
