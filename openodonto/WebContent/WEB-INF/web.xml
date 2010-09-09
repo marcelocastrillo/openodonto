@@ -6,7 +6,7 @@
 	
 	<display-name>openodonto</display-name>
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
+		<welcome-file>/faces/index.xhtml</welcome-file>
 	</welcome-file-list>
 
 	<!-- Servlet JSF -->
@@ -24,6 +24,11 @@
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml</param-value>
+	</context-param>
+	
+	<context-param>
+	    <param-name>org.ajax4jsf.VIEW_HANDLERS</param-name>
+	    <param-value>com.sun.facelets.FaceletViewHandler</param-value>	
 	</context-param>
 	
 	<context-param>
@@ -70,10 +75,6 @@
 		<filter-name>MyFacesExtensionsFilter</filter-name>
 		<url-pattern>/faces/myFacesExtensionResource/*</url-pattern>
 	</filter-mapping>
-	<context-param>
-	    <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
-	    <param-value>true</param-value>
-	</context-param>
 
 	<!-- Filtro Login-->
 	<filter>

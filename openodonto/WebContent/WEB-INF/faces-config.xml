@@ -4,12 +4,6 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
-	<!-- Facelets -->
-	<application>
-		<view-handler>
-			com.sun.facelets.FaceletViewHandler
-    </view-handler>
-	</application>
 
 	<!-- Conversores -->
 	<converter>
@@ -45,6 +39,11 @@
 	<managed-bean>
 		<managed-bean-name>login</managed-bean-name>
 		<managed-bean-class>br.ueg.openodonto.controle.Login</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>manterBean</managed-bean-name>
+		<managed-bean-class>br.ueg.openodonto.controle.fuck.ManterBean</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 
