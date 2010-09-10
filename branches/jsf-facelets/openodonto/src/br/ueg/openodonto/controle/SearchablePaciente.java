@@ -3,7 +3,6 @@ package br.ueg.openodonto.controle;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,9 @@ import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.FieldFacade;
+import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.InputMask;
+import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.SearchFilter;
 import br.ueg.openodonto.servico.busca.SearchFilterBase;
 import br.ueg.openodonto.servico.busca.Searchable;
@@ -22,37 +23,46 @@ import br.ueg.openodonto.validacao.ValidatorFactory;
 public class SearchablePaciente implements Searchable<Paciente>{
 
 	private List<FieldFacade>          facade;
-	private List<SearchFilter>         filters;
-	private Map<String,InputMask>      masks;
-	private String                     outMessage;
+	private Map<String,SearchFilter>   filtersMap;
+	private Map<String,InputMask>      masksMap;
+	private MessageDisplayer           displayer;
 	
-	public SearchablePaciente(String outMessage) {
+	private List<SearchFilter>         filtersList;
+	private List<InputMask>            masksList;
+	
+	public SearchablePaciente(MessageDisplayer displayer) {
+		this.displayer = displayer;
+		buildFacade();
+		buildMask();
+		buildFilter();
+		filtersList = new ArrayList<SearchFilter>(filtersMap.values());
+		masksList = new ArrayList<InputMask>(masksMap.values());
+	}
+	
+	private void buildFacade(){
 		OrmTranslator translator = new OrmTranslator(OrmResolver.getAllFields(new ArrayList<Field>(), Paciente.class, true));
 		facade = new ArrayList<FieldFacade>();
 		facade.add(new FieldFacade("Código",translator.getColumn("codigo")));
 		facade.add(new FieldFacade("Nome",translator.getColumn("nome")));
 		facade.add(new FieldFacade("CPF",translator.getColumn("cpf")));
 		facade.add(new FieldFacade("E-mail",translator.getColumn("email")));
-		this.outMessage = outMessage;
-		buildMask();
-		buildFilter();
 	}
 	
 	private void buildMask(){
-		masks = new HashMap<String,InputMask>();
-		masks.put("cpf",new JsMask("mask('999-999-999-99',{placeholder:' '})","maskCpf","maskCpf"));
+		masksMap = new HashMap<String,InputMask>();
+		masksMap.put("cpf",new JsMask("mask('999-999-999-99',{placeholder:' '})","maskCpf","maskCpf"));
 	}
 	
 	private void buildFilter(){
-		filters = new ArrayList<SearchFilter>();
-		filters.add(buildNameFilter());
-		filters.add(buildEmailFilter());
-		filters.add(buildCpfFilter());
-		filters.add(buildCodigoFilter());
+		filtersMap = new HashMap<String,SearchFilter>();
+		buildNameFilter();
+		buildEmailFilter();
+		buildCpfFilter();
+		buildCodigoFilter();
 	}
 	
-	private SearchFilterBase buildBasicFilter(String label,InputMask mask,Validator... validator){
-		SearchFilterBase filter = new SearchFilterBase(null,label,outMessage);
+	private SearchFilterBase buildBasicFilter(String name,String label,InputMask mask,Validator... validator){
+		SearchFilterBase filter = new SearchFilterBase(null,name,label,displayer);
 		SearchFilterBase.Field field = filter.new Field();
 		filter.setField(field);
 		SearchFilterBase.Input<String> input = filter.new Input<String>();
@@ -62,33 +72,36 @@ public class SearchablePaciente implements Searchable<Paciente>{
 		return filter;
 	}
 	
-	private SearchFilterBase buildBasicFilter(String label,Validator... validator){
-		return buildBasicFilter(label,null,validator);
+	private SearchFilterBase buildBasicFilter(String name,String label,Validator... validator){
+		return buildBasicFilter(name,label,null,validator);
 	}
 	
-	private SearchFilter buildNameFilter(){
+	private void buildNameFilter(){
 		Validator validator = ValidatorFactory.newSrtLen(10, true);
-		return buildBasicFilter("Nome:",validator);
+		filtersMap.put("nomeFilter", buildBasicFilter("nomeFilter","Nome",validator));
 	}
 	
-	private SearchFilter buildCpfFilter(){
+	private void buildCpfFilter(){
 		Validator validator = ValidatorFactory.newCpf();
-		InputMask mask = masks.get("cpf");
-		SearchFilterBase filter = buildBasicFilter("CPF:",mask,validator);
-		return filter;
+		InputMask mask = masksMap.get("cpf");
+		filtersMap.put("cpfFilter",buildBasicFilter("cpfFilter","CPF",mask,validator));
 	}
 	
-	private SearchFilter buildEmailFilter(){
+	private void buildEmailFilter(){
 		Validator validator = ValidatorFactory.newEmail();
-		SearchFilterBase filter = buildBasicFilter("E-mail:",validator);
-		return filter;
+		filtersMap.put("emailFilter", buildBasicFilter("emailFilter","E-mail",validator));
 	}
 	
-	private SearchFilter buildCodigoFilter(){
+	private void buildCodigoFilter(){
 		Validator validator = ValidatorFactory.newNumSize(Integer.MAX_VALUE);
-		return buildBasicFilter("Código:",validator);
+		filtersMap.put("idFilter",buildBasicFilter("idFilter","Código",validator));
 	}
 	
+	@SuppressWarnings("unchecked")
+	public InputField<String> getCommonInput(String name){
+		return (InputField<String>)filtersMap.get(name).getField().getInputFields().get(0);
+	}
+
 	@Override
 	public List<FieldFacade> getFacade() {
 		return facade;
@@ -96,15 +109,48 @@ public class SearchablePaciente implements Searchable<Paciente>{
 
 	@Override
 	public List<SearchFilter> getFilters() {
-		return filters;
-	}
-
-	public int getFilterlength(){
-		return filters == null ? 0 : filters.size();
+		return filtersList;
 	}
 
 	@Override
-	public Collection<InputMask> getMasks() {
-		return new ArrayList<InputMask>(masks.values());
-	}	
+	public List<InputMask> getMasks() {
+		return masksList;
+	}
+
+	public Map<String, SearchFilter> getFiltersMap() {
+		return filtersMap;
+	}
+
+	public void setFiltersMap(Map<String, SearchFilter> filtersMap) {
+		this.filtersMap = filtersMap;
+	}
+
+	public Map<String, InputMask> getMasksMap() {
+		return masksMap;
+	}
+
+	public void setMasksMap(Map<String, InputMask> masksMap) {
+		this.masksMap = masksMap;
+	}
+
+	public List<SearchFilter> getFiltersList() {
+		return filtersList;
+	}
+
+	public void setFiltersList(List<SearchFilter> filtersList) {
+		this.filtersList = filtersList;
+	}
+
+	public List<InputMask> getMasksList() {
+		return masksList;
+	}
+
+	public void setMasksList(List<InputMask> masksList) {
+		this.masksList = masksList;
+	}
+
+	public void setFacade(List<FieldFacade> facade) {
+		this.facade = facade;
+	}
+
 }

@@ -41,12 +41,6 @@
 		<managed-bean-class>br.ueg.openodonto.controle.Login</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
-	<managed-bean>
-		<managed-bean-name>manterBean</managed-bean-name>
-		<managed-bean-class>br.ueg.openodonto.controle.fuck.ManterBean</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-	</managed-bean>
-
     <!-- Regras de navegação -->
 	<navigation-rule>
 		<navigation-case>

@@ -12,5 +12,6 @@ public interface Search<T>{
 	void                           addSearchListener(SearchListener listener);
 	void                           search();
 	void                           setSelected(ResultFacade bean);
+	void                           clean();
 	
 }

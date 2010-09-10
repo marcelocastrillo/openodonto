@@ -11,7 +11,11 @@ public abstract class AbstractSearchListener implements SearchListener{
 	}
 
 	@Override
-	public void searchPerfomed(SearchEvent event) {
+	public void searchPerformed(SearchEvent event) {
+	}
+	
+	@Override
+	public void cleanPerformed(SearchEvent event) {	
 	}
 
 }
