@@ -11,7 +11,6 @@ import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.FieldFacade;
-import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.InputMask;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.SearchFilter;
@@ -77,7 +76,7 @@ public class SearchablePaciente implements Searchable<Paciente>{
 	}
 	
 	private void buildNameFilter(){
-		Validator validator = ValidatorFactory.newSrtLen(10, true);
+		Validator validator = ValidatorFactory.newStrMaxLen(10, true);
 		filtersMap.put("nomeFilter", buildBasicFilter("nomeFilter","Nome",validator));
 	}
 	
@@ -95,12 +94,7 @@ public class SearchablePaciente implements Searchable<Paciente>{
 	private void buildCodigoFilter(){
 		Validator validator = ValidatorFactory.newNumSize(Integer.MAX_VALUE);
 		filtersMap.put("idFilter",buildBasicFilter("idFilter","Código",validator));
-	}
-	
-	@SuppressWarnings("unchecked")
-	public InputField<String> getCommonInput(String name){
-		return (InputField<String>)filtersMap.get(name).getField().getInputFields().get(0);
-	}
+	}	
 
 	@Override
 	public List<FieldFacade> getFacade() {

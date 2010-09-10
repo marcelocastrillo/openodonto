@@ -20,13 +20,13 @@ public class NumberValidator extends AbstractValidator implements NumericValidat
 		super(next, next.getValue());
 	}
 
-	public Number getValue(){
-		return Double.valueOf(super.getValue().toString());
+	public Double getValue(){
+		return Double.parseDouble(super.getValue().toString());
 	}
 	
 	protected boolean validate(){
-		String sValue = super.getValue().toString();
-		if(!numberPattern.matcher(sValue).matches()){
+		String strValue = super.getValue().toString();
+		if(!numberPattern.matcher(strValue).matches()){
 			setErrorMsg("Não é um numero.");
 			return false;
 		}

@@ -124,8 +124,7 @@ public class OrmResolver {
 		return disjoinMap;
 	}
 
-	public List<Field> getNotNullFields(List<Field> fields, Class<?> type,
-			boolean deep) {
+	public List<Field> getNotNullFields(List<Field> fields, Class<?> type,boolean deep) {
 		List<Field> all = getAllFields(fields, type, deep);
 		List<Field> remove = new ArrayList<Field>();
 		OrmTranslator translator = new OrmTranslator(all);
