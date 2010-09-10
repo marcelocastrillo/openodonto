@@ -1,4 +1,4 @@
-package br.ueg.openodonto.validacao;
+package br.ueg.openodonto.validator;
 
 public class ValidatorFactory {
 
@@ -20,6 +20,6 @@ public class ValidatorFactory {
 	
 	public static Validator newEmail(){
 		return newStrMask("([\\w\\._-])+@([\\w-]+\\.)+[\\w-]+");
-	}	
-	
+	}
+
 }

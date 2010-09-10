@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Queue;
 import java.util.ResourceBundle;
 
@@ -31,6 +30,9 @@ import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.dominio.constante.TiposTelefone;
 import br.ueg.openodonto.dominio.constante.TiposUF;
 import br.ueg.openodonto.persistencia.dao.DaoBase;
+import br.ueg.openodonto.servico.busca.InputField;
+import br.ueg.openodonto.servico.busca.ResultFacade;
+import br.ueg.openodonto.servico.busca.SearchFilter;
 import br.ueg.openodonto.visao.ApplicationView;
 
 
@@ -46,8 +48,8 @@ public class ManterPacienteTest {
 	static volatile int recuperarTimes;
 	static volatile int updateTimes;
 	static volatile int deleteTimes;
-	private static int genTimes = 2; // Um milhão de vezes
-	private static int users    = 1;  // Quantidade de usuários Simulados
+	private static int genTimes = 100000; // Um milhão de vezes
+	private static int users    = 120;  // Quantidade de usuários Simulados
 	
 	
 	static volatile long timeCreate;
@@ -65,9 +67,8 @@ public class ManterPacienteTest {
 		manterPaciente = new ManterPaciente(){
 			private static final long serialVersionUID = -9039185309165031309L;
 
-			@SuppressWarnings("unused")
-			public void makeView(Properties params){
-				this.setView(new UnitTestView());
+			public void makeView(Map<String, String> params){
+				this.setView(new UnitTestView(params));
 			}
 		};
 		manterPaciente.setContext(context = new UnitTestContext());
@@ -251,14 +252,22 @@ public class ManterPacienteTest {
 		createTimes++;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void recuperar(Long id){
 		try{
-			/*
-			manterPaciente.setOpcao("codigo");
-			manterPaciente.setParamBusca(String.valueOf(id));
-			manterPaciente.acaoPesquisar();			
-			manterPaciente.acaoCarregarBean();
-			*/
+			Iterator<SearchFilter> iterator = manterPaciente.getSearch().getSearchable().getFilters().iterator();
+			SearchFilter filter;
+			while(iterator.hasNext()){
+				filter = iterator.next();
+				if(filter.getName().equals("idFilter")){
+					InputField<String> input = (InputField<String>)filter.getField().getInputFields().get(0);
+					input.setValue(id.toString());
+					break;
+				}
+			}
+			manterPaciente.getSearch().search();
+			ResultFacade selected = manterPaciente.getSearch().getResults().get(0); 
+			manterPaciente.getSearch().setSelected(selected);
 		}finally{
 		    recuperarTimes++;
 		}
@@ -310,11 +319,10 @@ class Stress implements Runnable{
 		
 		parcial = System.currentTimeMillis();
 		main.create();
-		ManterPacienteTest.timeCreate += System.currentTimeMillis() - parcial;
-	
+		ManterPacienteTest.timeCreate += System.currentTimeMillis() - parcial;	
+		
 		/*
 		parcial = System.currentTimeMillis();
-		main.getContext().getValues().put("index", 0);
 		main.recuperar(paciente.getCodigo());
 		ManterPacienteTest.timeRecuperar += System.currentTimeMillis() - parcial;
 		
@@ -391,9 +399,14 @@ class UnitTestView implements ApplicationView {
 
 	private static final long serialVersionUID = -5957572496863874257L;
 	private static ResourceBundle resourceBundle;
+	private Map<String, String> params;
 	
 	static{
-		resourceBundle = ResourceBundle.getBundle("br.ueg.openodonto.visao.i18n.mensagens");
+		resourceBundle = ResourceBundle.getBundle("br.ueg.openodonto.visao.i18n.messages_pt");
+	}
+	
+	public UnitTestView(Map<String, String> params) {
+		this.params = params;
 	}
 	
 	@Override
@@ -429,7 +442,7 @@ class UnitTestView implements ApplicationView {
 
 	@Override
 	public Map<String, String> getProperties() {
-		return null;
+		return params;
 	}
 
 	@Override

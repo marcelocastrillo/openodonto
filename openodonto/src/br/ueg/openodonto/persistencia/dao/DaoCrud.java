@@ -2,6 +2,7 @@ package br.ueg.openodonto.persistencia.dao;
 
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	public boolean exists(T o) throws SQLException {
 		OrmFormat orm = new OrmFormat(o);
 		Map<String, Object> keyMap = orm.formatKey();
-		/*
+		
 		if (keyMap == null || keyMap.size() == 0) {
 			return false;
 		}else{
@@ -47,10 +48,12 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 			}			
 			return true;
 		}
-		*/
 		
+		
+		/*
 		IQuery query = CrudQuery.getSelectQuery(super.getClasse(), keyMap);
 		return executeQuery(query.getQuery(), query.getParams().toArray()).next();
+		*/
 		
 	}
 	

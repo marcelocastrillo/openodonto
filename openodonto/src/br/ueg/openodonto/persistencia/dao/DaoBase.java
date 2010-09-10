@@ -38,7 +38,7 @@ import br.ueg.openodonto.persistencia.orm.OrmResolver;
 public abstract class DaoBase<T extends Entity> implements Serializable,EntityManager<T> {
 
 	private static final long serialVersionUID = 186038189036166890L;
-	public  static final short MAX_RESULTS = 100; 
+	public  static final short MAX_RESULTS = 1000; 
 	public  static volatile int times;
 	private static Map<String, String> storedQuerysMap;
 	private static Map<String, List<String>> metaTableAICache;

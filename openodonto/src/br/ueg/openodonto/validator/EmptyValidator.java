@@ -1,6 +1,6 @@
-package br.ueg.openodonto.validacao;
+package br.ueg.openodonto.validator;
 
-import br.ueg.openodonto.validacao.tipo.StringValidatorType;
+import br.ueg.openodonto.validator.tipo.StringValidatorType;
 
 public class EmptyValidator extends AbstractValidator implements StringValidatorType{
 
