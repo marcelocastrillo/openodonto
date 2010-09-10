@@ -30,8 +30,7 @@ public class OrmFormat {
 
     public Map<String, Object> formatNotNull() {
 	Class<?> type = getOrmResolver().getTarget().getClass();
-	List<Field> fields = ormResolver.getNotNullFields(
-		new ArrayList<Field>(), type, true);
+	List<Field> fields = ormResolver.getNotNullFields(new ArrayList<Field>(), type, true);
 	return ormResolver.formatBase(fields);
     }
 

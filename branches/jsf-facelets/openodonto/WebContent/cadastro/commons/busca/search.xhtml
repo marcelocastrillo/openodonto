@@ -31,7 +31,7 @@
 		            <div align="center">
 				        <rich:dataGrid value="#{search.searchable.filters}" var="filter" rowKeyVar="index" id="filters" columns="2" width="320px" >
 				            <h:panelGrid id="grid#{filter.name}" columns="2">
-					            <h:outputText id="filterLabel" value="#{filter.label} : " style="width : 80px"/>
+					            <h:outputLabel id="filterLabel" value="#{filter.label} : " style="width : 80px;white-space:nowrap"/>
 				                <rich:dataGrid var="input" value="#{filter.field.inputFields}" columns="1" elements="1" columnClasses="oo-border-none" styleClass="oo-border-none">
 				                    <h:inputText value="#{input.value}" styleClass="#{input.mask.styleClass}" />
 				                </rich:dataGrid>

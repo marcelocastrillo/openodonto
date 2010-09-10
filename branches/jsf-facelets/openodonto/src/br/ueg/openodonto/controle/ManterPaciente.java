@@ -1,32 +1,28 @@
 package br.ueg.openodonto.controle;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.servico.ExampleRequest;
+import br.ueg.openodonto.controle.servico.ManageExample;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.validador.AbstractValidator;
 import br.ueg.openodonto.controle.validador.ValidadorPadrao;
 import br.ueg.openodonto.dominio.Paciente;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
-import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.Search;
-import br.ueg.openodonto.servico.busca.event.AbstractSearchListener;
-import br.ueg.openodonto.servico.busca.event.SearchEvent;
+import br.ueg.openodonto.servico.busca.Searchable;
 import br.ueg.openodonto.validacao.EmptyValidator;
 import br.ueg.openodonto.validacao.NullValidator;
-import br.ueg.openodonto.validacao.Validator;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	
 	private static final long serialVersionUID = -2146469226044009908L;
 	
 	private ManageTelefone                manageTelefone;
+	private ManageExample<Paciente>       manageExample;
 	private static Map<String, String>    params;
 	private Search<Paciente>              search;
 	private MessageDisplayer              displayer;
@@ -46,7 +42,8 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	}
 
 	protected void initExtra() {
-		this.displayer = new ViewDisplayer();
+		this.displayer = new ViewDisplayer("searchDefaultOutput");
+		this.manageExample = new ManageExample<Paciente>(Paciente.class);
 		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this);
 		this.search = new SearchBase<Paciente>(new SearchablePaciente(this.displayer),"Buscar Paciente");
 		this.search.addSearchListener(new SearchPacienteHandler());
@@ -95,63 +92,39 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	public void setManageTelefone(ManageTelefone manageTelefone) {
 		this.manageTelefone = manageTelefone;
 	}
-
-	private Paciente buildExample(SearchablePaciente searchable){
-		Paciente target = new Paciente();
-		InputField<String> inputNome = searchable.getCommonInput("nomeFilter");
-		InputField<String> inputCpf = searchable.getCommonInput("cpfFilter");
-		InputField<String> inputEmail = searchable.getCommonInput("emailFilter");
-		InputField<String> inputId = searchable.getCommonInput("idFilter");
-		Validator validatorNome = inputNome.getValidators().get(0);
-		Validator validatorCpf = inputCpf.getValidators().get(0);
-		Validator validatorEmail = inputEmail.getValidators().get(0);
-		Validator validatorId = inputId.getValidators().get(0);
-		if(validatorNome.isValid()){
-			target.setNome(inputNome.getValue());
-		}else if(!(validatorNome.getSource() instanceof NullValidator) &&
-				!(validatorNome.getSource() instanceof EmptyValidator)){
-			displayer.display("* " + searchable.getFiltersMap().get("nomeFilter").getLabel() + " : " + validatorNome.getErrorMessage());
-		}
-		if(validatorEmail.isValid()){
-			target.setEmail(inputEmail.getValue());
-		}else if(!(validatorEmail.getSource() instanceof NullValidator) &&
-				!(validatorEmail.getSource() instanceof EmptyValidator)){
-			displayer.display("* " + searchable.getFiltersMap().get("emailFilter").getLabel() + " : " + validatorEmail.getErrorMessage());
-		}
-		if(validatorCpf.isValid()){
-			target.setCpf(inputCpf.getValue());
-		}
-		if(validatorId.isValid()){
-			target.setCodigo(Long.valueOf(inputId.getValue()));
-		}				
+	
+	private Paciente buildExample(Searchable<Paciente> searchable){
+		ExampleRequest<Paciente> request  = new ExampleRequest<Paciente>(searchable);
+		request.getFilterNameBeanPathMap().put("nomeFilter", "nome");
+		request.getFilterNameBeanPathMap().put("idFilter", "codigo");
+		request.getFilterNameBeanPathMap().put("emailFilter", "email");
+		request.getFilterNameBeanPathMap().put("cpfFilter", "cpf");
+		request.getInvalidPermiteds().add(NullValidator.class);
+		request.getInvalidPermiteds().add(EmptyValidator.class);
+		Paciente target = manageExample.processExampleRequest(request);
 		return target;
 	}
 	
 	protected class ViewDisplayer implements MessageDisplayer{
+		private String output;		
+		public ViewDisplayer(String output) {
+			this.output = output;
+		}		
 		@Override
 		public void display(String message) {
-			getView().addResourceDynamicMenssage(message, "searchDefaultOutput");
+			getView().addResourceDynamicMenssage(message, output);
 		}		
 	}
-	
-	protected class SearchPacienteHandler extends AbstractSearchListener{
-		@Override
-		@SuppressWarnings("unchecked")
-		public void searchPerformed(SearchEvent event) {
-			long time = System.currentTimeMillis();
-			try {				
-				Paciente target = buildExample((SearchablePaciente)((Search<Paciente>)event.getSource()).getSearchable());
-				OrmFormat format = new OrmFormat(target);
-				IQuery query = CrudQuery.getSelectQuery(Paciente.class, format.formatNotNull(),  "codigo", "nome", "email", "cpf");				
-				List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 100);
-				search.getResults().clear();
-				search.getResults().addAll(wrapResult(result));
-				time = System.currentTimeMillis() - time;
-				showTimeQuery(params.get("formModalSearch"), result.size(), time);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 
+	protected class SearchPacienteHandler extends SearchBeanHandler<Paciente>{
+		private String[] showColumns = {"codigo", "nome", "email", "cpf"}; 		
+		@Override
+		public Paciente buildExample(Searchable<Paciente> searchable) {
+			return ManterPaciente.this.buildExample(searchable);
+		}
+		@Override
+		public String[] getShowColumns() {
+			return showColumns;
 		}
 	}
 	

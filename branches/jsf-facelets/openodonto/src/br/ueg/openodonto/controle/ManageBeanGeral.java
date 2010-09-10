@@ -1,6 +1,7 @@
 package br.ueg.openodonto.controle;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,13 +10,19 @@ import java.util.Map;
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.controle.context.OpenOdontoWebContext;
 import br.ueg.openodonto.controle.validador.AbstractValidator;
+import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
+import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
+import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.servico.busca.ResultFacade;
+import br.ueg.openodonto.servico.busca.Search;
+import br.ueg.openodonto.servico.busca.Searchable;
 import br.ueg.openodonto.servico.busca.event.AbstractSearchListener;
+import br.ueg.openodonto.servico.busca.event.SearchEvent;
 import br.ueg.openodonto.servico.busca.event.SearchSelectedEvent;
 import br.ueg.openodonto.util.PBUtil;
 import br.ueg.openodonto.util.WordFormatter;
@@ -232,6 +239,30 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			resultWrap.add(new ResultFacadeBean(iterator.next()));
 		}
 		return resultWrap;
+	}
+	
+	protected abstract class SearchBeanHandler<E> extends AbstractSearchListener{
+		@Override
+		@SuppressWarnings("unchecked")
+		public void searchPerformed(SearchEvent event) {
+			long time = System.currentTimeMillis();
+			try {				
+				Search<E> search = (Search<E>)event.getSource();
+				E target = buildExample(search.getSearchable());
+				OrmFormat format = new OrmFormat(target);
+				IQuery query = CrudQuery.getSelectQuery(Paciente.class, format.formatNotNull(),  getShowColumns());				
+				List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 100);
+				search.getResults().clear();
+				search.getResults().addAll(wrapResult(result));
+				time = System.currentTimeMillis() - time;
+				showTimeQuery(getView().getProperties().get("formModalSearch"), result.size(), time);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}		
+		public abstract E buildExample(Searchable<E> searchable);
+		public abstract String[] getShowColumns();		
 	}
 	
 	public class SearchSelectedHandler extends AbstractSearchListener{

@@ -2,7 +2,7 @@ package br.ueg.openodonto.validacao;
 
 public class ValidatorFactory {
 
-	public static Validator newSrtLen(int size, boolean trimmed){
+	public static Validator newStrMaxLen(int size, boolean trimmed){
 		return new NullValidator(new EmptyValidator(new SizeValidator("", size),true));
 	}
 	
