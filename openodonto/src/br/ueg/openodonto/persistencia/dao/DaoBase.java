@@ -35,11 +35,11 @@ import br.ueg.openodonto.persistencia.orm.OrmResolver;
  * @author Vinicius
  */
 
-public abstract class DaoBase<T extends Entity> implements Serializable,
-		EntityManager<T> {
+public abstract class DaoBase<T extends Entity> implements Serializable,EntityManager<T> {
 
 	private static final long serialVersionUID = 186038189036166890L;
-	public static volatile int times;
+	public  static final short MAX_RESULTS = 100; 
+	public  static volatile int times;
 	private static Map<String, String> storedQuerysMap;
 	private static Map<String, List<String>> metaTableAICache;
 
@@ -71,14 +71,12 @@ public abstract class DaoBase<T extends Entity> implements Serializable,
 		this.getConnectionFactory().closeConnection();
 	}
 
-	public ResultSet executeQuery(String sql, Collection<Object> params,
-			Integer limit) throws SQLException {
-		PreparedStatement preparedStatement = this.getConnection()
-				.prepareStatement(sql);
+	public ResultSet executeQuery(String sql, Collection<Object> params,Integer limit) throws SQLException {
+		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql);
 		if (limit != null) {
-			preparedStatement.setMaxRows(limit);
+			preparedStatement.setMaxRows(limit > MAX_RESULTS ? MAX_RESULTS : limit);
 		} else {
-			preparedStatement.setMaxRows(1000);
+			preparedStatement.setMaxRows(MAX_RESULTS);
 		}
 		if (params != null) {
 			int i = 1;
@@ -94,10 +92,9 @@ public abstract class DaoBase<T extends Entity> implements Serializable,
 		return preparedStatement.executeQuery();
 	}
 
-	public ResultSet executeQuery(String sql, Object... params)
-			throws SQLException {
-		PreparedStatement preparedStatement = this.getConnection()
-				.prepareStatement(sql);
+	public ResultSet executeQuery(String sql, Object... params)	throws SQLException {
+		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql);
+		preparedStatement.setMaxRows(MAX_RESULTS);
 		if (params != null) {
 			for (int i = 1; i < params.length + 1; i++) {
 				if (params[i - 1] instanceof java.sql.Date) {
@@ -114,8 +111,7 @@ public abstract class DaoBase<T extends Entity> implements Serializable,
 	public Map<String, Object> execute(IQuery query) throws SQLException {
 		String sql = query.getQuery();
 		Object[] params = query.getParams().toArray();
-		PreparedStatement preparedStatement = this.getConnection()
-				.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement preparedStatement = this.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		if (params != null) {
 			for (int i = 1; i < params.length + 1; i++) {
 				if (params[i - 1] instanceof Date) {

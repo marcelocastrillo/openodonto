@@ -9,13 +9,13 @@
 	<div align="center">
 		<a4j:jsFunction name="message" oncomplete="if(${mBean.view.displayPopUp}){popUp()}" />
 	    <h:panelGroup layout="block">
-			<a4j:commandButton id="botaoSalvar" action="#{mBean.acaoAlterar}" oncomplete="message()" image="#{msg.imgBotaoSalvar}" value="salvar" focus="output" reRender="${mBean.view.formName}"/>
+			<a4j:commandButton id="botaoSalvar" action="#{mBean.acaoAlterar}" oncomplete="message()" image="#{msg.imgBotaoSalvar}" value="| #{msg.acaoSalvar} |" reRender="${mBean.view.formName}"/>
 			<rich:spacer width="16"/>
-			<a4j:commandButton id="botaoPesquisar"  image="#{msg.imgBotaoPesquisar}" onclick="Richfaces.showModalPanel('${mBean.view.properties.nameModalSearch}', {top:'80px'})" reRender="${mBean.view.properties.formModalSearch}"/>
+			<a4j:commandButton id="botaoPesquisar"  image="#{msg.imgBotaoPesquisar}" onclick="Richfaces.showModalPanel('${mBean.view.properties.nameModalSearch}', {top:'32px'})" value="| #{msg.acaoPesquisar} |" reRender="${mBean.view.properties.formModalSearch}"/>
 			<rich:spacer width="16"/>
-			<a4j:commandButton id="botaoExcluir" action="#{mBean.acaoRemoverSim}" oncomplete="message()" image="#{msg.imgBotaoExcluir}" onclick="if(!confirm('#{msg.DesejaExcluir}')){return false}" reRender="${mBean.view.formName}"/>
+			<a4j:commandButton id="botaoExcluir" action="#{mBean.acaoRemoverSim}" oncomplete="message()" image="#{msg.imgBotaoExcluir}" onclick="if(!confirm('#{msg.DesejaExcluir}')){return false}" value="| #{msg.acaoExcluir} |" reRender="${mBean.view.formName}"/>
 			<rich:spacer width="16"/>
-			<a4j:commandButton id="botaoCancelar" action="#{mBean.acaoAtualizar}" image="#{msg.imgBotaoCancelar}" reRender="${mBean.view.formName}" />												
+			<a4j:commandButton id="botaoCancelar" action="#{mBean.acaoAtualizar}" image="#{msg.imgBotaoCancelar}" value="| #{msg.acaoCancelar} |" reRender="${mBean.view.formName}" />												
 	    </h:panelGroup>	
     </div>
 </ui:composition>

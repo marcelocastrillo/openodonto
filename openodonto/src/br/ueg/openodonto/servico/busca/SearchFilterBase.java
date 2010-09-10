@@ -1,6 +1,7 @@
 package br.ueg.openodonto.servico.busca;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import br.ueg.openodonto.validacao.Validator;
@@ -8,16 +9,23 @@ import br.ueg.openodonto.validacao.Validator;
 public class SearchFilterBase implements SearchFilter{
 
 	private SearchField       field;
+	private String            name;
 	private String            label;
-	private String            outMessage;
+	private MessageDisplayer  display;
 	
 	public SearchFilterBase() {
 	}
 	
-	public SearchFilterBase(SearchField field, String label,	String outMessage) {
+	public SearchFilterBase(SearchField field,String name, String label,MessageDisplayer display) {
+		this.display = display;
 		this.field = field;
+		this.name = name;
 		this.label = label;
-		this.outMessage = outMessage;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 
 	@Override
@@ -30,10 +38,6 @@ public class SearchFilterBase implements SearchFilter{
 		return label;
 	}
 
-	@Override
-	public String getOutMessage() {
-		return outMessage;
-	}
 
 	public class Field implements SearchField{
 		
@@ -105,6 +109,7 @@ public class SearchFilterBase implements SearchFilter{
 		@Override
 		public void setValue(T value) {
 			this.value = value;
+			updateValidators();
 		}
 
 		public void setDomain(List<T> domain) {
@@ -119,6 +124,13 @@ public class SearchFilterBase implements SearchFilter{
 			this.validators = validators;
 		}
 
+		private void updateValidators(){
+			Iterator<Validator> iterator = getValidators().iterator();
+			while(iterator.hasNext()){
+				iterator.next().setValue(this.value);
+			}
+		}
+		
 		@Override
 		public String toString() {
 			return "Input [domain=" + domain + ", mask=" + mask
@@ -126,7 +138,7 @@ public class SearchFilterBase implements SearchFilter{
 		}		
 		
 	}
-
+	
 	public void setField(SearchField field) {
 		this.field = field;
 	}
@@ -135,14 +147,19 @@ public class SearchFilterBase implements SearchFilter{
 		this.label = label;
 	}
 
-	public void setOutMessage(String outMessage) {
-		this.outMessage = outMessage;
+	public void setName(String name) {
+		this.name = name;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "SearchFilterBase [field=" + field + ", label=" + label
-				+ ", outMessage=" + outMessage + "]";
+				+ ", name=" + name + "]";
+	}
+
+	@Override
+	public void displayValidationMessage(String message) {
+		display.display(message);
 	}
 	
 }

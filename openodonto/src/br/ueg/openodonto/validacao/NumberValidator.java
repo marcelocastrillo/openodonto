@@ -9,7 +9,7 @@ public class NumberValidator extends AbstractValidator implements NumericValidat
 	protected static Pattern numberPattern;
 	
 	static{
-		numberPattern = Pattern.compile("^(\\d|-)?\\d*\\.?\\d*$");
+		numberPattern = Pattern.compile("^(\\d|-){1}\\d*\\.?\\d*$");
 	}	
 	
 	public NumberValidator(Object value) {

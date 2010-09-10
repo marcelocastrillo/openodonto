@@ -12,9 +12,15 @@ import br.ueg.openodonto.controle.validador.ValidadorPadrao;
 import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.ueg.openodonto.servico.busca.InputField;
+import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.event.AbstractSearchListener;
 import br.ueg.openodonto.servico.busca.event.SearchEvent;
+import br.ueg.openodonto.validacao.EmptyValidator;
+import br.ueg.openodonto.validacao.NullValidator;
+import br.ueg.openodonto.validacao.Validator;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	
@@ -23,6 +29,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	private ManageTelefone                manageTelefone;
 	private static Map<String, String>    params;
 	private Search<Paciente>              search;
+	private MessageDisplayer              displayer;
 	
 	static{
 		params = new HashMap<String, String>();
@@ -39,8 +46,9 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	}
 
 	protected void initExtra() {
+		this.displayer = new ViewDisplayer();
 		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this);
-		this.search = new SearchBase<Paciente>(new SearchablePaciente("painelBusca:busca"),"Buscar Paciente");
+		this.search = new SearchBase<Paciente>(new SearchablePaciente(this.displayer),"Buscar Paciente");
 		this.search.addSearchListener(new SearchPacienteHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
 		makeView(params);
@@ -88,17 +96,57 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		this.manageTelefone = manageTelefone;
 	}
 
+	private Paciente buildExample(SearchablePaciente searchable){
+		Paciente target = new Paciente();
+		InputField<String> inputNome = searchable.getCommonInput("nomeFilter");
+		InputField<String> inputCpf = searchable.getCommonInput("cpfFilter");
+		InputField<String> inputEmail = searchable.getCommonInput("emailFilter");
+		InputField<String> inputId = searchable.getCommonInput("idFilter");
+		Validator validatorNome = inputNome.getValidators().get(0);
+		Validator validatorCpf = inputCpf.getValidators().get(0);
+		Validator validatorEmail = inputEmail.getValidators().get(0);
+		Validator validatorId = inputId.getValidators().get(0);
+		if(validatorNome.isValid()){
+			target.setNome(inputNome.getValue());
+		}else if(!(validatorNome.getSource() instanceof NullValidator) &&
+				!(validatorNome.getSource() instanceof EmptyValidator)){
+			displayer.display("* " + searchable.getFiltersMap().get("nomeFilter").getLabel() + " : " + validatorNome.getErrorMessage());
+		}
+		if(validatorEmail.isValid()){
+			target.setEmail(inputEmail.getValue());
+		}else if(!(validatorEmail.getSource() instanceof NullValidator) &&
+				!(validatorEmail.getSource() instanceof EmptyValidator)){
+			displayer.display("* " + searchable.getFiltersMap().get("emailFilter").getLabel() + " : " + validatorEmail.getErrorMessage());
+		}
+		if(validatorCpf.isValid()){
+			target.setCpf(inputCpf.getValue());
+		}
+		if(validatorId.isValid()){
+			target.setCodigo(Long.valueOf(inputId.getValue()));
+		}				
+		return target;
+	}
+	
+	protected class ViewDisplayer implements MessageDisplayer{
+		@Override
+		public void display(String message) {
+			getView().addResourceDynamicMenssage(message, "searchDefaultOutput");
+		}		
+	}
+	
 	protected class SearchPacienteHandler extends AbstractSearchListener{
 		@Override
-		public void searchPerfomed(SearchEvent event) {
+		@SuppressWarnings("unchecked")
+		public void searchPerformed(SearchEvent event) {
 			long time = System.currentTimeMillis();
-			IQuery query = CrudQuery.getListQuery(Paciente.class, "codigo", "nome", "email", "cpf");
-			try {
-				List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 1000);
+			try {				
+				Paciente target = buildExample((SearchablePaciente)((Search<Paciente>)event.getSource()).getSearchable());
+				OrmFormat format = new OrmFormat(target);
+				IQuery query = CrudQuery.getSelectQuery(Paciente.class, format.formatNotNull(),  "codigo", "nome", "email", "cpf");				
+				List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 100);
 				search.getResults().clear();
 				search.getResults().addAll(wrapResult(result));
 				time = System.currentTimeMillis() - time;
-				System.out.println(time);
 				showTimeQuery(params.get("formModalSearch"), result.size(), time);
 			} catch (SQLException e) {
 				e.printStackTrace();
