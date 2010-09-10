@@ -1,4 +1,4 @@
-package br.ueg.openodonto.validacao.tipo;
+package br.ueg.openodonto.validator.tipo;
 
 public interface ObjectValidatorType{
 	Object getValue();

@@ -1,4 +1,4 @@
-package br.ueg.openodonto.validacao.tipo;
+package br.ueg.openodonto.validator.tipo;
 
 import java.util.Date;
 
