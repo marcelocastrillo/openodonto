@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.busca.SearchBase;
+import br.ueg.openodonto.controle.busca.SearchablePaciente;
 import br.ueg.openodonto.controle.servico.ExampleRequest;
 import br.ueg.openodonto.controle.servico.ManageExample;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
@@ -14,8 +16,8 @@ import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.Searchable;
-import br.ueg.openodonto.validacao.EmptyValidator;
-import br.ueg.openodonto.validacao.NullValidator;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	
@@ -93,34 +95,23 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		this.manageTelefone = manageTelefone;
 	}
 	
-	private Paciente buildExample(Searchable<Paciente> searchable){
-		ExampleRequest<Paciente> request  = new ExampleRequest<Paciente>(searchable);
-		request.getFilterNameBeanPathMap().put("nomeFilter", "nome");
-		request.getFilterNameBeanPathMap().put("idFilter", "codigo");
-		request.getFilterNameBeanPathMap().put("emailFilter", "email");
-		request.getFilterNameBeanPathMap().put("cpfFilter", "cpf");
+	private Paciente buildPacienteExample(Searchable<Paciente> searchable){
+		ExampleRequest<Paciente> request  = new ExampleRequest<Paciente>(searchable);		
+		request.getFilterRelation().add(request.new TypedFilter("nomeFilter", "nome"));
+		request.getFilterRelation().add(request.new TypedFilter("idFilter","codigo"));
+		request.getFilterRelation().add(request.new TypedFilter("emailFilter", "email"));
+		request.getFilterRelation().add(request.new TypedFilter("cpfFilter", "cpf"));
 		request.getInvalidPermiteds().add(NullValidator.class);
 		request.getInvalidPermiteds().add(EmptyValidator.class);
 		Paciente target = manageExample.processExampleRequest(request);
 		return target;
-	}
-	
-	protected class ViewDisplayer implements MessageDisplayer{
-		private String output;		
-		public ViewDisplayer(String output) {
-			this.output = output;
-		}		
-		@Override
-		public void display(String message) {
-			getView().addResourceDynamicMenssage(message, output);
-		}		
 	}
 
 	protected class SearchPacienteHandler extends SearchBeanHandler<Paciente>{
 		private String[] showColumns = {"codigo", "nome", "email", "cpf"}; 		
 		@Override
 		public Paciente buildExample(Searchable<Paciente> searchable) {
-			return ManterPaciente.this.buildExample(searchable);
+			return buildPacienteExample(searchable);
 		}
 		@Override
 		public String[] getShowColumns() {

@@ -1,4 +1,4 @@
-package br.ueg.openodonto.validacao;
+package br.ueg.openodonto.validator;
 
 
 

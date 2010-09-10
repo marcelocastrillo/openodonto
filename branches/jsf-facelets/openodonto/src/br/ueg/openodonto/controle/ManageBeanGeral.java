@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.busca.ResultFacadeBean;
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.controle.context.OpenOdontoWebContext;
 import br.ueg.openodonto.controle.validador.AbstractValidator;
@@ -18,6 +19,7 @@ import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.Searchable;
@@ -131,8 +133,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			acaoValidarCampos();
 			if (!checarCamposObrigatorios()) {
 				exibirPopUp("Campos obrigatorios nao preenchidos");
-				getView().addLocalDynamicMenssage(
-						"Campos obrigatorios invalidos.", "saidaPadrao", true);
+				getView().addLocalDynamicMenssage("Campos obrigatorios invalidos.", "saidaPadrao", true);
 				return;
 			}
 			if (dao.exists(getBackBean()))
@@ -232,6 +233,17 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		this.view = ApplicationViewFactory.getViewInstance(ViewHandler.JSF,	params);
 	}
 	
+	protected class ViewDisplayer implements MessageDisplayer{
+		private String output;		
+		public ViewDisplayer(String output) {
+			this.output = output;
+		}		
+		@Override
+		public void display(String message) {
+			getView().addResourceDynamicMenssage(message, output);
+		}		
+	}
+	
 	protected List<ResultFacade> wrapResult(List<Map<String, Object>> result){
 		List<ResultFacade> resultWrap = new ArrayList<ResultFacade>(result.size());
 		Iterator<Map<String, Object>> iterator = result.iterator();
@@ -251,7 +263,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 				E target = buildExample(search.getSearchable());
 				OrmFormat format = new OrmFormat(target);
 				IQuery query = CrudQuery.getSelectQuery(Paciente.class, format.formatNotNull(),  getShowColumns());				
-				List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 100);
+				List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 1000);
 				search.getResults().clear();
 				search.getResults().addAll(wrapResult(result));
 				time = System.currentTimeMillis() - time;

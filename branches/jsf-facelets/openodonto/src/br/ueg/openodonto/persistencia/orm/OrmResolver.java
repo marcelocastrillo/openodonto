@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.converter.BeanConverterFactory;
 import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.util.PBUtil;
 
@@ -194,10 +195,11 @@ public class OrmResolver {
 
 	private void setBeanValue(Field field, Object value) {
 		try {
-			if (Enum.class.isAssignableFrom(field.getType())
-					&& hasAnnotation(field, Enumerator.class)) {
-				value = reTypeSyncEnum(value, field, field.getAnnotation(
-						Enumerator.class).type());
+			if((value instanceof String) && !field.getType().equals(String.class)){
+					value = attemptSyncValueType(value,field.getType());
+			}
+			if (Enum.class.isAssignableFrom(field.getType()) && hasAnnotation(field, Enumerator.class)) {
+				value = reTypeSyncEnum(value, field, field.getAnnotation(Enumerator.class).type());
 			} else if (Number.class.isAssignableFrom(field.getType())) {
 				value = reTypeSyncNumber(value, field.getType());
 			} else if (String.class.isAssignableFrom(field.getType())) {
@@ -238,6 +240,10 @@ public class OrmResolver {
 		return num;
 	}
 
+	private <T> T attemptSyncValueType(Object value,Class<T> type){
+		return BeanConverterFactory.getConverter(type).getAsObject(value.toString());
+	}
+	
 	private Object reTypeSyncEnum(Object value, Field field, EnumValue type) {
 		if (type == null) {
 			return null;

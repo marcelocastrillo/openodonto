@@ -1,22 +1,20 @@
 package br.ueg.openodonto.controle.servico;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import br.ueg.openodonto.servico.busca.Searchable;
 
 public class ExampleRequest<T> {
 
-	private Searchable<T>          searchable;
-	private Map<String,String>     filterNameBeanPathMap;
-	private List<Class<?>>         invalidPermiteds;
+	private Searchable<T>             searchable;
+	private List<Class<?>>            invalidPermiteds;
+	private List<TypedFilter>         filterRelation;
 	
 	public ExampleRequest(Searchable<T> searchable) {
 		this.searchable = searchable;
-		this.filterNameBeanPathMap = new HashMap<String, String>();
 		this.invalidPermiteds = new ArrayList<Class<?>>();
+		this.filterRelation = new ArrayList<TypedFilter>();
 	}
 	
 	public Searchable<T> getSearchable() {
@@ -25,17 +23,45 @@ public class ExampleRequest<T> {
 	public void setSearchable(Searchable<T> searchable) {
 		this.searchable = searchable;
 	}
-	public Map<String, String> getFilterNameBeanPathMap() {
-		return filterNameBeanPathMap;
-	}
-	public void setFilterNameBeanPathMap(Map<String, String> filterNameBeanPathMap) {
-		this.filterNameBeanPathMap = filterNameBeanPathMap;
-	}
 	public List<Class<?>> getInvalidPermiteds() {
 		return invalidPermiteds;
 	}
 	public void setInvalidPermiteds(List<Class<?>> invalidPermiteds) {
 		this.invalidPermiteds = invalidPermiteds;
 	}	
+	
+	public List<TypedFilter> getFilterRelation() {
+		return filterRelation;
+	}
+
+	public void setFilterRelation(List<TypedFilter> filterRelation) {
+		this.filterRelation = filterRelation;
+	}
+
+	public class TypedFilter{
+		private String    filterName;
+		private String    beanPath;
+		
+		public TypedFilter(String filterName, String beanPath) {
+			this.filterName = filterName;
+			this.beanPath = beanPath;
+		}
+		
+		public TypedFilter() {
+		}
+		
+		public String getFilterName() {
+			return filterName;
+		}
+		public void setFilterName(String filterName) {
+			this.filterName = filterName;
+		}
+		public String getBeanPath() {
+			return beanPath;
+		}
+		public void setBeanPath(String beanPath) {
+			this.beanPath = beanPath;
+		}	
+	}
 	
 }

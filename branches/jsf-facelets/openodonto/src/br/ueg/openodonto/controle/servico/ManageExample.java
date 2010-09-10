@@ -1,14 +1,18 @@
 package br.ueg.openodonto.controle.servico;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.ueg.openodonto.persistencia.orm.OrmResolver;
+import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.SearchFilter;
-import br.ueg.openodonto.validacao.Validator;
+import br.ueg.openodonto.validator.Validator;
 
 public class ManageExample<T> {
 
@@ -69,14 +73,19 @@ public class ManageExample<T> {
 		}
 	}
 	
-	public T processExampleRequest(ExampleRequest<T> req){
+  	public T processExampleRequest(ExampleRequest<T> req){
 		Map<String, Object> values = new HashMap<String, Object>();
-		for(String filtro : req.getFilterNameBeanPathMap().keySet()){
-			SearchFilter filter = findSearchFilter(filtro,req.getSearchable().getFilters());
+		OrmTranslator translator = new OrmTranslator(OrmResolver.getAllFields(new ArrayList<Field>(), classe, true));
+		Iterator<ExampleRequest<T>.TypedFilter> iterator = req.getFilterRelation().iterator();
+		while(iterator.hasNext()){
+			ExampleRequest<T>.TypedFilter typedFilter  = iterator.next();
+			SearchFilter filter = findSearchFilter(typedFilter.getFilterName(),req.getSearchable().getFilters());
 			InputField<String> inputField = getCommonInput(filter);
 			boolean valid = checkValidators(inputField.getValidators());
 			if(valid){
-				values.put(req.getFilterNameBeanPathMap().get(filtro), inputField.getValue());
+				String field = typedFilter.getBeanPath();
+				String column = translator.getColumn(field);
+				values.put(column, inputField.getValue());
 			}else{
 				notifyValidation(filter,inputField,req.getInvalidPermiteds());
 			}
