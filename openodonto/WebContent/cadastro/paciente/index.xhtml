@@ -22,12 +22,12 @@
 					<h:panelGrid columns="1">				
 					    <h:panelGrid columns="2">
 							<h:panelGrid columns="1">
-								<h:outputLabel value="Codigo" for="codigoPaciente" />
+								<h:outputLabel value="#{msg.ooCodigo}" for="codigoPaciente" />
 								<h:inputText id="codigoPaciente" readonly="true" disabled="true" value="#{manterPaciente.paciente.codigo}" style=" width : 160px;" />
 							</h:panelGrid>
 							<h:panelGrid columns="1">
 							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="Nome" for="entradaNome"  style="color : red" />
+								    <h:outputLabel value="#{msg.ooNome}" for="entradaNome"  style="color : red" />
 				                    <rich:spacer width="8" />
 				                    <rich:message id="messageEntradaNome" for="entradaNome" styleClass="oo-validation-messages" />
 				                </h:panelGrid>
@@ -35,7 +35,7 @@
 							</h:panelGrid>           
 							<h:panelGrid columns="1">
 							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="CPF" for="entradaCpf" style="color : red"/>
+								    <h:outputLabel value="#{msg.ooCpf}" for="entradaCpf" style="color : red"/>
 				                    <rich:spacer width="8" />
 				                    <rich:message id="messageEntradaCpf" for="entradaCpf" styleClass="oo-validation-messages" />
 				                </h:panelGrid>
@@ -45,7 +45,7 @@
 							</h:panelGrid>				
 							<h:panelGrid columns="1">
 							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="Data Inicio Tratamento" for="dataInicioTratamento" />
+								    <h:outputLabel value="#{msg.ooDataInicioTrat}" for="dataInicioTratamento" />
 				                    <rich:spacer width="8" />
 				                    <rich:message id="messageDataInicioTratamento" for="dataInicioTratamento" styleClass="oo-validation-messages" />
 				                </h:panelGrid>

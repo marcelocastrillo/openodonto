@@ -110,8 +110,7 @@ public class CrudQuery {
 		return new Query(query.toString(), params, table);
 	}
 
-	private static void makeWhereOfQuery(Map<String, Object> whereParams,
-			List<Object> params, StringBuilder query) {
+	private static void makeWhereOfQuery(Map<String, Object> whereParams,List<Object> params, StringBuilder query) {
 		if (whereParams != null && whereParams.size() > 0) {
 			Iterator<String> iterator = whereParams.keySet().iterator();
 			query.append(" WHERE ");
@@ -171,8 +170,7 @@ public class CrudQuery {
 			stb.append("ON ");
 			stb.append(typeColumnName).append(".").append(fk.tableField());
 			stb.append(" = ");
-			stb.append(superTypeColumnName).append(".").append(
-					fk.foreginField());
+			stb.append(superTypeColumnName).append(".").append(fk.foreginField());
 			stb.append(" ");
 		}
 		return stb.toString();

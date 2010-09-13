@@ -12,7 +12,7 @@
         </f:facet>
         <f:facet name="controls">
             <h:panelGroup>
-				<a4j:commandButton image="#{msg.imgBotaoFechar}" reRender="${formName}" value="#{msg.acaoFechar}" id="hidelink" styleClass="hidelink">
+				<a4j:commandButton image="#{msg.imgBotaoFechar}" reRender="#{formName}" value="#{msg.acaoFechar}" id="hidelink" styleClass="hidelink">
 					<rich:componentControl for="painelBusca" attachTo="hidelink" operation="hide" event="onclick"/>
 				</a4j:commandButton>
             </h:panelGroup>
@@ -33,7 +33,7 @@
 				            <h:panelGrid id="grid#{filter.name}" columns="2">
 					            <h:outputLabel id="filterLabel" value="#{filter.label} : " style="width : 80px;white-space:nowrap"/>
 				                <rich:dataGrid var="input" value="#{filter.field.inputFields}" columns="1" elements="1" columnClasses="oo-border-none" styleClass="oo-border-none">
-				                    <h:inputText value="#{input.value}" styleClass="#{input.mask.styleClass}" />
+				                    <h:inputText value="#{input.value}" styleClass="#{input.mask.styleClass}" onkeypress="if(doEnter(event)){pesquisar();}" />
 				                </rich:dataGrid>
 				            </h:panelGrid>
 				        </rich:dataGrid>
@@ -54,7 +54,7 @@
 						<h:outputText value="#{msg.buscaResultadosHeader}: " />
 					</f:facet>
 					<rich:dataTable width="590px" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" id="lista" columnsWidth="0*" value="#{search.results}" var="bean" rows="10">
-                	    <a4j:support event="onRowClick" reRender="${formName}"  oncomplete="#{rich:component('painelBusca')}.hide()">
+                	    <a4j:support event="onRowClick" reRender="#{formName}"  oncomplete="#{rich:component('painelBusca')}.hide()">
 				    	    <f:setPropertyActionListener value="#{bean}" target="#{search.selected}" />
 				    	</a4j:support>
 					    <rich:columns value="#{search.searchable.facade}" var="facade" >

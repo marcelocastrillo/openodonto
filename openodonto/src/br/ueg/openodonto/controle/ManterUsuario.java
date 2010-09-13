@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import br.ueg.openodonto.controle.validador.AbstractValidator;
-import br.ueg.openodonto.controle.validador.ValidadorPadrao;
+import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Usuario;
+import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterUsuario extends ManageBeanGeral<Usuario> {
 
@@ -125,12 +125,12 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 
 	
 	@Override
-	protected List<AbstractValidator> getCamposObrigatorios() {
-		List<AbstractValidator> obrigatorios = new ArrayList<AbstractValidator>();
-		obrigatorios.add(new ValidadorPadrao("nome", "formUsuario:entradaNome"));
-		obrigatorios.add(new ValidadorPadrao("user", "formUsuario:entradaUser"));
-		obrigatorios.add(new ValidadorPadrao("senha", "formDentista:entradaSenha"));
-		return null;
+	protected List<ValidationRequest> getCamposObrigatorios() {
+		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
+		obrigatorios.add(new ValidationRequest("nome",ValidatorFactory.newSrtEmpty(), "formUsuario:entradaNome"));
+		obrigatorios.add(new ValidationRequest("user",ValidatorFactory.newSrtEmpty(), "formUsuario:entradaUser"));
+		obrigatorios.add(new ValidationRequest("senha",ValidatorFactory.newSrtEmpty(), "formDentista:entradaSenha"));
+		return obrigatorios;
 	}
 
 	public Usuario getUsuario() {

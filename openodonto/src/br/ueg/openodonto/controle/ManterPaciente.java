@@ -10,14 +10,18 @@ import br.ueg.openodonto.controle.busca.SearchablePaciente;
 import br.ueg.openodonto.controle.servico.ExampleRequest;
 import br.ueg.openodonto.controle.servico.ManageExample;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
-import br.ueg.openodonto.controle.validador.AbstractValidator;
-import br.ueg.openodonto.controle.validador.ValidadorPadrao;
+import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Paciente;
+import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
+import br.ueg.openodonto.persistencia.dao.sql.IQuery;
+import br.ueg.openodonto.persistencia.dao.sql.Query;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.Searchable;
 import br.ueg.openodonto.validator.EmptyValidator;
 import br.ueg.openodonto.validator.NullValidator;
+import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	
@@ -68,10 +72,10 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		return formatados;
 	}
 
-	protected List<AbstractValidator> getCamposObrigatorios() {
-		List<AbstractValidator> obrigatorios = new ArrayList<AbstractValidator>();
-		obrigatorios.add(new ValidadorPadrao("nome", "formPaciente:entradaNome"));
-		obrigatorios.add(new ValidadorPadrao("cpf", "formPaciente:entradaCpf"));
+	protected List<ValidationRequest> getCamposObrigatorios() {
+		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
+		obrigatorios.add((new ValidationRequest("nome", ValidatorFactory.newSrtEmpty(),"formPaciente:entradaNome")));
+		obrigatorios.add(new ValidationRequest("cpf",ValidatorFactory.newCpf(),"formPaciente:entradaCpf"));
 		return obrigatorios;
 	}
 	
@@ -108,7 +112,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	}
 
 	protected class SearchPacienteHandler extends SearchBeanHandler<Paciente>{
-		private String[] showColumns = {"codigo", "nome", "email", "cpf"}; 		
+		private String[] showColumns = {"codigo", "nome", "email", "cpf"};
 		@Override
 		public Paciente buildExample(Searchable<Paciente> searchable) {
 			return buildPacienteExample(searchable);
@@ -116,6 +120,21 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		@Override
 		public String[] getShowColumns() {
 			return showColumns;
+		}
+		
+		@Override/*TODO Este método é temporário e será refatorado/extinto*/
+		public IQuery getQuery(Paciente example){
+			OrmFormat format = new OrmFormat(example);
+			Map<String, Object> params = format.formatNotNull();
+			Object nome;
+			if((nome = params.get("nome")) != null){
+				params.put("nome", "%"+nome+"%");
+			}
+			Query query = (Query)CrudQuery.getSelectQuery(Paciente.class,params, getShowColumns());
+			if(nome != null){
+			    query.setQuery(query.getQuery().replace("nome = ?", "nome like ?"));
+			}
+			return query;
 		}
 	}
 	

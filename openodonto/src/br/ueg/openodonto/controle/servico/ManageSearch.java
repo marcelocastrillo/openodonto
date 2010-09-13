@@ -15,6 +15,7 @@ import br.ueg.openodonto.util.PBUtil;
  * 
  * @param <T>
  */
+@Deprecated
 public class ManageSearch<T> implements Serializable {
 
 	private static final long serialVersionUID = -1563000243980108012L;
