@@ -1,5 +1,6 @@
 package br.ueg.openodonto.controle.servico;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +15,8 @@ import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.SearchFilter;
 import br.ueg.openodonto.validator.Validator;
 
-public class ManageExample<T> {
-
+public class ManageExample<T> implements Serializable{
+	private static final long serialVersionUID = -9067163321882594609L;
 	private Class<T> classe;
 	
 	public ManageExample(Class<T> classe) {

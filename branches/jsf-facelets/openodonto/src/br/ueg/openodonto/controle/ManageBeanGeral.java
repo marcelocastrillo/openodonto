@@ -3,6 +3,7 @@ package br.ueg.openodonto.controle;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
 import br.ueg.openodonto.controle.busca.ResultFacadeBean;
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.controle.context.OpenOdontoWebContext;
-import br.ueg.openodonto.controle.validador.AbstractValidator;
+import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.EntityManager;
@@ -28,6 +29,7 @@ import br.ueg.openodonto.servico.busca.event.SearchEvent;
 import br.ueg.openodonto.servico.busca.event.SearchSelectedEvent;
 import br.ueg.openodonto.util.PBUtil;
 import br.ueg.openodonto.util.WordFormatter;
+import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.visao.ApplicationView;
 import br.ueg.openodonto.visao.ApplicationViewFactory;
 import br.ueg.openodonto.visao.ApplicationViewFactory.ViewHandler;
@@ -85,9 +87,15 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		getView().showPopUp(message);
 	}
 
-	protected abstract List<AbstractValidator> getCamposObrigatorios();
+	@SuppressWarnings("unchecked")
+	protected List<ValidationRequest> getCamposObrigatorios(){
+		return Collections.EMPTY_LIST;
+	}
 
-	protected abstract List<String> getCamposFormatados();
+	@SuppressWarnings("unchecked")
+	protected List<String> getCamposFormatados(){
+		return Collections.EMPTY_LIST;
+	}
 
 	protected void ValidarCamposExtras(){};
 
@@ -97,15 +105,14 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		for (String path : camposFormatados) {
 			Object o = PBUtil.instance().getNestedProperty(getBackBean(), path);
 			String campoParaFormatar = null;
-			if (o != null)
+			if (o != null){
 				campoParaFormatar = String.valueOf(o);
-			else
+			}else{
 				continue;
+			}
 			if (!campoParaFormatar.isEmpty()) {
-				String atributoFormatado = WordFormatter.clear(
-						WordFormatter.remover(campoParaFormatar)).toUpperCase();
-				PBUtil.instance().setNestedProperty(getBackBean(), path,
-						atributoFormatado);
+				String atributoFormatado = WordFormatter.clear(WordFormatter.remover(campoParaFormatar)).toUpperCase();
+				PBUtil.instance().setNestedProperty(getBackBean(), path, atributoFormatado);
 			}
 		}
 	}
@@ -114,13 +121,14 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		return true;
 	}
 
-	protected boolean checarCamposObrigatorios() {
+	protected boolean checarCamposObrigatorios() throws Exception {
 		boolean returned = true;
-		List<AbstractValidator> camposObrigatorios = getCamposObrigatorios();
-		for (AbstractValidator validador : camposObrigatorios) {
-			if (validador.isValid(getBackBean())) {
-				getView().addLocalDynamicMenssage(validador.getMessage(),
-						validador.getMessageOut(), false);
+		List<ValidationRequest> camposObrigatorios = getCamposObrigatorios();
+		for (ValidationRequest validation : camposObrigatorios) {
+			Validator validador = validation.getValidator();
+			validador.setValue(PBUtil.instance().getNestedProperty(getBackBean(), validation.getPath()));
+			if (!validador.isValid()) {
+				getView().addLocalDynamicMenssage("* " + validador.getErrorMessage(), validation.getOut(), false);
 				returned = false;
 			}
 		}
@@ -132,12 +140,13 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		try {
 			acaoValidarCampos();
 			if (!checarCamposObrigatorios()) {
-				exibirPopUp("Campos obrigatorios nao preenchidos");
+				exibirPopUp(getView().getMessageFromResource("camposObrigatorios"));
 				getView().addLocalDynamicMenssage("Campos obrigatorios invalidos.", "saidaPadrao", true);
 				return;
 			}
-			if (dao.exists(getBackBean()))
+			if (dao.exists(getBackBean())){
 				alredy = true;
+			}
 			acaoSalvarExtra();
 			this.dao.alterar(this.backBean);
 		} catch (Exception ex) {
@@ -233,7 +242,8 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		this.view = ApplicationViewFactory.getViewInstance(ViewHandler.JSF,	params);
 	}
 	
-	protected class ViewDisplayer implements MessageDisplayer{
+	protected class ViewDisplayer implements MessageDisplayer,Serializable{
+		private static final long serialVersionUID = -745463611021419165L;
 		private String output;		
 		public ViewDisplayer(String output) {
 			this.output = output;
@@ -261,8 +271,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			try {				
 				Search<E> search = (Search<E>)event.getSource();
 				E target = buildExample(search.getSearchable());
-				OrmFormat format = new OrmFormat(target);
-				IQuery query = CrudQuery.getSelectQuery(Paciente.class, format.formatNotNull(),  getShowColumns());				
+				IQuery query = getQuery(target);				
 				List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 1000);
 				search.getResults().clear();
 				search.getResults().addAll(wrapResult(result));
@@ -272,12 +281,17 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 				e.printStackTrace();
 			}
 
-		}		
+		}
+		public IQuery getQuery(E example){
+			OrmFormat format = new OrmFormat(example);
+			return CrudQuery.getSelectQuery(Paciente.class, format.formatNotNull(),  getShowColumns());
+		}
+		public abstract String[] getShowColumns();
 		public abstract E buildExample(Searchable<E> searchable);
-		public abstract String[] getShowColumns();		
 	}
 	
-	public class SearchSelectedHandler extends AbstractSearchListener{
+	public class SearchSelectedHandler extends AbstractSearchListener implements Serializable{
+		private static final long serialVersionUID = -8455981783765205027L;
 		@Override
 		@SuppressWarnings("unchecked")
 		public void resultRequested(SearchSelectedEvent event) {

@@ -6,6 +6,7 @@ import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Inheritance;
 import br.ueg.openodonto.persistencia.orm.Table;
+import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name = "pacientes")
 @Inheritance(joinFields = { @ForwardKey(tableField = "id_pessoa", foreginField = "id") })
@@ -49,7 +50,8 @@ public class Paciente extends Pessoa {
     }
 
     public void setCpf(String cpf) {
-	this.cpf = cpf;
+    	cpf = WordFormatter.clear(cpf);
+    	this.cpf = cpf;
     }
 
     public Date getDataInicioTratamento() {

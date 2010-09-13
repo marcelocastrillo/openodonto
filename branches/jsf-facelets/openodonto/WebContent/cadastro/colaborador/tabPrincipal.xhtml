@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:rich="http://richfaces.org/rich"	
+	xmlns:a4j="http://richfaces.org/a4j">
+    <rich:panel styleClass="oo-crud-decore-panel">
+        <center>
+            <h:panelGrid id="gridPrincipal">
+                <h:panelGrid columns="1">
+                    <h:outputLabel value="#{categoria}" />
+                    <h:inputText value="" />
+                </h:panelGrid>
+            </h:panelGrid>
+            <h:panelGrid id="gridTextBox">       
+                <h:panelGrid columns="1">
+                    <h:outputLabel value="#{msg.tabPrincipalObs}" for="inTextBoxObs"/>
+                    <h:inputTextarea id="inTextBoxObs" value="#{manterColaborador.colaborador.observacao}" style="width : 480px; height : 96px;" />
+                </h:panelGrid>
+            </h:panelGrid>
+        </center>
+    </rich:panel>
+</ui:composition>	

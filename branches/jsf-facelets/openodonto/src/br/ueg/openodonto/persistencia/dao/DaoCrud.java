@@ -78,8 +78,9 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 					getConnection().rollback(save);
 				}
 				throw ex;
-			}
-			getConnection().setAutoCommit(true);
+			}finally{
+				getConnection().setAutoCommit(true);
+			}			
 		} else if (o != null) {
 			inserir(o);
 		}
@@ -110,8 +111,9 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 					getConnection().rollback(save);
 				}
 				throw ex;
-			}
-			getConnection().setAutoCommit(true);
+			}finally{
+				getConnection().setAutoCommit(true);
+			}			
 		}
 
 	}

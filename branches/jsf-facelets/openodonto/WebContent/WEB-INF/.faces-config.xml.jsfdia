@@ -32,14 +32,12 @@
  <PROCESS-ITEM NAME="rules::4" SHAPE="32,465,0,0" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules::4" NAME="item" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT
-    ID="manageColaborador::#cadastro#colaborador#index.xhtml"
-    NAME="output" PATH="/cadastro/colaborador/index.xhtml"
-    TARGET="rules:#cadastro#colaborador#index.xhtml"
-    TITLE="manageColaborador" model-entity="JSFProcessItemOutput"/>
+    ID="manageFornecedor::#cadastro#colaborador#fornecedor#index.xhtml"
+    NAME="output" PATH="/cadastro/colaborador/fornecedor/index.xhtml"
+    TARGET="rules:#cadastro#colaborador#fornecedor#index.xhtml"
+    TITLE="manageFornecedor" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
- <PROCESS-ITEM NAME="rules:#cadastro#colaborador#index.xhtml"
-  PATH="/cadastro/colaborador/index.xhtml" SHAPE="240,369,0,0" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#cadastro#usuario#index.xhtml"
   PATH="/cadastro/usuario/index.xhtml" SHAPE="240,481,0,0" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#login#login.xhtml" PATH="/login/login.xhtml"
@@ -47,9 +45,10 @@
  <PROCESS-ITEM NAME="rules::5" SHAPE="32,577,0,0" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules::5" NAME="item" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT
-    ID="manageUsuario::#cadastro#usuario#index.xhtml" NAME="output"
-    PATH="/cadastro/usuario/index.xhtml"
-    TARGET="rules:#cadastro#usuario#index.xhtml" TITLE="manageUsuario" model-entity="JSFProcessItemOutput"/>
+    ID="managePrestador::#cadastro#colaborador#prestador#index.xhtml"
+    NAME="output" PATH="/cadastro/colaborador/prestador/index.xhtml"
+    TARGET="rules:#cadastro#colaborador#prestador#index.xhtml"
+    TITLE="managePrestador" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#cadastro#dentista#index.xhtml"
@@ -58,4 +57,17 @@
   SHAPE="240,33,0,0" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#cadastro#paciente#index.xhtml"
   PATH="/cadastro/paciente/index.xhtml" SHAPE="240,257,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::6" SHAPE="32,689,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::6" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manageUsuario::#cadastro#usuario#index.xhtml" NAME="output"
+    PATH="/cadastro/usuario/index.xhtml"
+    TARGET="rules:#cadastro#usuario#index.xhtml" TITLE="manageUsuario" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cadastro#colaborador#fornecedor#index.xhtml"
+  PATH="/cadastro/colaborador/fornecedor/index.xhtml"
+  SHAPE="240,705,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#cadastro#colaborador#prestador#index.xhtml"
+  PATH="/cadastro/colaborador/prestador/index.xhtml" SHAPE="240,817,0,0" model-entity="JSFProcessGroup"/>
 </PROCESS>

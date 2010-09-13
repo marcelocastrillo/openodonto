@@ -16,7 +16,7 @@
 			</h:panelGrid>
 			<rich:spacer width="16"/>
 			<h:panelGrid columns="1">
-				<h:outputLabel value="#{msg.manageContactTelefone}" for="telefoneNumero" />
+				<h:outputLabel value="#{msg.manageContactTelefone}" for="telefoneNumero" style="color : red" />
 				<h:inputText id="telefoneNumero" value="#{mBean.manageTelefone.telefone.numero}" />
 			</h:panelGrid>
 			<h:panelGrid columns="1">
@@ -33,7 +33,7 @@
 		<h:panelGrid columns="3">
 			<h:panelGrid columns="1">
 				<h:outputText value="#{msg.manageContact}" />
-				<rich:scrollableDataTable width="500px" height="300px" var="telefone" value="#{mBean.paciente.telefone}" id="listaTelefones" rowKeyVar="index" rows="10" >
+				<rich:scrollableDataTable width="500px" height="300px" var="telefone" value="#{mBean.backBean.telefone}" id="listaTelefones" rowKeyVar="index" rows="10" >
 					<rich:column width="200px" >
 						<f:facet name="header">
 							<h:outputText value="#{msg.manageContactHeaderNumero}" />
