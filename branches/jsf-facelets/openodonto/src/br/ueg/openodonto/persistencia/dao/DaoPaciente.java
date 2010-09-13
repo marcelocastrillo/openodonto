@@ -20,12 +20,9 @@ public class DaoPaciente extends DaoCrud<Paciente> {
 	}
 
 	public static void initQueryMap() {
-		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByNome",
-				"WHERE nome LIKE ?");
-		DaoBase.getStoredQuerysMap()
-				.put("Paciente.BuscaByCPF", "WHERE cpf = ?");
-		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByEmail",
-				"WHERE email = ?");
+		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE nome LIKE ?");
+		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByCPF", "WHERE cpf = ?");
+		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByEmail","WHERE email = ?");
 	}
 
 	public DaoPaciente() {
@@ -37,10 +34,10 @@ public class DaoPaciente extends DaoCrud<Paciente> {
 		return new Paciente();
 	}
 
+	/*
 	private void updateRelationshipTelefone(Paciente o) throws Exception {
 		if (o.getTelefone() != null) {
-			EntityManager<Telefone> entityManagerTelefone = DaoFactory
-					.getInstance().getDao(Telefone.class);
+			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 			List<Telefone> todos = getTelefonesFromPaciente(o.getCodigo());
 			for (Telefone telefone : todos) {
 				if (!o.getTelefone().contains(telefone)) {
@@ -55,33 +52,37 @@ public class DaoPaciente extends DaoCrud<Paciente> {
 		}
 	}
 
-	private List<Telefone> getTelefonesFromPaciente(Long id)
-			throws SQLException {
-		EntityManager<Telefone> emTelefone = DaoFactory.getInstance().getDao(
-				Telefone.class);
+	private List<Telefone> getTelefonesFromPaciente(Long id)throws SQLException {
+		EntityManager<Telefone> emTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 		OrmFormat orm = new OrmFormat(new Telefone(id));
-		IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm
-				.formatNotNull(), "*");
+		IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm.formatNotNull(), "*");
 		return emTelefone.getSqlExecutor().executarQuery(query);
 	}
+	*/
 
 	@Override
 	protected void afterUpdate(Paciente o) throws Exception {
-		updateRelationshipTelefone(o);
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
 	}
 	
 	@Override
 	protected void aferInsert(Paciente o) throws Exception {
-		updateRelationshipTelefone(o);
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
 	}
 
 	@Override
 	public List<Paciente> listar(boolean lazy, String... fields) {
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
 		List<Paciente> lista = super.listar(lazy, fields);
 		if (lista != null && !lazy) {
 			for (Paciente paciente : lista) {
 				try {
-					paciente.setTelefone(getTelefonesFromPaciente(paciente.getCodigo()));
+					paciente.setTelefone(daoTelefone.getTelefonesRelationshipPessoa(paciente.getCodigo()));
 				} catch (Exception ex) {
 				}
 			}
@@ -91,7 +92,9 @@ public class DaoPaciente extends DaoCrud<Paciente> {
 
 	@Override
 	public void afterLoad(Paciente o) throws Exception {
-		List<Telefone> telefones = getTelefonesFromPaciente(o.getCodigo());
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		List<Telefone> telefones = daoTelefone.getTelefonesRelationshipPessoa(o.getCodigo());
 		o.setTelefone(telefones);
 	}
 
@@ -104,10 +107,8 @@ public class DaoPaciente extends DaoCrud<Paciente> {
 		try {
 			Long id = Long.parseLong(String.valueOf(key));
 			OrmFormat orm = new OrmFormat(new Paciente(id));
-			IQuery query = CrudQuery.getSelectQuery(Paciente.class, orm
-					.formatNotNull(), "*");
-			lista = getSqlExecutor().executarQuery(query.getQuery(),
-					query.getParams(), 1);
+			IQuery query = CrudQuery.getSelectQuery(Paciente.class, orm	.formatNotNull(), "*");
+			lista = getSqlExecutor().executarQuery(query.getQuery(),query.getParams(), 1);
 			if (lista.size() == 1) {
 				return lista.get(0);
 			}
@@ -118,14 +119,12 @@ public class DaoPaciente extends DaoCrud<Paciente> {
 	}
 
 	@Override
-	protected boolean beforeRemove(Paciente o, Map<String, Object> params)
-			throws Exception {
+	protected boolean beforeRemove(Paciente o, Map<String, Object> params)throws Exception {
 		List<String> referencias = referencedConstraint(Pessoa.class, params);
-		if (referencias.contains(CrudQuery.getTableName(Paciente.class))
-				&& referencias.contains(CrudQuery.getTableName(Telefone.class))
-				&& referencias.size() == 2) {
-			EntityManager<Telefone> entityManagerTelefone = DaoFactory
-					.getInstance().getDao(Telefone.class);
+		if (referencias.contains(CrudQuery.getTableName(Paciente.class)) &&
+				referencias.contains(CrudQuery.getTableName(Telefone.class))&&
+				referencias.size() == 2) {
+			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 			for (Telefone telefone : o.getTelefone()) {
 				entityManagerTelefone.remover(telefone);
 			}
