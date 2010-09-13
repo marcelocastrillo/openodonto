@@ -16,7 +16,7 @@ public class SearchableColaborador implements Searchable<Colaborador> {
 
 	@Override
 	public List<FieldFacade> getFacade() {
-		return null;
+		return null ;
 	}
 
 	@Override
