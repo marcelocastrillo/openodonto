@@ -83,6 +83,8 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	protected List<String> getCamposFormatados() {
 		List<String> formatados = new ArrayList<String>();
 		formatados.add("nome");
+		formatados.add("cidade");
+		formatados.add("endereco");
 		formatados.add("cpf");
 		formatados.add("cnpj");
 		return formatados;

@@ -6,7 +6,7 @@ import br.ueg.openodonto.persistencia.orm.Inheritance;
 import br.ueg.openodonto.persistencia.orm.Table;
 
 @Table(name = "dentistas")
-@Inheritance(joinFields = { @ForwardKey(tableField = "pessoas_id", foreginField = "id") })
+@Inheritance(joinFields = { @ForwardKey(tableField = "id_pessoa", foreginField = "id") })
 public class Dentista extends Pessoa {
 
     private static final long serialVersionUID = 2662858236851341336L;

@@ -45,6 +45,7 @@ public class Colaborador extends Pessoa {
 	
 	public Colaborador() {
 		this.produtos = new ArrayList<Produto>();
+		this.dataCadastro = new Date(System.currentTimeMillis());
 	}
 	
 	public Date getDataCadastro() {
