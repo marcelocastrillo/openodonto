@@ -10,8 +10,10 @@ import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
+import br.ueg.openodonto.persistencia.orm.Dao;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
+@Dao(classe=Colaborador.class)
 public class DaoColaborador extends DaoCrud<Colaborador> {
 
 	private static final long serialVersionUID = 5204016786567134806L;
@@ -47,47 +49,29 @@ public class DaoColaborador extends DaoCrud<Colaborador> {
 		return null;
 	}
 
-	private void updateRelationshipTelefone(Colaborador o) throws Exception {
-		if (o.getTelefone() != null) {
-			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-			List<Telefone> todos = getTelefonesFromColaborador(o.getCodigo());
-			for (Telefone telefone : todos) {
-				if (!o.getTelefone().contains(telefone)) {
-					entityManagerTelefone.remover(telefone);
-				}
-			}
-			for (Telefone telefone : o.getTelefone()) {
-				telefone.setIdPessoa(o.getCodigo());
-				entityManagerTelefone.alterar(telefone);
-				getConnection().setAutoCommit(false);
-			}
-		}
-	}
-
-	private List<Telefone> getTelefonesFromColaborador(Long id) throws SQLException {
-		EntityManager<Telefone> emTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-		OrmFormat orm = new OrmFormat(new Telefone(id));
-		IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm.formatNotNull(), "*");
-		return emTelefone.getSqlExecutor().executarQuery(query);
-	}
-
 	@Override
 	protected void afterUpdate(Colaborador o) throws Exception {
-		updateRelationshipTelefone(o);
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
 	}
 
 	@Override
 	protected void aferInsert(Colaborador o) throws Exception {
-		updateRelationshipTelefone(o);
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
 	}
 	
 	@Override
 	public List<Colaborador> listar() {
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
 		List<Colaborador> lista = super.listar();
 		if (lista != null) {
 			for (Colaborador colaborador : lista) {
 				try {
-					colaborador.setTelefone(getTelefonesFromColaborador(colaborador.getCodigo()));
+					colaborador.setTelefone(daoTelefone.getTelefonesRelationshipPessoa(colaborador.getCodigo()));
 				} catch (Exception ex) {
 				}
 			}
@@ -97,8 +81,10 @@ public class DaoColaborador extends DaoCrud<Colaborador> {
 	
 	@Override
 	public void afterLoad(Colaborador o) throws Exception {
-		List<Telefone> telefones = getTelefonesFromColaborador(o.getCodigo());
-		o.setTelefone(telefones);		
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		List<Telefone> telefones = daoTelefone.getTelefonesRelationshipPessoa(o.getCodigo());
+		o.setTelefone(telefones);
 	}
 	
 	@Override

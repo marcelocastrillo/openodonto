@@ -1,12 +1,13 @@
 package br.ueg.openodonto.dominio;
 
 import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Table(name = "colaboradores_produtos")
-public class ColaboradorProduto {
+public class ColaboradorProduto implements Entity{
 
 	@Column(name="id")
 	@Id(autoIncrement = IdIncrementType.IDENTITY)

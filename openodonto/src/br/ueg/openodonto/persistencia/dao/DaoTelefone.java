@@ -6,8 +6,10 @@ import java.util.List;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
+import br.ueg.openodonto.persistencia.orm.Dao;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
+@Dao(classe=Telefone.class)
 public class DaoTelefone extends DaoCrud<Telefone> {
 
 	private static final long serialVersionUID = -8028356632411640718L;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.Enumerator;
 import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Relationship;
@@ -13,7 +14,7 @@ import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Table(name = "produtos")
-public class Produto {
+public class Produto implements Entity{
 
 	@Column(name = "id_produto")
 	@Id(autoIncrement = IdIncrementType.IDENTITY)
@@ -32,6 +33,11 @@ public class Produto {
 	@Relationship
 	private List<Colaborador> colaboradores;
 
+	public Produto(Long codigo){
+		this();
+		this.codigo = codigo;
+	}
+	
 	public Produto() {
 		this.colaboradores = new ArrayList<Colaborador>();
 	}
@@ -76,6 +82,14 @@ public class Produto {
 		this.colaboradores = colaboradores;
 	}
 
+	public String getShortDescription(){
+		if(getDescricao() == null || getDescricao().isEmpty()){
+			return null;
+		}
+		String descricao = getDescricao(); 
+		return descricao.length() < 30 ? descricao : descricao.subSequence(0, 30) + "...";
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

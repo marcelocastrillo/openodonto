@@ -100,7 +100,13 @@ public class Colaborador extends Pessoa {
 	public String toString() {
 		return "Colaborador [categoria=" + categoria + ", cnpj=" + cnpj
 				+ ", cpf=" + cpf + ", dataCadastro=" + dataCadastro
-				+ ", observacao=" + observacao + ", produtos=" + produtos + "]";
+				+ ", observacao=" + observacao + ", produtos=" + produtos
+				+ ", getCidade()=" + getCidade() + ", getCodigo()="
+				+ getCodigo() + ", getEmail()=" + getEmail()
+				+ ", getEndereco()=" + getEndereco() + ", getEstado()="
+				+ getEstado() + ", getNome()=" + getNome() + ", getTelefone()="
+				+ getTelefone() + ", toString()=" + super.toString()
+				+ ", getClass()=" + getClass() + "]";
 	}
 
 	@Override

@@ -1,8 +1,10 @@
 package br.ueg.openodonto.persistencia.dao;
 
 import br.ueg.openodonto.dominio.Colaborador;
+import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Dentista;
 import br.ueg.openodonto.dominio.Paciente;
+import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.EntityManager;
@@ -35,6 +37,10 @@ public class DaoFactory {
 			return (EntityManager<T>) new DaoDentista();
 		} else if (modelo.equals(Colaborador.class)) {
 			return (EntityManager<T>) new DaoColaborador();
+		} else if (modelo.equals(ColaboradorProduto.class)) {
+			return (EntityManager<T>) new DaoColaboradorProduto();
+		} else if (modelo.equals(Produto.class)) {
+			return (EntityManager<T>) new DaoProduto();
 		} else {
 			return null;
 		}
