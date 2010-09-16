@@ -17,10 +17,10 @@ import br.ueg.openodonto.util.PBUtil;
 
 public class OrmResolver {
 
-	private Object target;
-	private Map<Class<?>, Class<?>> inheritanceMap;
-	private static Map<Class<?>, List<Field>> fieldsCache;
-	private static Map<Object, List<Class<? extends Annotation>>> annotationCache;
+	private Object                                                  target;
+	private Map<Class<?>, Class<?>>                                 inheritanceMap;
+	private static Map<Class<?>, List<Field>>                       fieldsCache;
+	private static Map<Object, List<Class<? extends Annotation>>>   annotationCache;
 
 	static {
 		fieldsCache = new HashMap<Class<?>, List<Field>>();
@@ -41,15 +41,13 @@ public class OrmResolver {
 		}
 		return cache;
 	}
-
-	public static boolean hasAnnotation(Object o,
-			Class<? extends Annotation> annotation) {
+	
+	public static boolean hasAnnotation(Object o,Class<? extends Annotation> annotation) {
 		List<Class<? extends Annotation>> cache = getAnnotations(o);
 		return cache.contains(annotation);
 	}
 
-	private static List<Class<? extends Annotation>> buildCache(
-			Annotation[] annotations) {
+	private static List<Class<? extends Annotation>> buildCache(Annotation[] annotations) {
 		List<Class<? extends Annotation>> cahce = new ArrayList<Class<? extends Annotation>>();
 		for (Annotation ann : annotations) {
 			cahce.add(ann.annotationType());
@@ -145,8 +143,7 @@ public class OrmResolver {
 		return all;
 	}
 
-	public static List<Field> getKeyFields(List<Field> fields, Class<?> type,
-			boolean deep) {
+	public static List<Field> getKeyFields(List<Field> fields, Class<?> type,boolean deep) {
 		List<Field> all = getAllFields(fields, type, deep);
 		List<Field> remove = new ArrayList<Field>();
 		for (Field field : all) {
@@ -162,9 +159,12 @@ public class OrmResolver {
 		if (fieldsCache.containsKey(type)) {
 			fields.addAll(fieldsCache.get(type));
 		} else {
+			List<Field> parc = new ArrayList<Field>();
 			for (Field field : type.getDeclaredFields()) {
-				fields.add(field);
+				parc.add(field);
 			}
+			fields.addAll(parc);
+			fieldsCache.put(type, parc);
 		}
 		Class<?> superType = type.getSuperclass();
 		if (superType != null) {

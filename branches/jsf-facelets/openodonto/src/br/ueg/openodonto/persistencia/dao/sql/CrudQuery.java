@@ -47,8 +47,7 @@ public class CrudQuery {
 		query.append(" ON ");
 		Map<String, String> joinAttributes = entry.getValue();
 		for (Map.Entry<String, String> join : joinAttributes.entrySet()) {
-			query.append(table).append(".").append(join.getKey()).append(" = ")
-					.append(entry.getKey()).append(".").append(join.getValue());
+			query.append(table).append(".").append(join.getKey()).append(" = ").append(entry.getKey()).append(".").append(join.getValue());
 		}
 		List<Object> params = new ArrayList<Object>();
 		makeWhereOfQuery(whereParams, params, query);
@@ -130,25 +129,28 @@ public class CrudQuery {
 		stb.append("SELECT ");
 		OrmTranslator translator = null;
 		if ((fields.length == 1) && (fields[0].equals("*"))) {
-			List<Field> allFields = OrmResolver.getAllFields(
-					new LinkedList<Field>(), classe, true);
+			List<Field> allFields = OrmResolver.getAllFields(new LinkedList<Field>(), classe, true);
 			translator = new OrmTranslator(allFields);
-
 		} else {
 			ResultMask mask = new MaskResolver(classe, fields);
 			translator = new OrmTranslator(mask.getResultMask());
 		}
 		Iterator<String> iterator = translator.getColumnsMap().keySet().iterator();
 		while (iterator.hasNext()) {
-			stb.append(iterator.next());
+			String column = iterator.next();
+			Class<?> type = translator.getField(column).getDeclaringClass();
+			stb.append(getTableName(type));
+			stb.append(".");stb.append(column);			
 			if (iterator.hasNext()) {
 				stb.append(",");
 			}
 		}
 		if (translator.getColumnsMap().isEmpty()) {
-			stb.append("1 as unknow");
+			stb.append("1 AS unknow");
 		}
 		stb.append(" FROM ");
+		stb.append(getTableName(classe));
+		stb.append(" ");
 		stb.append(getTableName(classe));
 		stb.append(" ");
 		if (OrmResolver.hasAnnotation(classe , Inheritance.class)) {
@@ -164,6 +166,8 @@ public class CrudQuery {
 		String typeColumnName = getTableName(classe);
 		String superTypeColumnName = getTableName(superType);
 		stb.append("LEFT JOIN ");
+		stb.append(superTypeColumnName);
+		stb.append(" ");
 		stb.append(superTypeColumnName);
 		stb.append(" ");
 		for (ForwardKey fk : type.getAnnotation(Inheritance.class).joinFields()) {

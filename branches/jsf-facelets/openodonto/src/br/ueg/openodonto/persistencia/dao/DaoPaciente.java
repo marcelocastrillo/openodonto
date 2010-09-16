@@ -10,10 +10,13 @@ import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
+import br.ueg.openodonto.persistencia.orm.Dao;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
-@SuppressWarnings("serial")
+@Dao(classe=Paciente.class)
 public class DaoPaciente extends DaoCrud<Paciente> {
+
+	private static final long serialVersionUID = -4278752127118870714L;
 
 	static {
 		initQueryMap();
@@ -33,32 +36,6 @@ public class DaoPaciente extends DaoCrud<Paciente> {
 	public Paciente getNewEntity() {
 		return new Paciente();
 	}
-
-	/*
-	private void updateRelationshipTelefone(Paciente o) throws Exception {
-		if (o.getTelefone() != null) {
-			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-			List<Telefone> todos = getTelefonesFromPaciente(o.getCodigo());
-			for (Telefone telefone : todos) {
-				if (!o.getTelefone().contains(telefone)) {
-					entityManagerTelefone.remover(telefone);
-				}
-			}
-			for (Telefone telefone : o.getTelefone()) {
-				telefone.setIdPessoa(o.getCodigo());
-				entityManagerTelefone.alterar(telefone);
-				getConnection().setAutoCommit(false);
-			}
-		}
-	}
-
-	private List<Telefone> getTelefonesFromPaciente(Long id)throws SQLException {
-		EntityManager<Telefone> emTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-		OrmFormat orm = new OrmFormat(new Telefone(id));
-		IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm.formatNotNull(), "*");
-		return emTelefone.getSqlExecutor().executarQuery(query);
-	}
-	*/
 
 	@Override
 	protected void afterUpdate(Paciente o) throws Exception {

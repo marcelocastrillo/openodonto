@@ -6,8 +6,10 @@ import java.util.List;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
+import br.ueg.openodonto.persistencia.orm.Dao;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
+@Dao(classe=Usuario.class)
 public class DaoUsuario extends DaoCrud<Usuario> {
 
 	public DaoUsuario() {
