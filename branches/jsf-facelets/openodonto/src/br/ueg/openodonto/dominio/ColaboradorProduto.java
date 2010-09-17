@@ -2,6 +2,7 @@ package br.ueg.openodonto.dominio;
 
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
+import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
@@ -13,10 +14,10 @@ public class ColaboradorProduto implements Entity{
 	@Id(autoIncrement = IdIncrementType.IDENTITY)
 	private Long codigo;
 	
-	@Column(name="colaborador_id_pessoa")
-	private Long colaboradorIdPessoa;	
+	@Column(name="colaborador_id_pessoa",joinFields={@ForwardKey(tableField="colaborador_id_pessoa",foreginField="id_pessoa")})
+	private Long colaboradorIdPessoa;
 	
-	@Column(name="produto_id_produto")
+	@Column(name="produto_id_produto",joinFields={@ForwardKey(tableField="produto_id_produto",foreginField="id_produto")})
 	private Long produtoIdProduto;
 
 	public ColaboradorProduto() {

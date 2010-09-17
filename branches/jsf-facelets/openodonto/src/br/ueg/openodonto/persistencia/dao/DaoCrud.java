@@ -66,8 +66,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 			Savepoint save = null;
 			try {
 				getConnection().setAutoCommit(false);
-				save = getConnection().setSavepoint(
-						"Before Update Dentista - Savepoint");
+				save = getConnection().setSavepoint("Before Update Dentista - Savepoint");
 				beforeUpdate(o);
 				OrmFormat orm = new OrmFormat(o);
 				update(o, orm.formatKey());

@@ -10,10 +10,12 @@ public class OrmTranslator {
 
 	private List<Field> fields;
 	private Map<String, Field> columnsMap;
+	private Map<String, Field> namesMap;
 
 	public OrmTranslator(List<Field> fields) {
 		this.fields = fields;
 		this.columnsMap = new HashMap<String, Field>();
+		this.namesMap = new HashMap<String, Field>();
 		resolveColumns();
 	}
 
@@ -35,15 +37,21 @@ public class OrmTranslator {
 				// TODO tratar relacionamentos
 			} else {
 				String columnName = getColumn(field);
+				String fieldName = field.getName();
 				if (columnName != null) {
 					columnsMap.put(columnName, field);
 				}
+				namesMap.put(fieldName, field);
 			}
 		}
 	}
 
 	private Field findFieldByAnnotation(String column) {
 		return columnsMap.get(column);
+	}
+	
+	private Field findFieldByName(String name) {
+		return namesMap.get(name);
 	}
 
 	public String getColumn(Field field) {
@@ -71,10 +79,14 @@ public class OrmTranslator {
 		return null;
 	}
 
-	public Field getField(String column) {
-		return findFieldByAnnotation(column);
+	public Field getFieldByColumnName(String columnName) {
+		return findFieldByAnnotation(columnName);
 	}
-
+	
+	public Field getFieldByFieldName(String fieldName) {
+		return findFieldByName(fieldName);
+	}
+	
 	public List<Field> getFields() {
 		return fields;
 	}

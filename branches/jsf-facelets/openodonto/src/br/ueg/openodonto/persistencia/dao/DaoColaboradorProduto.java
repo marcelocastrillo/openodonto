@@ -1,7 +1,9 @@
 package br.ueg.openodonto.persistencia.dao;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import br.ueg.openodonto.dominio.Colaborador;
@@ -14,19 +16,38 @@ import br.ueg.openodonto.persistencia.dao.sql.Query;
 import br.ueg.openodonto.persistencia.orm.Dao;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.ueg.openodonto.persistencia.orm.OrmResolver;
+import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 
 @Dao(classe=ColaboradorProduto.class)
 public class DaoColaboradorProduto  extends DaoCrud<ColaboradorProduto> {
 
 	private static final long serialVersionUID = 4322391116355410621L;	
+	private static String JOIN_FROM_PESSOA;
+	private static String JOIN_FROM_PRODUTO;
 	
 	static {
+		resolveRelationship();
 		initQueryMap();
 	}
 
+	private static void resolveRelationship(){
+		List<Field> fields = OrmResolver.getAllFields(new LinkedList<Field>(), ColaboradorProduto.class, false);
+		OrmTranslator translator = new OrmTranslator(fields);
+		JOIN_FROM_PESSOA = " "+buildJoin(translator,"colaboradorIdPessoa",Colaborador.class);
+		JOIN_FROM_PRODUTO = " "+buildJoin(translator,"colaboradorIdPessoa",Produto.class);
+		System.out.println(JOIN_FROM_PESSOA);
+		System.out.println(JOIN_FROM_PRODUTO);
+	}
+	
+	private static String buildJoin(OrmTranslator translator,String name,Class<?> relation){
+		Field field = translator.getFieldByFieldName(name);
+		return CrudQuery.getRelationshipJoin(relation,field);
+	}
+	
 	public static void initQueryMap() {
-		DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaProdutosByIdColaborador"," LEFT JOIN colaboradores_produtos on colaboradores_produtos.produto_id_produto = produtos.id_produto WHERE colaborador_id_pessoa = ?");
-		DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaColaboradoresByIdProduto"," LEFT JOIN colaboradores_produtos on colaboradores_produtos.colaborador_id_pessoa = colaboradores.id_pessoa WHERE produto_id_produto = ?");
+		DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaProdutosByIdColaborador",JOIN_FROM_PESSOA+" WHERE colaborador_id_pessoa = ?");
+		DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaColaboradoresByIdProduto",JOIN_FROM_PRODUTO+" WHERE produto_id_produto = ?");
 	}
 	
 	public DaoColaboradorProduto() {
@@ -79,3 +100,4 @@ public class DaoColaboradorProduto  extends DaoCrud<ColaboradorProduto> {
 	}
 
 }
+
