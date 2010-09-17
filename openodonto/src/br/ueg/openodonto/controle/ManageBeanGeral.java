@@ -135,7 +135,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		return checarCamposObrigatoriosExtras() && returned;
 	}
 
-	public void acaoAlterar() {
+	public void acaoSalvar() {
 		boolean alredy = false;
 		try {
 			acaoValidarCampos();

@@ -9,7 +9,7 @@
 	<div align="center">
 		<a4j:jsFunction name="message" oncomplete="if(${mBean.view.displayPopUp}){popUp()}" />
 	    <h:panelGroup layout="block">
-			<a4j:commandButton id="botaoSalvar" action="#{mBean.acaoAlterar}" oncomplete="message()" image="#{msg.imgBotaoSalvar}" value="| #{msg.acaoSalvar} |" reRender="#{formName}"/>
+			<a4j:commandButton id="botaoSalvar" action="#{mBean.acaoSalvar}" oncomplete="message()" image="#{msg.imgBotaoSalvar}" value="| #{msg.acaoSalvar} |" reRender="#{formName}"/>
 			<rich:spacer width="16"/>
 			<a4j:commandButton id="botaoPesquisar"  image="#{msg.imgBotaoPesquisar}" onclick="Richfaces.showModalPanel('${mBean.view.properties.nameModalSearch}', {top:'32px'})" value="| #{msg.acaoPesquisar} |" reRender="${mBean.view.properties.formModalSearch}"/>
 			<rich:spacer width="16"/>

@@ -185,6 +185,9 @@ public class OrmResolver {
 		OrmTranslator translator = new OrmTranslator(fields);
 		for (String column : values.keySet()) {
 			Field field = translator.getField(column);
+			if(field == null){
+				continue;
+			}
 			if (hasAnnotation(field, Relationship.class)) {
 				// TODO tratar relacionamentos
 			} else {
@@ -198,13 +201,16 @@ public class OrmResolver {
 			if((value instanceof String) && !field.getType().equals(String.class)){
 					value = attemptSyncValueType(value,field.getType());
 			}
-			if (Enum.class.isAssignableFrom(field.getType()) && hasAnnotation(field, Enumerator.class)) {
-				value = reTypeSyncEnum(value, field, field.getAnnotation(Enumerator.class).type());
-			} else if (Number.class.isAssignableFrom(field.getType())) {
-				value = reTypeSyncNumber(value, field.getType());
-			} else if (String.class.isAssignableFrom(field.getType())) {
-				value = reTypeSyncString(value);
+			if(!alreadyTyped(value,field)){
+				if (field.getType().isEnum() && hasAnnotation(field, Enumerator.class)) {
+					value = reTypeSyncEnum(value, field, field.getAnnotation(Enumerator.class).type());
+				} else if (Number.class.isAssignableFrom(field.getType())) {
+					value = reTypeSyncNumber(value, field.getType());
+				} else if (String.class.isAssignableFrom(field.getType())) {
+					value = reTypeSyncString(value);
+				}
 			}
+
 			PBUtil.instance().setNestedProperty(target, field.getName(), value);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -215,6 +221,13 @@ public class OrmResolver {
 		}
 	}
 
+	private boolean alreadyTyped(Object value,Field field){
+		if(value == null || field == null){
+			return false;
+		}
+		return value.getClass().isAssignableFrom(field.getType());
+	}
+	
 	private String reTypeSyncString(Object value) {
 		if (value == null) {
 			return null;
@@ -245,11 +258,10 @@ public class OrmResolver {
 	}
 	
 	private Object reTypeSyncEnum(Object value, Field field, EnumValue type) {
-		if (type == null) {
+		if (type == null || value == null) {
 			return null;
 		}
-		if (((type == EnumValue.ORDINAL && value instanceof Number) || (type == EnumValue.NAME && value instanceof String))
-				&& field.getType().isEnum()) {
+		if ((type == EnumValue.ORDINAL && value instanceof Number) || (type == EnumValue.NAME && value instanceof String)) {
 			if (type == EnumValue.ORDINAL) {
 				Object[] values = field.getType().getEnumConstants();
 				Number index = (Number) value;
@@ -273,7 +285,7 @@ public class OrmResolver {
 		}
 		return null;
 	}
-
+	
 	private Object getBeanValue(Field field) {
 		if (target == null) {
 			return null;

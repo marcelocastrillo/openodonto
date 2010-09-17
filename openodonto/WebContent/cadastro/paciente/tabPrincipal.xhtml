@@ -13,7 +13,7 @@
 					<h:panelGrid columns="1">
 						<h:outputLabel value="#{msg.tabPrincipalEstado}" for="selectMenuEstado" />
 						<h:selectOneMenu immediate="true" id="selectMenuEstado" value="#{manterPaciente.paciente.estado}" converter="simpleEntityConverter" style="width : 200px">
-							<f:selectItem itemLabel="-- Selecione --" itemValue="" />
+							<f:selectItem itemLabel="#{msg.ooSelecione}" itemValue="" />
 							<t:selectItems id="itemsEstado" value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposUF'].dominio}" var="estado" itemLabel="#{estado.descricao}" itemValue="#{estado}" />
 						</h:selectOneMenu>
 					</h:panelGrid>

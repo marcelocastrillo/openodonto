@@ -33,7 +33,11 @@
 				            <h:panelGrid id="grid#{filter.name}" columns="2">
 					            <h:outputLabel id="filterLabel" value="#{filter.label} : " style="width : 80px;white-space:nowrap"/>
 				                <rich:dataGrid var="input" value="#{filter.field.inputFields}" columns="1" elements="1" columnClasses="oo-border-none" styleClass="oo-border-none">
-				                    <h:inputText value="#{input.value}" styleClass="#{input.mask.styleClass}" onkeypress="if(doEnter(event)){pesquisar();}" />
+				                    <h:inputText id="filterSearchInput" rendered="#{empty input.domain}" value="#{input.value}" styleClass="#{input.mask.styleClass}" onkeypress="if(doEnter(event)){pesquisar();}" />
+				                    <h:selectOneMenu id="filterSearchSelect" rendered="#{not empty input.domain}" value="#{input.value}" converter="simpleEntityConverter" style="width : 136px">
+				                        <f:selectItem itemLabel="#{msg.ooSelecione}" itemValue="" />
+				                        <t:selectItems id="filterSearchOption" value="#{input.domain}" var="select" itemLabel="#{select}" itemValue="#{select}" />
+				                    </h:selectOneMenu>
 				                </rich:dataGrid>
 				            </h:panelGrid>
 				        </rich:dataGrid>

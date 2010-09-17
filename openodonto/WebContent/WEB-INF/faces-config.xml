@@ -33,6 +33,11 @@
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>
  <managed-bean>
+  <managed-bean-name>manterProduto</managed-bean-name>
+  <managed-bean-class>br.ueg.openodonto.controle.ManterProduto</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
   <managed-bean-name>manterListagem</managed-bean-name>
   <managed-bean-class>br.ueg.openodonto.controle.servico.ManageListagem</managed-bean-class>
   <managed-bean-scope>application</managed-bean-scope>
@@ -70,7 +75,14 @@
    <to-view-id>/cadastro/dentista/index.xhtml</to-view-id>
    <redirect/>
   </navigation-case>
- </navigation-rule>
+ </navigation-rule> 
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manageProduto</from-outcome>
+   <to-view-id>/cadastro/produto/index.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule> 
  <navigation-rule>
   <navigation-case>
    <from-outcome>manageFornecedor</from-outcome>
