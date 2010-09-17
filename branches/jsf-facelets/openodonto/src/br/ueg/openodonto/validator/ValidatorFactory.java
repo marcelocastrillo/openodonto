@@ -2,6 +2,10 @@ package br.ueg.openodonto.validator;
 
 public class ValidatorFactory {
 
+	public static Validator newNull(){
+		return new NullValidator("");
+	}
+	
 	public static Validator newStrMaxLen(int max, boolean trimmed){
 		return new NullValidator(new EmptyValidator(new StringSizeValidator("", max,0),true));
 	}

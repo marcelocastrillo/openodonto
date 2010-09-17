@@ -194,7 +194,7 @@ public class ManterPacienteTest {
 	}
 	
 	public void create(){
-		manterPaciente.acaoAlterar();
+		manterPaciente.acaoSalvar();
 		manterPaciente.setContext(context);
 		createTimes++;
 	}
@@ -221,7 +221,7 @@ public class ManterPacienteTest {
 	}
 	
 	public void update(){
-		manterPaciente.acaoAlterar();
+		manterPaciente.acaoSalvar();
 		manterPaciente.setContext(context);
 		updateTimes++;
 	}

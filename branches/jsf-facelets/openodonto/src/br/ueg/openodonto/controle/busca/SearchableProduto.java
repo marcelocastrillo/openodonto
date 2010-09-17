@@ -7,8 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.ueg.openodonto.dominio.Colaborador;
-import br.ueg.openodonto.dominio.Paciente;
+import br.ueg.openodonto.controle.servico.ManageListagem;
+import br.ueg.openodonto.dominio.Produto;
+import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.FieldFacade;
@@ -20,34 +21,31 @@ import br.ueg.openodonto.servico.busca.Searchable;
 import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
-public class SearchableColaborador implements Searchable<Colaborador> {
+public class SearchableProduto implements Searchable<Produto>{
 
 	private static List<FieldFacade>   facade;
 	private Map<String,SearchFilter>   filtersMap;
-	private Map<String,InputMask>      masksMap;
 	private MessageDisplayer           displayer;
 	
 	private List<SearchFilter>         filtersList;
-	private List<InputMask>            masksList;
 	
 	static{
 		buildFacade();
-	}	
+	}
 	
-	public SearchableColaborador(MessageDisplayer displayer) {
+	public SearchableProduto(MessageDisplayer displayer){
 		this.displayer = displayer;
 		buildFilter();
 		filtersList = new ArrayList<SearchFilter>(filtersMap.values());
-		masksList = new ArrayList<InputMask>(masksMap.values());
 	}
-
+	
 	private static void buildFacade(){
-		OrmTranslator translator = new OrmTranslator(OrmResolver.getAllFields(new ArrayList<Field>(), Paciente.class, true));
+		OrmTranslator translator = new OrmTranslator(OrmResolver.getAllFields(new ArrayList<Field>(), Produto.class, true));
 		facade = new ArrayList<FieldFacade>();
 		facade.add(new FieldFacade("Código",translator.getColumn("codigo")));
 		facade.add(new FieldFacade("Nome",translator.getColumn("nome")));
-		facade.add(new FieldFacade("Categoria",translator.getColumn("categoria")));
-		facade.add(new FieldFacade("Descrição",translator.getColumn("descricao")));
+		facade.add(new FieldFacade("Categoria","categoriaDesc"));
+		facade.add(new FieldFacade("Descrição","shortDescription"));
 	}
 	
 	private void buildFilter(){
@@ -68,12 +66,20 @@ public class SearchableColaborador implements Searchable<Colaborador> {
 	}
 	
 	private void buildDescricaoFilter() {
-		Validator validator = ValidatorFactory.newStrRangeLen(300,5, true);
-		filtersMap.put("nomeFilter", buildBasicFilter("descricaoFilter","Descrição",validator));
+		Validator validator = ValidatorFactory.newStrRangeLen(300,3, true);
+		filtersMap.put("descricaoFilter", buildBasicFilter("descricaoFilter","Descrição",validator));
 	}
 
 	private void buildCategoriaFilter() {
-	
+		Validator validator = ValidatorFactory.newNull();
+		SearchFilterBase filter = new SearchFilterBase(null,"categoriaFilter","Categoria",displayer);
+		SearchFilterBase.Field field = filter.new Field();
+		filter.setField(field);
+		SearchFilterBase.Input<CategoriaProduto> input = filter.new Input<CategoriaProduto>();
+		input.getValidators().add(validator);
+		input.setDomain(ManageListagem.getLista(CategoriaProduto.class).getDominio());
+		field.getInputFields().add(input);
+		filtersMap.put("categoriaFilter", filter);
 	}
 
 	private void buildNameFilter() {
@@ -93,7 +99,7 @@ public class SearchableColaborador implements Searchable<Colaborador> {
 
 	@Override
 	public List<InputMask> getMasks() {
-		return masksList;
+		return null;
 	}
 
 	public Map<String, SearchFilter> getFiltersMap() {
@@ -104,28 +110,12 @@ public class SearchableColaborador implements Searchable<Colaborador> {
 		this.filtersMap = filtersMap;
 	}
 
-	public Map<String, InputMask> getMasksMap() {
-		return masksMap;
-	}
-
-	public void setMasksMap(Map<String, InputMask> masksMap) {
-		this.masksMap = masksMap;
-	}
-
 	public List<SearchFilter> getFiltersList() {
 		return filtersList;
 	}
 
 	public void setFiltersList(List<SearchFilter> filtersList) {
 		this.filtersList = filtersList;
-	}
-
-	public List<InputMask> getMasksList() {
-		return masksList;
-	}
-
-	public void setMasksList(List<InputMask> masksList) {
-		this.masksList = masksList;
 	}
 
 }

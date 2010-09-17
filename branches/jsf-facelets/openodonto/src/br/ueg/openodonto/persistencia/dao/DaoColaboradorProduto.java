@@ -12,6 +12,7 @@ import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.dao.sql.Query;
 import br.ueg.openodonto.persistencia.orm.Dao;
+import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
 @Dao(classe=ColaboradorProduto.class)
@@ -24,8 +25,6 @@ public class DaoColaboradorProduto  extends DaoCrud<ColaboradorProduto> {
 	}
 
 	public static void initQueryMap() {
-		//DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaProdutosByIdColaborador"," LEFT JOIN produtos on colaboradores_produtos.produto_id_produto = produtos.id_produto WHERE colaborador_id_pessoa = ?");
-		//DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaColaboradoresByIdProduto"," LEFT JOIN colaboradores on colaboradores_produtos.colaborador_id_pessoa = colaboradores.id_pessoa WHERE produto_id_produto = ?");
 		DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaProdutosByIdColaborador"," LEFT JOIN colaboradores_produtos on colaboradores_produtos.produto_id_produto = produtos.id_produto WHERE colaborador_id_pessoa = ?");
 		DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaColaboradoresByIdProduto"," LEFT JOIN colaboradores_produtos on colaboradores_produtos.colaborador_id_pessoa = colaboradores.id_pessoa WHERE produto_id_produto = ?");
 	}
@@ -39,24 +38,22 @@ public class DaoColaboradorProduto  extends DaoCrud<ColaboradorProduto> {
 		return new ColaboradorProduto();
 	}	
 	
-	public List<Colaborador> getColaboradores(Long idProduto) throws SQLException{
-		List<Object> params = Arrays.asList(new Object[]{idProduto});
-		String select = CrudQuery.getSelectRoot(Colaborador.class, "*");
-		String where = getStoredQuerysMap().get("DaoColaboradorProduto.BuscaColaboradoresByIdProduto");
+	public <T extends Entity> List<T> getRelacionamento(Long id,Class<T> relacao,String name) throws SQLException{
+		List<Object> params = Arrays.asList(new Object[]{id});
+		String select = CrudQuery.getSelectRoot(relacao, "*");
+		String where = getStoredQuerysMap().get(name);
 		String sql = select + where;
 		IQuery query = new Query(sql, params,CrudQuery.getTableName(getClasse()));
-		EntityManager<Colaborador> dao = DaoFactory.getInstance().getDao(Colaborador.class);
-		return dao.getSqlExecutor().executarQuery(query);
+		EntityManager<T> dao = DaoFactory.getInstance().getDao(relacao);		
+		return dao.getSqlExecutor().executarQuery(query);		
+	}
+	
+	public List<Colaborador> getColaboradores(Long idProduto) throws SQLException{
+		return getRelacionamento(idProduto,Colaborador.class,"DaoColaboradorProduto.BuscaColaboradoresByIdProduto");
 	}
 	
 	public List<Produto> getProdutos(Long idColaborador) throws SQLException{
-		List<Object> params = Arrays.asList(new Object[]{idColaborador});
-		String select = CrudQuery.getSelectRoot(Produto.class, "*");
-		String where = getStoredQuerysMap().get("DaoColaboradorProduto.BuscaProdutosByIdColaborador");
-		String sql = select + where;
-		IQuery query = new Query(sql, params,CrudQuery.getTableName(getClasse()));
-		EntityManager<Produto> dao = DaoFactory.getInstance().getDao(Produto.class);
-		return dao.getSqlExecutor().executarQuery(query);
+		return getRelacionamento(idColaborador,Produto.class,"DaoColaboradorProduto.BuscaProdutosByIdColaborador");
 	}
 	
 	@Override

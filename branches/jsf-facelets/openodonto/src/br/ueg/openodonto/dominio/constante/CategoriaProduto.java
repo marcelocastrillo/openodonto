@@ -1,6 +1,8 @@
 package br.ueg.openodonto.dominio.constante;
 
-public enum CategoriaProduto {
+import br.ueg.openodonto.persistencia.orm.Entity;
+
+public enum CategoriaProduto implements Entity{
 
 	SERVICO("Serviço"), PRODUTO("Produto");
 
@@ -18,6 +20,11 @@ public enum CategoriaProduto {
 		return ordinal();
 	}
 
+	public static CategoriaProduto parseCategoria(Object id){
+		int index = Integer.parseInt(id.toString());
+		return values()[index];
+	}
+	
 	public String toString() {
 		return this.descricao;
 	}

@@ -74,7 +74,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 
 	protected List<ValidationRequest> getCamposObrigatorios() {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
-		obrigatorios.add((new ValidationRequest("nome", ValidatorFactory.newSrtEmpty(),"formPaciente:entradaNome")));
+		obrigatorios.add((new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100, 5,true),"formPaciente:entradaNome")));
 		obrigatorios.add(new ValidationRequest("cpf",ValidatorFactory.newCpf(),"formPaciente:entradaCpf"));
 		return obrigatorios;
 	}

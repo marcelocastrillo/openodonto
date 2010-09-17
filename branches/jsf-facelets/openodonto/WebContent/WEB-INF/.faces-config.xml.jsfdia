@@ -32,10 +32,9 @@
  <PROCESS-ITEM NAME="rules::4" SHAPE="32,465,0,0" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules::4" NAME="item" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT
-    ID="manageFornecedor::#cadastro#colaborador#fornecedor#index.xhtml"
-    NAME="output" PATH="/cadastro/colaborador/fornecedor/index.xhtml"
-    TARGET="rules:#cadastro#colaborador#fornecedor#index.xhtml"
-    TITLE="manageFornecedor" model-entity="JSFProcessItemOutput"/>
+    ID="manageProduto::#cadastro#produto#index.xhtml" NAME="output"
+    PATH="/cadastro/produto/index.xhtml"
+    TARGET="rules:#cadastro#produto#index.xhtml" TITLE="manageProduto" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#cadastro#usuario#index.xhtml"
@@ -45,10 +44,10 @@
  <PROCESS-ITEM NAME="rules::5" SHAPE="32,577,0,0" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules::5" NAME="item" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT
-    ID="managePrestador::#cadastro#colaborador#prestador#index.xhtml"
-    NAME="output" PATH="/cadastro/colaborador/prestador/index.xhtml"
-    TARGET="rules:#cadastro#colaborador#prestador#index.xhtml"
-    TITLE="managePrestador" model-entity="JSFProcessItemOutput"/>
+    ID="manageFornecedor::#cadastro#colaborador#fornecedor#index.xhtml"
+    NAME="output" PATH="/cadastro/colaborador/fornecedor/index.xhtml"
+    TARGET="rules:#cadastro#colaborador#fornecedor#index.xhtml"
+    TITLE="manageFornecedor" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#cadastro#dentista#index.xhtml"
@@ -60,9 +59,10 @@
  <PROCESS-ITEM NAME="rules::6" SHAPE="32,689,0,0" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules::6" NAME="item" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT
-    ID="manageUsuario::#cadastro#usuario#index.xhtml" NAME="output"
-    PATH="/cadastro/usuario/index.xhtml"
-    TARGET="rules:#cadastro#usuario#index.xhtml" TITLE="manageUsuario" model-entity="JSFProcessItemOutput"/>
+    ID="managePrestador::#cadastro#colaborador#prestador#index.xhtml"
+    NAME="output" PATH="/cadastro/colaborador/prestador/index.xhtml"
+    TARGET="rules:#cadastro#colaborador#prestador#index.xhtml"
+    TITLE="managePrestador" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#cadastro#colaborador#fornecedor#index.xhtml"
@@ -70,4 +70,14 @@
   SHAPE="240,705,0,0" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#cadastro#colaborador#prestador#index.xhtml"
   PATH="/cadastro/colaborador/prestador/index.xhtml" SHAPE="240,817,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::7" SHAPE="32,801,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::7" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manageUsuario::#cadastro#usuario#index.xhtml" NAME="output"
+    PATH="/cadastro/usuario/index.xhtml"
+    TARGET="rules:#cadastro#usuario#index.xhtml" TITLE="manageUsuario" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cadastro#produto#index.xhtml"
+  PATH="/cadastro/produto/index.xhtml" SHAPE="240,929,0,0" model-entity="JSFProcessGroup"/>
 </PROCESS>

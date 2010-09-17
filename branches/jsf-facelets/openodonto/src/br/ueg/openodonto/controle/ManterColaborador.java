@@ -58,9 +58,9 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	}
 	
 	@Override
-	public void acaoAlterar() {
+	public void acaoSalvar() {
 		clearUnsedDocument();
-		super.acaoAlterar();
+		super.acaoSalvar();
 	}
 	
 	@Override

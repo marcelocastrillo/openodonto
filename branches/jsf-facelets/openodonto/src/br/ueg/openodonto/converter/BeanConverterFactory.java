@@ -2,8 +2,8 @@ package br.ueg.openodonto.converter;
 
 public class BeanConverterFactory {
 
-	private static BeanConverter<Integer> integerConv;
-	private static BeanConverter<Long>    longConv;
+	private static BeanConverter<Integer>       integerConv;
+	private static BeanConverter<Long>          longConv;
 	
 	static{
 		integerConv = new IntegerBeanConverter();
@@ -16,6 +16,8 @@ public class BeanConverterFactory {
 			return (BeanConverter<T>)integerConv;
 		}else if(type.equals(Long.class)){
 			return (BeanConverter<T>) longConv;
+		}else if(type.isEnum()){
+			return new EnumConverter(type);
 		}else{
 			return null;
 		}

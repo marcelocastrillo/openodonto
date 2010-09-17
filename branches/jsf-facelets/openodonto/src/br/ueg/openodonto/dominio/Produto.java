@@ -1,5 +1,6 @@
 package br.ueg.openodonto.dominio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,9 @@ import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Table(name = "produtos")
-public class Produto implements Entity{
+public class Produto implements Entity,Serializable{
+
+	private static final long serialVersionUID = -3660581324822564453L;
 
 	@Column(name = "id_produto")
 	@Id(autoIncrement = IdIncrementType.IDENTITY)
@@ -80,14 +83,6 @@ public class Produto implements Entity{
 
 	public void setColaboradores(List<Colaborador> colaboradores) {
 		this.colaboradores = colaboradores;
-	}
-
-	public String getShortDescription(){
-		if(getDescricao() == null || getDescricao().isEmpty()){
-			return null;
-		}
-		String descricao = getDescricao(); 
-		return descricao.length() < 30 ? descricao : descricao.subSequence(0, 30) + "...";
 	}
 	
 	@Override
