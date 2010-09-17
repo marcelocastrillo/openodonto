@@ -42,6 +42,10 @@ public class OrmResolver {
 		return cache;
 	}
 	
+	public static List<Field> getFieldsCache(Class<?> key){
+		return fieldsCache.get(key);
+	}
+	
 	public static boolean hasAnnotation(Object o,Class<? extends Annotation> annotation) {
 		List<Class<? extends Annotation>> cache = getAnnotations(o);
 		return cache.contains(annotation);
@@ -184,7 +188,7 @@ public class OrmResolver {
 		List<Field> fields = getAllFields(new LinkedList<Field>(), classe, true);
 		OrmTranslator translator = new OrmTranslator(fields);
 		for (String column : values.keySet()) {
-			Field field = translator.getField(column);
+			Field field = translator.getFieldByColumnName(column);
 			if(field == null){
 				continue;
 			}

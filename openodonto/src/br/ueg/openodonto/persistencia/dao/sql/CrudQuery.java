@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Inheritance;
@@ -138,7 +139,7 @@ public class CrudQuery {
 		Iterator<String> iterator = translator.getColumnsMap().keySet().iterator();
 		while (iterator.hasNext()) {
 			String column = iterator.next();
-			Class<?> type = translator.getField(column).getDeclaringClass();
+			Class<?> type = translator.getFieldByColumnName(column).getDeclaringClass();
 			stb.append(getTableName(type));
 			stb.append(".");stb.append(column);			
 			if (iterator.hasNext()) {
@@ -160,21 +161,30 @@ public class CrudQuery {
 	}
 
 	public static String getFromJoin(Class<?> classe) {
-		StringBuilder stb = new StringBuilder();
 		Class<?> type = classe;
 		Class<?> superType = type.getSuperclass();
-		String typeColumnName = getTableName(classe);
-		String superTypeColumnName = getTableName(superType);
+		ForwardKey[] fks = type.getAnnotation(Inheritance.class).joinFields();
+		return getJoin(type, superType, fks);
+	}
+
+	public static String getRelationshipJoin(Class<?> classe,Field join){
+		return getJoin(classe,join.getDeclaringClass() , join.getAnnotation(Column.class).joinFields());
+	}
+	
+	public static String getJoin(Class<?> fromType,Class<?> joinType,ForwardKey[] fks) {
+		StringBuilder stb = new StringBuilder();
+		String typeColumnName = getTableName(fromType);
+		String joinTypeColumnName = getTableName(joinType);
 		stb.append("LEFT JOIN ");
-		stb.append(superTypeColumnName);
+		stb.append(joinTypeColumnName);
 		stb.append(" ");
-		stb.append(superTypeColumnName);
+		stb.append(joinTypeColumnName);
 		stb.append(" ");
-		for (ForwardKey fk : type.getAnnotation(Inheritance.class).joinFields()) {
+		for (ForwardKey fk : fks) {
 			stb.append("ON ");
 			stb.append(typeColumnName).append(".").append(fk.tableField());
 			stb.append(" = ");
-			stb.append(superTypeColumnName).append(".").append(fk.foreginField());
+			stb.append(joinTypeColumnName).append(".").append(fk.foreginField());
 			stb.append(" ");
 		}
 		return stb.toString();
