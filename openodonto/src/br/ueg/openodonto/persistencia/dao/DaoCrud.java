@@ -1,8 +1,10 @@
 package br.ueg.openodonto.persistencia.dao;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,16 +14,20 @@ import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.ueg.openodonto.persistencia.orm.OrmResolver;
+import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 
 public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 
 	private static final long serialVersionUID = 7282308921887713737L;
 
 	private SqlExecutor<T> sqlExecutor;
+	protected List<Field> fields;
 
 	public DaoCrud(Class<T> classe) {
 		super(classe);
 		sqlExecutor = new QueryExecutor<T>(this);
+		fields = OrmResolver.getAllFields(new LinkedList<Field>(), getClasse(), true);
 	}
 
 	public boolean exists(T o) throws SQLException {
@@ -177,8 +183,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	protected void afterLoad(T o) throws Exception {
 	}
 
-	protected boolean beforeRemove(T o, Map<String, Object> params)
-			throws Exception {
+	protected boolean beforeRemove(T o, Map<String, Object> params)	throws Exception {
 		return false;
 	}
 
