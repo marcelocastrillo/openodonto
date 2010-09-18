@@ -167,6 +167,11 @@ public class CrudQuery {
 		return getJoin(type, superType, fks);
 	}
 
+	public static String buildJoin(OrmTranslator translator,String name,Class<?> relation){
+		Field field = translator.getFieldByFieldName(name);
+		return getRelationshipJoin(relation,field);
+	}
+	
 	public static String getRelationshipJoin(Class<?> classe,Field join){
 		return getJoin(classe,join.getDeclaringClass() , join.getAnnotation(Column.class).joinFields());
 	}
@@ -190,6 +195,12 @@ public class CrudQuery {
 		return stb.toString();
 	}
 
+	public static void insertJoin(Query query,String join){
+		String sql = query.getQuery(); 
+		sql = sql.replace("WHERE",join + " WHERE");
+		query.setQuery(sql);
+	}
+	
 	public static String getTableName(Class<?> clazz) {
 		String tableName;
 		if ((tableName = tableNameCache.get(clazz)) == null) {

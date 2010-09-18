@@ -1,3 +1,4 @@
+import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
@@ -39,6 +40,9 @@ public class ManterProdutoTest {
 		DaoColaboradorProduto dao = (DaoColaboradorProduto)DaoFactory.getInstance().getDao(ColaboradorProduto.class);
 		for(Produto produto : dao.getProdutos(4L)){
 			System.out.println(produto);
+		}
+		for(Colaborador colaborador : dao.getColaboradores(2L)){
+			System.out.println(colaborador);
 		}
 	
 	}

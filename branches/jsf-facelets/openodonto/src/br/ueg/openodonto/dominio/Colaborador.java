@@ -41,7 +41,12 @@ public class Colaborador extends Pessoa {
 	public Colaborador(CategoriaProduto categoria) {
 		this();
 		this.categoria = categoria;
-	}	
+	}
+	
+	public Colaborador(Long codigo) {
+		this();
+		setCodigo(codigo);
+	}		
 	
 	public Colaborador() {
 		this.produtos = new ArrayList<Produto>();

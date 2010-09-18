@@ -1,9 +1,6 @@
 package br.ueg.openodonto.persistencia.dao;
 
-import java.lang.reflect.Field;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import br.ueg.openodonto.dominio.Colaborador;
@@ -16,39 +13,12 @@ import br.ueg.openodonto.persistencia.dao.sql.Query;
 import br.ueg.openodonto.persistencia.orm.Dao;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
-import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 
 @Dao(classe=ColaboradorProduto.class)
 public class DaoColaboradorProduto  extends DaoCrud<ColaboradorProduto> {
 
-	private static final long serialVersionUID = 4322391116355410621L;	
-	private static String JOIN_FROM_PESSOA;
-	private static String JOIN_FROM_PRODUTO;
-	
-	static {
-		resolveRelationship();
-		initQueryMap();
-	}
-
-	private static void resolveRelationship(){
-		List<Field> fields = OrmResolver.getAllFields(new LinkedList<Field>(), ColaboradorProduto.class, false);
-		OrmTranslator translator = new OrmTranslator(fields);
-		JOIN_FROM_PESSOA = " "+buildJoin(translator,"colaboradorIdPessoa",Colaborador.class);
-		JOIN_FROM_PRODUTO = " "+buildJoin(translator,"colaboradorIdPessoa",Produto.class);
-		System.out.println(JOIN_FROM_PESSOA);
-		System.out.println(JOIN_FROM_PRODUTO);
-	}
-	
-	private static String buildJoin(OrmTranslator translator,String name,Class<?> relation){
-		Field field = translator.getFieldByFieldName(name);
-		return CrudQuery.getRelationshipJoin(relation,field);
-	}
-	
-	public static void initQueryMap() {
-		DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaProdutosByIdColaborador",JOIN_FROM_PESSOA+" WHERE colaborador_id_pessoa = ?");
-		DaoBase.getStoredQuerysMap().put("DaoColaboradorProduto.BuscaColaboradoresByIdProduto",JOIN_FROM_PRODUTO+" WHERE produto_id_produto = ?");
-	}
+	private static final long serialVersionUID = 4322391116355410621L;
 	
 	public DaoColaboradorProduto() {
 		super(ColaboradorProduto.class);
@@ -59,22 +29,31 @@ public class DaoColaboradorProduto  extends DaoCrud<ColaboradorProduto> {
 		return new ColaboradorProduto();
 	}	
 	
+	public String getWhere(String to){
+		if(to.equals("colaboradorIdPessoa")){
+			return " WHERE produto_id_produto = ?";
+		}else if(to.equals("produtoIdProduto")){
+			return  "WHERE colaborador_id_pessoa = ?";
+		}
+		return null;
+	}
+	
 	public <T extends Entity> List<T> getRelacionamento(Long id,Class<T> relacao,String name) throws SQLException{
-		List<Object> params = Arrays.asList(new Object[]{id});
-		String select = CrudQuery.getSelectRoot(relacao, "*");
-		String where = getStoredQuerysMap().get(name);
-		String sql = select + where;
-		IQuery query = new Query(sql, params,CrudQuery.getTableName(getClasse()));
-		EntityManager<T> dao = DaoFactory.getInstance().getDao(relacao);		
+		String sql = CrudQuery.getSelectRoot(relacao, "*");
+		OrmTranslator translator = new OrmTranslator(fields);
+		sql += CrudQuery.buildJoin(translator,name,relacao);
+		sql += getWhere(name);
+		EntityManager<T> dao = DaoFactory.getInstance().getDao(relacao);
+		IQuery query = new Query(sql, CrudQuery.getTableName(relacao),id);
 		return dao.getSqlExecutor().executarQuery(query);		
 	}
 	
 	public List<Colaborador> getColaboradores(Long idProduto) throws SQLException{
-		return getRelacionamento(idProduto,Colaborador.class,"DaoColaboradorProduto.BuscaColaboradoresByIdProduto");
-	}
+		return getRelacionamento(idProduto,Colaborador.class,"colaboradorIdPessoa");
+	}	
 	
 	public List<Produto> getProdutos(Long idColaborador) throws SQLException{
-		return getRelacionamento(idColaborador,Produto.class,"DaoColaboradorProduto.BuscaProdutosByIdColaborador");
+		return getRelacionamento(idColaborador,Produto.class,"produtoIdProduto");
 	}
 	
 	@Override
