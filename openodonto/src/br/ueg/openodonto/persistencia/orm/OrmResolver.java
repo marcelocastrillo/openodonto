@@ -106,7 +106,8 @@ public class OrmResolver {
 			} else {
 				String column = translator.getColumn(field);
 				if (column != null) {
-					map.put(column, getBeanValue(field));
+					Table table = field.getDeclaringClass().getAnnotation(Table.class);
+					map.put(table.name()+"."+column, getBeanValue(field));
 				}
 			}
 		}

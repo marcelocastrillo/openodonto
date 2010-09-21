@@ -80,8 +80,7 @@ public class CrudQuery {
 		return new Query(query.toString(), params, table);
 	}
 
-	public static IQuery getUpdateQuery(Map<String, Object> object,
-			Map<String, Object> whereParams, String table) {
+	public static IQuery getUpdateQuery(Map<String, Object> object,	Map<String, Object> whereParams, String table) {
 		StringBuilder query = new StringBuilder();
 		List<Object> params = new ArrayList<Object>();
 		query.append("UPDATE ");
@@ -100,8 +99,7 @@ public class CrudQuery {
 		return new Query(query.toString(), params, table);
 	}
 
-	public static IQuery getRemoveQuery(Map<String, Object> whereParams,
-			String table) {
+	public static IQuery getRemoveQuery(Map<String, Object> whereParams,String table) {
 		StringBuilder query = new StringBuilder();
 		List<Object> params = new ArrayList<Object>();
 		query.append("DELETE FROM ");
@@ -110,7 +108,7 @@ public class CrudQuery {
 		return new Query(query.toString(), params, table);
 	}
 
-	private static void makeWhereOfQuery(Map<String, Object> whereParams,List<Object> params, StringBuilder query) {
+	public static void makeWhereOfQuery(Map<String, Object> whereParams,List<Object> params, StringBuilder query) {
 		if (whereParams != null && whereParams.size() > 0) {
 			Iterator<String> iterator = whereParams.keySet().iterator();
 			query.append(" WHERE ");
@@ -150,16 +148,27 @@ public class CrudQuery {
 			stb.append("1 AS unknow");
 		}
 		stb.append(" FROM ");
-		stb.append(getTableName(classe));
-		stb.append(" ");
-		stb.append(getTableName(classe));
-		stb.append(" ");
-		if (OrmResolver.hasAnnotation(classe , Inheritance.class)) {
-			stb.append(getFromJoin(classe));
-		}
+		stb.append(getTarget(classe));
+		stb.append(joinInheritance(classe));
 		return stb.toString();
 	}
 
+	public static String getTarget(Class<?> classe){
+		StringBuilder stb = new StringBuilder();
+		stb.append(getTableName(classe));
+		stb.append(" ");
+		stb.append(getTableName(classe));
+		stb.append(" ");
+		return stb.toString();
+	}
+	
+	public static String joinInheritance(Class<?> classe){
+		if (OrmResolver.hasAnnotation(classe , Inheritance.class)) {
+			return getFromJoin(classe);
+		}
+		return "";
+	}
+	
 	public static String getFromJoin(Class<?> classe) {
 		Class<?> type = classe;
 		Class<?> superType = type.getSuperclass();
@@ -181,10 +190,7 @@ public class CrudQuery {
 		String typeColumnName = getTableName(fromType);
 		String joinTypeColumnName = getTableName(joinType);
 		stb.append("LEFT JOIN ");
-		stb.append(joinTypeColumnName);
-		stb.append(" ");
-		stb.append(joinTypeColumnName);
-		stb.append(" ");
+		stb.append(getTarget(joinType));
 		for (ForwardKey fk : fks) {
 			stb.append("ON ");
 			stb.append(typeColumnName).append(".").append(fk.tableField());
@@ -192,15 +198,10 @@ public class CrudQuery {
 			stb.append(joinTypeColumnName).append(".").append(fk.foreginField());
 			stb.append(" ");
 		}
+		stb.append(joinInheritance(joinType));
 		return stb.toString();
 	}
 
-	public static void insertJoin(Query query,String join){
-		String sql = query.getQuery(); 
-		sql = sql.replace("WHERE",join + " WHERE");
-		query.setQuery(sql);
-	}
-	
 	public static String getTableName(Class<?> clazz) {
 		String tableName;
 		if ((tableName = tableNameCache.get(clazz)) == null) {

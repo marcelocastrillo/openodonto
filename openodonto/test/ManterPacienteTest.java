@@ -36,8 +36,8 @@ public class ManterPacienteTest {
 	static volatile int recuperarTimes;
 	static volatile int updateTimes;
 	static volatile int deleteTimes;
-	private static int genTimes = 8; // Um milhão de vezes
-	private static int users    = 2;  // Quantidade de usuários Simulados
+	private static int genTimes = 1; // Um milhão de vezes
+	private static int users    = 1;  // Quantidade de usuários Simulados
 	
 	
 	static volatile long timeCreate;
@@ -268,7 +268,7 @@ class Stress implements Runnable{
 		main.create();
 		ManterPacienteTest.timeCreate += System.currentTimeMillis() - parcial;	
 		
-		/*
+		
 		parcial = System.currentTimeMillis();
 		main.recuperar(paciente.getCodigo());
 		ManterPacienteTest.timeRecuperar += System.currentTimeMillis() - parcial;
@@ -281,7 +281,7 @@ class Stress implements Runnable{
 		parcial = System.currentTimeMillis();
 		main.delete();
 		ManterPacienteTest.timeDelete += System.currentTimeMillis() - parcial;
-		*/
+		
 		
 	}
 	

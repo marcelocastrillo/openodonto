@@ -26,8 +26,7 @@ public class QueryExecutor<T extends Entity> implements SqlExecutor<T> {
 	}
 
 	@Override
-	public List<T> executarNamedQuery(String name, Collection<Object> params,
-			Integer quant, String... fields) throws SQLException {
+	public List<T> executarNamedQuery(String name, Collection<Object> params,Integer quant, String... fields) throws SQLException {
 		String root = CrudQuery.getSelectRoot(dao.getClasse(), fields);
 		String where = DaoBase.getStoredQuerysMap().get(name);
 		String sql = root + " " + where;
