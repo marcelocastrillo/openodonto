@@ -23,8 +23,7 @@ public class OrmFormat {
 	}
 
 	public Map<String, Object> format(String... fields) {
-		ResultMask mask = new MaskResolver(ormResolver.getTarget().getClass(),
-				fields);
+		ResultMask mask = new MaskResolver(ormResolver.getTarget().getClass(), fields);
 		return ormResolver.formatBase(mask.getResultMask());
 	}
 

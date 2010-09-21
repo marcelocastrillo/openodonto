@@ -249,18 +249,18 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 			}
 			String pk = formatedRs.get("PKCOLUMN_NAME").toString();
 			String fk = formatedRs.get("FKCOLUMN_NAME").toString();
+			/*
 			if (keyParams.containsKey(pk)) {
 				whereParams.put(tableName + "." + pk, keyParams.get(pk));
 			} else {
-				throw new RuntimeException("O valor da coluna " + pk
-						+ " é obrigatório");
+				throw new RuntimeException("O valor da coluna " + pk + " é obrigatório");
 			}
+			*/
 			joinAttributteMap.put(pk, fk);
 		}
 		rs.close();
 		for (Map.Entry<String, Map<String, String>> entry : joinMap.entrySet()) {
-			IQuery query = CrudQuery.getInheritanceConstraintQuery(tableName,
-					entry, whereParams);
+			IQuery query = CrudQuery.getInheritanceConstraintQuery(tableName, entry, whereParams);
 			ResultSet rsi = executeQuery(query.getQuery(), query.getParams(), 1);
 			if (rsi.next()) {
 				constraintList.add(entry.getKey());

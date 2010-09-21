@@ -21,6 +21,7 @@ public class SearchablePaciente extends AbstractSearchable<Paciente>{
 	}
 	
 	public void buildFacade(){
+		super.buildFacade();
 		OrmTranslator translator = new OrmTranslator(OrmResolver.getAllFields(new ArrayList<Field>(), Paciente.class, true));
 		getFacade().add(new FieldFacade("Código",translator.getColumn("codigo")));
 		getFacade().add(new FieldFacade("Nome",translator.getColumn("nome")));
