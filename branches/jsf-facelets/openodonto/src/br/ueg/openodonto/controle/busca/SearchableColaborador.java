@@ -17,7 +17,7 @@ public class SearchableColaborador extends AbstractSearchable<Colaborador> {
 	private static final long serialVersionUID = -2595474489456158101L;
 
 	public SearchableColaborador(MessageDisplayer displayer) {
-		super(displayer);
+		super(displayer,Colaborador.class);
 	}
 
 	public void buildFacade(){
@@ -48,6 +48,11 @@ public class SearchableColaborador extends AbstractSearchable<Colaborador> {
 	private void buildNameFilter() {
 		Validator validator = ValidatorFactory.newStrRangeLen(150,3, true);
 		getFiltersMap().put("nomeFilter", buildBasicFilter("nomeFilter","Nome",validator));
+	}
+
+	@Override
+	public Colaborador buildExample() {
+		return null;
 	}
 
 }

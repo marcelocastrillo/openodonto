@@ -1,5 +1,6 @@
 package br.ueg.openodonto.controle;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,29 +10,23 @@ import java.util.Map;
 import br.ueg.openodonto.controle.busca.ResultFacadeBean;
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchableProduto;
-import br.ueg.openodonto.controle.servico.ExampleRequest;
-import br.ueg.openodonto.controle.servico.ManageExample;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
+import br.ueg.openodonto.dominio.Colaborador;
+import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.dao.sql.Query;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
+import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
-import br.ueg.openodonto.servico.busca.Searchable;
 import br.ueg.openodonto.util.WordFormatter;
-import br.ueg.openodonto.validator.EmptyValidator;
-import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterProduto extends ManageBeanGeral<Produto>{
 
 	private static final long serialVersionUID = -7320449089337162282L;
 	
-	private ManageExample<Produto>       manageExample;
 	private static Map<String, String>   params;
 	private Search<Produto>              search;
 	private MessageDisplayer             displayer;	
@@ -52,7 +47,6 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 	@Override
 	protected void initExtra() {
 		this.displayer = new ViewDisplayer("searchDefaultOutput");
-		this.manageExample = new ManageExample<Produto>(Produto.class);
 		this.search = new SearchBase<Produto>(new SearchableProduto(this.displayer),"Buscar Produto");
 		this.search.addSearchListener(new SearchProdutoHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
@@ -84,18 +78,7 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 	
 	public Search<Produto> getSearch() {
 		return search;
-	}
-	
-	private Produto buildProdutoExample(Searchable<Produto> searchable){
-		ExampleRequest<Produto> request  = new ExampleRequest<Produto>(searchable);		
-		request.getFilterRelation().add(request.new TypedFilter("nomeFilter", "nome"));
-		request.getFilterRelation().add(request.new TypedFilter("categoriaFilter","categoria"));
-		request.getFilterRelation().add(request.new TypedFilter("descricaoFilter","descricao"));
-		request.getInvalidPermiteds().add(NullValidator.class);
-		request.getInvalidPermiteds().add(EmptyValidator.class);
-		Produto target = manageExample.processExampleRequest(request);
-		return target;
-	}
+	}	
 	
 	@Override
 	protected List<ResultFacade> wrapResult(List<Map<String, Object>> result) {
@@ -113,34 +96,24 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 	protected class SearchProdutoHandler extends SearchBeanHandler<Produto>{
 		private String[] showColumns = {"codigo", "nome", "categoria", "descricao"};
 		@Override
-		public Produto buildExample(Searchable<Produto> searchable) {
-			return buildProdutoExample(searchable);
-		}
-		@Override
 		public String[] getShowColumns() {
 			return showColumns;
-		}		
-		@Override/*TODO Este método é temporário e será refatorado/extinto*/
-		public IQuery getQuery(Produto example){
-			OrmFormat format = new OrmFormat(example);
-			Map<String, Object> params = format.formatNotNull();
-			Object nome;
-			if((nome = params.get("nome")) != null){
-				params.put("nome", "%"+nome+"%");
-			}
-			Object descricao;
-			if((descricao = params.get("descricao")) != null){
-				params.put("descricao", "%"+descricao+"%");
-			}
-			Query query = (Query)CrudQuery.getSelectQuery(Produto.class,params, getShowColumns());
-			if(nome != null){
-			    query.setQuery(query.getQuery().replace("nome = ?", "nome like ?"));
-			}
-			if(descricao != null){
-			    query.setQuery(query.getQuery().replace("descricao = ?", "descricao like ?"));
-			}
-			return query;
 		}
+		
+		public List<Map<String,Object>> evaluteResult(Search<Produto> search) throws SQLException{
+			SearchableProduto searchable = (SearchableProduto)search.getSearchable();
+			Produto produto = searchable.buildExample();
+			Colaborador colaborador = searchable.buildExampleColaborador();
+			DaoColaboradorProduto dao = (DaoColaboradorProduto)DaoFactory.getInstance().getDao(ColaboradorProduto.class);
+			List<Map<String,Object>> result;
+			if(colaborador == null){
+				result = getDao().getSqlExecutor().executarUntypedQuery(getQuery(produto));
+			}else{
+				result = dao.getUntypeProdutos(colaborador, produto);
+			}
+			return result;			
+		}
+
 	}	
 	
 

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.servico.ManageExample;
 import br.ueg.openodonto.servico.busca.FieldFacade;
 import br.ueg.openodonto.servico.busca.InputMask;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
@@ -23,6 +24,7 @@ public abstract class AbstractSearchable<T> implements Searchable<T>,Serializabl
 	private Map<String,SearchFilter>   filtersMap;
 	private Map<String,InputMask>      masksMap;
 	private MessageDisplayer           displayer;
+	private ManageExample<T>           manageExample;
 	
 	private List<SearchFilter>         filtersList;
 	private List<InputMask>            masksList;
@@ -31,10 +33,11 @@ public abstract class AbstractSearchable<T> implements Searchable<T>,Serializabl
 		buildFacade();
 	}
 	
-	public AbstractSearchable(MessageDisplayer displayer) {
+	public AbstractSearchable(MessageDisplayer displayer,Class<T> classe) {
 		this.displayer = displayer;
 		buildMask();
 		buildFilter();
+		this.manageExample = new ManageExample<T>(classe);
 		filtersList = new ArrayList<SearchFilter>(filtersMap.values());
 		masksList = new ArrayList<InputMask>(masksMap.values());
 	}
@@ -63,6 +66,8 @@ public abstract class AbstractSearchable<T> implements Searchable<T>,Serializabl
 		return buildBasicFilter(name,label,null,null,validator);
 	}
 	
+	public abstract T buildExample();
+	
 	protected void buildFacade(){
 		facade = new ArrayList<FieldFacade>();
 	}
@@ -88,6 +93,14 @@ public abstract class AbstractSearchable<T> implements Searchable<T>,Serializabl
 	@Override
 	public List<InputMask> getMasks() {
 		return masksList;
+	}	
+	
+	public ManageExample<T> getManageExample() {
+		return manageExample;
+	}
+
+	public void setManageExample(ManageExample<T> manageExample) {
+		this.manageExample = manageExample;
 	}
 
 	public Map<String, SearchFilter> getFiltersMap() {

@@ -3,6 +3,7 @@ package br.ueg.openodonto.controle.servico;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
 import br.ueg.openodonto.servico.busca.Searchable;
 
 public class ExampleRequest<T> {
@@ -39,12 +40,14 @@ public class ExampleRequest<T> {
 	}
 
 	public class TypedFilter{
-		private String    filterName;
-		private String    beanPath;
+		private String                filterName;
+		private String                beanPath;
+		private SqlWhereOperatorType  type;
 		
-		public TypedFilter(String filterName, String beanPath) {
+		public TypedFilter(String filterName, String beanPath,SqlWhereOperatorType  type) {
 			this.filterName = filterName;
 			this.beanPath = beanPath;
+			this.type = type;
 		}
 		
 		public TypedFilter() {
@@ -61,7 +64,13 @@ public class ExampleRequest<T> {
 		}
 		public void setBeanPath(String beanPath) {
 			this.beanPath = beanPath;
-		}	
+		}
+		public SqlWhereOperatorType getType() {
+			return type;
+		}
+		public void setType(SqlWhereOperatorType type) {
+			this.type = type;
+		}		
 	}
 	
 }

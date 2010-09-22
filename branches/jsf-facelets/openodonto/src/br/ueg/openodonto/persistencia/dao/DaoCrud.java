@@ -3,18 +3,27 @@ package br.ueg.openodonto.persistencia.dao;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
+import br.ueg.openodonto.persistencia.dao.sql.Query;
 import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
+import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
+import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
+import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 
 public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 
@@ -211,4 +220,95 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	protected void afterRemove(T o) throws Exception {
 	}
 
+	/**
+	 * Faz uma select na classe recebida em 'relacao' com join para classe atual do DAO .
+	 * Para filtrar o join ( clausula 'ON') usa a declaracao de foregin key presente no field 'name'.
+	 * @param <R> O Tipo de retorno
+	 * @param relacao
+	 * @param name
+	 * @param whereParams
+	 * @return
+	 * @throws SQLException
+	 */
+	@SuppressWarnings("unchecked")
+	public <R extends Entity> void getRelacionamento(Class<R> relacao,String name,Map<String,Object> whereParams,Set lista,boolean formated) throws SQLException{
+		StringBuilder sql = new StringBuilder(CrudQuery.getSelectRoot(relacao, "*"));
+		OrmTranslator translator = new OrmTranslator(fields);
+		sql.append(CrudQuery.buildJoin(translator,name,relacao));
+		List<Object> params = new ArrayList<Object>();
+		CrudQuery.makeWhereOfQuery(whereParams, params, sql);
+		EntityManager<R> dao = DaoFactory.getInstance().getDao(relacao);
+		IQuery query = new Query(sql.toString(),params,CrudQuery.getTableName(relacao));
+		if(formated){
+			lista.addAll(dao.getSqlExecutor().executarQuery(query));
+		}else{
+			lista.addAll(dao.getSqlExecutor().executarUntypedQuery(query));
+		}	
+	}	
+	
+	/**
+	 * Inicialmente faz uma consulta filtrando pelo exemplo de <E>;
+	 * Em seguida pega os resultados da consulta anterior e tenta relacionar cada resultado com <T>.
+	 * Usa o nome do field 'fname' para recuperar a foregin key da classe atual com a classe <E>
+	 * fornecendo assim a juncao inicial para a filtragem pelo exemplo de 'relacao'.
+	 * @param <R>
+	 * @param <E>
+	 * @param example
+	 * @param relacao
+	 * @param fname
+	 * @param rname
+	 * @return
+	 * @throws SQLException
+	 */
+	@SuppressWarnings("unchecked")
+	public <R extends Entity,E extends Entity>void getRelacionamento(E example,R relacao,String fname,String rname,Set lista,boolean formated) throws SQLException{
+		OrmTranslator translator = new OrmTranslator(fields);
+		OrmTranslator exampleTranslator = new OrmTranslator(OrmResolver.getAllFields(new LinkedList<Field>(), example.getClass(), true));
+		//Recupera o nome da coluna referenciada pela FK de 'fname' e traduz para o nome do field associado.
+		ForwardKey[] fks = translator.getFieldByFieldName(fname).getAnnotation(Column.class).joinFields();
+		String[] crossFkField = new String[fks.length];
+		for(int i = 0 ; i < fks.length;i++){
+			crossFkField[i] = exampleTranslator.getFieldName(fks[i].tableField());
+		}		
+		OrmFormat format = new OrmFormat(example);
+		OrmFormat formatRelacao = new OrmFormat(relacao);
+		IQuery query = CrudQuery.getSelectQuery(example.getClass(), format.formatNotNull(), crossFkField);		
+		EntityManager<E> dao = DaoFactory.getInstance().getDao((Class<E>)example.getClass());
+		List<Map<String, Object>> results = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 1000);		
+
+		for(Map<String, Object> result : results){
+			Map<String, Object> whereParams = new HashMap<String, Object>();
+			whereParams.put(translator.getColumn(fname), result.get(exampleTranslator.getColumn(crossFkField[0])));
+			whereParams.putAll(formatRelacao.formatNotNull());
+			getRelacionamento((Class<R>)relacao.getClass(),rname,whereParams,lista,formated);
+		}
+	}
+	
+	public <R extends Entity> List<R> getRelacionamento(Class<R> relacao,String name,Map<String,Object> whereParams) throws SQLException{
+		Set<R> lista = new HashSet<R>();
+		getRelacionamento(relacao,name,whereParams,lista,true);
+		return new ArrayList<R>(lista);
+
+	}
+	
+	public <R extends Entity,E extends Entity>List<R> getRelacionamento(E example,R relacao,String fname,String rname) throws SQLException{
+		Set<R> lista = new HashSet<R>();
+		getRelacionamento(example,relacao,fname,rname,lista,true);
+		return new ArrayList<R>(lista);
+	}
+	
+	public <R extends Entity> List<Map<String,Object>> getAtypeRelacionamento(Class<R> relacao,String name,Map<String,Object> whereParams) throws SQLException{
+		Set<Map<String,Object>> lista = new HashSet<Map<String,Object>>();
+		getRelacionamento(relacao,name,whereParams,lista,false);
+		return new ArrayList<Map<String,Object>>(lista);
+
+	}
+	
+	public <R extends Entity,E extends Entity>List<Map<String,Object>> getAtypeRelacionamento(E example,R relacao,String fname,String rname) throws SQLException{
+		Set<Map<String,Object>> lista = new HashSet<Map<String,Object>>();
+		getRelacionamento(example,relacao,fname,rname,lista,false);
+		return new ArrayList<Map<String,Object>>(lista);
+	}
+
+	
 }

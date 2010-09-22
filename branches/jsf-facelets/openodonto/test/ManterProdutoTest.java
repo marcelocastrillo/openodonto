@@ -1,7 +1,10 @@
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
-import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
 
@@ -49,11 +52,12 @@ public class ManterProdutoTest {
 		}
 		*/
 		
+		
 		Colaborador colaborador = new Colaborador();
-		colaborador.setNome("JOSE MARIA");
+		//colaborador.setNome("JOSE MARIA");
 		Produto produto = new Produto();
-		produto.setCodigo(2l);
-		for(Produto i : dao.getProdutos(colaborador,produto)){
+		Set<Map<String,Object>> results = new HashSet<Map<String,Object>>(dao.getUntypeProdutos(colaborador,produto));
+		for(Map<String,Object> i : results){
 			System.out.println(i);
 		}
 		

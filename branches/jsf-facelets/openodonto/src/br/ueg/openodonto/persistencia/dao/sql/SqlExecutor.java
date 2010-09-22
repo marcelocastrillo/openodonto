@@ -23,4 +23,8 @@ public interface SqlExecutor<T> extends Serializable {
 	public List<T> executarNamedQuery(String query, Collection<Object> params,Integer quant, String... fields) throws SQLException;
 
 	public List<Map<String, Object>> executarUntypedQuery(String query,	Collection<Object> params, Integer quant) throws SQLException;
+	
+	public List<Map<String, Object>> executarUntypedQuery(String query, Collection<Object> params)throws SQLException ;
+	
+	public List<Map<String, Object>> executarUntypedQuery(IQuery query)throws SQLException ;
 }
