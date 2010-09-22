@@ -67,6 +67,14 @@ public class QueryExecutor<T extends Entity> implements SqlExecutor<T> {
 		return pList;
 	}
 	
+	public List<Map<String, Object>> executarUntypedQuery(String query, Collection<Object> params)throws SQLException {
+		return executarUntypedQuery(query,params,null);
+	}
+	
+	public List<Map<String, Object>> executarUntypedQuery(IQuery query)throws SQLException {
+		return executarUntypedQuery(query.getQuery(),query.getParams(),null);
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected void executarQuery(String query, Collection<Object> params,Integer quant,List lista,boolean formated){
 		if (params == null) {

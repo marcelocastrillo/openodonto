@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
@@ -33,7 +34,7 @@ public class ManageExample<T> implements Serializable{
 		}
 		return null;
 	}
-	
+
 	private SearchFilter findSearchFilter(String name,List<SearchFilter> filters){
 		for(Iterator<SearchFilter> iterator = filters.iterator();iterator.hasNext();){
 			SearchFilter filter;
@@ -44,9 +45,8 @@ public class ManageExample<T> implements Serializable{
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private InputField<String> getCommonInput(SearchFilter filter){
-		return (InputField<String>) filter.getField().getInputFields().get(0);
+	private InputField<?> getCommonInput(SearchFilter filter){
+		return filter.getField().getInputFields().get(0);
 	}
 	
 	private boolean checkValidators(List<Validator> validators){
@@ -74,6 +74,14 @@ public class ManageExample<T> implements Serializable{
 		}
 	}
 	
+	private Object getValue(InputField<?> inputField ,ExampleRequest<T>.TypedFilter typedFilter){
+		Object value = inputField.getValue();
+		if(typedFilter.getType() == SqlWhereOperatorType.LIKE && (value instanceof String)){
+			return "%" + value + "%";
+		}
+		return value;
+	}
+	
   	public T processExampleRequest(ExampleRequest<T> req){
 		Map<String, Object> values = new HashMap<String, Object>();
 		OrmTranslator translator = new OrmTranslator(OrmResolver.getAllFields(new ArrayList<Field>(), classe, true));
@@ -81,12 +89,12 @@ public class ManageExample<T> implements Serializable{
 		while(iterator.hasNext()){
 			ExampleRequest<T>.TypedFilter typedFilter  = iterator.next();
 			SearchFilter filter = findSearchFilter(typedFilter.getFilterName(),req.getSearchable().getFilters());
-			InputField<String> inputField = getCommonInput(filter);
+			InputField<?> inputField = getCommonInput(filter);
 			boolean valid = checkValidators(inputField.getValidators());
 			if(valid){
 				String field = typedFilter.getBeanPath();
 				String column = translator.getColumn(field);
-				values.put(column, inputField.getValue());
+				values.put(column, getValue(inputField,typedFilter));
 			}else{
 				notifyValidation(filter,inputField,req.getInvalidPermiteds());
 			}

@@ -114,8 +114,9 @@ public class CrudQuery {
 			query.append(" WHERE ");
 			while (iterator.hasNext()) {
 				String field = iterator.next();
-				query.append(field + " = ?");
-				params.add(whereParams.get(field));
+				Object value = whereParams.get(field); 
+				query.append(field + (isLike(value) ? " LIKE ?" : " = ?"));
+				params.add(value);
 				if (iterator.hasNext()) {
 					query.append(" AND ");
 				}
@@ -123,6 +124,14 @@ public class CrudQuery {
 		}
 	}
 
+	private static boolean isLike(Object value){
+		if(value != null && (value instanceof String)){
+			String str = value.toString();
+			return str.startsWith("%") && str.endsWith("%");
+		}
+		return false;
+	}
+	
 	public static String getSelectRoot(Class<?> classe, String... fields) {
 		StringBuilder stb = new StringBuilder();
 		stb.append("SELECT ");

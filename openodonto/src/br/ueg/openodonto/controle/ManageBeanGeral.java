@@ -8,11 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.busca.AbstractSearchable;
 import br.ueg.openodonto.controle.busca.ResultFacadeBean;
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.controle.context.OpenOdontoWebContext;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
-import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
@@ -270,9 +270,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			long time = System.currentTimeMillis();
 			try {				
 				Search<E> search = (Search<E>)event.getSource();
-				E target = buildExample(search.getSearchable());
-				IQuery query = getQuery(target);				
-				List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 1000);
+				List<Map<String,Object>> result = evaluteResult(search);
 				search.getResults().clear();
 				search.getResults().addAll(wrapResult(result));
 				time = System.currentTimeMillis() - time;
@@ -282,12 +280,23 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			}
 
 		}
+		
+		public List<Map<String,Object>> evaluteResult(Search<E> search) throws SQLException{
+			E target = buildExample(search.getSearchable());
+			IQuery query = getQuery(target);				
+			List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query);
+			return result;
+		}
+		
 		public IQuery getQuery(E example){
 			OrmFormat format = new OrmFormat(example);
-			return CrudQuery.getSelectQuery(Paciente.class, format.formatNotNull(),  getShowColumns());
+			return CrudQuery.getSelectQuery(classe, format.formatNotNull(),  getShowColumns());
 		}
 		public abstract String[] getShowColumns();
-		public abstract E buildExample(Searchable<E> searchable);
+		
+		public E buildExample(Searchable<E> searchable){
+			return ((AbstractSearchable<E>)searchable).buildExample();
+		}
 	}
 	
 	public class SearchSelectedHandler extends AbstractSearchListener implements Serializable{

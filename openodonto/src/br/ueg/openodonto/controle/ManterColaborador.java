@@ -8,7 +8,6 @@ import java.util.Map;
 
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchableColaborador;
-import br.ueg.openodonto.controle.servico.ManageExample;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Colaborador;
@@ -16,7 +15,6 @@ import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.dominio.constante.TipoPessoa;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.Search;
-import br.ueg.openodonto.servico.busca.Searchable;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterColaborador extends ManageBeanGeral<Colaborador> {
@@ -24,7 +22,6 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	private static final long serialVersionUID = 7597358634869495788L;
 	
 	private ManageTelefone                manageTelefone;
-	private ManageExample<Colaborador>    manageExample;
 	private static Map<String, String>    params;
 	private Search<Colaborador>           search;
 	private MessageDisplayer              displayer;	
@@ -48,7 +45,6 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	@Override
 	protected void initExtra() {
 		this.displayer = new ViewDisplayer("searchDefaultOutput");
-		this.manageExample = new ManageExample<Colaborador>(Colaborador.class);
 		this.manageTelefone = new ManageTelefone(getColaborador().getTelefone(), this);
 		this.search = new SearchBase<Colaborador>(new SearchableColaborador(this.displayer),"Buscar Colaborador");
 		this.search.addSearchListener(new SearchColaboradorHandler());
@@ -152,10 +148,6 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	protected class SearchColaboradorHandler extends SearchBeanHandler<Colaborador> implements Serializable{
 		private static final long serialVersionUID = 5660539094298081485L;
 		private String[] showColumns = {""};
-		@Override
-		public Colaborador buildExample(Searchable<Colaborador> searchable) {
-			return null;
-		}
 		@Override
 		public String[] getShowColumns() {
 			return showColumns;

@@ -3,12 +3,16 @@ package br.ueg.openodonto.controle.busca;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import br.ueg.openodonto.controle.servico.ExampleRequest;
 import br.ueg.openodonto.dominio.Paciente;
+import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.FieldFacade;
 import br.ueg.openodonto.servico.busca.InputMask;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
@@ -17,7 +21,7 @@ public class SearchablePaciente extends AbstractSearchable<Paciente>{
 	private static final long serialVersionUID = -946348173920879375L;
 
 	public SearchablePaciente(MessageDisplayer displayer) {
-		super(displayer);
+		super(displayer,Paciente.class);
 	}
 	
 	public void buildFacade(){
@@ -63,4 +67,16 @@ public class SearchablePaciente extends AbstractSearchable<Paciente>{
 		getFiltersMap().put("idFilter",buildBasicFilter("idFilter","Código",validator));
 	}
 
+	public Paciente buildExample(){
+		ExampleRequest<Paciente> request  = new ExampleRequest<Paciente>(this);		
+		request.getFilterRelation().add(request.new TypedFilter("nomeFilter", "nome",SqlWhereOperatorType.LIKE));
+		request.getFilterRelation().add(request.new TypedFilter("idFilter","codigo",SqlWhereOperatorType.EQUAL));
+		request.getFilterRelation().add(request.new TypedFilter("emailFilter", "email",SqlWhereOperatorType.EQUAL));
+		request.getFilterRelation().add(request.new TypedFilter("cpfFilter", "cpf",SqlWhereOperatorType.EQUAL));
+		request.getInvalidPermiteds().add(NullValidator.class);
+		request.getInvalidPermiteds().add(EmptyValidator.class);
+		Paciente target = getManageExample().processExampleRequest(request);
+		return target;
+	}
+	
 }
