@@ -13,8 +13,7 @@ public class MaskResolver implements ResultMask {
 	private List<String> fields;
 
 	public MaskResolver(Class<?> classe, String... fields) {
-		this.classe = classe;
-		this.fields = Arrays.asList(fields);
+		this(classe,Arrays.asList(fields));
 	}
 
 	public MaskResolver(Class<?> classe, List<String> fields) {

@@ -1,7 +1,7 @@
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
-import br.ueg.openodonto.persistencia.EntityManager;
+import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
 
@@ -51,8 +51,10 @@ public class ManterProdutoTest {
 		
 		Colaborador colaborador = new Colaborador();
 		colaborador.setNome("JOSE MARIA");
-		for(Produto produto : dao.getProdutos(colaborador)){
-			System.out.println(produto);
+		Produto produto = new Produto();
+		produto.setCodigo(2l);
+		for(Produto i : dao.getProdutos(colaborador,produto)){
+			System.out.println(i);
 		}
 		
 		/*
