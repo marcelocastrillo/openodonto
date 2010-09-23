@@ -55,7 +55,7 @@
 							<h:outputText value="#{msg.manageContactAcaoAlterar}" />
 						</f:facet>
 						<center>
-						<a4j:commandButton value="#{msg.manageContactAcaoAlterar}" id="alterarTelefone" oncomplete="Richfaces.showModalPanel('painelAlterarTelefone')" reRender="formAlterarTelefone" image="/images/edit.jpg">
+						<a4j:commandButton value="#{msg.manageContactAcaoAlterar}" id="alterarTelefone" action="#{mBean.manageTelefone.acaoCarregarEdicao}" oncomplete="Richfaces.showModalPanel('painelAlterarTelefone')" reRender="formAlterarTelefone" image="/images/edit.jpg">
 							<f:setPropertyActionListener value="#{telefone}" target="#{mBean.manageTelefone.telefone}" />
 						</a4j:commandButton>
 						</center>						
