@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:oo="http://code.google.com/p/openodonto"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j" template="/template/template.xhtml">
 	<ui:define name="title">
@@ -11,7 +12,6 @@
 	<ui:param name="workPanel" value="#{msg.manterDentistas}" />
 	<ui:param name="mBean"     value="#{manterDentista}" />
 	<ui:param name="formName"  value="#{manterDentista.view.formName}" />
-	<ui:param name="search"    value="#{manterDentista.search}" />
 	<ui:define name="work">
 	    <a4j:keepAlive beanName="manterDentista"/>
 	    <a4j:jsFunction name="popUp" action="#{manterDentista.acaoShowed}" oncomplete="exibirMensagem('#{manterDentista.view.popUpMsg}')"/>
@@ -60,6 +60,6 @@
     </ui:define>
     <ui:define name="outOfFormContent">
         <ui:include src="/cadastro/commons/contato/edit.xhtml" />
-        <ui:include src="/cadastro/commons/busca/search.xhtml" />
+        <oo:search search="#{mBean.search}" />
     </ui:define>
 </ui:composition>

@@ -30,7 +30,6 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		params.put("formModalSearch", "formSearch");
 		params.put("nameModalSearch", "painelBusca");
 		params.put("saidaPadrao", "formPaciente:output");
-		params.put("saidaContato", "messageTelefone");
 	}
 
 	public ManterPaciente() {
