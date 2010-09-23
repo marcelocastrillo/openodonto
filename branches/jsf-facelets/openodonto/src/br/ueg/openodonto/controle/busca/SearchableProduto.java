@@ -70,7 +70,7 @@ public class SearchableProduto extends AbstractSearchable<Produto>{
 		Colaborador colaborador = null;
 		if(value != null && !value.toString().trim().isEmpty()){
 			colaborador = new Colaborador();
-		    colaborador.setNome(value.toString());
+		    colaborador.setNome("%"+value.toString()+"%");
 		}
 	    return colaborador;	
 	}

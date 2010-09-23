@@ -177,15 +177,26 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 			throw new RuntimeException("Registro Inválido");
 		}
 		IQuery query = CrudQuery.getSelectQuery(super.getClasse(), key, "*");
-		List<T> lista = getSqlExecutor().executarQuery(query.getQuery(),
-				query.getParams());
+		List<T> lista = getSqlExecutor().executarQuery(query.getQuery(),query.getParams());
 		if (lista.size() == 1) {
 			beforeLoad(o);
 			T loaded = lista.get(0);
 			OrmFormat ormLoaded = new OrmFormat(loaded);
-			orm.parse(ormLoaded.format());
+			orm.parse(getCleanFormat(ormLoaded.format()));
 			afterLoad(o);
 		}
+	}
+	
+	private Map<String,Object> getCleanFormat(Map<String, Object> formated){
+		Map<String,Object> clean = new HashMap<String, Object>();
+		for(Map.Entry<String, Object> entry : formated.entrySet()){
+			String key = entry.getKey();
+			if(entry.getKey().contains(".")){
+				key = key.substring(key.lastIndexOf(".") + 1);
+			}
+			clean.put(key, entry.getValue());
+		}
+		return clean;
 	}
 
 	protected void afterLoad(T o) throws Exception {

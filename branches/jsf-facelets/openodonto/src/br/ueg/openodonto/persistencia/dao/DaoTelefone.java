@@ -30,7 +30,7 @@ public class DaoTelefone extends DaoCrud<Telefone> {
 		if(telefones != null){
 			List<Telefone> todos = getTelefonesRelationshipPessoa(idPessoa);
 			for (Telefone telefone : todos) {
-				if (telefones.contains(telefone)) {
+				if (!telefones.contains(telefone)) {
 					remover(telefone);
 				}
 			}
