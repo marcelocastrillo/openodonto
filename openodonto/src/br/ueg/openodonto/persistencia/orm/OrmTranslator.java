@@ -48,7 +48,7 @@ public class OrmTranslator {
 				if (fullColumnName != null) {
 					int tableIndex;
 					String tableName = (tableIndex = fullColumnName.indexOf(".")) > 0 ? fullColumnName.substring(0,tableIndex) : null;
-					String columnName = (tableIndex = fullColumnName.indexOf(".")) > 0 ? fullColumnName.substring(tableIndex+1) : fullColumnName;
+					String columnName = tableIndex > 0 ? fullColumnName.substring(tableIndex+1) : fullColumnName;
 					getTableColumnMap(tableName).put(columnName, field);
 					columnsMap.put(columnName, field);
 				}
