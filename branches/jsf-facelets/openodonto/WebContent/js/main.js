@@ -25,17 +25,9 @@ function limparCPF(cpf){
 	return cpf;
 }
 
-function doEnter(event) {  
-    var keynum;           
-    if(window.event) {  
-        keynum = event.keyCode;  
-    }else if(event.which){  
-        keynum = event.which;  
-    }  
-    if( keynum==13 ){  
-   	 return true;
-    }
-    return false;  
+function doEnter(e) {  
+	var key=e.keyCode || e.which;
+	return key==13;
  }  
 
 function dataTabeMouseOut(row,color){

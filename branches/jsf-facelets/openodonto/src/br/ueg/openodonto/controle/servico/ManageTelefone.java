@@ -144,7 +144,7 @@ public class ManageTelefone implements Serializable {
 	}
 
 	private String getSaidaEditarContato(){
-		if(saidaContato == null){
+		if(saidaEditarContato == null){
 			buildSaidaEditarContato();
 		}
 		return saidaEditarContato;

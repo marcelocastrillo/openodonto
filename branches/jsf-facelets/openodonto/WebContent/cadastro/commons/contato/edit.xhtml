@@ -11,7 +11,7 @@
 		    <h:outputText value="Alterar Telefone" />
         </f:facet>	
 		<a4j:form  id="formAlterarTelefone">
-		    <a4j:jsFunction name="close" oncomplete="if(#{mBean.manageTelefone.sucessEdit}){Richfaces.hideModalPanel('painelAlterarTelefone');}" />
+		    <a4j:jsFunction name="save" action="#{mBean.manageTelefone.acaoEditar}" reRender="listaTelefones" oncomplete="if(#{mBean.manageTelefone.sucessEdit}){Richfaces.hideModalPanel('painelAlterarTelefone');}" />
 			<rich:panel>
 				<h:panelGrid columns="3">
 					<h:panelGrid columns="1">
@@ -22,10 +22,10 @@
 					</h:panelGrid>
 					<h:panelGrid columns="1">
 						<h:outputLabel value="#{msg.manageContactTelefone}" for="numeroTelefonePainel" />
-						<h:inputText id="numeroTelefonePainel" value="#{mBean.manageTelefone.editNumber}" />
+						<h:inputText id="numeroTelefonePainel" value="#{mBean.manageTelefone.editNumber}" onkeypress="if(doEnter(event)){save();return false;}" />
 					</h:panelGrid>
 					<h:panelGrid columns="2">
-						<a4j:commandButton id="btnAlterar" action="#{mBean.manageTelefone.acaoEditar}" reRender="listaTelefones" oncomplete="if(#{mBean.manageTelefone.sucessEdit}){Richfaces.hideModalPanel('painelAlterarTelefone');}" value="#{msg.manageContactAcaoSalvar}"/>
+						<a4j:commandButton onclick="save()" value="#{msg.manageContactAcaoSalvar}"/>
 						<a4j:commandButton id="btnCancelar" action="#{mBean.manageTelefone.acaoCancelarEdicao}" reRender="listaTelefones" oncomplete="Richfaces.hideModalPanel('painelAlterarTelefone')" value="#{msg.manageContactAcaoCancelar}" ajaxSingle="true"/>
 				    </h:panelGrid>
 			    </h:panelGrid>

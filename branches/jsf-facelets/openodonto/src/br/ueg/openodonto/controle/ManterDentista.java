@@ -29,7 +29,6 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 		params.put("formModalSearch", "formSearch");
 		params.put("nameModalSearch", "painelBusca");
 		params.put("saidaPadrao", "formDentista:output");
-		params.put("saidaContato", "messageTelefone");
 	}
 	
 	public ManterDentista() {

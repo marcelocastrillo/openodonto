@@ -1,19 +1,27 @@
 package br.ueg.openodonto.controle;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.busca.ResultFacadeBean;
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchableColaborador;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Colaborador;
+import br.ueg.openodonto.dominio.ColaboradorProduto;
+import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.dominio.constante.TipoPessoa;
+import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
+import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
+import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
@@ -145,12 +153,44 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 		this.manageTelefone = manageTelefone;
 	}
 
+	protected List<ResultFacade> wrapResult(List<Map<String, Object>> result) {
+		List<ResultFacade> resultWrap = new ArrayList<ResultFacade>(result.size());
+		Iterator<Map<String, Object>> iterator = result.iterator();
+		while(iterator.hasNext()){
+			Map<String,Object> value = iterator.next();
+			Object cpf = value.get("cpf");
+			Object cnpj = value.get("cnpj");
+			String documento = (cpf == null ? (cnpj != null ? cnpj : "") : cpf).toString();
+			value.put("documento", documento);
+			resultWrap.add(new ResultFacadeBean(value));
+		}
+		return resultWrap;
+	}
+	
 	protected class SearchColaboradorHandler extends SearchBeanHandler<Colaborador> implements Serializable{
 		private static final long serialVersionUID = 5660539094298081485L;
-		private String[] showColumns = {""};
+		private String[] showColumns = {"codigo","nome","email","cpf","cnpj"};
 		@Override
 		public String[] getShowColumns() {
 			return showColumns;
+		}
+		@Override
+		protected List<ResultFacade> wrapResult(List<Map<String, Object>> result) {
+			return ManterColaborador.this.wrapResult(result);
+		}
+		public List<Map<String,Object>> evaluteResult(Search<Colaborador> search) throws SQLException{
+			SearchableColaborador searchable = (SearchableColaborador)search.getSearchable();
+			searchable.setCategoria(getCategoria());
+			Colaborador colaborador = searchable.buildExample();
+			Produto produto = searchable.buildExampleProduto();
+			DaoColaboradorProduto dao = (DaoColaboradorProduto)DaoFactory.getInstance().getDao(ColaboradorProduto.class);
+			List<Map<String,Object>> result;
+			if(produto == null){
+				result = getDao().getSqlExecutor().executarUntypedQuery(getQuery(colaborador));
+			}else{
+				result = dao.getUntypeColaboradores(produto,colaborador);
+			}
+			return result;			
 		}
 		
 	}

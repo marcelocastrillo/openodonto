@@ -3,12 +3,12 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:oo="http://code.google.com/p/openodonto"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:a4j="http://richfaces.org/a4j" template="/template/template.xhtml">
 	<ui:param name="mBean"     value="#{manterColaborador}" />
 	<ui:param name="formName"  value="#{manterColaborador.view.formName}" />
-	<ui:param name="search"    value="#{manterPaciente.search}" />
 	<ui:define name="work">
 	    <a4j:loadScript src="/js/jquery.maskedinput-1.2.2.js" />
 	    <a4j:keepAlive beanName="manterColaborador"/>
@@ -69,6 +69,6 @@
     </ui:define>
     <ui:define name="outOfFormContent">
         <ui:include src="/cadastro/commons/contato/edit.xhtml" />
-
+        <oo:search search="#{mBean.search}" />
     </ui:define>
 </ui:composition>

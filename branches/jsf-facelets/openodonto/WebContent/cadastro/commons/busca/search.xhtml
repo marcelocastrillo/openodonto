@@ -29,23 +29,13 @@
 		                <h:outputText value="#{msg.buscaFiltrosHeader}:" />
 		            </f:facet>
 		            <div align="center">
-				        <rich:dataGrid value="#{search.searchable.filters}" var="filter" rowKeyVar="index" id="filters" columns="2" width="320px" >
-				            <h:panelGrid id="grid#{filter.name}" columns="2">
-					            <h:outputLabel id="filterLabel" value="#{filter.label} : " style="width : 80px;white-space:nowrap"/>
-				                <rich:dataGrid var="input" value="#{filter.field.inputFields}" columns="1" elements="1" columnClasses="oo-border-none" styleClass="oo-border-none">
-				                    <h:inputText id="filterSearchInput" rendered="#{empty input.domain}" value="#{input.value}" styleClass="#{input.mask.styleClass}" onkeypress="if(doEnter(event)){pesquisar();}" />
-				                    <h:selectOneMenu id="filterSearchSelect" rendered="#{not empty input.domain}" value="#{input.value}" converter="simpleEntityConverter" style="width : 136px">
-				                        <f:selectItem itemLabel="#{msg.ooSelecione}" itemValue="" />
-				                        <t:selectItems id="filterSearchOption" value="#{input.domain}" var="select" itemLabel="#{select}" itemValue="#{select}" />
-				                    </h:selectOneMenu>
-				                </rich:dataGrid>
-				            </h:panelGrid>
-				        </rich:dataGrid>
+		                <ui:insert name="filters">
+		                    <ui:include src="filters.xhtml" />
+		                </ui:insert>
 				        <div align="right" style="padding-top: 16px">
-							<h:panelGrid columns="3">
-								<a4j:commandButton value="#{msg.buscaAcaoBuscar}" reRender="lista,dataScroller" action="#{search.search}" />
-								<a4j:commandButton value="#{msg.buscaAcaoLimpar}" reRender="filters,lista,dataScroller" action="#{search.clean}"/>
-							</h:panelGrid>
+				            <ui:insert name="buttons">
+				                <ui:include src="buttons.xhtml" />
+				            </ui:insert>
 						</div>
 			        </div>
 				</rich:panel>
@@ -57,19 +47,9 @@
 					<f:facet name="header">
 						<h:outputText value="#{msg.buscaResultadosHeader}: " />
 					</f:facet>
-					<rich:dataTable width="590px" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" id="lista" columnsWidth="0*" value="#{search.results}" var="bean" rows="10">
-                	    <a4j:support event="onRowClick" reRender="#{formName}"  oncomplete="#{rich:component('painelBusca')}.hide()">
-				    	    <f:setPropertyActionListener value="#{bean}" target="#{search.selected}" />
-				    	</a4j:support>
-					    <rich:columns value="#{search.searchable.facade}" var="facade" >
-					        <f:facet name="header">
-					            <h:outputText value="#{facade.colunmName}" />
-					        </f:facet>
-					        <h:outputText value="#{bean.value[facade.fieldName]}" />
-					    </rich:columns>
-				    </rich:dataTable>
-				    <rich:spacer height="8" />
-				    <rich:datascroller for="lista" maxPages="20" align="center" id="dataScroller"  />
+					<ui:insert name="resultTable">
+					    <ui:include src="resultTable.xhtml" />
+					</ui:insert>
 				</rich:panel>
 		    </a4j:form>
 		</rich:panel>
