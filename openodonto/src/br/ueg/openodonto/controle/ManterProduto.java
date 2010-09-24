@@ -80,7 +80,7 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 		return search;
 	}	
 	
-	@Override
+	
 	protected List<ResultFacade> wrapResult(List<Map<String, Object>> result) {
 		List<ResultFacade> resultWrap = new ArrayList<ResultFacade>(result.size());
 		Iterator<Map<String, Object>> iterator = result.iterator();
@@ -98,6 +98,11 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 		@Override
 		public String[] getShowColumns() {
 			return showColumns;
+		}
+		
+		@Override
+		protected List<ResultFacade> wrapResult(List<Map<String, Object>> result) {
+			return ManterProduto.this.wrapResult(result);
 		}
 		
 		public List<Map<String,Object>> evaluteResult(Search<Produto> search) throws SQLException{

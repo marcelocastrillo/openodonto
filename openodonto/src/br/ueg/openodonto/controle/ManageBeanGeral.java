@@ -254,16 +254,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		}		
 	}
 	
-	protected List<ResultFacade> wrapResult(List<Map<String, Object>> result){
-		List<ResultFacade> resultWrap = new ArrayList<ResultFacade>(result.size());
-		Iterator<Map<String, Object>> iterator = result.iterator();
-		while(iterator.hasNext()){
-			resultWrap.add(new ResultFacadeBean(iterator.next()));
-		}
-		return resultWrap;
-	}
-	
-	protected abstract class SearchBeanHandler<E> extends AbstractSearchListener{
+	public abstract class SearchBeanHandler<E> extends AbstractSearchListener{
 		@Override
 		@SuppressWarnings("unchecked")
 		public void searchPerformed(SearchEvent event) {
@@ -279,6 +270,15 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 				e.printStackTrace();
 			}
 
+		}
+		
+		protected List<ResultFacade> wrapResult(List<Map<String, Object>> result){
+			List<ResultFacade> resultWrap = new ArrayList<ResultFacade>(result.size());
+			Iterator<Map<String, Object>> iterator = result.iterator();
+			while(iterator.hasNext()){
+				resultWrap.add(new ResultFacadeBean(iterator.next()));
+			}
+			return resultWrap;
 		}
 		
 		public List<Map<String,Object>> evaluteResult(Search<E> search) throws SQLException{

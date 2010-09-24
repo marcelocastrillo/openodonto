@@ -24,7 +24,7 @@
 				<h:panelGrid columns="3">
 					<a4j:commandButton action="#{mBean.manageTelefone.acaoInserirTelefone}" image="/images/add.jpg" reRender="listaTelefones,gridAddTel" value="#{msg.manageContactAcaoInserir}" />
 					<rich:spacer width="16"/>
-					<rich:message id="#{mBean.view.properties.saidaContato}" for="#{mBean.view.properties.saidaContato}" styleClass="oo-validation-messages"/>
+					<rich:message id="messageTelefone" for="messageTelefone" styleClass="oo-validation-messages"/>
 				</h:panelGrid>
 			</h:panelGrid>
 		</h:panelGrid>
