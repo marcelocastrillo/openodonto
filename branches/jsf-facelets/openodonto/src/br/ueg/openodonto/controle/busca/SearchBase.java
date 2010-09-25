@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import br.ueg.openodonto.servico.busca.InputField;
+import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.SearchFilter;
@@ -18,17 +19,29 @@ public class SearchBase<T> implements Search<T>,Serializable {
 
 	private static final long serialVersionUID = 7711768887942893883L;
 	private String                    title;
+	private String                    name;
 	private List<ResultFacade>        results;
 	private Searchable<T>             searchable;
 	private List<SearchListener>      listeners;
+	private MessageDisplayer          displayer;
 
 	
-	public SearchBase(Searchable<T> searchable,String title) {
+	public SearchBase(Searchable<T> searchable,String title,String name,MessageDisplayer displayer) {
+		this.displayer = displayer;
+		this.name = name;
 		this.title = title;
 		this.results = new ArrayList<ResultFacade>();
 		this.searchable = searchable;
+		if(searchable instanceof AbstractSearchable<?>){
+			((AbstractSearchable<T>)searchable).setDisplayer(displayer);
+		}
 		this.listeners = new ArrayList<SearchListener>();
 	}
+	
+	@Override
+	public MessageDisplayer getDisplayer() {
+		return displayer;
+	}	
 	
 	@Override
 	public List<ResultFacade> getResults() {
@@ -46,6 +59,15 @@ public class SearchBase<T> implements Search<T>,Serializable {
 
 	public void setSearchable(Searchable<T> searchable) {
 		this.searchable = searchable;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public String getTitle() {
@@ -132,6 +154,5 @@ public class SearchBase<T> implements Search<T>,Serializable {
 		}
 		getResults().clear();
 		fireCleanPerformed();
-	}	
-
+	}
 }

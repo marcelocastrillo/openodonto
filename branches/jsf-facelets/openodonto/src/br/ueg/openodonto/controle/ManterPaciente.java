@@ -7,10 +7,11 @@ import java.util.Map;
 
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchablePaciente;
+import br.ueg.openodonto.controle.busca.SearchablePessoa;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Paciente;
-import br.ueg.openodonto.servico.busca.MessageDisplayer;
+import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
@@ -21,14 +22,12 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	private ManageTelefone                manageTelefone;
 	private static Map<String, String>    params;
 	private Search<Paciente>              search;
-	private MessageDisplayer              displayer;
+	private Search<Pessoa>                personSearch;
 	
 	static{
 		params = new HashMap<String, String>();
 		params.put("managebeanName", "manterPaciente");
 		params.put("formularioSaida", "formPaciente");
-		params.put("formModalSearch", "formSearch");
-		params.put("nameModalSearch", "painelBusca");
 		params.put("saidaPadrao", "formPaciente:output");
 	}
 
@@ -37,11 +36,21 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	}
 
 	protected void initExtra() {
-		this.displayer = new ViewDisplayer("searchDefaultOutput");
 		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this);
-		this.search = new SearchBase<Paciente>(new SearchablePaciente(this.displayer),"Buscar Paciente");
+		this.search = new SearchBase<Paciente>(
+				new SearchablePaciente(),
+				"Buscar Paciente",
+				"painelBusca",
+				new ViewDisplayer("searchDefault"));
+		this.personSearch = new SearchBase<Pessoa>(
+				new SearchablePessoa(),
+				"Buscar Pessoa",
+				"painelBuscaPessoa",
+				new ViewDisplayer("searchPerson"));
 		this.search.addSearchListener(new SearchPacienteHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
+		this.personSearch.addSearchListener(new SearchPessoaHandler());
+		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
 		makeView(params);
 	}
 
@@ -71,6 +80,10 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		return search;
 	}
 
+	public Search<Pessoa> getPersonSearch() {
+		return personSearch;
+	}
+	
 	public Paciente getPaciente() {
 		return getBackBean();
 	}

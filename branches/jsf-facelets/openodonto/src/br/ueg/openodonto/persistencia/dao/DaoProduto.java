@@ -3,7 +3,6 @@ package br.ueg.openodonto.persistencia.dao;
 import java.sql.SQLException;
 import java.util.List;
 
-import br.ueg.openodonto.controle.ManterPaciente;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;

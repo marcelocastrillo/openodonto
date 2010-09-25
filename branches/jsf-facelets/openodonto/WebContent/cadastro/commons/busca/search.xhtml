@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-	<rich:modalPanel id="painelBusca" autosized="true" resizeable="false" onshow="pesquisar()">
+	<rich:modalPanel id="#{search.name}" autosized="true" resizeable="false" onshow="pesquisar()">
 	    <f:facet name="header">
 		    <h:outputText value="#{search.title}" />
         </f:facet>
         <f:facet name="controls">
             <h:panelGroup>
-				<a4j:commandButton image="#{msg.imgBotaoFechar}" reRender="#{formName}" value="#{msg.acaoFechar}" id="hidelink" styleClass="hidelink">
-					<rich:componentControl for="painelBusca" attachTo="hidelink" operation="hide" event="onclick"/>
+				<a4j:commandButton image="#{msg.imgBotaoFechar}" reRender="#{formName}" value="#{msg.acaoFechar}" id="hidelink#{search.name}" styleClass="hidelink">
+					<rich:componentControl for="#{search.name}" attachTo="hidelink#{search.name}" operation="hide" event="onclick"/>
 				</a4j:commandButton>
             </h:panelGroup>
         </f:facet>
-        <rich:messages id="searchDefaultOutput" for="searchDefaultOutput"  styleClass="oo-validation-messages" />
-        <rich:panel id="searchMasterPainel" >
-		    <a4j:form  id="formSearch">
+        <rich:messages id="#{search.displayer.output}" for="#{search.displayer.output}"  styleClass="oo-validation-messages" />
+        <rich:panel id="searchMasterPainel#{search.name}" >
+		    <a4j:form  id="formSearch#{search.name}">
 		        <a4j:jsFunction name="pesquisar" reRender="lista,dataScroller" action="#{search.search}"  />
 		        <rich:dataGrid value="#{search.searchable.masks}" rendered="#{not empty search.searchable.masks}" var="mask" columnClasses="oo-border-none" styleClass="oo-border-none">
 		            <rich:jQuery query="#{mask.query}" timing="onload" selector=".#{mask.seletor}" />		        
@@ -40,18 +40,18 @@
 			        </div>
 				</rich:panel>
 				<h:panelGrid style="text-align : left" columns="2">					    
-				    <rich:message id="buscar" for="buscar" style=" width : 280px;"/>
-				    <rich:message id="queryTime" for="queryTime" styleClass="oo-query-time-messages"/>
+				    <rich:message id="buscar#{search.name}" for="buscar#{search.name}" style=" width : 280px;"/>
+				    <rich:message id="queryTime#{search.name}" for="queryTime#{search.name}" styleClass="oo-query-time-messages"/>
 				</h:panelGrid>
 				<rich:panel>
 					<f:facet name="header">
 						<h:outputText value="#{msg.buscaResultadosHeader}: " />
 					</f:facet>
 					<ui:insert name="resultTable">
-					    <ui:include src="resultTable.xhtml" />
+					    <ui:decorate template="resultTable.xhtml"/>
 					</ui:insert>
 				</rich:panel>
 		    </a4j:form>
 		</rich:panel>
 	</rich:modalPanel>
-</ui:composition>
+</ui:component>

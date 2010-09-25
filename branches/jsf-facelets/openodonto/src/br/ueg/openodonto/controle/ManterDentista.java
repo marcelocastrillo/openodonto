@@ -10,7 +10,6 @@ import br.ueg.openodonto.controle.busca.SearchableDentista;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Dentista;
-import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
@@ -20,14 +19,11 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 	private ManageTelefone                manageTelefone;
 	private static Map<String, String>    params;
 	private Search<Dentista>              search;
-	private MessageDisplayer              displayer;
 
 	static{
 		params = new HashMap<String, String>();
 		params.put("managebeanName", "manterDentista");
 		params.put("formularioSaida", "formDentista");
-		params.put("formModalSearch", "formSearch");
-		params.put("nameModalSearch", "painelBusca");
 		params.put("saidaPadrao", "formDentista:output");
 	}
 	
@@ -37,9 +33,11 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 
 	@Override
 	protected void initExtra() {
-		this.displayer = new ViewDisplayer("searchDefaultOutput");
 		this.manageTelefone = new ManageTelefone(getDentista().getTelefone(), this);
-		this.search = new SearchBase<Dentista>(new SearchableDentista(this.displayer),"Buscar Dentista");
+		this.search = new SearchBase<Dentista>(new SearchableDentista(),
+				"Buscar Paciente",
+				"painelBusca",
+				new ViewDisplayer("searchDefault"));
 		this.search.addSearchListener(new SearchDentistaHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
 		makeView(params);

@@ -54,7 +54,10 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	protected void initExtra() {
 		this.displayer = new ViewDisplayer("searchDefaultOutput");
 		this.manageTelefone = new ManageTelefone(getColaborador().getTelefone(), this);
-		this.search = new SearchBase<Colaborador>(new SearchableColaborador(this.displayer),"Buscar Colaborador");
+		this.search = new SearchBase<Colaborador>(new SearchableColaborador(),
+				"Buscar Colaborador",
+				"painelBusca",
+				this.displayer);
 		this.search.addSearchListener(new SearchColaboradorHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
 		this.tipoPessoa = TipoPessoa.PESSOA_FISICA;

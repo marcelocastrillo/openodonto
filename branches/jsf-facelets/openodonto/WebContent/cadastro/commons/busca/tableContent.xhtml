@@ -6,7 +6,7 @@
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-  	<a4j:support event="onRowClick" reRender="#{formName}"  oncomplete="#{rich:component('painelBusca')}.hide()">
+  	<a4j:support event="onRowClick" reRender="#{formName}"  oncomplete="Richfaces.hideModalPanel('#{search.name}')">
    	    <f:setPropertyActionListener value="#{bean}" target="#{search.selected}" />
    	</a4j:support>
    	<ui:insert name="columns">

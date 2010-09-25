@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -96,7 +97,7 @@ public class OrmResolver {
 		Map<String, Object> map = formatBase(fields);
 		return map;
 	}
-
+	
 	public Map<String, Object> formatBase(List<Field> fields) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		OrmTranslator translator = new OrmTranslator(fields);
@@ -104,14 +105,40 @@ public class OrmResolver {
 			if (hasAnnotation(field, Relationship.class)) {
 				// TODO tratar relacionamentos
 			} else {
-				String column = translator.getColumn(field);
+				String column = getSimpleColumnName(field,translator);
 				if (column != null) {
-					Table table = field.getDeclaringClass().getAnnotation(Table.class);
-					map.put(table.name()+"."+column, getBeanValue(field));
+					map.put(column, getBeanValue(field));
 				}
 			}
 		}
 		return map;
+	}
+	
+	
+	@SuppressWarnings("unused")
+	private String getColumnName(Field field,OrmTranslator translator){
+		if(!getTarget().getClass().equals(field.getDeclaringClass()) && hasAnnotation(field, Id.class)){
+			Inheritance inheritance = getTarget().getClass().getAnnotation(Inheritance.class);
+			Table table = getTarget().getClass().getAnnotation(Table.class);
+			for(Iterator<ForwardKey> iterator = Arrays.asList(inheritance.joinFields()).iterator();iterator.hasNext();){
+				ForwardKey fk = iterator.next();
+				if(fk.foreginField().equals(translator.getColumn(field.getName()))){
+					return table.name() + "." + fk.tableField();
+				}
+			}
+		}else{
+			return getSimpleColumnName(field,translator);
+		}
+		return null;
+	}
+	
+	private String getSimpleColumnName(Field field,OrmTranslator translator){
+		String column = translator.getColumn(field);
+		if (column != null) {				
+			Table table = field.getDeclaringClass().getAnnotation(Table.class);
+			return table.name()+"."+column;
+		}
+		return null;
 	}
 
 	public Map<Class<?>, Map<String, Object>> formatDisjoin() {
