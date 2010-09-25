@@ -21,10 +21,7 @@
 				<center>
 					<h:panelGrid columns="1">				
 					    <h:panelGrid columns="2">
-							<h:panelGrid columns="1">
-								<h:outputLabel value="#{msg.ooCodigo}" for="codigoPaciente" />
-								<h:inputText id="codigoPaciente" readonly="true" disabled="true" value="#{manterPaciente.paciente.codigo}" style=" width : 160px;" />
-							</h:panelGrid>
+					        <oo:personSearch codigo="#{manterPaciente.paciente.codigo}" searchName="painelBuscaPessoa" />
 							<h:panelGrid columns="1">
 							    <h:panelGrid columns="3">				
 								    <h:outputLabel value="#{msg.ooNome}" for="entradaNome"  style="color : red" />
@@ -66,5 +63,6 @@
     <ui:define name="outOfFormContent">
         <ui:include src="/cadastro/commons/contato/edit.xhtml" />
         <oo:search search="#{mBean.search}" />
+        <oo:search search="#{mBean.personSearch}" />
     </ui:define>
 </ui:composition>

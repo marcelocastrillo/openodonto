@@ -6,7 +6,6 @@ import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +17,7 @@ import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.dao.sql.Query;
 import br.ueg.openodonto.persistencia.dao.sql.QueryExecutor;
 import br.ueg.openodonto.persistencia.dao.sql.SqlExecutor;
-import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
-import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
@@ -41,7 +38,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	public boolean exists(T o) throws SQLException {
 		OrmFormat orm = new OrmFormat(o);
 		Map<String, Object> keyMap = orm.formatKey();
-		
+		/*
 		if (keyMap == null || keyMap.size() == 0) {
 			return false;
 		}else{
@@ -62,12 +59,12 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 			}			
 			return true;
 		}
+		*/
 		
 		
-		/*
 		IQuery query = CrudQuery.getSelectQuery(super.getClasse(), keyMap);
 		return executeQuery(query.getQuery(), query.getParams().toArray()).next();
-		*/
+		
 		
 	}
 	
@@ -275,21 +272,20 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	public <R extends Entity,E extends Entity>void getRelacionamento(E example,R relacao,String fname,String rname,Set lista,boolean formated) throws SQLException{
 		OrmTranslator translator = new OrmTranslator(fields);
 		OrmTranslator exampleTranslator = new OrmTranslator(OrmResolver.getAllFields(new LinkedList<Field>(), example.getClass(), true));
-		//Recupera o nome da coluna referenciada pela FK de 'fname' e traduz para o nome do field associado.
-		ForwardKey[] fks = translator.getFieldByFieldName(fname).getAnnotation(Column.class).joinFields();
-		String[] crossFkField = new String[fks.length];
-		for(int i = 0 ; i < fks.length;i++){
-			crossFkField[i] = exampleTranslator.getFieldName(fks[i].tableField());
+		List<Field> keyFields = OrmResolver.getKeyFields(new LinkedList<Field>(), example.getClass(), true);
+		String[] fkFields = new String[keyFields.size()];
+		for(int i = 0 ; i < fkFields.length ; i++){
+			fkFields[i] = keyFields.get(i).getName();
 		}		
 		OrmFormat format = new OrmFormat(example);
 		OrmFormat formatRelacao = new OrmFormat(relacao);
-		IQuery query = CrudQuery.getSelectQuery(example.getClass(), format.formatNotNull(), crossFkField);		
+		IQuery query = CrudQuery.getSelectQuery(example.getClass(), format.formatNotNull(), fkFields);		
 		EntityManager<E> dao = DaoFactory.getInstance().getDao((Class<E>)example.getClass());
 		List<Map<String, Object>> results = dao.getSqlExecutor().executarUntypedQuery(query.getQuery(), query.getParams(), 1000);		
 
 		for(Map<String, Object> result : results){
 			Map<String, Object> whereParams = new HashMap<String, Object>();
-			whereParams.put(translator.getColumn(fname), result.get(exampleTranslator.getColumn(crossFkField[0])));
+			whereParams.put(translator.getColumn(fname), result.get(exampleTranslator.getColumn(fkFields[0])));
 			whereParams.putAll(formatRelacao.formatNotNull());
 			getRelacionamento((Class<R>)relacao.getClass(),rname,whereParams,lista,formated);
 		}

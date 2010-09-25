@@ -13,6 +13,7 @@ import br.ueg.openodonto.controle.busca.ResultFacadeBean;
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.controle.context.OpenOdontoWebContext;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
+import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
@@ -162,15 +163,17 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		getView().addLocalMessage(alredy ? "Atualizado" : "Cadastro", "saidaPadrao", true);
 	}
 	
-	protected void showTimeQuery(String formName,int size , long time){
+	protected void showTimeQuery(String searchName,int size , long time){
+		String buscarMessage = "formSearch"+searchName+":buscar"+searchName,
+		timeMessage = "formSearch"+searchName+":queryTime"+searchName;
 		StringBuilder fetchedMsg = new StringBuilder();
 		fetchedMsg.append(String.format("Foram encontrados %d resultados.",size));
-		getView().addResourceDynamicMenssage(fetchedMsg.toString(),formName + ":buscar");
+		getView().addResourceDynamicMenssage(fetchedMsg.toString(),buscarMessage);
 		if(time != -1){
 			StringBuilder FetchedTimeMsg = new StringBuilder();
 			double fTime = time / 1000.0;
 			FetchedTimeMsg.append(String.format("( %.3f segundos )",fTime));
-			getView().addResourceDynamicMenssage(FetchedTimeMsg.toString(), formName + ":queryTime");
+			getView().addResourceDynamicMenssage(FetchedTimeMsg.toString(), timeMessage);
 		}
 	}
 
@@ -251,7 +254,48 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		@Override
 		public void display(String message) {
 			getView().addResourceDynamicMenssage(message, output);
+		}
+		@Override
+		public String getOutput() {
+			return output;
 		}		
+	}
+	
+	protected class SearchPessoaHandler extends SearchBeanHandler<Pessoa>{
+		private String[] showColumns = {"codigo", "nome", "email"};
+		@Override
+		public String[] getShowColumns() {
+			return showColumns;
+		}
+		
+		public IQuery getQuery(Pessoa example){
+			OrmFormat format = new OrmFormat(example);
+			return CrudQuery.getSelectQuery(Pessoa.class, format.formatNotNull(),  getShowColumns());
+		}
+		
+		public List<Map<String,Object>> evaluteResult(Search<Pessoa> search) throws SQLException{
+			Pessoa target = buildExample(search.getSearchable());
+			IQuery query = getQuery(target);	
+			EntityManager<Pessoa> dao = DaoFactory.getInstance().getDao(Pessoa.class);
+			List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query);
+			return result;
+		}
+		
+	}
+	
+	protected class SearchPessoaSelectedHandler extends SearchSelectedHandler{
+
+		private static final long serialVersionUID = -991152447586425922L;
+		@Override
+		public void load() {
+			try {
+				EntityManager<Pessoa> dao = DaoFactory.getInstance().getDao(Pessoa.class);
+				dao.load((Pessoa)getBackBean());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	public abstract class SearchBeanHandler<E> extends AbstractSearchListener{
@@ -265,7 +309,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 				search.getResults().clear();
 				search.getResults().addAll(wrapResult(result));
 				time = System.currentTimeMillis() - time;
-				showTimeQuery(getView().getProperties().get("formModalSearch"), result.size(), time);
+				showTimeQuery(search.getName(), result.size(), time);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -309,11 +353,19 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 				setBackBean(entity);
 				OrmFormat format = new OrmFormat(entity);
 				format.parse(event.getSelected().getValue());
-				dao.load(getBackBean());
+				load();
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
 			carregarExtra();			
+		}
+		
+		public void load(){
+			try {
+				dao.load(getBackBean());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

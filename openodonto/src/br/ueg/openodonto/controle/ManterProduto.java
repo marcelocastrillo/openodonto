@@ -17,7 +17,6 @@ import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
-import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.util.WordFormatter;
@@ -29,14 +28,11 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 	
 	private static Map<String, String>   params;
 	private Search<Produto>              search;
-	private MessageDisplayer             displayer;	
 	
 	static{
 		params = new HashMap<String, String>();
 		params.put("managebeanName", "manterProduto");
 		params.put("formularioSaida", "formProduto");
-		params.put("formModalSearch", "formSearch");
-		params.put("nameModalSearch", "painelBusca");
 		params.put("saidaPadrao", "formProduto:output");
 	}
 	
@@ -46,8 +42,7 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 
 	@Override
 	protected void initExtra() {
-		this.displayer = new ViewDisplayer("searchDefaultOutput");
-		this.search = new SearchBase<Produto>(new SearchableProduto(this.displayer),"Buscar Produto");
+		this.search = new SearchBase<Produto>(new SearchableProduto(),"Buscar Produto","painelBusca",new ViewDisplayer("searchDefault"));
 		this.search.addSearchListener(new SearchProdutoHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
 		makeView(params);

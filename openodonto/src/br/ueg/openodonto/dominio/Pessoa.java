@@ -15,10 +15,10 @@ import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Table(name = "pessoas")
-public abstract class Pessoa implements Serializable, Entity {
+public class Pessoa implements Serializable, Entity {
 
-    private static final long serialVersionUID = -7734113332277720024L;
-
+    private static final long serialVersionUID = -7734113332277720024L;    
+    
     @Column(name = "id")
     @Id(autoIncrement = IdIncrementType.IDENTITY)
     private Long codigo;
@@ -43,7 +43,7 @@ public abstract class Pessoa implements Serializable, Entity {
     private TiposUF estado;
 
     public Pessoa() {
-	this.telefone = new ArrayList<Telefone>();
+    	this.telefone = new ArrayList<Telefone>();
     }
 
     public Long getCodigo() {

@@ -52,22 +52,28 @@ public class ManterProdutoTest {
 		}
 		*/
 		
-		
+		/*
 		Colaborador colaborador = new Colaborador();
-		//colaborador.setNome("JOSE MARIA");
+		colaborador.setNome("JOSE MARIA");
 		Produto produto = new Produto();
+		produto.setNome("Fruta");
 		Set<Map<String,Object>> results = new HashSet<Map<String,Object>>(dao.getUntypeProdutos(colaborador,produto));
 		for(Map<String,Object> i : results){
 			System.out.println(i);
 		}
+		*/
 		
-		/*
+		
 		Produto produto = new Produto();
 		produto.setNome("Fruta");
-		for(Colaborador resultado : dao.getColaboradores(produto)){
-			System.out.println(resultado);
+		Colaborador colaborador = new Colaborador();
+		colaborador.setNome("JOSE MARIA");
+		Set<Map<String,Object>> results = new HashSet<Map<String,Object>>(dao.getUntypeColaboradores(produto,colaborador));
+		for(Map<String,Object> i : results){
+			System.out.println(i);
 		}
-		*/
+		
+		
 	
 	}
 

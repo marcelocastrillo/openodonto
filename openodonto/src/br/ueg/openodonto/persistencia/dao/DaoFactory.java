@@ -4,6 +4,7 @@ import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Dentista;
 import br.ueg.openodonto.dominio.Paciente;
+import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.Usuario;
@@ -41,6 +42,8 @@ public class DaoFactory {
 			return (EntityManager<T>) new DaoColaboradorProduto();
 		} else if (modelo.equals(Produto.class)) {
 			return (EntityManager<T>) new DaoProduto();
+		} else if (modelo.equals(Pessoa.class)){
+			return (EntityManager<T>)new DaoPessoa();
 		} else {
 			return null;
 		}

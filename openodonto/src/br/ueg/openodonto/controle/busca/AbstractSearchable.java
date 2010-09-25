@@ -33,8 +33,7 @@ public abstract class AbstractSearchable<T> implements Searchable<T>,Serializabl
 		buildFacade();
 	}
 	
-	public AbstractSearchable(MessageDisplayer displayer,Class<T> classe) {
-		this.displayer = displayer;
+	public AbstractSearchable(Class<T> classe) {
 		buildMask();
 		buildFilter();
 		this.manageExample = new ManageExample<T>(classe);
@@ -134,5 +133,13 @@ public abstract class AbstractSearchable<T> implements Searchable<T>,Serializabl
 	public void setMasksList(List<InputMask> masksList) {
 		this.masksList = masksList;
 	}
+
+	public MessageDisplayer getDisplayer() {
+		return displayer;
+	}
+
+	public void setDisplayer(MessageDisplayer displayer) {
+		this.displayer = displayer;
+	}	
 
 }

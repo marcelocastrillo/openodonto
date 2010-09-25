@@ -29,6 +29,7 @@ import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Inheritance;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
+import br.ueg.openodonto.persistencia.orm.Table;
 
 /**
  * 
@@ -231,8 +232,7 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 		}
 	}
 
-	protected List<String> referencedConstraint(Class<?> type,
-			Map<String, Object> keyParams) throws SQLException {
+	protected List<String> referencedConstraint(Class<?> type, Map<String, Object> keyParams) throws SQLException {
 		List<String> constraintList = new ArrayList<String>();
 		ResultSet rs = getConnection().getMetaData().getExportedKeys(null,
 				null, CrudQuery.getTableName(type));
@@ -318,15 +318,12 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 		}
 		OrmFormat format = new OrmFormat(entity);
 		Map<Class<?>, Map<String, Object>> object = format.formatDisjoin();
-		LinkedList<Class<?>> sortedSet = new LinkedList<Class<?>>(object
-				.keySet());
+		LinkedList<Class<?>> sortedSet = new LinkedList<Class<?>>(object.keySet());
 		Iterator<Class<?>> iterator = sortedSet.iterator();
 		while (iterator.hasNext()) {
 			Class<?> type = iterator.next();
-			Map<String, Object> localParams = disjoinAttributes(object
-					.get(type).keySet(), whereParams, type);
-			IQuery query = CrudQuery.getUpdateQuery(object.get(type),
-					localParams, CrudQuery.getTableName(type));
+			Map<String, Object> localParams = disjoinAttributes(object.get(type).keySet(), whereParams, type);
+			IQuery query = CrudQuery.getUpdateQuery(object.get(type),localParams, CrudQuery.getTableName(type));
 			execute(query);
 		}
 	}
@@ -381,8 +378,7 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 		}
 	}
 
-	private Map<String, Object> disjoinAttributes(Set<String> keys,
-			Map<String, Object> attributes, Class<?> type) {
+	private Map<String, Object> disjoinAttributes(Set<String> keys,	Map<String, Object> attributes, Class<?> type) {
 		Map<String, Object> localParams = new LinkedHashMap<String, Object>();
 		Inheritance inherite = type.getAnnotation(Inheritance.class);
 		for (String key : attributes.keySet()) {
@@ -390,9 +386,13 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 				localParams.put(key, attributes.get(key));
 			}
 			if (inherite != null) {
+				Table superTable = type.getSuperclass().getAnnotation(Table.class);
+				Table typeTable = type.getAnnotation(Table.class);
 				for (ForwardKey fk : inherite.joinFields()) {
-					if (fk.foreginField().equals(key)) {
-						localParams.put(fk.tableField(), attributes.get(key));
+					String foreginField = superTable.name()+ "." + fk.foreginField();
+					String tableField = typeTable.name() + "." + fk.tableField();
+					if (foreginField.equals(key)) {
+						localParams.put(tableField, attributes.get(key));
 					}
 				}
 			}
