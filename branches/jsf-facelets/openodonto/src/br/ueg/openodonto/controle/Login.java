@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import br.ueg.openodonto.controle.context.ApplicationContext;
-import br.ueg.openodonto.controle.context.OpenOdontoWebContext;
 import br.ueg.openodonto.controle.exception.LoginInvalidoException;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.LoginManager;
@@ -14,6 +13,7 @@ import br.ueg.openodonto.util.ShaUtil;
 import br.ueg.openodonto.visao.ApplicationView;
 import br.ueg.openodonto.visao.ApplicationViewFactory;
 import br.ueg.openodonto.visao.ApplicationViewFactory.ViewHandler;
+import br.ueg.openodonto.web.WebContext;
 
 /**
  * @author Vinicius
@@ -31,7 +31,7 @@ public class Login implements Serializable{
 	public Login() {
 		this.usuario = new Usuario();
 		this.loginDao = new DaoLogin();
-		this.context = new OpenOdontoWebContext();
+		this.context = new WebContext();
 		makeView(Collections.EMPTY_MAP);
 	}
 
@@ -49,8 +49,7 @@ public class Login implements Serializable{
 					"LoginForm:messageLogin");
 		} catch (Exception e) {
 			usuario.setSenha(null);
-			view.addResourceDynamicMenssage("Usuario/senha incorreto(s).",
-					"Erro de causa desconhecida.");
+			view.addResourceDynamicMenssage("Usuario/senha incorreto(s).","Erro de causa desconhecida.");
 			e.printStackTrace();
 		}
 		return null;

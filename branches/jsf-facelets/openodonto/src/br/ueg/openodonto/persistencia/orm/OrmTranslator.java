@@ -12,6 +12,7 @@ public class OrmTranslator {
 	private Map<String, Field>              columnsMap;
 	private Map<String, Field>              namesMap;
 	private Map<String,Map<String, Field>>  tableColumnsMap;
+	@SuppressWarnings("unused")
 	private Map<String,Map<String, Field>>  classNamesMap;
 
 	public OrmTranslator(List<Field> fields) {

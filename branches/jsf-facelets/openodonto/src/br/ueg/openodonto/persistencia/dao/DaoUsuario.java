@@ -2,6 +2,7 @@ package br.ueg.openodonto.persistencia.dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
@@ -31,6 +32,16 @@ public class DaoUsuario extends DaoCrud<Usuario> {
 	@Override
 	public Usuario getNewEntity() {
 		return new Usuario();
+	}
+	
+	public void changePassWord(Usuario usuario,String newPwd) throws SQLException{
+		OrmFormat format = new OrmFormat(usuario);
+		Map<String,Object> whereParams = getCleanFormat(format.format("codigo","senha"));
+		usuario.setSenha(newPwd);
+		Map<String,Object> object = format.format("senha");
+		String tabela = CrudQuery.getTableName(getClasse());
+		IQuery query = CrudQuery.getUpdateQuery(object,whereParams ,tabela);
+		execute(query);
 	}
 
 	@Override

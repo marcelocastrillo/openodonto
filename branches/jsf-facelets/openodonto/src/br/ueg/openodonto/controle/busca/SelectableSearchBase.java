@@ -11,7 +11,7 @@ public class SelectableSearchBase<T> extends SearchBase<T> implements Selectable
 	private static final long serialVersionUID = -1781119263710365722L;
 
 	public SelectableSearchBase(Searchable<T> searchable, String title) {
-		super(searchable,title,"painelBusca",null);
+		super(searchable,title,"painelBusca");
 	}
 
 	@Override

@@ -7,6 +7,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 	<rich:panel styleClass="oo-crud-decore-panel">
+	    <a4j:jsFunction name="addFone" action="#{mBean.manageTelefone.acaoInserirTelefone}" reRender="listaTelefones,gridAddTel"  />
 		<h:panelGrid columns="4" id="gridAddTel">
 			<h:panelGrid columns="1">
 				<h:outputLabel value="#{msg.manageContactTipo}" for="tipoTelefoneContato" />
@@ -17,12 +18,12 @@
 			<rich:spacer width="16"/>
 			<h:panelGrid columns="1">
 				<h:outputLabel value="#{msg.manageContactTelefone}" for="telefoneNumero" style="color : red" />
-				<h:inputText id="telefoneNumero" value="#{mBean.manageTelefone.telefone.numero}" />
+				<h:inputText id="telefoneNumero" value="#{mBean.manageTelefone.telefone.numero}" onkeyup="if(doEnter(event)){addFone();}" />
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<rich:spacer height="8"/>
 				<h:panelGrid columns="3">
-					<a4j:commandButton action="#{mBean.manageTelefone.acaoInserirTelefone}" image="/images/add.jpg" reRender="listaTelefones,gridAddTel" value="#{msg.manageContactAcaoInserir}" />
+					<a4j:commandButton  image="/images/add.jpg" onclick="addFone()" value="#{msg.manageContactAcaoInserir}" />
 					<rich:spacer width="16"/>
 					<rich:message id="messageTelefone" for="messageTelefone" styleClass="oo-validation-messages"/>
 				</h:panelGrid>
@@ -55,7 +56,7 @@
 							<h:outputText value="#{msg.manageContactAcaoAlterar}" />
 						</f:facet>
 						<center>
-						<a4j:commandButton value="#{msg.manageContactAcaoAlterar}" id="alterarTelefone" action="#{mBean.manageTelefone.acaoCarregarEdicao}" oncomplete="Richfaces.showModalPanel('painelAlterarTelefone')" reRender="formAlterarTelefone" image="/images/edit.jpg">
+						<a4j:commandButton value="#{msg.manageContactAcaoAlterar}" id="alterarTelefone" action="#{mBean.manageTelefone.acaoCarregarEdicao}" oncomplete="Richfaces.showModalPanel('painelAlterarTelefone')" reRender="formAlterarTelefone" image="#{msg.imgBotaoMiniEdit}">
 							<f:setPropertyActionListener value="#{telefone}" target="#{mBean.manageTelefone.telefone}" />
 						</a4j:commandButton>
 						</center>						
@@ -65,7 +66,7 @@
 							<h:outputText value="#{msg.manageContactAcaoRemover}" />
 						</f:facet>
 						<center>
-							<a4j:commandButton value="#{msg.manageContactAcaoRemover}" action="#{mBean.manageTelefone.acaoRemoverTelefone}" reRender="listaTelefones"  image="/images/remove.jpg">
+							<a4j:commandButton value="#{msg.manageContactAcaoRemover}" action="#{mBean.manageTelefone.acaoRemoverTelefone}" reRender="listaTelefones"  image="#{msg.imgBotaoMiniRemove}">
 							    <f:setPropertyActionListener value="#{telefone}" target="#{mBean.manageTelefone.telefone}" />
 							</a4j:commandButton>
 						</center>

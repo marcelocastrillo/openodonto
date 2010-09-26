@@ -269,6 +269,9 @@ public class OrmResolver {
 
 	public Number reTypeSyncNumber(Object value, Class<?> type) {
 		Number num = (Number) value;
+		if(value == null){
+			return num;
+		}
 		if (type.isAssignableFrom(Integer.class)) {
 			return num.intValue();
 		} else if (type.isAssignableFrom(Long.class)) {

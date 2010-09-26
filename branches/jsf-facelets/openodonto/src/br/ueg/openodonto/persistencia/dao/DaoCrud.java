@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
@@ -38,34 +39,17 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	public boolean exists(T o) throws SQLException {
 		OrmFormat orm = new OrmFormat(o);
 		Map<String, Object> keyMap = orm.formatKey();
-		/*
-		if (keyMap == null || keyMap.size() == 0) {
-			return false;
-		}else{
-			Iterator<Map.Entry<String,Object>> iterator = keyMap.entrySet().iterator();
-			while(iterator.hasNext()){
-				Map.Entry<String,Object> key = iterator.next();
-				if(key.getValue() == null){
-					return false;
-				}else if(key.getValue() instanceof String){
-					if(key.getValue().toString().isEmpty()){
-						return false;
-					}
-				}else if(key.getValue() instanceof Number){
-					if(key.getValue().toString().equals("0")){
-						return false;
-					}
-				}
-			}			
-			return true;
-		}
-		*/
-		
-		
 		IQuery query = CrudQuery.getSelectQuery(super.getClasse(), keyMap);
-		return executeQuery(query.getQuery(), query.getParams().toArray()).next();
-		
-		
+		return executeQuery(query.getQuery(), query.getParams().toArray()).next();		
+	}
+	
+	public boolean isLastConstraintWithTelefone(List<String> referencias){
+		boolean lastWithThis = referencias.contains(CrudQuery.getTableName(getClasse())) &&
+		referencias.contains(CrudQuery.getTableName(Telefone.class))&&
+		referencias.size() == 2;
+		boolean justLast = referencias.contains(CrudQuery.getTableName(Telefone.class))&&
+		referencias.size() == 1;
+		return lastWithThis || justLast;
 	}
 	
 	protected void beforeUpdate(T o) throws Exception {
@@ -184,7 +168,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 		}
 	}
 	
-	private Map<String,Object> getCleanFormat(Map<String, Object> formated){
+	protected Map<String,Object> getCleanFormat(Map<String, Object> formated){
 		Map<String,Object> clean = new HashMap<String, Object>();
 		for(Map.Entry<String, Object> entry : formated.entrySet()){
 			String key = entry.getKey();
@@ -207,8 +191,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	public void remover(T o) throws Exception {
 		Savepoint save = null;
 		try {
-			save = getConnection().setSavepoint(
-					"Before Remove Telefone - Savepoint");
+			save = getConnection().setSavepoint("Before Remove Telefone - Savepoint");
 			OrmFormat orm = new OrmFormat(o);
 			Map<String, Object> params = orm.formatKey();
 			boolean tolerance = beforeRemove(o, params);

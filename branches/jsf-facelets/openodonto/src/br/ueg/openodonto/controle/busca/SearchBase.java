@@ -26,15 +26,15 @@ public class SearchBase<T> implements Search<T>,Serializable {
 	private MessageDisplayer          displayer;
 
 	
-	public SearchBase(Searchable<T> searchable,String title,String name,MessageDisplayer displayer) {
-		this.displayer = displayer;
+	public SearchBase(Searchable<T> searchable,String title,String name) {
+		if(searchable instanceof AbstractSearchable<?>){
+			this.displayer = ((AbstractSearchable<T>)searchable).getDisplayer();
+		}
 		this.name = name;
 		this.title = title;
 		this.results = new ArrayList<ResultFacade>();
 		this.searchable = searchable;
-		if(searchable instanceof AbstractSearchable<?>){
-			((AbstractSearchable<T>)searchable).setDisplayer(displayer);
-		}
+
 		this.listeners = new ArrayList<SearchListener>();
 	}
 	

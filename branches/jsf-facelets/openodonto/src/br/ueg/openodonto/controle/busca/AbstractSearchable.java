@@ -20,7 +20,7 @@ public abstract class AbstractSearchable<T> implements Searchable<T>,Serializabl
 
 	private static final long serialVersionUID = 8694703534298665402L;
 	
-	private static List<FieldFacade>   facade;
+	private List<FieldFacade>          facade;
 	private Map<String,SearchFilter>   filtersMap;
 	private Map<String,InputMask>      masksMap;
 	private MessageDisplayer           displayer;
@@ -29,13 +29,12 @@ public abstract class AbstractSearchable<T> implements Searchable<T>,Serializabl
 	private List<SearchFilter>         filtersList;
 	private List<InputMask>            masksList;
 	
-	{
-		buildFacade();
-	}
 	
-	public AbstractSearchable(Class<T> classe) {
+	public AbstractSearchable(Class<T> classe,MessageDisplayer displayer) {
+		this.displayer = displayer;
 		buildMask();
 		buildFilter();
+		buildFacade();
 		this.manageExample = new ManageExample<T>(classe);
 		filtersList = new ArrayList<SearchFilter>(filtersMap.values());
 		masksList = new ArrayList<InputMask>(masksMap.values());

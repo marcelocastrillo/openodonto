@@ -1,22 +1,19 @@
 package br.ueg.openodonto.persistencia.dao;
 
-import br.ueg.openodonto.dominio.Colaborador;
-import br.ueg.openodonto.dominio.ColaboradorProduto;
-import br.ueg.openodonto.dominio.Dentista;
-import br.ueg.openodonto.dominio.Paciente;
-import br.ueg.openodonto.dominio.Pessoa;
-import br.ueg.openodonto.dominio.Produto;
-import br.ueg.openodonto.dominio.Telefone;
-import br.ueg.openodonto.dominio.Usuario;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.orm.Entity;
 
 public class DaoFactory {
 
 	private static DaoFactory instance;
+	private Map<Class<? extends Entity>,Class<EntityManager<? extends Entity>>> daoMap;
 
 	private DaoFactory() {
-
+		daoMap = new HashMap<Class<? extends Entity>, Class<EntityManager<? extends Entity>>>();
 	}
 
 	public static DaoFactory getInstance() {
@@ -26,24 +23,23 @@ public class DaoFactory {
 		return instance;
 	}
 
+	public <T extends Entity>void registerDao(Class<T> modelo,Class<EntityManager<? extends Entity>> entityManage){
+		daoMap.put(modelo, entityManage);
+		System.out.println(new Date() + " [DAO] Registrado - " + modelo.getName());
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T extends Entity> EntityManager<T> getDao(Class<T> modelo) {
-		if (modelo.equals(Paciente.class)) {
-			return (EntityManager<T>) new DaoPaciente();
-		} else if (modelo.equals(Telefone.class)) {
-			return (EntityManager<T>) new DaoTelefone();
-		} else if (modelo.equals(Usuario.class)) {
-			return (EntityManager<T>) new DaoUsuario();
-		} else if (modelo.equals(Dentista.class)) {
-			return (EntityManager<T>) new DaoDentista();
-		} else if (modelo.equals(Colaborador.class)) {
-			return (EntityManager<T>) new DaoColaborador();
-		} else if (modelo.equals(ColaboradorProduto.class)) {
-			return (EntityManager<T>) new DaoColaboradorProduto();
-		} else if (modelo.equals(Produto.class)) {
-			return (EntityManager<T>) new DaoProduto();
-		} else if (modelo.equals(Pessoa.class)){
-			return (EntityManager<T>)new DaoPessoa();
+		Class<EntityManager<? extends Entity>> entityManager;
+		if((entityManager = daoMap.get(modelo)) != null){
+			try {
+				return (EntityManager<T>)entityManager.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			return null;
 		} else {
 			return null;
 		}

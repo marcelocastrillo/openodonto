@@ -14,7 +14,7 @@ import br.ueg.openodonto.persistencia.dao.DaoFactory;
 public class ManterProdutoTest {
 
 	public static void main(String[] args) throws Exception{
-		SetupConnection.setupJNDI();
+		TestSetup.setup();
 		/*
 		EntityManager<Produto> dao = DaoFactory.getInstance().getDao(Produto.class);
 		Produto produto = new Produto();

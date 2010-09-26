@@ -1,4 +1,4 @@
-package br.ueg.openodonto.visao;
+package br.ueg.openodonto.web;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.ueg.openodonto.util.MessageBundle;
 import br.ueg.openodonto.util.MessageBundle.MSG_TIPO;
+import br.ueg.openodonto.visao.ApplicationView;
 
 public class JSFView implements ApplicationView {
 

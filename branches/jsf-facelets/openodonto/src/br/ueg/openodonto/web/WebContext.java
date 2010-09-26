@@ -1,4 +1,4 @@
-package br.ueg.openodonto.controle.context;
+package br.ueg.openodonto.web;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -9,9 +9,10 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.dominio.Usuario;
 
-public class OpenOdontoWebContext implements ApplicationContext {
+public class WebContext implements ApplicationContext {
 
 	private static final long serialVersionUID = -7688766269073741104L;
 

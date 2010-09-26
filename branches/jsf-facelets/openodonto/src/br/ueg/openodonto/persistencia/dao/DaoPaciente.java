@@ -16,17 +16,8 @@ import br.ueg.openodonto.persistencia.orm.OrmFormat;
 @Dao(classe=Paciente.class)
 public class DaoPaciente extends DaoCrud<Paciente> {
 
-	private static final long serialVersionUID = -4278752127118870714L;
+    private static final long serialVersionUID = -4278752127118870714L;
 
-	static {
-		initQueryMap();
-	}
-
-	public static void initQueryMap() {
-		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByNome","WHERE nome LIKE ?");
-		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByCPF", "WHERE cpf = ?");
-		DaoBase.getStoredQuerysMap().put("Paciente.BuscaByEmail","WHERE email = ?");
-	}
 
 	public DaoPaciente() {
 		super(Paciente.class);
@@ -74,6 +65,20 @@ public class DaoPaciente extends DaoCrud<Paciente> {
 		List<Telefone> telefones = daoTelefone.getTelefonesRelationshipPessoa(o.getCodigo());
 		o.setTelefone(telefones);
 	}
+	
+	@Override
+	protected boolean beforeRemove(Paciente o, Map<String, Object> params)throws Exception {
+		List<String> referencias = referencedConstraint(Pessoa.class, params);
+		if (isLastConstraintWithTelefone(referencias)) {
+			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+			for (Telefone telefone : o.getTelefone()) {
+				entityManagerTelefone.remover(telefone);
+			}
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	@Override
 	public Paciente pesquisar(Object key) {
@@ -93,22 +98,6 @@ public class DaoPaciente extends DaoCrud<Paciente> {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	@Override
-	protected boolean beforeRemove(Paciente o, Map<String, Object> params)throws Exception {
-		List<String> referencias = referencedConstraint(Pessoa.class, params);
-		if (referencias.contains(CrudQuery.getTableName(Paciente.class)) &&
-				referencias.contains(CrudQuery.getTableName(Telefone.class))&&
-				referencias.size() == 2) {
-			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-			for (Telefone telefone : o.getTelefone()) {
-				entityManagerTelefone.remover(telefone);
-			}
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 }

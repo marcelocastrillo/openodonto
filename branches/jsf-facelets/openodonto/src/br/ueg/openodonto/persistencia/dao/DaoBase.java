@@ -234,8 +234,7 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 
 	protected List<String> referencedConstraint(Class<?> type, Map<String, Object> keyParams) throws SQLException {
 		List<String> constraintList = new ArrayList<String>();
-		ResultSet rs = getConnection().getMetaData().getExportedKeys(null,
-				null, CrudQuery.getTableName(type));
+		ResultSet rs = getConnection().getMetaData().getExportedKeys(null,	null, CrudQuery.getTableName(type));
 		Map<String, Map<String, String>> joinMap = new HashMap<String, Map<String, String>>();
 		Map<String, Object> whereParams = new HashMap<String, Object>();
 		String tableName = CrudQuery.getTableName(type);
@@ -249,13 +248,12 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 			}
 			String pk = formatedRs.get("PKCOLUMN_NAME").toString();
 			String fk = formatedRs.get("FKCOLUMN_NAME").toString();
-			/*
-			if (keyParams.containsKey(pk)) {
-				whereParams.put(tableName + "." + pk, keyParams.get(pk));
+			String full_pk = tableName + "." + pk;
+			if (keyParams.containsKey(full_pk)) {
+				whereParams.put(full_pk, keyParams.get(full_pk));
 			} else {
 				throw new RuntimeException("O valor da coluna " + pk + " é obrigatório");
 			}
-			*/
 			joinAttributteMap.put(pk, fk);
 		}
 		rs.close();

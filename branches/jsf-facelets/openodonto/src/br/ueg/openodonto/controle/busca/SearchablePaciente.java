@@ -10,6 +10,7 @@ import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.FieldFacade;
 import br.ueg.openodonto.servico.busca.InputMask;
+import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.validator.EmptyValidator;
 import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.Validator;
@@ -19,8 +20,8 @@ public class SearchablePaciente extends AbstractSearchable<Paciente>{
 
 	private static final long serialVersionUID = -946348173920879375L;
 
-	public SearchablePaciente() {
-		super(Paciente.class);
+	public SearchablePaciente(MessageDisplayer displayer) {
+		super(Paciente.class,displayer);
 	}
 	
 	public void buildFacade(){
