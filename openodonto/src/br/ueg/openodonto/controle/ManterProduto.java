@@ -42,7 +42,10 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 
 	@Override
 	protected void initExtra() {
-		this.search = new SearchBase<Produto>(new SearchableProduto(),"Buscar Produto","painelBusca",new ViewDisplayer("searchDefault"));
+		this.search = new SearchBase<Produto>(
+				new SearchableProduto(new ViewDisplayer("searchDefault")),
+				"Buscar Produto",
+				"painelBusca");
 		this.search.addSearchListener(new SearchProdutoHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
 		makeView(params);

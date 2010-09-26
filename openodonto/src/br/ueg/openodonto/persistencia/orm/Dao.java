@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Dao {
 
-	Class<?> classe();
+	Class<? extends Entity> classe();
 	String   name() default "";
 	
 }

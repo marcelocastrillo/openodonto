@@ -1,120 +1,57 @@
 package br.ueg.openodonto.controle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
+import br.ueg.openodonto.controle.busca.SearchBase;
+import br.ueg.openodonto.controle.busca.SearchablePessoa;
+import br.ueg.openodonto.controle.busca.SearchableUsuario;
+import br.ueg.openodonto.controle.servico.ManagePassword;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
+import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Usuario;
+import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterUsuario extends ManageBeanGeral<Usuario> {
 
 	private static final long serialVersionUID = 2655162625494306823L;
+	
+	private static Map<String, String>    params;
+	private Search<Usuario>               search;
+	private Search<Pessoa>                personSearch;
+	private ManagePassword                managePassword;
 
-	public ManterUsuario() {
-		super(Usuario.class);
-		Properties params = new Properties();
+	static{
+        params = new HashMap<String, String>();
 		params.put("managebeanName", "manterUsuario");
 		params.put("formularioSaida", "formUsuario");
 		params.put("saidaPadrao", "formUsuario:output");
-		makeView(null);
 	}
-
-	/*
+	
+	public ManterUsuario() {
+		super(Usuario.class);
+	}
+	
 	@Override
-	public String acaoPesquisar() {
-		if (this.getBusca().getParams().get("opcao") == null
-				|| this.getBusca().getParams().get("opcao").isEmpty()
-				|| this.getBusca().getParams().get("opcao").length() < 3) {
-			getView().addResourceDynamicMenssage(
-					"Selecine um filtro de pesquisa.",
-					"formModalUsuario:buscar");
-			return DEFAULT_RULE;
-		}
-
-		if (this.getBusca().getParams().get("param") == null
-				|| this.getBusca().getParams().get("param").isEmpty()) {
-			getView().addResourceDynamicMenssage(
-					"Informe o parametro para pesquisa.",
-					"formModalUsuario:buscar");
-			return DEFAULT_RULE;
-		}
-
-		if (this.getBusca().getParams().get("opcao").equals("nome")
-				&& this.getBusca().getParams().get("param").length() < 3) {
-			getView().addResourceDynamicMenssage(
-					"Informe pelo menos 3 caracteres.",
-					"formModalUsuario:buscar");
-			getBusca().getParams().put("opcao", null);
-			return DEFAULT_RULE;
-		}
-
-		if (this.getBusca().getParams().get("opcao").equals("user")
-				&& this.getBusca().getParams().get("param").length() < 4) {
-			getView().addResourceDynamicMenssage(
-					"A especialidade deve ter mais que 4 caracteres.",
-					"formModalUsuario:buscar");
-			getBusca().getParams().put("opcao", null);
-			return DEFAULT_RULE;
-		}
-
-		try {
-			List<Usuario> result = null;
-			Usuario usuario = new Usuario();
-			OrmFormat orm = new OrmFormat(usuario);
-			String[] fields = { "codigo", "user", "nome" };
-			if (this.getBusca().getParams().get("opcao").equals("codigo")) {
-				long cod = 0;
-				try {
-					cod = Long.parseLong(this.getBusca().getParams().get(
-							"param"));
-				} catch (Exception ex) {
-					getView().addResourceDynamicMenssage(
-							"Digite Apenas numeros para esta opcao.",
-							"formModalUsuario:buscar");
-					getBusca().getParams().put("param", null);
-					getBusca().getParams().put("opcao", null);
-					return DEFAULT_RULE;
-				}
-				usuario.setCodigo(cod);
-				IQuery query = CrudQuery.getSelectQuery(Dentista.class, orm
-						.formatNotNull(), fields);
-				result = dao.getSqlExecutor().executarQuery(query.getQuery(),
-						query.getParams(), null);
-			} else if (this.getBusca().getParams().get("opcao").equals("nome")) {
-				usuario.setNome("%"+this.getBusca().getParams().get("param")+"%");
-				result = dao.getSqlExecutor().executarNamedQuery(
-						"Usuario.findByNome", orm.formatNotNull().values(),
-						fields);
-			} else if (this.getBusca().getParams().get("opcao").equals("user")) {
-				usuario.setUser(this.getBusca().getParams().get("param"));
-				result = dao.getSqlExecutor().executarNamedQuery(
-						"Usuario.findUser", orm.formatNotNull().values(),
-						fields);
-			}
-			if (result != null) {
-				this.getBusca().acaoLimpar();
-				getBusca().getResultados().addAll(result);
-				getView().addResourceDynamicMenssage(
-						"Foram encontrados " + result.size() + " resultados.",
-						"formModalUsuario:buscar");
-			} else
-				getView().addResourceDynamicMenssage(
-						"Nao foi encontrado nenhum resultado.",
-						"formModalUsuario:buscar");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			getView().addResourceMessage("ErroSistema.",
-					"formModalUsuario:buscar");
-		} finally {
-			dao.closeConnection();
-		}
-		getBusca().getParams().put("param", null);
-		getBusca().getParams().put("opcao", null);
-		return DEFAULT_RULE;
+	protected void initExtra() {
+		this.search = new SearchBase<Usuario>(
+				new SearchableUsuario(new ViewDisplayer("searchDefault")),
+				"Buscar Usuário",
+				"painelBusca");
+		this.personSearch = new SearchBase<Pessoa>(
+				new SearchablePessoa(new ViewDisplayer("searchPerson")),
+				"Buscar Pessoa",
+				"painelBuscaPessoa");
+		this.search.addSearchListener(new SearchUsuarioHandler());
+		this.search.addSearchListener(new SearchSelectedHandler());
+		this.personSearch.addSearchListener(new SearchPessoaHandler());
+		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
+		makeView(params);
+		managePassword = new ManagePassword(getUsuario(),this.getView());
 	}
-*/
 
 	@Override
 	protected List<String> getCamposFormatados() {
@@ -133,6 +70,10 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		return obrigatorios;
 	}
 
+	protected void carregarExtra() {
+		managePassword.setUsuario(getUsuario());
+	}
+	
 	public Usuario getUsuario() {
 		return super.getBackBean();
 	}
@@ -141,8 +82,24 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		super.setBackBean(usuario);
 	}
 
-	public boolean getEnableChangePassword(){
-		return getBackBean() != null && getBackBean().getCodigo() != null && getBackBean().getCodigo() != 0;
+	public ManagePassword getManagePassword() {
+		return managePassword;
+	}
+	
+	public Search<Usuario> getSearch() {
+		return search;
+	}
+	
+	public Search<Pessoa> getPersonSearch() {
+		return personSearch;
+	}
+	
+	protected class SearchUsuarioHandler extends SearchBeanHandler<Usuario>{
+		private String[] showColumns = {"codigo", "nome", "user",};
+		@Override
+		public String[] getShowColumns() {
+			return showColumns;
+		}		
 	}
 
 }

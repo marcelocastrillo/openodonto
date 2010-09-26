@@ -8,7 +8,7 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 	<rich:modalPanel id="painelAlterarTelefone" autosized="true" width="300" height="100">
 	    <f:facet name="header">
-		    <h:outputText value="Alterar Telefone" />
+		    <h:outputText value="#{msg.manageContactChangePhone}" />
         </f:facet>	
 		<a4j:form  id="formAlterarTelefone">
 		    <a4j:jsFunction name="save" action="#{mBean.manageTelefone.acaoEditar}" reRender="listaTelefones" oncomplete="if(#{mBean.manageTelefone.sucessEdit}){Richfaces.hideModalPanel('painelAlterarTelefone');}" />
@@ -22,7 +22,7 @@
 					</h:panelGrid>
 					<h:panelGrid columns="1">
 						<h:outputLabel value="#{msg.manageContactTelefone}" for="numeroTelefonePainel" />
-						<h:inputText id="numeroTelefonePainel" value="#{mBean.manageTelefone.editNumber}" onkeypress="if(doEnter(event)){save();return false;}" />
+						<h:inputText id="numeroTelefonePainel" value="#{mBean.manageTelefone.editNumber}" onkeyup="if(doEnter(event)){save();return false;}" />
 					</h:panelGrid>
 					<h:panelGrid columns="2">
 						<a4j:commandButton onclick="save()" value="#{msg.manageContactAcaoSalvar}"/>

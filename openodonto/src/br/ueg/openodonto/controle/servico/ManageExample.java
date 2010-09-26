@@ -14,6 +14,7 @@ import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.SearchFilter;
+import br.ueg.openodonto.util.WordFormatter;
 import br.ueg.openodonto.validator.Validator;
 
 public class ManageExample<T> implements Serializable{
@@ -69,7 +70,11 @@ public class ManageExample<T> implements Serializable{
 		for(Iterator<Validator> iterator = inputField.getValidators().iterator();iterator.hasNext();){
 			Validator validator = iterator.next();
 			if(!validator.isValid() && checkInvalidPermiteds(invalidPermiteds,validator)){
-				filter.displayValidationMessage("* " + filter.getLabel() + " = '" + inputField.getValue() + "' : " + validator.getErrorMessage());
+				filter.displayValidationMessage("* " + filter.getLabel() +
+						" = '" +
+						WordFormatter.abstractStr(inputField.getValue().toString(), 10) +
+						"' : " +
+						validator.getErrorMessage());
 			}
 		}
 	}

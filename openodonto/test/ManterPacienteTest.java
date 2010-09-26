@@ -66,7 +66,7 @@ public class ManterPacienteTest {
 	
 	public static void main(String[] args) throws NamingException {    
 	    
-		SetupConnection.setupJNDI();
+		TestSetup.setup();
 		
 		long timeGenerateDataStart = System.currentTimeMillis();
 		List<Thread> bootUsers = new ArrayList<Thread>();
@@ -268,7 +268,7 @@ class Stress implements Runnable{
 		main.create();
 		ManterPacienteTest.timeCreate += System.currentTimeMillis() - parcial;	
 		
-		/*
+		
 		parcial = System.currentTimeMillis();
 		main.recuperar(paciente.getCodigo());
 		ManterPacienteTest.timeRecuperar += System.currentTimeMillis() - parcial;
@@ -281,7 +281,7 @@ class Stress implements Runnable{
 		parcial = System.currentTimeMillis();
 		main.delete();
 		ManterPacienteTest.timeDelete += System.currentTimeMillis() - parcial;
-		*/
+		
 		
 	}
 	

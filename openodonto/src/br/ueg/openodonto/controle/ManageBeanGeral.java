@@ -11,7 +11,6 @@ import java.util.Map;
 import br.ueg.openodonto.controle.busca.AbstractSearchable;
 import br.ueg.openodonto.controle.busca.ResultFacadeBean;
 import br.ueg.openodonto.controle.context.ApplicationContext;
-import br.ueg.openodonto.controle.context.OpenOdontoWebContext;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Usuario;
@@ -34,6 +33,7 @@ import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.visao.ApplicationView;
 import br.ueg.openodonto.visao.ApplicationViewFactory;
 import br.ueg.openodonto.visao.ApplicationViewFactory.ViewHandler;
+import br.ueg.openodonto.web.WebContext;
 
 /**
  * @author vinicius.rodrigues
@@ -61,7 +61,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 	protected void init() {
 		this.backBean = fabricarNovoBean();
 		this.dao = DaoFactory.getInstance().getDao(classe);		
-		this.context = new OpenOdontoWebContext();
+		this.context = new WebContext();
 		initExtra();
 	}
 
@@ -100,7 +100,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 
 	protected void ValidarCamposExtras(){};
 
-	protected void acaoValidarCampos() throws Exception {
+	protected void acaoFormatarCampos() throws Exception {
 		ValidarCamposExtras();
 		List<String> camposFormatados = getCamposFormatados();
 		for (String path : camposFormatados) {
@@ -139,7 +139,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 	public void acaoSalvar() {
 		boolean alredy = false;
 		try {
-			acaoValidarCampos();
+			acaoFormatarCampos();
 			if (!checarCamposObrigatorios()) {
 				exibirPopUp(getView().getMessageFromResource("camposObrigatorios"));
 				getView().addLocalDynamicMenssage("Campos obrigatorios invalidos.", "saidaPadrao", true);
@@ -250,15 +250,24 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		private String output;		
 		public ViewDisplayer(String output) {
 			this.output = output;
-		}		
+		}
+		public ViewDisplayer() {
+			this(null);
+		}
 		@Override
 		public void display(String message) {
+			display(message, output);
+		}		
+		public void display(String message,String output) {
 			getView().addResourceDynamicMenssage(message, output);
-		}
+		}		
 		@Override
 		public String getOutput() {
 			return output;
-		}		
+		}
+		public void setOutput(String output) {
+			this.output = output;
+		}
 	}
 	
 	protected class SearchPessoaHandler extends SearchBeanHandler<Pessoa>{
@@ -289,8 +298,12 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		@Override
 		public void load() {
 			try {
-				EntityManager<Pessoa> dao = DaoFactory.getInstance().getDao(Pessoa.class);
-				dao.load((Pessoa)getBackBean());
+				if(!ManageBeanGeral.this.dao.exists(getBackBean())){
+				    EntityManager<Pessoa> dao = DaoFactory.getInstance().getDao(Pessoa.class);
+				    dao.load((Pessoa)getBackBean());
+				}else{
+					ManageBeanGeral.this.dao.load(getBackBean());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -302,8 +315,8 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		@Override
 		@SuppressWarnings("unchecked")
 		public void searchPerformed(SearchEvent event) {
-			long time = System.currentTimeMillis();
 			try {				
+				long time = System.currentTimeMillis();
 				Search<E> search = (Search<E>)event.getSource();
 				List<Map<String,Object>> result = evaluteResult(search);
 				search.getResults().clear();

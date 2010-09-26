@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import br.ueg.openodonto.controle.servico.ExampleRequest;
-import br.ueg.openodonto.dominio.Pessoa;
+import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
@@ -15,27 +15,39 @@ import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
-public class SearchablePessoa extends AbstractSearchable<Pessoa>{
+public class SearchableUsuario extends AbstractSearchable<Usuario>{
 
-	private static final long serialVersionUID = -5786526767273778486L;
-
-	public SearchablePessoa(MessageDisplayer displayer) {
-		super(Pessoa.class,displayer);
+	public SearchableUsuario(MessageDisplayer displayer) {
+		super(Usuario.class, displayer);
 	}
-	
+
+	private static final long serialVersionUID = -3337119630038867463L;
+
 	@Override
 	protected void buildFacade() {
 		super.buildFacade();
-		OrmTranslator translator = new OrmTranslator(OrmResolver.getAllFields(new ArrayList<Field>(), Pessoa.class, true));
+		OrmTranslator translator = new OrmTranslator(OrmResolver.getAllFields(new ArrayList<Field>(), Usuario.class, true));
 		getFacade().add(new FieldFacade("Código",translator.getColumn("codigo")));
 		getFacade().add(new FieldFacade("Nome",translator.getColumn("nome")));
+		getFacade().add(new FieldFacade("Usuário",translator.getColumn("user")));
 	}
 	
 	@Override
 	protected void buildFilter() {
 		super.buildFilter();
-		buildNameFilter();
 		buildCodigoFilter();
+		buildUserFilter();
+		buildNameFilter();
+	}
+	
+	private void buildCodigoFilter(){
+		Validator validator = ValidatorFactory.newNumSize(Integer.MAX_VALUE);
+		getFiltersMap().put("idFilter",buildBasicFilter("idFilter","Código",validator));
+	}
+	
+	private void buildUserFilter(){
+		Validator validator = ValidatorFactory.newStrRangeLen(45,3, true);
+		getFiltersMap().put("userFilter", buildBasicFilter("userFilter","Usuário",validator));
 	}
 	
 	private void buildNameFilter(){
@@ -43,19 +55,15 @@ public class SearchablePessoa extends AbstractSearchable<Pessoa>{
 		getFiltersMap().put("nomeFilter", buildBasicFilter("nomeFilter","Nome",validator));
 	}
 	
-	private void buildCodigoFilter(){
-		Validator validator = ValidatorFactory.newNumSize(Integer.MAX_VALUE);
-		getFiltersMap().put("idFilter",buildBasicFilter("idFilter","Código",validator));
-	}
-
 	@Override
-	public Pessoa buildExample() {
-		ExampleRequest<Pessoa> request  = new ExampleRequest<Pessoa>(this);		
+	public Usuario buildExample() {
+		ExampleRequest<Usuario> request  = new ExampleRequest<Usuario>(this);		
 		request.getFilterRelation().add(request.new TypedFilter("nomeFilter", "nome",SqlWhereOperatorType.LIKE));
 		request.getFilterRelation().add(request.new TypedFilter("idFilter","codigo",SqlWhereOperatorType.EQUAL));
+		request.getFilterRelation().add(request.new TypedFilter("userFilter", "user",SqlWhereOperatorType.EQUAL));
 		request.getInvalidPermiteds().add(NullValidator.class);
 		request.getInvalidPermiteds().add(EmptyValidator.class);
-		Pessoa target = getManageExample().processExampleRequest(request);
+		Usuario target = getManageExample().processExampleRequest(request);
 		return target;
 	}
 

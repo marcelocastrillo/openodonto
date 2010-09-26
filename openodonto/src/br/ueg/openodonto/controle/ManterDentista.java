@@ -7,9 +7,11 @@ import java.util.Map;
 
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchableDentista;
+import br.ueg.openodonto.controle.busca.SearchablePessoa;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Dentista;
+import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
@@ -19,6 +21,7 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 	private ManageTelefone                manageTelefone;
 	private static Map<String, String>    params;
 	private Search<Dentista>              search;
+	private Search<Pessoa>                personSearch;
 
 	static{
 		params = new HashMap<String, String>();
@@ -33,13 +36,19 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 
 	@Override
 	protected void initExtra() {
-		this.manageTelefone = new ManageTelefone(getDentista().getTelefone(), this);
-		this.search = new SearchBase<Dentista>(new SearchableDentista(),
+		this.manageTelefone = new ManageTelefone(getDentista().getTelefone(), this.getView());
+		this.search = new SearchBase<Dentista>(
+				new SearchableDentista(new ViewDisplayer("searchDefault")),
 				"Buscar Paciente",
-				"painelBusca",
-				new ViewDisplayer("searchDefault"));
+				"painelBusca");
+		this.personSearch = new SearchBase<Pessoa>(
+				new SearchablePessoa(new ViewDisplayer("searchPerson")),
+				"Buscar Pessoa",
+				"painelBuscaPessoa");
 		this.search.addSearchListener(new SearchDentistaHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
+		this.personSearch.addSearchListener(new SearchPessoaHandler());
+		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
 		makeView(params);
 	}	
 
@@ -71,6 +80,10 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 		return search;
 	}
 
+	public Search<Pessoa> getPersonSearch() {
+		return personSearch;
+	}
+	
 	public Dentista getDentista() {
 		return getBackBean();
 	}

@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,10 +14,17 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
+import br.ueg.openodonto.persistencia.scan.EntityManagerSetup;
 
-public class SetupConnection {
 
-	public static void setupJNDI()throws NamingException{
+public class TestSetup {
+
+	public static void setup()throws NamingException{
+		setupJndi();
+		setupDao();
+	}
+	
+	private static void setupJndi() throws NamingException{
 		System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.fscontext.RefFSContextFactory");
 	    System.setProperty(Context.PROVIDER_URL, "file:///.");
 	    InitialContext ic = new InitialContext();
@@ -56,7 +64,18 @@ public class SetupConnection {
 	    poolReference.add(new StringRefAddr("maxActive", maxActive));
 	    poolReference.add(new StringRefAddr("maxIdle", maxIdle));
 	    poolReference.add(new StringRefAddr("maxWait", maxWait));
-	    ic.rebind("java:comp/env/"+jndiName, poolReference);
+	    ic.rebind("java:comp/env/"+jndiName, poolReference);		
+	}
+	
+	private static void setupDao(){
+		try {
+			String binPath = new File("bin").getAbsolutePath();
+			String[] pacotes = "br.ueg.openodonto.persistencia.dao".split(";");
+			EntityManagerSetup setup = new EntityManagerSetup(binPath, pacotes);
+			setup.registerEntityManagers();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
 	}
 	
 }

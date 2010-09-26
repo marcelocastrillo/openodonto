@@ -3,11 +3,11 @@ package br.ueg.openodonto.controle.servico;
 import java.io.Serializable;
 import java.util.List;
 
-import br.ueg.openodonto.controle.ManageBeanGeral;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.constante.TiposTelefone;
 import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
+import br.ueg.openodonto.visao.ApplicationView;
 
 /**
  * @author Vinicius
@@ -17,37 +17,27 @@ public class ManageTelefone implements Serializable {
 
 	private static final long serialVersionUID = 8556507770756119797L;
 
-	private Telefone telefone;
+	private Telefone         telefone;
+	private String           editNumber;	
+	private TiposTelefone    editType;	
+	private List<Telefone>   telefones;	
+	private Validator        validatorType;
+	private Validator        validatorNumber;	
+	private String           saidaContato;	
+	private String           saidaEditarContato;
+	private ApplicationView  view;
+	private boolean          sucessEdit;
 
-	private String   editNumber;
-	
-	private TiposTelefone   editType;
-	
-	private List<Telefone> telefones;
-	
-	private Validator      validatorType;
-	private Validator      validatorNumber;
-
-	@SuppressWarnings("unchecked")
-	private ManageBeanGeral backBean;
-	
-	private String saidaContato;
-	
-	private String saidaEditarContato;
-	
-	private boolean sucessEdit;
-
-	@SuppressWarnings("unchecked")
-	public ManageTelefone(List<Telefone> telefones, ManageBeanGeral backBean) {
+	public ManageTelefone(List<Telefone> telefones,ApplicationView view) {
 		this.telefone = new Telefone();
 		this.telefones = telefones;
-		this.backBean = backBean;
+		this.view = view;
 		this.validatorNumber = ValidatorFactory.newStrRangeLen(15, 4, true);
 		this.validatorType = ValidatorFactory.newNull();
 	}
 
 	private void buildSaidaContato(){
-		this.saidaContato =    this.backBean.getView().getProperties().get("formularioSaida") + ":" + "messageTelefone";
+		this.saidaContato =    this.view.getProperties().get("formularioSaida") + ":" + "messageTelefone";
 	}
 	
 	private void buildSaidaEditarContato() {
@@ -76,7 +66,7 @@ public class ManageTelefone implements Serializable {
 			setTelefone(new Telefone());
 			setSucessEdit(true);
 		}else{
-			this.backBean.getView().addResourceDynamicMenssage("* Tipo e Numero são obrigatórios !",	getSaidaEditarContato());
+			this.view.addResourceDynamicMenssage("* Tipo e Numero são obrigatórios !",	getSaidaEditarContato());
 		}
 	}
 	
@@ -85,7 +75,7 @@ public class ManageTelefone implements Serializable {
 				|| this.getTelefone().getNumero() == null
 				|| this.getTelefone().getNumero().isEmpty()
 				|| this.getTelefone().getTipoTelefone() == null) {
-			this.backBean.getView().addResourceDynamicMenssage("* Tipo e Numero são obrigatórios !",	getSaidaContato());
+			this.view.addResourceDynamicMenssage("* Tipo e Numero são obrigatórios !",	getSaidaContato());
 			return;
 		}
 		getTelefones().add(this.getTelefone());

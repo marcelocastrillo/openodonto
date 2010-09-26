@@ -11,16 +11,17 @@ import java.util.Map;
 import br.ueg.openodonto.controle.busca.ResultFacadeBean;
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchableColaborador;
+import br.ueg.openodonto.controle.busca.SearchablePessoa;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
+import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.dominio.constante.TipoPessoa;
 import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
-import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.validator.ValidatorFactory;
@@ -32,7 +33,7 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	private ManageTelefone                manageTelefone;
 	private static Map<String, String>    params;
 	private Search<Colaborador>           search;
-	private MessageDisplayer              displayer;	
+	private Search<Pessoa>                personSearch;
 	private CategoriaProduto              categoria;
 	private TipoPessoa                    tipoPessoa;
 	
@@ -40,10 +41,7 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 		params = new HashMap<String, String>();
 		params.put("managebeanName", "manterColaborador");
 		params.put("formularioSaida", "formColaborador");
-		params.put("formModalSearch", "formSearch");
-		params.put("nameModalSearch", "painelBusca");
 		params.put("saidaPadrao", "formColaborador:output");
-		params.put("saidaContato", "messageTelefone");
 	}
 	
 	public ManterColaborador() {
@@ -52,14 +50,19 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 
 	@Override
 	protected void initExtra() {
-		this.displayer = new ViewDisplayer("searchDefaultOutput");
-		this.manageTelefone = new ManageTelefone(getColaborador().getTelefone(), this);
-		this.search = new SearchBase<Colaborador>(new SearchableColaborador(),
+		this.manageTelefone = new ManageTelefone(getColaborador().getTelefone(), this.getView());
+		this.search = new SearchBase<Colaborador>(
+				new SearchableColaborador(new ViewDisplayer("searchDefaultOutput")),
 				"Buscar Colaborador",
-				"painelBusca",
-				this.displayer);
+				"painelBusca");
+		this.personSearch = new SearchBase<Pessoa>(
+				new SearchablePessoa(new ViewDisplayer("searchPerson")),
+				"Buscar Pessoa",
+				"painelBuscaPessoa");
 		this.search.addSearchListener(new SearchColaboradorHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
+		this.personSearch.addSearchListener(new SearchPessoaHandler());
+		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
 		this.tipoPessoa = TipoPessoa.PESSOA_FISICA;
 		makeView(params);
 	}
@@ -130,6 +133,10 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	
 	public Search<Colaborador> getSearch() {
 		return search;
+	}
+	
+	public Search<Pessoa> getPersonSearch() {
+		return personSearch;
 	}
 
 	public TipoPessoa getTipoPessoa() {

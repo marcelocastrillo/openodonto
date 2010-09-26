@@ -6,7 +6,7 @@
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-	<rich:modalPanel id="#{search.name}" autosized="true" resizeable="false" onshow="pesquisar()">
+	<rich:modalPanel id="#{search.name}" autosized="true" resizeable="false" onshow="pesquisar#{search.name}()">
 	    <f:facet name="header">
 		    <h:outputText value="#{search.title}" />
         </f:facet>
@@ -20,7 +20,7 @@
         <rich:messages id="#{search.displayer.output}" for="#{search.displayer.output}"  styleClass="oo-validation-messages" />
         <rich:panel id="searchMasterPainel#{search.name}" >
 		    <a4j:form  id="formSearch#{search.name}">
-		        <a4j:jsFunction name="pesquisar" reRender="lista,dataScroller" action="#{search.search}"  />
+		        <a4j:jsFunction id="pesquisar#{search.name}" name="pesquisar#{search.name}" reRender="lista,dataScroller" action="#{search.search}"  />
 		        <rich:dataGrid value="#{search.searchable.masks}" rendered="#{not empty search.searchable.masks}" var="mask" columnClasses="oo-border-none" styleClass="oo-border-none">
 		            <rich:jQuery query="#{mask.query}" timing="onload" selector=".#{mask.seletor}" />		        
 		        </rich:dataGrid>

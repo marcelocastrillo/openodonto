@@ -19,10 +19,7 @@
 					<h:panelGrid columns="1">
 					    <a4j:jsFunction name="changePType" reRender="gridDocumento" />
                         <h:panelGrid columns="2">
-							<h:panelGrid columns="1">
-								<h:outputLabel value="#{msg.ooCodigo}" for="codigoColaborador" />
-								<h:inputText id="codigoColaborador" readonly="true" disabled="true" value="#{manterColaborador.colaborador.codigo}" style=" width : 120px;" />
-							</h:panelGrid>
+                            <oo:personSearch codigo="#{manterColaborador.colaborador.codigo}" searchName="painelBuscaPessoa" />
                             <h:panelGrid columns="1">
                                 <h:panelGroup>
                                 	<h:outputLabel id="labelEntradaNome" for="entradaNome" value="#{msg.nomeRazaoSocial}:" style="color : red" />
@@ -70,5 +67,6 @@
     <ui:define name="outOfFormContent">
         <ui:include src="/cadastro/commons/contato/edit.xhtml" />
         <oo:search search="#{mBean.search}" />
+        <oo:search search="#{mBean.personSearch}" />
     </ui:define>
 </ui:composition>

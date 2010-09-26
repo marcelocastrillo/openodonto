@@ -1,4 +1,4 @@
-package br.ueg.openodonto.filtro;
+package br.ueg.openodonto.web;
 
 import java.io.IOException;
 

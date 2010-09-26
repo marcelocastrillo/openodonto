@@ -12,6 +12,7 @@ import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
 import br.ueg.openodonto.persistencia.orm.OrmResolver;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.FieldFacade;
+import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.validator.EmptyValidator;
 import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.Validator;
@@ -23,12 +24,12 @@ public class SearchableColaborador extends AbstractSearchable<Colaborador> {
 
 	private CategoriaProduto categoria;
 	
-	public SearchableColaborador() {
-		this(null);
+	public SearchableColaborador(MessageDisplayer displayer) {
+		this(displayer,null);
 	}
 	
-	public SearchableColaborador(CategoriaProduto categoria) {
-		super(Colaborador.class);
+	public SearchableColaborador(MessageDisplayer displayer,CategoriaProduto categoria) {
+		super(Colaborador.class,displayer);
 		this.categoria = categoria;
 	}
 

@@ -35,23 +35,21 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		super(Paciente.class);
 	}
 
-	protected void initExtra() {
-		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this);
+	protected void initExtra() {		
 		this.search = new SearchBase<Paciente>(
-				new SearchablePaciente(),
+				new SearchablePaciente(new ViewDisplayer("searchDefault")),
 				"Buscar Paciente",
-				"painelBusca",
-				new ViewDisplayer("searchDefault"));
+				"painelBusca");
 		this.personSearch = new SearchBase<Pessoa>(
-				new SearchablePessoa(),
+				new SearchablePessoa(new ViewDisplayer("searchPerson")),
 				"Buscar Pessoa",
-				"painelBuscaPessoa",
-				new ViewDisplayer("searchPerson"));
+				"painelBuscaPessoa");
 		this.search.addSearchListener(new SearchPacienteHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
 		this.personSearch.addSearchListener(new SearchPessoaHandler());
 		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
 		makeView(params);
+		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this.getView());
 	}
 
 	protected void carregarExtra() {
