@@ -34,7 +34,6 @@ public class SearchBase<T> implements Search<T>,Serializable {
 		this.title = title;
 		this.results = new ArrayList<ResultFacade>();
 		this.searchable = searchable;
-
 		this.listeners = new ArrayList<SearchListener>();
 	}
 	
@@ -70,6 +69,7 @@ public class SearchBase<T> implements Search<T>,Serializable {
 		this.name = name;
 	}
 	
+	@Override
 	public String getTitle() {
 		return title;
 	}
@@ -109,30 +109,44 @@ public class SearchBase<T> implements Search<T>,Serializable {
 	}
 	
 	private void fireSearchPerfomed(){
-		SearchEvent event = buildEvent();
-		Iterator<SearchListener> iterator = listeners.iterator();
-		while(iterator.hasNext()){
-			SearchListener listener = iterator.next();
-			listener.searchPerformed(event);
-		}
+		final SearchEvent event = buildEvent();
+		new SearchEventTrigger() {
+			@Override
+			public void doActionEvent(SearchListener listener) {
+				listener.searchPerformed(event);
+			}
+		}.doAction();
 	}
 	
 	private void fireCleanPerformed(){
-		SearchEvent event = buildEvent();
-		Iterator<SearchListener> iterator = listeners.iterator();
-		while(iterator.hasNext()){
-			SearchListener listener = iterator.next();
-			listener.cleanPerformed(event);
-		}
+		final SearchEvent event = buildEvent();
+		new SearchEventTrigger() {
+			@Override
+			public void doActionEvent(SearchListener listener) {
+				listener.cleanPerformed(event);
+			}
+		};
 	}
 	
 	private void fireSelectPerfomed(ResultFacade bean){
-		SearchSelectedEvent event = buildSelectEvent(bean);
-		Iterator<SearchListener> iterator = listeners.iterator();
-		while(iterator.hasNext()){
-			SearchListener listener = iterator.next();
-			listener.resultRequested(event);
+		final SearchSelectedEvent event = buildSelectEvent(bean);
+		new SearchEventTrigger() {
+			@Override
+			public void doActionEvent(SearchListener listener) {
+				listener.resultRequested(event);
+			}
+		}.doAction();
+	}
+	
+	public abstract class SearchEventTrigger{
+		public void doAction(){
+			Iterator<SearchListener> iterator = listeners.iterator();
+			while(iterator.hasNext()){
+				SearchListener listener = iterator.next();
+				doActionEvent(listener);
+			}
 		}
+		public abstract void doActionEvent(SearchListener listener);
 	}
 	
 	@Override
