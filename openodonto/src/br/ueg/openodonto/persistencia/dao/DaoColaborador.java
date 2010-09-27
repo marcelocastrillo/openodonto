@@ -90,9 +90,7 @@ public class DaoColaborador extends DaoCrud<Colaborador> {
 	@Override
 	protected boolean beforeRemove(Colaborador o, Map<String, Object> params)throws Exception {
 		List<String> referencias = referencedConstraint(Pessoa.class, params);
-		if (referencias.contains(CrudQuery.getTableName(Colaborador.class))
-				&& referencias.contains(CrudQuery.getTableName(Telefone.class))
-				&& referencias.size() == 2) {
+		if (isLastConstraintWithTelefone(referencias)) {
 			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 			for (Telefone telefone : o.getTelefone()) {
 				entityManagerTelefone.remover(telefone);

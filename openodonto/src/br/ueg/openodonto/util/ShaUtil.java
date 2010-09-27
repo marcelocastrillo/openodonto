@@ -16,7 +16,7 @@ public class ShaUtil {
 	} catch (Exception e) {
 	}
 	while (stb.length() != 32) {
-	    stb.indexOf("0", 0);
+	    stb.insert(0,"0");
 	}
 	return stb.toString();
     }

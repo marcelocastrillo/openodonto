@@ -1,5 +1,6 @@
 package br.ueg.openodonto.util;
 
+
 /**
  * @author vinicius.rodrigues
  * 
@@ -49,6 +50,18 @@ public class WordFormatter {
 		for (String sg : sobreNomes)
 			nome += " " + sg.substring(0, 1).toUpperCase().trim();
 		return nome;
+	}
+	
+	public static String ocult(String plain){
+		return plain.trim().replaceAll(".*", "*");
+	}
+	
+	public static String formatErrorMessage(String label,String value,String message){
+		return "* " + label +
+		" = '" +
+		abstractStr(value, 10) +
+		"' : " +
+		message;
 	}
 
 	public static String clear(String s) {

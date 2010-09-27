@@ -18,13 +18,13 @@
             </h:panelGroup>
         </f:facet>
 		<a4j:form  id="formAlterarSenha">
-		    <a4j:jsFunction name="change" action="#{manterUsuario.managePassword.acaoMudarSenha}" oncomplete="if(#{manterUsuario.managePassword.sucessChange}){Richfaces.hideModalPanel('painelAlterarSenha');}" />
+		    <a4j:jsFunction name="change" reRender="gridPwds" action="#{manterUsuario.managePassword.acaoMudarSenha}" oncomplete="if(#{manterUsuario.managePassword.sucessChange}){Richfaces.hideModalPanel('painelAlterarSenha');}" />
 			<rich:panel>
 			    <h:panelGrid columns="1" id="gridMessage">
-			        <rich:message for="messageEditTelefone" id="messageEditTelefone" styleClass="oo-validation-messages" />
+			        <rich:messages for="messageEditTelefone" id="messageEditTelefone" styleClass="oo-validation-messages" />
 			    </h:panelGrid>
-				<h:panelGrid columns="2">
-				    <h:outputLabel for="entradaSenhaAtual" value="#{msg.manterUsuariosSenha}: " />
+				<h:panelGrid columns="2" id="gridPwds">
+				    <h:outputLabel for="entradaSenhaAtual" value="#{msg.manterUsuariosSenhaAtual}: " />
 				    <h:inputSecret id="entradaSenhaAtual" value="#{manterUsuario.managePassword.senha}" onkeyup="if(doEnter(event)){change();return false;}" />				
 				    <h:outputLabel for="entradaNovaSenha" value="#{msg.manterUsuariosNovaSenha}: " />
 				    <h:inputSecret id="entradaNovaSenha" value="#{manterUsuario.managePassword.novaSenha}" onkeyup="if(doEnter(event)){change();return false;}"/>

@@ -10,15 +10,15 @@
 	    <a4j:jsFunction name="addFone" action="#{mBean.manageTelefone.acaoInserirTelefone}" reRender="listaTelefones,gridAddTel"  />
 		<h:panelGrid columns="4" id="gridAddTel">
 			<h:panelGrid columns="1">
-				<h:outputLabel value="#{msg.manageContactTipo}" for="tipoTelefoneContato" />
-				<h:selectOneMenu id="tipoTelefoneContato" value="#{mBean.manageTelefone.telefone.tipoTelefone}" converter="simpleEntityConverter">
+				<h:outputLabel value="#{msg.manageContactTipo}" for="tipoTelefoneContato" style="color : red" />
+				<h:selectOneMenu id="tipoTelefoneContato" value="#{mBean.manageTelefone.editType}" converter="simpleEntityConverter">
 					<t:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].dominio}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
 				</h:selectOneMenu>
 			</h:panelGrid>
 			<rich:spacer width="16"/>
 			<h:panelGrid columns="1">
 				<h:outputLabel value="#{msg.manageContactTelefone}" for="telefoneNumero" style="color : red" />
-				<h:inputText id="telefoneNumero" value="#{mBean.manageTelefone.telefone.numero}" onkeyup="if(doEnter(event)){addFone();}" />
+				<h:inputText id="telefoneNumero" value="#{mBean.manageTelefone.editNumber}" onkeypress="if(doEnter(event)){addFone();return false;}" />
 			</h:panelGrid>
 			<h:panelGrid columns="1">
 				<rich:spacer height="8"/>

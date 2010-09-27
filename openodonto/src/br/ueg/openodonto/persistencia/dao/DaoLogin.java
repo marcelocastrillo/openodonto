@@ -25,6 +25,11 @@ public class DaoLogin implements LoginManager, Serializable {
 		this.daoUsuario = DaoFactory.getInstance().getDao(Usuario.class);
 	}
 
+	public Usuario autenticar(String login, String senha) {
+		Usuario usuario = new Usuario(login,senha);
+		return autenticar(usuario);
+	}
+	
 	public Usuario autenticar(Usuario usuario) {
 		OrmFormat orm = new OrmFormat(usuario);		
 		IQuery query = CrudQuery.getSelectQuery(Usuario.class, orm.format("user", "senha"),  "*");

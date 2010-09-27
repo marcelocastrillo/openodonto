@@ -2,6 +2,7 @@ package br.ueg.openodonto.persistencia.orm;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,18 @@ public class OrmFormat {
 			map.put(classe, ormResolver.formatBase(mask.getResultMask(classe)));
 		}
 		return map;
+	}
+	
+	public static Map<String,Object> getCleanFormat(Map<String, Object> formated){
+		Map<String,Object> clean = new HashMap<String, Object>();
+		for(Map.Entry<String, Object> entry : formated.entrySet()){
+			String key = entry.getKey();
+			if(entry.getKey().contains(".")){
+				key = key.substring(key.lastIndexOf(".") + 1);
+			}
+			clean.put(key, entry.getValue());
+		}
+		return clean;
 	}
 
 	public void parse(Map<String, Object> values) {

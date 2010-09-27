@@ -5,6 +5,8 @@ import java.util.List;
 
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.constante.TiposTelefone;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 import br.ueg.openodonto.visao.ApplicationView;
@@ -43,11 +45,15 @@ public class ManageTelefone implements Serializable {
 	private void buildSaidaEditarContato() {
 		this.saidaEditarContato = "formAlterarTelefone:messageEditTelefone";
 	}
-
-	public void acaoCancelarEdicao(){
+	
+	private void renew(){
 		setEditType(null);
 		setEditNumber(null);
 		setTelefone(new Telefone());
+	}
+
+	public void acaoCancelarEdicao(){
+		renew();
 		setSucessEdit(false);
 	}
 	
@@ -58,30 +64,48 @@ public class ManageTelefone implements Serializable {
 	
 	public void acaoEditar(){
 		setSucessEdit(false);
-		this.validatorNumber.setValue(getEditNumber());
-		this.validatorType.setValue(getEditType());
-		if(validatorNumber.isValid() && validatorType.isValid()){
-			getTelefone().setNumero(getEditNumber());
-			getTelefone().setTipoTelefone(getEditType());
-			setTelefone(new Telefone());
-			setSucessEdit(true);
-		}else{
-			this.view.addResourceDynamicMenssage("* Tipo e Numero são obrigatórios !",	getSaidaEditarContato());
+		if(validarSalvar(getSaidaEditarContato())){
+			salvarTelefone();
+			renew();
 		}
 	}
 	
 	public void acaoInserirTelefone() {
-		if (this.getTelefone() == null
-				|| this.getTelefone().getNumero() == null
-				|| this.getTelefone().getNumero().isEmpty()
-				|| this.getTelefone().getTipoTelefone() == null) {
-			this.view.addResourceDynamicMenssage("* Tipo e Numero são obrigatórios !",	getSaidaContato());
-			return;
+		if(validarSalvar(getSaidaContato())){
+			setTelefone(new Telefone());
+			salvarTelefone();
+			getTelefones().add(getTelefone());
+			renew();
 		}
-		getTelefones().add(this.getTelefone());
-		setTelefone(new Telefone());
 	}
 
+	private boolean validarSalvar(String saida){
+		this.validatorNumber.setValue(getEditNumber());
+		this.validatorType.setValue(getEditType());
+		boolean valid = true;
+		if(!validatorNumber.isValid()){
+			this.view.addResourceDynamicMenssage("* Numero : " + validatorNumber.getErrorMessage(),	saida);
+			valid = false;
+		}
+		if(!validatorType.isValid()){
+			valid = false;
+		}
+		if(!valid){
+			if(validatorType.getSource() instanceof NullValidator ||
+					validatorNumber.getSource() instanceof NullValidator ||
+					validatorNumber.getSource() instanceof EmptyValidator){
+				this.view.addResourceDynamicMenssage("* Tipo e Numero são obrigatórios !",	saida);
+			}
+		}
+		return valid;
+	}
+	
+	private void salvarTelefone(){
+		getTelefone().setNumero(getEditNumber());
+		getTelefone().setTipoTelefone(getEditType());
+		setSucessEdit(true);
+	}
+	
 	public void acaoRemoverTelefone() {
 		if (this.telefone != null){
 			getTelefones().remove(this.telefone);
