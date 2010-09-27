@@ -10,6 +10,7 @@ import java.util.Map;
 
 import br.ueg.openodonto.controle.busca.AbstractSearchable;
 import br.ueg.openodonto.controle.busca.ResultFacadeBean;
+import br.ueg.openodonto.controle.busca.SelectableBean;
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Pessoa;
@@ -24,6 +25,8 @@ import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.Searchable;
+import br.ueg.openodonto.servico.busca.SelectableResult;
+import br.ueg.openodonto.servico.busca.SelectableSearch;
 import br.ueg.openodonto.servico.busca.event.AbstractSearchListener;
 import br.ueg.openodonto.servico.busca.event.SearchEvent;
 import br.ueg.openodonto.servico.busca.event.SearchSelectedEvent;
@@ -275,25 +278,21 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		@Override
 		public String[] getShowColumns() {
 			return showColumns;
-		}
-		
+		}		
 		public IQuery getQuery(Pessoa example){
 			OrmFormat format = new OrmFormat(example);
 			return CrudQuery.getSelectQuery(Pessoa.class, format.formatNotNull(),  getShowColumns());
-		}
-		
-		public List<Map<String,Object>> evaluteResult(Search<Pessoa> search) throws SQLException{
+		}		
+		public List<Map<String,Object>> evaluateResult(Search<Pessoa> search) throws SQLException{
 			Pessoa target = buildExample(search.getSearchable());
 			IQuery query = getQuery(target);	
 			EntityManager<Pessoa> dao = DaoFactory.getInstance().getDao(Pessoa.class);
 			List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query);
 			return result;
-		}
-		
+		}		
 	}
 	
 	protected class SearchPessoaSelectedHandler extends SearchSelectedHandler{
-
 		private static final long serialVersionUID = -991152447586425922L;
 		@Override
 		public void load() {
@@ -306,18 +305,27 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		
+		}		
 		protected void loadAlreadyEntity() throws Exception{
 			ManageBeanGeral.this.dao.load(getBackBean());
-		}
-		
+		}		
 		protected void loadJustPerson() throws Exception{
 		    EntityManager<Pessoa> dao = DaoFactory.getInstance().getDao(Pessoa.class);
 		    dao.load((Pessoa)getBackBean());			
+		}		
+	}
+	
+	public abstract class SearchSelectableHandler<E> extends SearchBeanHandler<E>{
+		@Override
+		protected void addResults(Search<E> search,	List<Map<String, Object>> result) {
+			SelectableSearch<E> selectableSearch = (SelectableSearch<E>)search;
+			selectableSearch.getSelectableResults().clear();
+			search.getResults().addAll(wrapResult(result));
 		}
-		
-		
+		@Override
+		protected SelectableResult buildWrapBean(Map<String, Object> value) {
+			return new SelectableBean(value);
+		}
 	}
 	
 	public abstract class SearchBeanHandler<E> extends AbstractSearchListener{
@@ -327,42 +335,43 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			try {				
 				long time = System.currentTimeMillis();
 				Search<E> search = (Search<E>)event.getSource();
-				List<Map<String,Object>> result = evaluteResult(search);
-				search.getResults().clear();
-				search.getResults().addAll(wrapResult(result));
+				List<Map<String,Object>> result = evaluateResult(search);
+				addResults(search,result);
 				time = System.currentTimeMillis() - time;
 				showTimeQuery(search.getName(), result.size(), time);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-
-		}
-		
+		}		
+		protected void addResults(Search<E> search,List<Map<String,Object>> result){
+			search.getResults().clear();
+			search.getResults().addAll(wrapResult(result));
+		}		
 		protected List<ResultFacade> wrapResult(List<Map<String, Object>> result){
 			List<ResultFacade> resultWrap = new ArrayList<ResultFacade>(result.size());
 			Iterator<Map<String, Object>> iterator = result.iterator();
 			while(iterator.hasNext()){
-				resultWrap.add(new ResultFacadeBean(iterator.next()));
+				resultWrap.add(buildWrapBean(iterator.next()));
 			}
 			return resultWrap;
 		}
-		
-		public List<Map<String,Object>> evaluteResult(Search<E> search) throws SQLException{
+		protected ResultFacade buildWrapBean(Map<String,Object> value){
+			return new ResultFacadeBean(value);
+		}
+		public List<Map<String,Object>> evaluateResult(Search<E> search) throws SQLException{
 			E target = buildExample(search.getSearchable());
 			IQuery query = getQuery(target);				
 			List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query);
 			return result;
-		}
-		
+		}		
 		public IQuery getQuery(E example){
 			OrmFormat format = new OrmFormat(example);
 			return CrudQuery.getSelectQuery(classe, format.formatNotNull(),  getShowColumns());
 		}
-		public abstract String[] getShowColumns();
-		
 		public E buildExample(Searchable<E> searchable){
 			return ((AbstractSearchable<E>)searchable).buildExample();
 		}
+		public abstract String[] getShowColumns();
 	}
 	
 	public class SearchSelectedHandler extends AbstractSearchListener implements Serializable{

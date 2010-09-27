@@ -1,6 +1,7 @@
 package br.ueg.openodonto.controle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,14 +58,8 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	}
 
 	protected List<String> getCamposFormatados() {
-		List<String> formatados = new ArrayList<String>();
-		formatados.add("nome");
-		formatados.add("cpf");
-		formatados.add("cidade");
-		formatados.add("endereco");
-		formatados.add("responsavel");
-		formatados.add("referencia");
-		return formatados;
+		String[] formatados = {"nome","cpf","cidade","endereco","responsavel","referencia"};
+		return Arrays.asList(formatados);
 	}
 
 	protected List<ValidationRequest> getCamposObrigatorios() {
