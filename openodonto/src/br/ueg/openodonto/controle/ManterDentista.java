@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.busca.CommonSearchDentistaHandler;
+import br.ueg.openodonto.controle.busca.CommonSearchPessoaHandler;
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchableDentista;
 import br.ueg.openodonto.controle.busca.SearchablePessoa;
+import br.ueg.openodonto.controle.busca.ViewDisplayer;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Dentista;
@@ -36,20 +39,20 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 
 	@Override
 	protected void initExtra() {
+		makeView(params);
 		this.manageTelefone = new ManageTelefone(getDentista().getTelefone(), this.getView());
 		this.search = new SearchBase<Dentista>(
-				new SearchableDentista(new ViewDisplayer("searchDefault")),
+				new SearchableDentista(new ViewDisplayer("searchDefault",getView())),
 				"Buscar Paciente",
 				"painelBusca");
 		this.personSearch = new SearchBase<Pessoa>(
-				new SearchablePessoa(new ViewDisplayer("searchPerson")),
+				new SearchablePessoa(new ViewDisplayer("searchPerson",getView())),
 				"Buscar Pessoa",
 				"painelBuscaPessoa");
-		this.search.addSearchListener(new SearchDentistaHandler());
+		this.search.addSearchListener(new CommonSearchDentistaHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
-		this.personSearch.addSearchListener(new SearchPessoaHandler());
+		this.personSearch.addSearchListener(new CommonSearchPessoaHandler());
 		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
-		makeView(params);
 	}	
 
 	@Override
@@ -98,14 +101,6 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 
 	public void setManageTelefone(ManageTelefone manageTelefone) {
 		this.manageTelefone = manageTelefone;
-	}
-	
-	protected class SearchDentistaHandler extends SearchBeanHandler<Dentista>{
-		private String[] showColumns = {"codigo", "nome", "cro", "especialidade"};
-		@Override
-		public String[] getShowColumns() {
-			return showColumns;
-		}		
-	}
+	}	
 
 }

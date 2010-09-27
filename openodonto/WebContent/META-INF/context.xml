@@ -31,6 +31,6 @@
   <Resource name="jdbc/openodonto" auth="Container" type="javax.sql.DataSource"
                maxActive="128" maxIdle="30" maxWait="10000"
                username="root" password="12345" driverClassName="com.mysql.jdbc.Driver"
-               url="jdbc:mysql://5.68.7.9:3306/openodonto"/>
+               url="jdbc:mysql://localhost:3306/openodonto"/>
 
 </Context>

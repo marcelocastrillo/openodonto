@@ -1,14 +1,14 @@
 package br.ueg.openodonto.controle.busca;
 
 import br.ueg.openodonto.dominio.Paciente;
-import br.ueg.openodonto.persistencia.EntityManager;
+import br.ueg.openodonto.persistencia.dao.DaoFactory;
 
-public abstract class CommonSearchPacienteHandler extends CommoSearchBeanHandler<Paciente>{
+public class CommonSearchPacienteHandler extends CommonSearchBeanHandler<Paciente>{
 
 	private String[] showColumns = {"codigo", "nome", "email", "cpf"};
 	
-	public CommonSearchPacienteHandler(EntityManager<Paciente> dao) {
-		super(Paciente.class, dao);
+	public CommonSearchPacienteHandler() {
+		super(Paciente.class, DaoFactory.getInstance().getDao(Paciente.class));
 	}
 
 	@Override

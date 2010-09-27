@@ -10,18 +10,20 @@ import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
-import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 
-public abstract class CommonSearchColaboradorHandler extends CommoSearchBeanHandler<Colaborador>{
+public abstract class CommonSearchColaboradorHandler extends CommonSearchBeanHandler<Colaborador>{
 
-	public CommonSearchColaboradorHandler(EntityManager<Colaborador> dao) {
-		super(Colaborador.class, dao);
+	private String[] showColumns = {"codigo","nome","email","cpf","cnpj"};
+	
+	public CommonSearchColaboradorHandler() {
+		super(Colaborador.class, DaoFactory.getInstance().getDao(Colaborador.class));
 	}
 	
+	@Override
 	public List<ResultFacade> wrapResult(List<Map<String, Object>> result) {
 		List<ResultFacade> resultWrap = new ArrayList<ResultFacade>(result.size());
 		Iterator<Map<String, Object>> iterator = result.iterator();
@@ -35,6 +37,9 @@ public abstract class CommonSearchColaboradorHandler extends CommoSearchBeanHand
 		}
 		return resultWrap;
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")	
 	public List<Map<String,Object>> evaluateResult(Search<Colaborador> search) throws SQLException{
 		SearchableColaborador searchable = (SearchableColaborador)search.getSearchable();
 		searchable.setCategoria(getCategoria());
@@ -50,4 +55,7 @@ public abstract class CommonSearchColaboradorHandler extends CommoSearchBeanHand
 		return result;			
 	}
 	public abstract CategoriaProduto getCategoria();
+	public String[] getShowColumns() {
+		return showColumns;
+	}
 }

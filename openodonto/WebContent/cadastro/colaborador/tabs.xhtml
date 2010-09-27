@@ -8,16 +8,17 @@
 	<rich:tabPanel switchType="client">
 		<rich:tab label="#{msg.tabPrincipal}" switchType="client" styleClass="oo-tabpanel">
 		    <div align="center">
-		        <ui:include src="tabPrincipal.xhtml" />
+		        <ui:decorate template="tabPrincipal.xhtml" />
 		    </div>			
 		</rich:tab>
 		<rich:tab label="#{msg.tabContat}" switchType="client" styleClass="oo-tabpanel">
 		    <div align="center">
-		        <ui:include src="tabContato.xhtml" />
+		        <ui:decorate template="tabContato.xhtml" />
 		    </div>
 		</rich:tab>
 		<rich:tab label="#{categoria.descricao}" switchType="client" styleClass="oo-tabpanel">
 		    <div align="center">
+		        <ui:decorate template="tabCategoria.xhtml" />
 		    </div>
 		</rich:tab>
 	</rich:tabPanel>

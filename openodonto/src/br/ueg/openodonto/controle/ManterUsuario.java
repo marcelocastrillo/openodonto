@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.busca.CommonSearchPessoaHandler;
+import br.ueg.openodonto.controle.busca.CommonSearchUsuarioHandler;
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchablePessoa;
 import br.ueg.openodonto.controle.busca.SearchableUsuario;
+import br.ueg.openodonto.controle.busca.ViewDisplayer;
 import br.ueg.openodonto.controle.servico.ManagePassword;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Pessoa;
@@ -38,19 +41,19 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 	
 	@Override
 	protected void initExtra() {
+		makeView(params);
 		this.search = new SearchBase<Usuario>(
-				new SearchableUsuario(new ViewDisplayer("searchDefault")),
+				new SearchableUsuario(new ViewDisplayer("searchDefault",getView())),
 				"Buscar Usuário",
 				"painelBusca");
 		this.personSearch = new SearchBase<Pessoa>(
-				new SearchablePessoa(new ViewDisplayer("searchPerson")),
+				new SearchablePessoa(new ViewDisplayer("searchPerson",getView())),
 				"Buscar Pessoa",
 				"painelBuscaPessoa");
-		this.search.addSearchListener(new SearchUsuarioHandler());
+		this.search.addSearchListener(new CommonSearchUsuarioHandler());
 		this.search.addSearchListener(new SearchUsuarioSelectedHandler());
-		this.personSearch.addSearchListener(new SearchPessoaHandler());
+		this.personSearch.addSearchListener(new CommonSearchPessoaHandler());
 		this.personSearch.addSearchListener(new SearchPessoaUsuarioSelectedHandler());
-		makeView(params);
 		managePassword = new ManagePassword(getUsuario(),this.getView());
 		managePassword.setEnableChangePassword(true);
 	}
@@ -134,12 +137,4 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		}
 	}
 	
-	protected class SearchUsuarioHandler extends SearchBeanHandler<Usuario>{
-		private String[] showColumns = {"codigo", "nome", "user",};
-		@Override
-		public String[] getShowColumns() {
-			return showColumns;
-		}		
-	}
-
 }

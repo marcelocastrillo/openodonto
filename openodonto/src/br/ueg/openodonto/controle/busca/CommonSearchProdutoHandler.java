@@ -10,19 +10,18 @@ import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
-import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.util.WordFormatter;
 
-public abstract class CommonSearchProdutoHandler extends CommoSearchBeanHandler<Produto>{
+public class CommonSearchProdutoHandler extends CommonSearchBeanHandler<Produto>{
 	
 	private String[] showColumns = {"codigo", "nome", "categoria", "descricao"};
 	
-	public CommonSearchProdutoHandler(EntityManager<Produto> dao){
-		super(Produto.class , dao);
+	public CommonSearchProdutoHandler(){
+		super(Produto.class , DaoFactory.getInstance().getDao(Produto.class));
 	}
 	
 	@Override
@@ -39,6 +38,7 @@ public abstract class CommonSearchProdutoHandler extends CommoSearchBeanHandler<
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<Map<String,Object>> evaluateResult(Search<Produto> search) throws SQLException{
 		SearchableProduto searchable = (SearchableProduto)search.getSearchable();
 		Produto produto = searchable.buildExample();

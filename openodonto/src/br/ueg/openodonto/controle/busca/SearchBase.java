@@ -86,6 +86,21 @@ public class SearchBase<T> implements Search<T>,Serializable {
 		listeners.add(listener);
 	}
 
+	@Override
+	public void showTimeQuery(int size , long time){
+		String buscarMessage = "formSearch"+getName()+":buscar"+getName(),
+		timeMessage = "formSearch"+getName()+":queryTime"+getName();
+		StringBuilder fetchedMsg = new StringBuilder();
+		fetchedMsg.append(String.format("Foram encontrados %d resultados.",size));
+		getDisplayer().getView().addResourceDynamicMenssage(fetchedMsg.toString(),buscarMessage);
+		if(time != -1){
+			StringBuilder FetchedTimeMsg = new StringBuilder();
+			double fTime = time / 1000.0;
+			FetchedTimeMsg.append(String.format("( %.3f segundos )",fTime));
+			getDisplayer().getView().addResourceDynamicMenssage(FetchedTimeMsg.toString(), timeMessage);
+		}
+	}
+	
 	private SearchEvent buildEvent(){
 		return new SearchEvent() {
 			@Override

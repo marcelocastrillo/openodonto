@@ -9,7 +9,6 @@ import java.util.Map;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
@@ -17,12 +16,14 @@ import br.ueg.openodonto.servico.busca.Searchable;
 import br.ueg.openodonto.servico.busca.event.AbstractSearchListener;
 import br.ueg.openodonto.servico.busca.event.SearchEvent;
 
-public abstract class CommoSearchBeanHandler<E extends Entity> extends AbstractSearchListener{
+public abstract class CommonSearchBeanHandler<E> extends AbstractSearchListener{
 	
 	private Class<E>          classe;
-	private EntityManager<E>  dao;
+	@SuppressWarnings("unchecked")
+	private EntityManager     dao;
 	
-	public CommoSearchBeanHandler(Class<E> classe,EntityManager<E> dao) {
+	@SuppressWarnings("unchecked")
+	public CommonSearchBeanHandler(Class<E> classe,EntityManager dao) {
 		this.dao = dao;
 		this.classe = classe;
 	}
@@ -36,7 +37,7 @@ public abstract class CommoSearchBeanHandler<E extends Entity> extends AbstractS
 			List<Map<String,Object>> result = evaluateResult(search);
 			addResults(search,result);
 			time = System.currentTimeMillis() - time;
-			showTimeQuery(search.getName(), result.size(), time);
+			search.showTimeQuery(result.size(), time);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -60,6 +61,7 @@ public abstract class CommoSearchBeanHandler<E extends Entity> extends AbstractS
 		return new ResultFacadeBean(value);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Map<String,Object>> evaluateResult(Search<E> search) throws SQLException{
 		E target = buildExample(search.getSearchable());
 		IQuery query = getQuery(target);				
@@ -76,14 +78,13 @@ public abstract class CommoSearchBeanHandler<E extends Entity> extends AbstractS
 		return ((AbstractSearchable<E>)searchable).buildExample();
 	}
 	
-	public EntityManager<E> getDao() {
+	@SuppressWarnings("unchecked")
+	public EntityManager getDao() {
 		return dao;
 	}
 	
 	public Class<E> getClasse() {
 		return classe;
-	}
-	
+	}	
 	public abstract String[] getShowColumns();
-	public abstract void showTimeQuery(String name, int size, long time);
 }

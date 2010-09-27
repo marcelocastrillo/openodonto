@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.busca.CommonSearchPacienteHandler;
+import br.ueg.openodonto.controle.busca.CommonSearchPessoaHandler;
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchablePaciente;
 import br.ueg.openodonto.controle.busca.SearchablePessoa;
+import br.ueg.openodonto.controle.busca.ViewDisplayer;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Paciente;
@@ -36,20 +39,20 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		super(Paciente.class);
 	}
 
-	protected void initExtra() {		
+	protected void initExtra() {
+		makeView(params);
 		this.search = new SearchBase<Paciente>(
-				new SearchablePaciente(new ViewDisplayer("searchDefault")),
+				new SearchablePaciente(new ViewDisplayer("searchDefault",getView())),
 				"Buscar Paciente",
 				"painelBusca");
 		this.personSearch = new SearchBase<Pessoa>(
-				new SearchablePessoa(new ViewDisplayer("searchPerson")),
+				new SearchablePessoa(new ViewDisplayer("searchPerson",getView())),
 				"Buscar Pessoa",
 				"painelBuscaPessoa");
-		this.search.addSearchListener(new SearchPacienteHandler());
+		this.search.addSearchListener(new CommonSearchPacienteHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
-		this.personSearch.addSearchListener(new SearchPessoaHandler());
+		this.personSearch.addSearchListener(new CommonSearchPessoaHandler());
 		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
-		makeView(params);
 		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this.getView());
 	}
 
@@ -91,14 +94,6 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 
 	public void setManageTelefone(ManageTelefone manageTelefone) {
 		this.manageTelefone = manageTelefone;
-	}
-
-	protected class SearchPacienteHandler extends SearchBeanHandler<Paciente>{
-		private String[] showColumns = {"codigo", "nome", "email", "cpf"};
-		@Override
-		public String[] getShowColumns() {
-			return showColumns;
-		}
 	}
 	
 }
