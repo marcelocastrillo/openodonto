@@ -25,11 +25,11 @@
 			    </h:panelGrid>
 				<h:panelGrid columns="2" id="gridPwds">
 				    <h:outputLabel for="entradaSenhaAtual" value="#{msg.manterUsuariosSenhaAtual}: " />
-				    <h:inputSecret id="entradaSenhaAtual" value="#{manterUsuario.managePassword.senha}" onkeyup="if(doEnter(event)){change();return false;}" />				
+				    <h:inputSecret id="entradaSenhaAtual" value="#{manterUsuario.managePassword.senha}" onkeyup="if(doEnter(event)){change();return false;}" redisplay="true"  />				
 				    <h:outputLabel for="entradaNovaSenha" value="#{msg.manterUsuariosNovaSenha}: " />
-				    <h:inputSecret id="entradaNovaSenha" value="#{manterUsuario.managePassword.novaSenha}" onkeyup="if(doEnter(event)){change();return false;}"/>
+				    <h:inputSecret id="entradaNovaSenha" value="#{manterUsuario.managePassword.novaSenha}" onkeyup="if(doEnter(event)){change();return false;}" redisplay="true" />
 				    <h:outputLabel for="entradaConfirmarNovaSenha" value="#{msg.manterUsuariosConfirmarNovaSenha}: " />
-				    <h:inputSecret id="entradaConfirmarNovaSenha" value="#{manterUsuario.managePassword.confirmaNovaSenha}" onkeyup="if(doEnter(event)){change();return false;}"/>
+				    <h:inputSecret id="entradaConfirmarNovaSenha" value="#{manterUsuario.managePassword.confirmaNovaSenha}" onkeyup="if(doEnter(event)){change();return false;}" redisplay="true" />
 			    </h:panelGrid>
 		        <div align="right" style="padding-top: 16px">
 				    <h:panelGroup>

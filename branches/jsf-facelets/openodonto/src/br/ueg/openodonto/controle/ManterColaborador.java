@@ -1,19 +1,22 @@
 package br.ueg.openodonto.controle;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.controle.busca.CommonSearchAssociateHandler;
 import br.ueg.openodonto.controle.busca.CommonSearchColaboradorHandler;
+import br.ueg.openodonto.controle.busca.CommonSearchPessoaHandler;
 import br.ueg.openodonto.controle.busca.CommonSearchProdutoHandler;
+import br.ueg.openodonto.controle.busca.CommonSearchSelectableBeanHandler;
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchableColaborador;
 import br.ueg.openodonto.controle.busca.SearchablePessoa;
 import br.ueg.openodonto.controle.busca.SearchableProduto;
 import br.ueg.openodonto.controle.busca.SelectableSearchBase;
+import br.ueg.openodonto.controle.busca.ViewDisplayer;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Colaborador;
@@ -21,9 +24,7 @@ import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.dominio.constante.TipoPessoa;
-import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.SelectableSearch;
@@ -54,26 +55,27 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 
 	@Override
 	protected void initExtra() {
+		makeView(params);
 		this.manageTelefone = new ManageTelefone(getColaborador().getTelefone(), this.getView());
 		this.search = new SearchBase<Colaborador>(
-				new SearchableColaborador(new ViewDisplayer("searchDefaultOutput")),
+				new SearchableColaborador(new ViewDisplayer("searchDefaultOutput",getView())),
 				"Buscar Colaborador",
 				"painelBusca");
 		this.personSearch = new SearchBase<Pessoa>(
-				new SearchablePessoa(new ViewDisplayer("searchPerson")),
+				new SearchablePessoa(new ViewDisplayer("searchPerson",getView())),
 				"Buscar Pessoa",
 				"painelBuscaPessoa");
 		this.searchProduto = new SelectableSearchBase<Produto>(
-				new SearchableProduto(new ViewDisplayer("searchProduct")),
+				new SearchableProduto(new ViewDisplayer("searchProduct",getView())),
 				"Associar Produto",
 				"painelBuscaProduto");
 		this.search.addSearchListener(new SearchColaboradorHandler());
 		this.search.addSearchListener(new SearchSelectedHandler());
-		this.personSearch.addSearchListener(new SearchPessoaHandler());
+		this.personSearch.addSearchListener(new CommonSearchPessoaHandler());
 		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
-		this.searchProduto.addSearchListener(new SearchSelectableProdutoHandler());
+		this.searchProduto.addSearchListener(new SearchProdutoSelectableHandler());
+		this.searchProduto.addSearchListener(new CommonSearchAssociateHandler());
 		this.tipoPessoa = TipoPessoa.PESSOA_FISICA;
-		makeView(params);
 	}
 	
 	@Override
@@ -175,69 +177,41 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	public void setManageTelefone(ManageTelefone manageTelefone) {
 		this.manageTelefone = manageTelefone;
 	}
-
-	protected class SearchSelectableProdutoHandler extends SearchSelectableHandler<Produto>{
-		private String[] showColumns = {"codigo", "nome", "categoria", "descricao"};
-		private CommonSearchProdutoHandler produtoHandler = null;
-		public SearchSelectableProdutoHandler(){
-			EntityManager<Produto> dao = DaoFactory.getInstance().getDao(Produto.class);
-			produtoHandler = new CommonSearchProdutoHandler(dao) {			
+	
+	protected class SearchProdutoSelectableHandler extends CommonSearchSelectableBeanHandler<Produto>{
+		private CommonSearchProdutoHandler searchProduto;		
+		public SearchProdutoSelectableHandler() {
+			super(Produto.class, DaoFactory.getInstance().getDao(Produto.class));
+			searchProduto = new CommonSearchProdutoHandler(){
 				@Override
-				public IQuery getQuery(Produto example) {
-					return SearchSelectableProdutoHandler.this.getQuery(example);
-				}				
+				protected void addResults(Search<Produto> search,List<Map<String, Object>> result) {
+					SearchProdutoSelectableHandler.this.addResults(search, result);
+				}
 				@Override
-				public ResultFacade buildWrapBean(Map<String, Object> value) {
-					return SearchSelectableProdutoHandler.this.buildWrapBean(value);
+				protected ResultFacade buildWrapBean(Map<String, Object> value) {
+					return SearchProdutoSelectableHandler.this.buildWrapBean(value);
 				}
 			};
 		}
 		@Override
 		public String[] getShowColumns() {
-			return showColumns;
+			return searchProduto.getShowColumns();
 		}
 		@Override
 		protected List<ResultFacade> wrapResult(List<Map<String, Object>> result) {
-			return produtoHandler.wrapResult(result);
+			return searchProduto.wrapResult(result);
 		}
 		@Override
-		public List<Map<String,Object>> evaluateResult(Search<Produto> search) throws SQLException{
-			return produtoHandler.evaluateResult(search);			
-		}		
+		public List<Map<String, Object>> evaluateResult(Search<Produto> search)	throws SQLException {
+			return searchProduto.evaluateResult(search);
+		}
 	}
 	
-	@SuppressWarnings("serial")
-	protected class SearchColaboradorHandler extends SearchBeanHandler<Colaborador> implements Serializable{
-		private String[] showColumns = {"codigo","nome","email","cpf","cnpj"};
-		private CommonSearchColaboradorHandler colaboradorHandler;
-		public SearchColaboradorHandler() {
-			colaboradorHandler = new CommonSearchColaboradorHandler(getDao()){				
-				@Override
-				public IQuery getQuery(Colaborador example) {
-					return SearchColaboradorHandler.this.getQuery(example);
-				}				
-				@Override
-				public CategoriaProduto getCategoria() {
-					return ManterColaborador.this.getCategoria();
-				}				
-				@Override
-				public ResultFacade buildWrapBean(Map<String, Object> value) {
-					return SearchColaboradorHandler.this.buildWrapBean(value);
-				}
-			};
-		}
+	protected class SearchColaboradorHandler extends CommonSearchColaboradorHandler{
 		@Override
-		public String[] getShowColumns() {
-			return showColumns;
-		}
-		@Override
-		protected List<ResultFacade> wrapResult(List<Map<String, Object>> result) {
-			return colaboradorHandler.wrapResult(result);
-		}
-		public List<Map<String,Object>> evaluateResult(Search<Colaborador> search) throws SQLException{
-			return colaboradorHandler.evaluateResult(search);
+		public CategoriaProduto getCategoria() {
+			return ManterColaborador.this.getCategoria();
 		}
 		
 	}
-
 }

@@ -69,5 +69,11 @@ public class SelectableSearchBase<T> extends SearchBase<T> implements Selectable
 	public List<SelectableResult> getSelectableResults() {
 		return results;
 	}
+	
+	@Override
+	public void clean() {
+		super.clean();
+		getSelectableResults().clear();
+	}
 
 }

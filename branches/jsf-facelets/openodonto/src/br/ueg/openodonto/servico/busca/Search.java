@@ -15,5 +15,6 @@ public interface Search<T>{
 	void                           search();
 	void                           setSelected(ResultFacade bean);
 	void                           clean();
+	void                           showTimeQuery(int size , long time);
 	
 }
