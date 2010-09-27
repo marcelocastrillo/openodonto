@@ -100,14 +100,10 @@ public class DaoDentista extends DaoCrud<Dentista> {
 	}
 
 	@Override
-	protected boolean beforeRemove(Dentista o, Map<String, Object> params)
-			throws Exception {
+	protected boolean beforeRemove(Dentista o, Map<String, Object> params)throws Exception {
 		List<String> referencias = referencedConstraint(Pessoa.class, params);
-		if (referencias.contains(CrudQuery.getTableName(Dentista.class))
-				&& referencias.contains(CrudQuery.getTableName(Telefone.class))
-				&& referencias.size() == 2) {
-			EntityManager<Telefone> entityManagerTelefone = DaoFactory
-					.getInstance().getDao(Telefone.class);
+		if (isLastConstraintWithTelefone(referencias)) {
+			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 			for (Telefone telefone : o.getTelefone()) {
 				entityManagerTelefone.remover(telefone);
 			}

@@ -9,5 +9,6 @@ import br.ueg.openodonto.dominio.Usuario;
 public interface LoginManager {
 
     Usuario autenticar(Usuario usuario);
+    Usuario autenticar(String usuario, String senha);
 
 }

@@ -299,15 +299,24 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		public void load() {
 			try {
 				if(!ManageBeanGeral.this.dao.exists(getBackBean())){
-				    EntityManager<Pessoa> dao = DaoFactory.getInstance().getDao(Pessoa.class);
-				    dao.load((Pessoa)getBackBean());
+					loadJustPerson();
 				}else{
-					ManageBeanGeral.this.dao.load(getBackBean());
+					loadAlreadyEntity();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		
+		protected void loadAlreadyEntity() throws Exception{
+			ManageBeanGeral.this.dao.load(getBackBean());
+		}
+		
+		protected void loadJustPerson() throws Exception{
+		    EntityManager<Pessoa> dao = DaoFactory.getInstance().getDao(Pessoa.class);
+		    dao.load((Pessoa)getBackBean());			
+		}
+		
 		
 	}
 	

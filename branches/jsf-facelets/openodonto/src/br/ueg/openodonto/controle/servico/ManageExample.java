@@ -70,14 +70,16 @@ public class ManageExample<T> implements Serializable{
 		for(Iterator<Validator> iterator = inputField.getValidators().iterator();iterator.hasNext();){
 			Validator validator = iterator.next();
 			if(!validator.isValid() && checkInvalidPermiteds(invalidPermiteds,validator)){
-				filter.displayValidationMessage("* " + filter.getLabel() +
-						" = '" +
-						WordFormatter.abstractStr(inputField.getValue().toString(), 10) +
-						"' : " +
-						validator.getErrorMessage());
+				filter.displayValidationMessage(
+						WordFormatter.formatErrorMessage(
+								filter.getLabel(),
+								inputField.getValue().toString(),
+								validator.getErrorMessage()));
 			}
 		}
 	}
+	
+
 	
 	private Object getValue(InputField<?> inputField ,ExampleRequest<T>.TypedFilter typedFilter){
 		Object value = inputField.getValue();

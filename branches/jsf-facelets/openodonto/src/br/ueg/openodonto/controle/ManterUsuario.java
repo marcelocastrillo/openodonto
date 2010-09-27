@@ -13,6 +13,7 @@ import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.servico.busca.Search;
+import br.ueg.openodonto.util.ShaUtil;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterUsuario extends ManageBeanGeral<Usuario> {
@@ -46,11 +47,12 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 				"Buscar Pessoa",
 				"painelBuscaPessoa");
 		this.search.addSearchListener(new SearchUsuarioHandler());
-		this.search.addSearchListener(new SearchSelectedHandler());
+		this.search.addSearchListener(new SearchUsuarioSelectedHandler());
 		this.personSearch.addSearchListener(new SearchPessoaHandler());
-		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
+		this.personSearch.addSearchListener(new SearchPessoaUsuarioSelectedHandler());
 		makeView(params);
 		managePassword = new ManagePassword(getUsuario(),this.getView());
+		managePassword.setEnableChangePassword(true);
 	}
 
 	@Override
@@ -59,7 +61,6 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		formatados.add("nome");
 		return formatados;
 	}
-
 	
 	@Override
 	protected List<ValidationRequest> getCamposObrigatorios() {
@@ -68,10 +69,26 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		obrigatorios.add(new ValidationRequest("user",ValidatorFactory.newSrtEmpty(), "formUsuario:entradaUser"));
 		obrigatorios.add(new ValidationRequest("senha",ValidatorFactory.newSrtEmpty(), "formDentista:entradaSenha"));
 		return obrigatorios;
-	}
+	}	
 
 	protected void carregarExtra() {
 		managePassword.setUsuario(getUsuario());
+	}
+	
+	@Override
+	public void acaoSalvar() {
+		if(getManagePassword().getEnableChangePassword()){
+			getUsuario().setSenha(getManagePassword().getSenhaCadastro());
+		}		
+		super.acaoSalvar();
+	}
+	
+	@Override
+	public void acaoSalvarExtra() {
+		if(getManagePassword().getEnableChangePassword()){
+		    String hashPwd = ShaUtil.hash(getManagePassword().getSenhaCadastro());
+		    getUsuario().setSenha(hashPwd);
+		}
 	}
 	
 	public Usuario getUsuario() {
@@ -92,6 +109,29 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 	
 	public Search<Pessoa> getPersonSearch() {
 		return personSearch;
+	}
+	
+	protected class SearchUsuarioSelectedHandler extends SearchSelectedHandler{
+		private static final long serialVersionUID = -2628406982724139783L;
+		@Override
+		public void load() {
+			super.load();
+			ManterUsuario.this.getManagePassword().setEnableChangePassword(false);
+		}		
+	}
+	
+	protected class SearchPessoaUsuarioSelectedHandler extends SearchPessoaSelectedHandler{
+		private static final long serialVersionUID = 5918458632782223511L;
+		@Override
+		protected void loadAlreadyEntity() throws Exception {
+			super.loadAlreadyEntity();
+			ManterUsuario.this.getManagePassword().setEnableChangePassword(false);
+		}
+		@Override
+		protected void loadJustPerson() throws Exception {
+			super.loadJustPerson();
+			ManterUsuario.this.getManagePassword().setEnableChangePassword(true);
+		}
 	}
 	
 	protected class SearchUsuarioHandler extends SearchBeanHandler<Usuario>{

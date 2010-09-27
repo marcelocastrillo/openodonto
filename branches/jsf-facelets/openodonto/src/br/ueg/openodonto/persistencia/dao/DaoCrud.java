@@ -163,21 +163,9 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 			beforeLoad(o);
 			T loaded = lista.get(0);
 			OrmFormat ormLoaded = new OrmFormat(loaded);
-			orm.parse(getCleanFormat(ormLoaded.format()));
+			orm.parse(OrmFormat.getCleanFormat(ormLoaded.format()));
 			afterLoad(o);
 		}
-	}
-	
-	protected Map<String,Object> getCleanFormat(Map<String, Object> formated){
-		Map<String,Object> clean = new HashMap<String, Object>();
-		for(Map.Entry<String, Object> entry : formated.entrySet()){
-			String key = entry.getKey();
-			if(entry.getKey().contains(".")){
-				key = key.substring(key.lastIndexOf(".") + 1);
-			}
-			clean.put(key, entry.getValue());
-		}
-		return clean;
 	}
 
 	protected void afterLoad(T o) throws Exception {
@@ -211,6 +199,10 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	protected void afterRemove(T o) throws Exception {
 	}
 
+	public List<Field> getFields() {
+		return fields;
+	}
+	
 	/**
 	 * Faz uma select na classe recebida em 'relacao' com join para classe atual do DAO .
 	 * Para filtrar o join ( clausula 'ON') usa a declaracao de foregin key presente no field 'name'.

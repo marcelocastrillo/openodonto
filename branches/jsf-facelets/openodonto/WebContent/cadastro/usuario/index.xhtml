@@ -45,11 +45,11 @@
 				                    <rich:message id="messageEntradaSenha" for="entradaSenha" styleClass="oo-validation-messages" />
 				                </h:panelGrid>
 				                <h:panelGrid columns="3">
-								    <h:inputSecret disabled="#{mPwd.enableChangePassword}" id="entradaSenha" value="#{mPwd.senhaCadastro}" redisplay="true" style=" width : 280px;" />
+								    <h:inputSecret disabled="#{not mPwd.enableChangePassword}" id="entradaSenha" value="#{mPwd.senhaCadastro}" redisplay="true" style=" width : 280px;" />
 								    <a4j:commandButton 
-								    		disabled="#{not mPwd.enableChangePassword}"
+								    		disabled="#{mPwd.enableChangePassword}"
 								    		value="#{msg.manterUsuariosChangePwd}"
-								    		image="#{mPwd.enableChangePassword ? msg.imgBotaoMiniEdit : msg.imgBotaoMiniDisableEdit}"
+								    		image="#{mPwd.enableChangePassword ? msg.imgBotaoMiniDisableEdit : msg.imgBotaoMiniEdit}"
 								    		onclick="Richfaces.showModalPanel('painelAlterarSenha')">
 								        <rich:toolTip value="#{msg.manterUsuariosChangePwd}" />
 								    </a4j:commandButton>
@@ -63,9 +63,9 @@
 	</ui:define>
 	<ui:define name="extraContent">
         <ui:include src="/cadastro/commons/crud/actions.xhtml"/>
-        <ui:include src="modalChangePwd.xhtml"/>
     </ui:define>
     <ui:define name="outOfFormContent">
+        <ui:include src="modalChangePwd.xhtml"/>
         <oo:search search="#{mBean.search}" />
         <oo:search search="#{mBean.personSearch}" />
     </ui:define>

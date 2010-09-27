@@ -4,7 +4,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.dominio.Pessoa;
+import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.Usuario;
+import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.orm.Dao;
@@ -34,14 +37,18 @@ public class DaoUsuario extends DaoCrud<Usuario> {
 		return new Usuario();
 	}
 	
-	public void changePassWord(Usuario usuario,String newPwd) throws SQLException{
-		OrmFormat format = new OrmFormat(usuario);
-		Map<String,Object> whereParams = getCleanFormat(format.format("codigo","senha"));
-		usuario.setSenha(newPwd);
-		Map<String,Object> object = format.format("senha");
-		String tabela = CrudQuery.getTableName(getClasse());
-		IQuery query = CrudQuery.getUpdateQuery(object,whereParams ,tabela);
-		execute(query);
+	@Override
+	protected boolean beforeRemove(Usuario o, Map<String, Object> params)throws Exception {
+		List<String> referencias = referencedConstraint(Pessoa.class, params);
+		if (isLastConstraintWithTelefone(referencias)) {
+			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+			for (Telefone telefone : o.getTelefone()) {
+				entityManagerTelefone.remover(telefone);
+			}
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	@Override
