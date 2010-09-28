@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.dominio.Colaborador;
+import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Pessoa;
+import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
@@ -51,16 +53,19 @@ public class DaoColaborador extends DaoCrud<Colaborador> {
 
 	@Override
 	protected void afterUpdate(Colaborador o) throws Exception {
-		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
-		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
+		updateRelationship(o);
 	}
 
 	@Override
 	protected void aferInsert(Colaborador o) throws Exception {
-		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		updateRelationship(o);
+	}
+	
+	private void updateRelationship(Colaborador o) throws Exception{
+		DaoTelefone daoTelefone = (DaoTelefone)DaoFactory.getInstance().getDao(Telefone.class);
 		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
+		DaoProduto daoProduto = (DaoProduto)DaoFactory.getInstance().getDao(Produto.class);
+		daoProduto.updateRelationshipProduto(o);		
 	}
 	
 	@Override
@@ -81,24 +86,31 @@ public class DaoColaborador extends DaoCrud<Colaborador> {
 	
 	@Override
 	public void afterLoad(Colaborador o) throws Exception {
-		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		DaoTelefone daoTelefone = (DaoTelefone) DaoFactory.getInstance().getDao(Telefone.class);
 		List<Telefone> telefones = daoTelefone.getTelefonesRelationshipPessoa(o.getCodigo());
 		o.setTelefone(telefones);
+		DaoProduto daoProduto = (DaoProduto)DaoFactory.getInstance().getDao(Produto.class);
+		List<Produto> produtos = daoProduto.getProdutosRelationshipColaborador(o.getCodigo());
+		o.setProdutos(produtos);
 	}
 	
 	@Override
 	protected boolean beforeRemove(Colaborador o, Map<String, Object> params)throws Exception {
 		List<String> referencias = referencedConstraint(Pessoa.class, params);
+		boolean tolerance = true;
 		if (isLastConstraintWithTelefone(referencias)) {
 			EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 			for (Telefone telefone : o.getTelefone()) {
 				entityManagerTelefone.remover(telefone);
 			}
-			return false;
-		} else {
-			return true;
+			tolerance = false;
 		}
+		DaoColaboradorProduto daoCP = (DaoColaboradorProduto) DaoFactory.getInstance().getDao(ColaboradorProduto.class);
+		for(Produto produto : o.getProdutos()){
+			ColaboradorProduto cp = new ColaboradorProduto(o.getCodigo(),produto.getCodigo());
+			daoCP.remover(cp);
+		}
+		return tolerance;
 	}
 	
 }

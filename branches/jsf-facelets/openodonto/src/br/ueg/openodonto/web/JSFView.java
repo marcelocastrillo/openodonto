@@ -81,16 +81,13 @@ public class JSFView implements ApplicationView {
 	}
 
 	@Override
-	public void addLocalDynamicMenssage(String msg, String target,
-			boolean targetParam) {
-		messageBundleList.add(new MessageBundle(MSG_TIPO.dinamica, msg,
-				targetParam ? params.get(target) : target));
+	public void addLocalDynamicMenssage(String msg, String target,boolean targetParam) {
+		messageBundleList.add(new MessageBundle(MSG_TIPO.dinamica, msg,	targetParam ? params.get(target) : target));
 	}
 
 	@Override
 	public void addLocalMessage(String key, String target, boolean targetParam) {
-		messageBundleList.add(new MessageBundle(MSG_TIPO.dinamica,
-				resourceBundle.getString(key), targetParam ? params.get(target) : target));
+		messageBundleList.add(new MessageBundle(MSG_TIPO.dinamica,resourceBundle.getString(key), targetParam ? params.get(target) : target));
 	}
 
 	protected HttpServletRequest getRequest() {

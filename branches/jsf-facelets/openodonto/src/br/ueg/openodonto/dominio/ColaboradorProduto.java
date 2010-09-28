@@ -14,11 +14,18 @@ public class ColaboradorProduto implements Entity{
 	@Id(autoIncrement = IdIncrementType.IDENTITY)
 	private Long codigo;
 	
+	@Id
 	@Column(name="colaborador_id_pessoa",joinFields={@ForwardKey(tableField="id_pessoa",foreginField="colaborador_id_pessoa")})
 	private Long colaboradorIdPessoa;
 	
+	@Id
 	@Column(name="produto_id_produto",joinFields={@ForwardKey(tableField="id_produto",foreginField="produto_id_produto")})
 	private Long produtoIdProduto;
+		
+	public ColaboradorProduto(Long colaboradorIdPessoa, Long produtoIdProduto) {
+		this.colaboradorIdPessoa = colaboradorIdPessoa;
+		this.produtoIdProduto = produtoIdProduto;
+	}
 
 	public ColaboradorProduto() {
 	}

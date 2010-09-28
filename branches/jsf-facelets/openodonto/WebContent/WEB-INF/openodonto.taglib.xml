@@ -15,4 +15,8 @@
 	    <tag-name>selectableSearch</tag-name>
 	    <source>../cadastro/commons/busca/selecionavel/selectableSearch.xhtml</source>
 	</tag>
+	<tag>
+	    <tag-name>label</tag-name>
+	    <source>../cadastro/commons/crud/label.xhtml</source>
+	</tag>
 </facelet-taglib>

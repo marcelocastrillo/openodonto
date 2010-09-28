@@ -4,16 +4,22 @@ import br.ueg.openodonto.persistencia.orm.Entity;
 
 public enum CategoriaProduto implements Entity{
 
-	SERVICO("Serviço"), PRODUTO("Produto");
+	SERVICO("Serviço","Prestador de Serviço"), PRODUTO("Produto","Fornecedor");
 
 	private String descricao;
+	private String colaborador;
 
-	private CategoriaProduto(String descricao) {
+	private CategoriaProduto(String descricao,String colabordor) {
 		this.descricao = descricao;
+		this.colaborador = colabordor;
 	}
 
 	public String getDescricao() {
 		return descricao;
+	}	
+	
+	public String getColaborador() {
+		return colaborador;
 	}
 
 	public long getCodigo() {

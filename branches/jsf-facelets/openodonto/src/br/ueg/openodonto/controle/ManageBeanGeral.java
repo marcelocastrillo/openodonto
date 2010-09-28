@@ -2,6 +2,7 @@ package br.ueg.openodonto.controle;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -79,16 +80,21 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 	protected List<ValidationRequest> getCamposObrigatorios(){
 		return Collections.EMPTY_LIST;
 	}
+	
+	@SuppressWarnings("unchecked")
+	protected List<ValidationRequest> getCamposValidados(){
+		return Collections.EMPTY_LIST;
+	}
 
 	@SuppressWarnings("unchecked")
 	protected List<String> getCamposFormatados(){
 		return Collections.EMPTY_LIST;
 	}
 
-	protected void ValidarCamposExtras(){};
+	protected void formatarCamposExtras(){};
 
 	protected void acaoFormatarCampos() throws Exception {
-		ValidarCamposExtras();
+		formatarCamposExtras();
 		List<String> camposFormatados = getCamposFormatados();
 		for (String path : camposFormatados) {
 			Object o = PBUtil.instance().getNestedProperty(getBackBean(), path);
@@ -104,32 +110,60 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			}
 		}
 	}
-
-	protected boolean checarCamposObrigatoriosExtras() {
-		return true;
+	
+	private boolean checkInvalidPermiteds(List<Class<?>> invalidPermiteds,Validator validator){
+		Iterator<Class<?>> iterator  = invalidPermiteds.iterator();
+		boolean valid = true;
+		while(iterator.hasNext()){
+			Class<?> permited = iterator.next();
+			valid = valid && !permited.isAssignableFrom(validator.getSource().getClass());
+		}
+		return valid;
 	}
 
-	protected boolean checarCamposObrigatorios() throws Exception {
+	private boolean evaluateValidators(List<ValidationRequest> validations) throws Exception{
 		boolean returned = true;
-		List<ValidationRequest> camposObrigatorios = getCamposObrigatorios();
-		for (ValidationRequest validation : camposObrigatorios) {
+		for (ValidationRequest validation : validations) {
 			Validator validador = validation.getValidator();
 			validador.setValue(PBUtil.instance().getNestedProperty(getBackBean(), validation.getPath()));
-			if (!validador.isValid()) {
+			if (!validador.isValid() && checkInvalidPermiteds(validation.getInvalidPermiteds(),validador)) {
 				getView().addLocalDynamicMenssage("* " + validador.getErrorMessage(), validation.getOut(), false);
 				returned = false;
 			}
 		}
-		return checarCamposObrigatoriosExtras() && returned;
+		return returned;
+	}
+	
+	protected boolean checarCamposObrigatoriosExtras() {
+		return true;
+	}
+	
+	protected boolean checarCamposObrigatorios() throws Exception {
+		List<ValidationRequest> camposObrigatorios = getCamposObrigatorios();
+		return checarCamposObrigatoriosExtras() && evaluateValidators(camposObrigatorios);
 	}
 
+	protected boolean checarCamposValidadosExtras() {
+		return true;
+	}
+	
+	protected boolean checarCamposValidados()throws Exception{
+		List<ValidationRequest> camposValidados = getCamposValidados();
+		return checarCamposValidadosExtras() && evaluateValidators(camposValidados);
+	}
+	
 	public void acaoSalvar() {
 		boolean alredy = false;
 		try {
 			acaoFormatarCampos();
-			if (!checarCamposObrigatorios()) {
+			if(!checarCamposObrigatorios()) {
 				exibirPopUp(getView().getMessageFromResource("camposObrigatorios"));
-				getView().addLocalDynamicMenssage("Campos obrigatorios invalidos.", "saidaPadrao", true);
+				getView().addLocalMessage("camposObrigatorios", "saidaPadrao", true);
+				return;
+			}
+			if(!checarCamposValidados()){
+				exibirPopUp(getView().getMessageFromResource("camposInvalidos"));
+				getView().addLocalMessage("camposInvalidos", "saidaPadrao", true);
 				return;
 			}
 			if (dao.exists(getBackBean())){

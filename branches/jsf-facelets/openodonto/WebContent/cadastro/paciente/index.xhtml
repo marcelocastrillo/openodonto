@@ -23,29 +23,17 @@
 					    <h:panelGrid columns="2">
 					        <oo:personSearch codigo="#{manterPaciente.paciente.codigo}" searchName="painelBuscaPessoa" />
 							<h:panelGrid columns="1">
-							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="#{msg.ooNome}" for="entradaNome"  style="color : red" />
-				                    <rich:spacer width="8" />
-				                    <rich:message id="messageEntradaNome" for="entradaNome" styleClass="oo-validation-messages" />
-				                </h:panelGrid>
+							    <oo:label value="#{msg.ooNome}" for="entradaNome" required="true" />
 								<h:inputText id="entradaNome" value="#{manterPaciente.paciente.nome}" style="width : 310px;"	/>
 							</h:panelGrid>           
 							<h:panelGrid columns="1">
-							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="#{msg.ooCpf}" for="entradaCpf" style="color : red"/>
-				                    <rich:spacer width="8" />
-				                    <rich:message id="messageEntradaCpf" for="entradaCpf" styleClass="oo-validation-messages" />
-				                </h:panelGrid>
+							    <oo:label value="#{msg.ooCpf}:" for="entradaCpf" required="true" />
 								<h:inputText value="#{manterPaciente.paciente.cpf}" id="entradaCpf" style="width : 160px;">
 									<rich:jQuery selector="#entradaCpf" query="mask('999.999.999-99')" timing="onload" />
 								</h:inputText>
 							</h:panelGrid>				
 							<h:panelGrid columns="1">
-							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="#{msg.ooDataInicioTrat}" for="dataInicioTratamento" />
-				                    <rich:spacer width="8" />
-				                    <rich:message id="messageDataInicioTratamento" for="dataInicioTratamento" styleClass="oo-validation-messages" />
-				                </h:panelGrid>
+							    <oo:label value="#{msg.ooDataInicioTrat}" for="dataInicioTratamento" required="true" />
 								<rich:calendar id="dataInicioTratamento" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataInicioTratamento}" inputStyle="width : 290px;" >
 									<f:converter converterId="SqlDateConverter" />
 								</rich:calendar>

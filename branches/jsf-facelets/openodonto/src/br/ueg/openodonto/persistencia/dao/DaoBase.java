@@ -116,11 +116,9 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 		if (params != null) {
 			for (int i = 1; i < params.length + 1; i++) {
 				if (params[i - 1] instanceof Date) {
-					preparedStatement.setDate(i, new java.sql.Date(
-							((Date) params[i - 1]).getTime()));
+					preparedStatement.setDate(i, new java.sql.Date(	((Date) params[i - 1]).getTime()));
 				} else if (params[i - 1] instanceof String) {
-					preparedStatement.setString(i, String
-							.valueOf(params[i - 1]));
+					preparedStatement.setString(i, String.valueOf(params[i - 1]));
 				} else {
 					preparedStatement.setObject(i, params[i - 1]);
 				}

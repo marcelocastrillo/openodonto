@@ -179,7 +179,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	public void remover(T o) throws Exception {
 		Savepoint save = null;
 		try {
-			save = getConnection().setSavepoint("Before Remove Telefone - Savepoint");
+			save = getConnection().setSavepoint("Before Remove - Savepoint");
 			OrmFormat orm = new OrmFormat(o);
 			Map<String, Object> params = orm.formatKey();
 			boolean tolerance = beforeRemove(o, params);

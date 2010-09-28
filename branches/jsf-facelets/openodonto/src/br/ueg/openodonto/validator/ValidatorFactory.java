@@ -19,10 +19,14 @@ public class ValidatorFactory {
 	}
 	
 	public static Validator newStrMask(String mask){
-		return new NullValidator(new EmptyValidator(new MaskValidator("", mask)));
+		return newStrMask(mask,Integer.MAX_VALUE);
 	}
 	
-	public static Validator newSrtEmpty(){
+	public static Validator newStrMask(String mask,int max){
+		return new NullValidator(new EmptyValidator(new StringSizeValidator(new MaskValidator("", mask), max,0)));
+	}
+	
+	public static Validator newStrEmpty(){
 		return new NullValidator(new EmptyValidator(""));
 	}
 	
@@ -38,8 +42,11 @@ public class ValidatorFactory {
 		return newStrMask("^[0-9]{2}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[/]?[0-9]{4}[-]?[0-9]{2}");//99.999.999/9999-99
 	}
 	
-	public static Validator newEmail(){
-		return newStrMask("([\\w\\._-])+@([\\w-]+\\.)+[\\w-]+");
+	public static Validator newEmail(int max){
+		return newStrMask("([\\w\\._-])+@([\\w-]+\\.)+[\\w-]+",max);
 	}
-
+	
+	public static Validator newEmail(){
+		return newEmail(Integer.MAX_VALUE);
+	}
 }

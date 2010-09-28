@@ -21,11 +21,7 @@
                         <h:panelGrid columns="2">
                             <oo:personSearch codigo="#{manterColaborador.colaborador.codigo}" searchName="painelBuscaPessoa" />
                             <h:panelGrid columns="1">
-                                <h:panelGroup>
-                                	<h:outputLabel id="labelEntradaNome" for="entradaNome" value="#{msg.nomeRazaoSocial}:" style="color : red" />
-			                    	<rich:spacer width="8" />
-			                    	<rich:message id="messageEntradaNome" for="entradaNome" styleClass="oo-validation-messages" />
-                                </h:panelGroup>
+                                <oo:label value="#{msg.ooNome}:" for="entradaNome" required="true" />
                                 <h:inputText id="entradaNome" value="#{manterColaborador.colaborador.nome}" style=" width : 240px;"/>
                             </h:panelGrid>
                             

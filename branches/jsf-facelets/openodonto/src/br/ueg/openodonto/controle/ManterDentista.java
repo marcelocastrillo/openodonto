@@ -69,9 +69,15 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 	protected List<ValidationRequest> getCamposObrigatorios() {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
 		obrigatorios.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100, 5,true), "formDentista:entradaNome"));
-		obrigatorios.add(new ValidationRequest("cro", ValidatorFactory.newSrtEmpty(), "formDentista:entradaCro"));
+		obrigatorios.add(new ValidationRequest("cro", ValidatorFactory.newStrEmpty(), "formDentista:entradaCro"));
 		obrigatorios.add(new ValidationRequest("especialidade",	ValidatorFactory.newStrRangeLen(150, 3,true),"formDentista:entradaEspecialidade"));
 		return obrigatorios;
+	}
+	
+	@Override
+	protected List<ValidationRequest> getCamposValidados(){
+		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
+		return validados;
 	}
 	
 	@Override
