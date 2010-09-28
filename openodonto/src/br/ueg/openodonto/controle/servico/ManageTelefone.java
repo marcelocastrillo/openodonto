@@ -31,7 +31,6 @@ public class ManageTelefone implements Serializable {
 	private boolean          sucessEdit;
 
 	public ManageTelefone(List<Telefone> telefones,ApplicationView view) {
-		this.telefone = new Telefone();
 		this.telefones = telefones;
 		this.view = view;
 		this.validatorNumber = ValidatorFactory.newStrRangeLen(15, 4, true);

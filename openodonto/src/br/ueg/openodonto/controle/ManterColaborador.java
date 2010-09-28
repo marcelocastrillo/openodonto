@@ -17,6 +17,7 @@ import br.ueg.openodonto.controle.busca.SearchablePessoa;
 import br.ueg.openodonto.controle.busca.SearchableProduto;
 import br.ueg.openodonto.controle.busca.SelectableSearchBase;
 import br.ueg.openodonto.controle.busca.ViewDisplayer;
+import br.ueg.openodonto.controle.servico.ManageProduto;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Colaborador;
@@ -35,6 +36,7 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	private static final long serialVersionUID = 7597358634869495788L;
 	
 	private ManageTelefone                manageTelefone;
+	private ManageProduto                 manageProduto;
 	private static Map<String, String>    params;
 	private Search<Colaborador>           search;
 	private SelectableSearch<Produto>     searchProduto; 
@@ -57,6 +59,7 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	protected void initExtra() {
 		makeView(params);
 		this.manageTelefone = new ManageTelefone(getColaborador().getTelefone(), this.getView());
+		this.manageProduto = new ManageProduto(getColaborador().getProdutos());
 		this.search = new SearchBase<Colaborador>(
 				new SearchableColaborador(new ViewDisplayer("searchDefaultOutput",getView())),
 				"Buscar Colaborador",
@@ -74,7 +77,7 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 		this.personSearch.addSearchListener(new CommonSearchPessoaHandler());
 		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
 		this.searchProduto.addSearchListener(new SearchProdutoSelectableHandler());
-		this.searchProduto.addSearchListener(new CommonSearchAssociateHandler());
+		this.searchProduto.addSearchListener(new SearchColaboradorAssociateHandler());
 		this.tipoPessoa = TipoPessoa.PESSOA_FISICA;
 	}
 	
@@ -126,6 +129,7 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	@Override
 	protected void carregarExtra() {
 		manageTelefone.setTelefones(getColaborador().getTelefone());
+		manageProduto.setProdutos(getColaborador().getProdutos());
 	}	
 	
 	public Colaborador getColaborador(){
@@ -176,8 +180,18 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 
 	public void setManageTelefone(ManageTelefone manageTelefone) {
 		this.manageTelefone = manageTelefone;
-	}
+	}	
 	
+	public ManageProduto getManageProduto() {
+		return manageProduto;
+	}
+
+	public void setManageProduto(ManageProduto manageProduto) {
+		this.manageProduto = manageProduto;
+	}
+
+
+
 	protected class SearchProdutoSelectableHandler extends CommonSearchSelectableBeanHandler<Produto>{
 		private CommonSearchProdutoHandler searchProduto;		
 		public SearchProdutoSelectableHandler() {
@@ -204,6 +218,16 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 		@Override
 		public List<Map<String, Object>> evaluateResult(Search<Produto> search)	throws SQLException {
 			return searchProduto.evaluateResult(search);
+		}
+	}
+	
+	protected class SearchColaboradorAssociateHandler extends CommonSearchAssociateHandler<Produto>{
+		public SearchColaboradorAssociateHandler() {
+			super(DaoFactory.getInstance().getDao(Produto.class));
+		}
+		@Override
+		public void associateBeans(List<Produto> associated) {
+			getManageProduto().associarProdutos(associated);
 		}
 	}
 	

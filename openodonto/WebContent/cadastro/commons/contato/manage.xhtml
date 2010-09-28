@@ -33,7 +33,7 @@
 	<rich:panel style="border-top: none;" styleClass="oo-crud-decore-panel">
 		<h:panelGrid columns="3">
 			<h:panelGrid columns="1">
-				<h:outputText value="#{msg.manageContact}" />
+				<h:outputText value="#{msg.manageContact}:" styleClass="oo-negrito" />
 				<rich:scrollableDataTable width="500px" height="300px" var="telefone" value="#{mBean.backBean.telefone}" id="listaTelefones" rowKeyVar="index" rows="10" >
 					<rich:column width="200px" >
 						<f:facet name="header">
