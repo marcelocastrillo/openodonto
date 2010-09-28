@@ -17,6 +17,8 @@ import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.servico.busca.Search;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {
@@ -67,9 +69,24 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 
 	protected List<ValidationRequest> getCamposObrigatorios() {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
-		obrigatorios.add((new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100, 5,true),"formPaciente:entradaNome")));
-		obrigatorios.add(new ValidationRequest("cpf",ValidatorFactory.newCpf(),"formPaciente:entradaCpf"));
+		obrigatorios.add((new ValidationRequest("nome", ValidatorFactory.newStrEmpty(),"formPaciente:entradaNome")));
+		obrigatorios.add(new ValidationRequest("cpf",ValidatorFactory.newStrEmpty(),"formPaciente:entradaCpf"));
 		return obrigatorios;
+	}
+	
+	@Override
+	protected List<ValidationRequest> getCamposValidados(){
+		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
+		Class<?>[] allowed = {NullValidator.class,EmptyValidator.class};
+		validados.add(new ValidationRequest("observacao", ValidatorFactory.newStrMaxLen(500, true), "formPaciente:inTextBoxObs",allowed));
+		validados.add(new ValidationRequest("email", ValidatorFactory.newEmail(45), "formPaciente:entradaEmail",allowed));
+		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100,4, true), "formPaciente:entradaNome"));
+		validados.add(new ValidationRequest("endereco", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaEndereco",allowed));		
+		validados.add(new ValidationRequest("referencia", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaReferencia",allowed));
+		validados.add(new ValidationRequest("responsavel", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaResponavel",allowed));		
+		validados.add(new ValidationRequest("cidade", ValidatorFactory.newStrRangeLen(45,3, true), "formPaciente:entradaCidade",allowed));
+		validados.add(new ValidationRequest("cpf", ValidatorFactory.newCpf(), "formPaciente:entradaCpf"));
+		return validados;
 	}
 	
 	public Search<Paciente> getSearch() {

@@ -58,6 +58,12 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 		return obrigatorios;
 	}
 	
+	@Override
+	protected List<ValidationRequest> getCamposValidados(){
+		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
+		return validados;
+	}	
+	
 	public Produto getProduto(){
 		return getBackBean();
 	}

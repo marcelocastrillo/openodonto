@@ -42,7 +42,7 @@ public class ManterProdutoTest {
 		*/
 		
 		DaoColaboradorProduto dao = (DaoColaboradorProduto)DaoFactory.getInstance().getDao(ColaboradorProduto.class);
-		/*
+		
 		for(Produto produto : dao.getProdutos(4L)){
 			System.out.println(produto);
 		}
@@ -50,7 +50,7 @@ public class ManterProdutoTest {
 		for(Colaborador colaborador : dao.getColaboradores(2L)){
 			System.out.println(colaborador);
 		}
-		*/
+		
 		
 		/*
 		Colaborador colaborador = new Colaborador();
@@ -63,7 +63,7 @@ public class ManterProdutoTest {
 		}
 		*/
 		
-		
+		/*
 		Produto produto = new Produto();
 		produto.setNome("Fruta");
 		Colaborador colaborador = new Colaborador();
@@ -72,7 +72,7 @@ public class ManterProdutoTest {
 		for(Map<String,Object> i : results){
 			System.out.println(i);
 		}
-		
+		*/
 		
 	
 	}

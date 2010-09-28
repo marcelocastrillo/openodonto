@@ -17,8 +17,7 @@ public class SqlDateConverter implements Converter {
     }
 
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component,
-	    String value) {
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
 	if (value != null && !value.isEmpty()
 		&& value.matches("[0-1][0-9]/[0-3][0-9]/[0-9]{4}")) {
 	    StringBuilder sqlDateSttring = new StringBuilder();
@@ -35,8 +34,7 @@ public class SqlDateConverter implements Converter {
     }
 
     @Override
-    public String getAsString(FacesContext context, UIComponent component,
-	    Object value) {
+    public String getAsString(FacesContext context, UIComponent component, Object value) {
 	Date date = (Date) value;
 	return dateFormat.format(date);
     }

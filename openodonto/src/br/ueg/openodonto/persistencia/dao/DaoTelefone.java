@@ -17,21 +17,14 @@ public class DaoTelefone extends DaoCrud<Telefone> {
 	public DaoTelefone() {
 		super(Telefone.class);
 	}
-
-	static {
-		initQuerymap();
-	}
-
-	private static void initQuerymap() {
-		DaoBase.getStoredQuerysMap().put("Telefone.findByPessoa","WHERE id_pessoa = ?");
-	}
-
+	
 	public void updateRelationshipPessoa(List<Telefone> telefones,Long idPessoa) throws Exception {
 		if(telefones != null){
 			List<Telefone> todos = getTelefonesRelationshipPessoa(idPessoa);
 			for (Telefone telefone : todos) {
 				if (!telefones.contains(telefone)) {
 					remover(telefone);
+					getConnection().setAutoCommit(false);
 				}
 			}
 			for (Telefone telefone : telefones) {

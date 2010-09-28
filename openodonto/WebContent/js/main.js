@@ -35,6 +35,15 @@ function dataTabeMouseOut(row,color){
 	row.style.cursor='default';	
 }
 
+function dataTableMouseClick(row,e){
+	selectBox = row.cells.item(0).firstChild;
+	source =  e.target || e.srcElement;
+	if(source != selectBox){
+		associar = selectBox.checked;
+		selectBox.checked = !associar;
+	}
+}
+
 function dataTabeMouseOver(row){
 	row.style.backgroundColor='#F1F1F1';
 	row.style.cursor='pointer';	

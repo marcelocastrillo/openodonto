@@ -2,6 +2,7 @@ package br.ueg.openodonto.controle;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,8 @@ import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.SelectableSearch;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterColaborador extends ManageBeanGeral<Colaborador> {
@@ -59,7 +62,7 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	protected void initExtra() {
 		makeView(params);
 		this.manageTelefone = new ManageTelefone(getColaborador().getTelefone(), this.getView());
-		this.manageProduto = new ManageProduto(getColaborador().getProdutos());
+		this.manageProduto = new ManageProduto(getColaborador().getProdutos(),getCategoria(),getView());
 		this.search = new SearchBase<Colaborador>(
 				new SearchableColaborador(new ViewDisplayer("searchDefaultOutput",getView())),
 				"Buscar Colaborador",
@@ -105,31 +108,46 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	
 	@Override
 	protected List<String> getCamposFormatados() {
-		List<String> formatados = new ArrayList<String>();
-		formatados.add("nome");
-		formatados.add("cidade");
-		formatados.add("endereco");
-		formatados.add("cpf");
-		formatados.add("cnpj");
-		return formatados;
+		String[] formatados = {"nome","cidade","endereco","cpf","cnpj"};
+		return Arrays.asList(formatados);
 	}
 
 	@Override
 	protected List<ValidationRequest> getCamposObrigatorios() {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
-		obrigatorios.add(new ValidationRequest("nome", ValidatorFactory.newSrtEmpty(), "formColaborador:entradaNome"));
+		obrigatorios.add(new ValidationRequest("nome", ValidatorFactory.newStrEmpty(), "formColaborador:entradaNome"));
 		if(getTipoPessoa().isPf()){
-			obrigatorios.add(new ValidationRequest("cpf",ValidatorFactory.newCpf(),"formColaborador:entradaCpf"));
+			obrigatorios.add(new ValidationRequest("cpf",ValidatorFactory.newStrEmpty(),"formColaborador:entradaCpf"));
 		}else if(getTipoPessoa().isPj()){
-			obrigatorios.add(new ValidationRequest("cnpj",ValidatorFactory.newCnpj(),"formColaborador:entradaCnpj"));
+			obrigatorios.add(new ValidationRequest("cnpj",ValidatorFactory.newStrEmpty(),"formColaborador:entradaCnpj"));
 		}
 		return obrigatorios;
+	}
+	
+	@Override
+	protected List<ValidationRequest> getCamposValidados(){
+		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
+		Class<?>[] allowed = {NullValidator.class,EmptyValidator.class};
+		validados.add(new ValidationRequest("observacao", ValidatorFactory.newStrMaxLen(500, true), "formColaborador:inTextBoxObs",allowed));
+		validados.add(new ValidationRequest("email", ValidatorFactory.newEmail(45), "formColaborador:entradaEmail",allowed));
+		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100,4, true), "formColaborador:entradaNome"));
+		validados.add(new ValidationRequest("endereco", ValidatorFactory.newStrRangeLen(150,4, true), "formColaborador:entradaEndereco",allowed));
+		validados.add(new ValidationRequest("cidade", ValidatorFactory.newStrRangeLen(45,3, true), "formColaborador:entradaCidade",allowed));
+		if(getTipoPessoa().isPf()){
+			validados.add(new ValidationRequest("cpf", ValidatorFactory.newCpf(), "formColaborador:entradaCpf"));
+		}else if(getTipoPessoa().isPj()){
+			validados.add(new ValidationRequest("cnpj", ValidatorFactory.newCnpj(), "formColaborador:entradaCnpj"));
+		}	
+		return validados;
 	}
 	
 	@Override
 	protected void carregarExtra() {
 		manageTelefone.setTelefones(getColaborador().getTelefone());
 		manageProduto.setProdutos(getColaborador().getProdutos());
+		if(getManageProduto() != null){
+			getManageProduto().resyncByCategoria();
+		}
 	}	
 	
 	public Colaborador getColaborador(){
@@ -137,12 +155,12 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 	}
 	
 	public CategoriaProduto getPrestadorMode(){
-		this.categoria = CategoriaProduto.SERVICO;
+		setCategoria(CategoriaProduto.SERVICO);
 		return getCategoria();
 	}
 	
 	public CategoriaProduto getFornecedorMode(){
-		this.categoria = CategoriaProduto.PRODUTO;
+		setCategoria(CategoriaProduto.PRODUTO);
 		return getCategoria();
 	}	
 	
@@ -166,6 +184,13 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 		this.tipoPessoa = tipoPessoa;
 	}
 
+	public void setCategoria(CategoriaProduto categoria) {
+		if(getManageProduto() != null){
+			getManageProduto().setCategoriaColaborador(categoria);
+		}
+		this.categoria = categoria;
+	}
+	
 	public CategoriaProduto getCategoria() {
 		return categoria;
 	}

@@ -68,12 +68,18 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 	@Override
 	protected List<ValidationRequest> getCamposObrigatorios() {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
-		obrigatorios.add(new ValidationRequest("nome",ValidatorFactory.newSrtEmpty(), "formUsuario:entradaNome"));
-		obrigatorios.add(new ValidationRequest("user",ValidatorFactory.newSrtEmpty(), "formUsuario:entradaUser"));
-		obrigatorios.add(new ValidationRequest("senha",ValidatorFactory.newSrtEmpty(), "formDentista:entradaSenha"));
+		obrigatorios.add(new ValidationRequest("nome",ValidatorFactory.newStrEmpty(), "formUsuario:entradaNome"));
+		obrigatorios.add(new ValidationRequest("user",ValidatorFactory.newStrEmpty(), "formUsuario:entradaUser"));
+		obrigatorios.add(new ValidationRequest("senha",ValidatorFactory.newStrEmpty(), "formDentista:entradaSenha"));
 		return obrigatorios;
 	}	
 
+	@Override
+	protected List<ValidationRequest> getCamposValidados(){
+		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
+		return validados;
+	}	
+	
 	protected void carregarExtra() {
 		managePassword.setUsuario(getUsuario());
 	}

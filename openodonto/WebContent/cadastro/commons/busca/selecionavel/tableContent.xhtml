@@ -7,13 +7,11 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
    	<ui:insert name="columns">
-   	    <rich:column>
+   	    <rich:column style="text-align : center">
    	        <f:facet name="header">
    	            <h:selectBooleanCheckbox value="" disabled="true" />
    	        </f:facet>
-   	        <center>
-   	        	<h:selectBooleanCheckbox value="#{bean.selected}" />
-   	        </center>
+   	        	<h:selectBooleanCheckbox value="#{bean.selected}"/>
    	    </rich:column>   	   	    
    	    <ui:decorate template="/cadastro/commons/busca/columns.xhtml" />
    	</ui:insert>

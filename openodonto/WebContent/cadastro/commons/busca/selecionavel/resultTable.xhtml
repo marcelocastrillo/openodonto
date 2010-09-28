@@ -6,7 +6,7 @@
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-	<rich:dataTable width="590px" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" id="lista" columnsWidth="0*" value="#{search.selectableResults}" var="bean" rows="10">
+	<rich:dataTable width="590px" onRowClick="dataTableMouseClick(this,event);" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" id="lista" columnsWidth="0*" value="#{search.selectableResults}" var="bean" rows="10">
 	    <ui:insert name="tableContent">
 	       <ui:decorate template="/cadastro/commons/busca/selecionavel/tableContent.xhtml" />
 	    </ui:insert>
