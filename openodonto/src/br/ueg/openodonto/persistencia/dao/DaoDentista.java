@@ -22,16 +22,6 @@ public class DaoDentista extends DaoCrud<Dentista> {
 		super(Dentista.class);
 	}
 
-	static {
-		initQuerymap();
-	}
-
-	private static void initQuerymap() {
-		DaoBase.getStoredQuerysMap().put("Dentista.findByNome",	"WHERE nome LIKE ?");
-		DaoBase.getStoredQuerysMap().put("Dentista.findByCro", "WHERE cro = ?");
-		DaoBase.getStoredQuerysMap().put("Dentista.findEspecialidade", "WHERE especialidade like ?");
-	}
-
 	@Override
 	public Dentista getNewEntity() {
 		return new Dentista();

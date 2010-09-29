@@ -16,25 +16,45 @@ import br.ueg.openodonto.persistencia.orm.OrmFormat;
 @Dao(classe=Usuario.class)
 public class DaoUsuario extends DaoCrud<Usuario> {
 
+	private static final long serialVersionUID = 4857838625916905656L;
+	
 	public DaoUsuario() {
 		super(Usuario.class);
 	}
 
-	static {
-		initQuerymap();
-	}
-
-	private static void initQuerymap() {
-		DaoBase.getStoredQuerysMap().put("Usuario.autenticar",	"WHERE user = ? AND senha = ?");
-		DaoBase.getStoredQuerysMap().put("Usuario.findByNome",  "WHERE nome LIKE ?");
-		DaoBase.getStoredQuerysMap().put("Usuario.findUser",  "WHERE user = ? ");
-	}
-
-	private static final long serialVersionUID = 4857838625916905656L;
-
 	@Override
 	public Usuario getNewEntity() {
 		return new Usuario();
+	}
+
+	@Override
+	protected void afterUpdate(Usuario o) throws Exception {
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
+	}
+
+	@Override
+	protected void aferInsert(Usuario o) throws Exception {
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
+	}
+
+	@Override
+	public List<Usuario> listar() {
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		List<Usuario> lista = super.listar();
+		if (lista != null) {
+			for (Usuario dentista : lista) {
+				try {
+					dentista.setTelefone(daoTelefone.getTelefonesRelationshipPessoa(dentista.getCodigo()));
+				} catch (Exception ex) {
+				}
+			}
+		}
+		return lista;
 	}
 	
 	@Override
@@ -51,6 +71,14 @@ public class DaoUsuario extends DaoCrud<Usuario> {
 		}
 	}
 
+	@Override
+	public void afterLoad(Usuario o) throws Exception {
+		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
+		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
+		List<Telefone> telefones = daoTelefone.getTelefonesRelationshipPessoa(o.getCodigo());
+		o.setTelefone(telefones);
+	}
+	
 	@Override
 	public Usuario pesquisar(Object key) {
 		if (key == null) {
