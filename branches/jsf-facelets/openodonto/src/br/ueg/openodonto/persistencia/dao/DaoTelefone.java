@@ -39,32 +39,10 @@ public class DaoTelefone extends DaoCrud<Telefone> {
 		OrmFormat orm = new OrmFormat(new Telefone(idPessoa));
 		IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm.formatNotNull(), "*");
 		return getSqlExecutor().executarQuery(query);
-	}
-	
-	@Override
-	public Telefone pesquisar(Object key) {
-		if (key == null) {
-			return null;
-		}
-		List<Telefone> lista;
-		try {
-			Long id = Long.parseLong(String.valueOf(key));
-			Telefone find = new Telefone();
-			find.setCodigo(id);
-			OrmFormat orm = new OrmFormat(find);
-			IQuery query = CrudQuery.getSelectQuery(Telefone.class, orm.formatNotNull(), "*");
-			lista = getSqlExecutor().executarQuery(query.getQuery(),query.getParams(), 1);
-			if (lista.size() == 1) {
-				return lista.get(0);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	}	
 
 	@Override
 	public Telefone getNewEntity() {
-		return new Telefone();
+		return new Telefone(); //Melhor que reflexão
 	}
 }

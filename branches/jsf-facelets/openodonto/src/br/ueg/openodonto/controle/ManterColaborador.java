@@ -32,6 +32,7 @@ import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.SelectableSearch;
 import br.ueg.openodonto.validator.EmptyValidator;
 import br.ueg.openodonto.validator.NullValidator;
+import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterColaborador extends ManageBeanGeral<Colaborador> {
@@ -106,6 +107,18 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 		}
 	}
 	
+	private void typeTipoPessoa(){
+		Validator validCNPJ = ValidatorFactory.newStrEmpty();
+		Validator validCPF = ValidatorFactory.newStrEmpty();
+		validCPF.setValue(getColaborador().getCpf());
+		validCNPJ.setValue(getColaborador().getCnpj());
+		if(validCPF.isValid()){
+			setTipoPessoa(TipoPessoa.PESSOA_FISICA);
+		}else if(validCNPJ.isValid()){
+			setTipoPessoa(TipoPessoa.PESSOA_JURIDICA);
+		}
+	}
+	
 	@Override
 	protected List<String> getCamposFormatados() {
 		String[] formatados = {"nome","cidade","endereco","cpf","cnpj"};
@@ -148,6 +161,7 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 		if(getManageProduto() != null){
 			getManageProduto().resyncByCategoria();
 		}
+		typeTipoPessoa();
 	}	
 	
 	public Colaborador getColaborador(){

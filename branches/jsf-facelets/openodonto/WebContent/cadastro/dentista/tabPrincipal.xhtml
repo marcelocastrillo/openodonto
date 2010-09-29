@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:oo="http://code.google.com/p/openodonto"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:rich="http://richfaces.org/rich"	
 	xmlns:a4j="http://richfaces.org/a4j">
@@ -18,22 +19,22 @@
 						</h:selectOneMenu>
 					</h:panelGrid>
 					<h:panelGrid columns="1">
-						<h:outputLabel value="#{msg.tabPrincipalCidade}" for="entradaCidade" />
+						<oo:label value="#{msg.tabPrincipalCidade}" for="entradaCidade" />
 						<h:inputText id="entradaCidade"	value="#{manterDentista.dentista.cidade}" style="width : 180px"/>
 					</h:panelGrid>
 					<h:panelGrid columns="1">
-						<h:outputLabel value="#{msg.tabPrincipalEndereco}" for="entradaEndereco" />
+						<oo:label value="#{msg.tabPrincipalEndereco}" for="entradaEndereco" />
 						<h:inputText id="entradaEndereco" value="#{manterDentista.dentista.endereco}" style=" width : 300px;" />
 					</h:panelGrid>
 					<h:panelGrid columns="1">
-						<h:outputLabel value="#{msg.tabPrincipalEmail}" for="entradaEmail" />
+						<oo:label value="#{msg.tabPrincipalEmail}" for="entradaEmail" />
 						<h:inputText id="entradaEmail" value="#{manterDentista.dentista.email}" style=" width : 200px;" />
 					</h:panelGrid>
                 </h:panelGrid>
             </h:panelGrid>
             <h:panelGrid id="gridTextBox">       
                 <h:panelGrid columns="1">
-                    <h:outputLabel value="#{msg.tabPrincipalObs}" for="inTextBoxObs"/>
+                    <oo:label value="#{msg.tabPrincipalObs}" for="inTextBoxObs"/>
                     <h:inputTextarea id="inTextBoxObs" value="#{manterDentista.dentista.observacao}" style="width : 480px; height : 96px;" />
                 </h:panelGrid>
             </h:panelGrid>

@@ -22,27 +22,15 @@
 						<h:panelGrid columns="2">
 						    <oo:personSearch codigo="#{manterDentista.dentista.codigo}" searchName="painelBuscaPessoa" />
 							<h:panelGrid columns="1">
-								<h:panelGrid columns="3">				
-					    			<h:outputLabel value="#{msg.ooNome}" for="entradaNome"  style="color : red" />
-	                    			<rich:spacer width="8" />
-	                    			<rich:message id="messageEntradaNome" for="entradaNome" styleClass="oo-validation-messages" />
-	                			</h:panelGrid>
+				    			<oo:label value="#{msg.ooNome}" for="entradaNome"  required="true" />
 								<h:inputText id="entradaNome" value="#{manterDentista.dentista.nome}" style="width : 310px;"	/>
 							</h:panelGrid>           
 							<h:panelGrid columns="1">
-				    			<h:panelGrid columns="3">				
-					    			<h:outputLabel value="#{msg.ooCro}" for="entradaCro" style="color : red"/>
-	                    			<rich:spacer width="8" />
-	                    			<rich:message id="messageEntradaCro" for="entradaCro" styleClass="oo-validation-messages" />
-	                			</h:panelGrid>
+				    			<oo:label value="#{msg.ooCro}" for="entradaCro" required="true"/>
 								<h:inputText value="#{manterDentista.dentista.cro}" onkeypress="return digitarNumero(this, event)" id="entradaCro" style="width : 160px;"/>
 							</h:panelGrid>				
-							<h:panelGrid columns="1">
-				    			<h:panelGrid columns="3">				
-					    			<h:outputLabel value="#{msg.ooEspecialidade}" style="color : red" for="entradaEspecialidade" />
-	                    			<rich:spacer width="8" />
-	                    			<rich:message id="messageEntradaEspecialidade" for="entradaEspecialidade" styleClass="oo-validation-messages" />
-	                			</h:panelGrid>
+							<h:panelGrid columns="1">	
+				    			<oo:label value="#{msg.ooEspecialidade}" for="entradaEspecialidade" required="true" />
 								<h:inputText id="entradaEspecialidade" value="#{manterDentista.dentista.especialidade}" style=" width : 310px;" />
 							</h:panelGrid>				
 						</h:panelGrid>			

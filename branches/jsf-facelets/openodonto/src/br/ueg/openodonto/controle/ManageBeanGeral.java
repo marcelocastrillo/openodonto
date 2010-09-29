@@ -2,7 +2,6 @@ package br.ueg.openodonto.controle;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +17,7 @@ import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.util.PBUtil;
 import br.ueg.openodonto.util.WordFormatter;
 import br.ueg.openodonto.validator.Validator;
+import br.ueg.openodonto.validator.ValidatorFactory;
 import br.ueg.openodonto.visao.ApplicationView;
 import br.ueg.openodonto.visao.ApplicationViewFactory;
 import br.ueg.openodonto.visao.ApplicationViewFactory.ViewHandler;
@@ -38,6 +38,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 	private ApplicationContext  context;
 	private ApplicationView     view;
 	private String              msgBundle;
+	private boolean             canDelete;
 
 	public ManageBeanGeral(Class<T> classe) {
 		this.classe = classe;
@@ -47,6 +48,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 	protected void initExtra(){}
 
 	protected void init() {
+		this.canDelete = false;
 		this.backBean = fabricarNovoBean();
 		this.dao = DaoFactory.getInstance().getDao(classe);		
 		this.context = new WebContext();
@@ -110,23 +112,13 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			}
 		}
 	}
-	
-	private boolean checkInvalidPermiteds(List<Class<?>> invalidPermiteds,Validator validator){
-		Iterator<Class<?>> iterator  = invalidPermiteds.iterator();
-		boolean valid = true;
-		while(iterator.hasNext()){
-			Class<?> permited = iterator.next();
-			valid = valid && !permited.isAssignableFrom(validator.getSource().getClass());
-		}
-		return valid;
-	}
 
 	private boolean evaluateValidators(List<ValidationRequest> validations) throws Exception{
 		boolean returned = true;
 		for (ValidationRequest validation : validations) {
 			Validator validador = validation.getValidator();
 			validador.setValue(PBUtil.instance().getNestedProperty(getBackBean(), validation.getPath()));
-			if (!validador.isValid() && checkInvalidPermiteds(validation.getInvalidPermiteds(),validador)) {
+			if (!validador.isValid() && ValidatorFactory.checkInvalidPermiteds(validation.getInvalidPermiteds(),validador)) {
 				getView().addLocalDynamicMenssage("* " + validador.getErrorMessage(), validation.getOut(), false);
 				returned = false;
 			}
@@ -188,9 +180,15 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 
 	public void acaoRemoverSim() {
 		try {
-			this.dao.remover(this.backBean);
+			if(canDelete){
+				this.dao.remover(this.backBean);
+			}else{
+				exibirPopUp(getView().getMessageFromResource("naoPodeRemover"));
+				getView().addLocalMessage("naoPodeRemover","saidaPadrao", true);
+				return;
+			}			
 		} catch (Exception e) {
-			exibirPopUp("Nao foi possivel remover o registro.");
+			exibirPopUp("Não foi possivel remover o registro.");
 			getView().addLocalDynamicMenssage("Nao foi possivel remover o registro.","saidaPadrao", true);
 			return;
 		} finally {
@@ -248,6 +246,10 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		this.view = view;
 	}
 
+	public boolean isCanDelete() {
+		return canDelete;
+	}
+	
 	public void makeView(Map<String, String> params) {
 		this.view = ApplicationViewFactory.getViewInstance(ViewHandler.JSF,	params);
 	}
@@ -269,6 +271,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		@SuppressWarnings("unchecked")
 		@Override
 		public void setBean(Pessoa bean) {
+			canDelete = true;
 			setBackBean((T)bean);
 		}	
 	}	
@@ -280,6 +283,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		}
 		@Override
 		public void extraLoad() {
+			canDelete = true;
 			carregarExtra();
 		}
 		@Override
