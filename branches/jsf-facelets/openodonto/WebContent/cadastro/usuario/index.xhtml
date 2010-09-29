@@ -23,27 +23,15 @@
 						<h:panelGrid columns="2">
 						    <oo:personSearch codigo="#{manterUsuario.usuario.codigo}" searchName="painelBuscaPessoa" />
 							<h:panelGrid columns="1">
-							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="#{msg.ooNome}" for="entradaNome"  style="color : red" />
-				                    <rich:spacer width="8" />
-				                    <rich:message id="messageEntradaNome" for="entradaNome" styleClass="oo-validation-messages" />
-				                </h:panelGrid>
+							    <oo:label value="#{msg.ooNome}" for="entradaNome"  required="true"/>
 								<h:inputText id="entradaNome" value="#{manterUsuario.usuario.nome}" style="width : 310px;"	/>
 							</h:panelGrid>           
-							<h:panelGrid columns="1">
-							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="#{msg.manterUsuariosUsuario}" for="entradaUser" style="color : red"/>
-				                    <rich:spacer width="8" />
-				                    <rich:message id="messageEntradaUser" for="entradaUser" styleClass="oo-validation-messages" />
-				                </h:panelGrid>
+							<h:panelGrid columns="1">				
+							    <oo:label value="#{msg.manterUsuariosUsuario}" for="entradaUser" required="true"/>
 								<h:inputText value="#{manterUsuario.usuario.user}"  id="entradaUser" style="width : 160px;"/>
 							</h:panelGrid>				
-							<h:panelGrid columns="1">
-							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="#{msg.manterUsuariosSenha}" style="color : red" for="entradaSenha" />
-				                    <rich:spacer width="8" />
-				                    <rich:message id="messageEntradaSenha" for="entradaSenha" styleClass="oo-validation-messages" />
-				                </h:panelGrid>
+							<h:panelGrid columns="1">				
+							    <oo:label value="#{msg.manterUsuariosSenha}" for="entradaSenha" required="true" />
 				                <h:panelGrid columns="3">
 								    <h:inputSecret disabled="#{not mPwd.enableChangePassword}" id="entradaSenha" value="#{mPwd.senhaCadastro}" redisplay="true" style=" width : 280px;" />
 								    <a4j:commandButton 

@@ -25,20 +25,12 @@
 								<h:outputLabel value="#{msg.ooCodigo}" for="codigoProduto" />
 								<h:inputText id="codigoProduto" readonly="true" disabled="true" value="#{manterProduto.produto.codigo}" style=" width : 60px;" />
 							</h:panelGrid>
-							<h:panelGrid columns="1">
-							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="#{msg.ooNome}" for="entradaNome"  style="color : red" />
-				                    <rich:spacer width="8" />
-				                    <rich:message id="messageEntradaNome" for="entradaNome" styleClass="oo-validation-messages" />
-				                </h:panelGrid>
+							<h:panelGrid columns="1">				
+							    <oo:label value="#{msg.ooNome}" for="entradaNome"  required="true" />
 								<h:inputText id="entradaNome" value="#{manterProduto.produto.nome}" style="width : 280px;"	/>
 							</h:panelGrid>
 							<h:panelGrid columns="1">
-							    <h:panelGrid columns="3">				
-								    <h:outputLabel value="#{msg.categoriaProduto}" for="selectCategoria"  style="color : red" />
-				                    <rich:spacer width="8" />
-				                    <rich:message id="messageSelectCategoria" for="selectCategoria" styleClass="oo-validation-messages" />
-				                </h:panelGrid>
+							    <oo:label value="#{msg.categoriaProduto}" for="selectCategoria"  required="true"/>
 							    <h:selectOneMenu style="width : 120px;" id="selectCategoria" value="#{manterProduto.produto.categoria}" converter="simpleEntityConverter">
 							        <f:selectItem itemLabel="#{msg.ooSelecione}" itemValue="" />
 							        <t:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.CategoriaProduto'].dominio}" var="categoria" itemLabel="#{categoria.descricao}" itemValue="#{categoria}" />
@@ -47,7 +39,7 @@
 					    </h:panelGrid>
 					    <h:panelGrid id="gridTextBox">       
                             <h:panelGrid columns="1">
-                                <h:outputLabel value="#{msg.produtoDescricao}" for="inTextBoxObs"/>
+                                <oo:label value="#{msg.produtoDescricao}" for="inTextBoxObs"/>
                                 <h:inputTextarea id="inTextBoxObs" value="#{manterProduto.produto.descricao}" style="width : 480px; height : 96px;" />
                             </h:panelGrid>
                         </h:panelGrid>

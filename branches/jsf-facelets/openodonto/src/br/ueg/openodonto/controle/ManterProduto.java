@@ -1,6 +1,7 @@
 package br.ueg.openodonto.controle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import br.ueg.openodonto.controle.busca.ViewDisplayer;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.servico.busca.Search;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterProduto extends ManageBeanGeral<Produto>{
@@ -45,15 +48,14 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 	
 	@Override
 	protected List<String> getCamposFormatados() {
-		List<String> formatados = new ArrayList<String>();
-		formatados.add("nome");
-		return formatados;
+		String[] formatados = {"nome"};
+		return Arrays.asList(formatados);
 	}
 	
 	@Override
 	protected List<ValidationRequest> getCamposObrigatorios() {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
-		obrigatorios.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100, 5,true), "formProduto:entradaNome"));
+		obrigatorios.add(new ValidationRequest("nome", ValidatorFactory.newStrEmpty(), "formProduto:entradaNome"));
 		obrigatorios.add(new ValidationRequest("categoria",	ValidatorFactory.newNull(),"formProduto:selectCategoria"));
 		return obrigatorios;
 	}
@@ -61,6 +63,9 @@ public class ManterProduto extends ManageBeanGeral<Produto>{
 	@Override
 	protected List<ValidationRequest> getCamposValidados(){
 		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
+		Class<?>[] allowed = {NullValidator.class,EmptyValidator.class};
+		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(150, 4, true), "formProduto:entradaNome"));
+		validados.add(new ValidationRequest("descricao", ValidatorFactory.newStrMaxLen(300, true), "formProduto:inTextBoxObs",allowed));
 		return validados;
 	}	
 	

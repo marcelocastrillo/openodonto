@@ -1,6 +1,7 @@
 package br.ueg.openodonto.controle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +61,8 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 
 	@Override
 	protected List<String> getCamposFormatados() {
-		List<String> formatados = new ArrayList<String>();
-		formatados.add("nome");
-		return formatados;
+		String[] formatados = {"nome"};
+		return Arrays.asList(formatados);
 	}
 	
 	@Override
@@ -70,13 +70,18 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
 		obrigatorios.add(new ValidationRequest("nome",ValidatorFactory.newStrEmpty(), "formUsuario:entradaNome"));
 		obrigatorios.add(new ValidationRequest("user",ValidatorFactory.newStrEmpty(), "formUsuario:entradaUser"));
-		obrigatorios.add(new ValidationRequest("senha",ValidatorFactory.newStrEmpty(), "formDentista:entradaSenha"));
+		obrigatorios.add(new ValidationRequest("senha",ValidatorFactory.newStrEmpty(), "formUsuario:entradaSenha"));
 		return obrigatorios;
 	}	
 
 	@Override
 	protected List<ValidationRequest> getCamposValidados(){
 		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
+		validados.add(new ValidationRequest("user",ValidatorFactory.newStrMaxLen(45,true), "formUsuario:entradaUser"));
+		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100,4,true), "formUsuario:entradaNome"));
+		if(getManagePassword().getEnableChangePassword()){
+			validados.add(new ValidationRequest("senha",ValidatorFactory.newStrRangeLen(32,3,true), "formUsuario:entradaSenha"));
+		}
 		return validados;
 	}	
 	
