@@ -16,15 +16,15 @@ import br.ueg.openodonto.persistencia.orm.OrmFormat;
 @Dao(classe=Produto.class)
 public class DaoProduto extends DaoCrud<Produto>{
 
+	private static final long serialVersionUID = 4731561150550714997L;
+	
 	public DaoProduto() {
 		super(Produto.class);
-	}
-
-	private static final long serialVersionUID = 4731561150550714997L;
+	}	
 
 	@Override
 	public Produto getNewEntity() {
-		return new Produto();
+		return new Produto(); // Melhor que reflexão
 	}
 
 	public void updateRelationshipProduto(Colaborador colaborador) throws Exception{
@@ -69,8 +69,7 @@ public class DaoProduto extends DaoCrud<Produto>{
 		@Override
 		public int compare(Produto o1, Produto o2) {
 			return o1.getCodigo().compareTo(o2.getCodigo());
-		}
-		
+		}		
 	}
 	
 	private List<ColaboradorProduto> getCPRelationship(ColaboradorProduto example) throws SQLException{
@@ -82,26 +81,7 @@ public class DaoProduto extends DaoCrud<Produto>{
 	public List<Produto> getProdutosRelationshipColaborador(Long idColaborador)throws SQLException {
 		DaoColaboradorProduto dao = (DaoColaboradorProduto)DaoFactory.getInstance().getDao(ColaboradorProduto.class);
 		return dao.getProdutos(idColaborador);
-	}
-	
-	@Override
-	public Produto pesquisar(Object key) {
-		if (key == null) {
-			return null;
-		}
-		List<Produto> lista;
-		try {
-			Long id = Long.parseLong(String.valueOf(key));
-			OrmFormat orm = new OrmFormat(new Produto(id));
-			IQuery query = CrudQuery.getSelectQuery(Produto.class, orm.formatNotNull(), "*");
-			lista = getSqlExecutor().executarQuery(query.getQuery(),query.getParams(), 1);
-			if (lista.size() == 1) {
-				return lista.get(0);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	}	
+
 	
 }

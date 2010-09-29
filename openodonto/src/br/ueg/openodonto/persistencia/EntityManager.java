@@ -25,9 +25,7 @@ public interface EntityManager<T extends Entity> {
    
     List<T> listar();
     
-    List<T> listar(boolean lazy,String... filds);
-
-    T pesquisar(Object key);    
+    List<T> listar(boolean lazy,String... filds);    
 
     SqlExecutor<T> getSqlExecutor();
 

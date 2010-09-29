@@ -8,10 +8,7 @@ import java.util.Map;
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.orm.Dao;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 
 @Dao(classe=ColaboradorProduto.class)
@@ -56,28 +53,6 @@ public class DaoColaboradorProduto  extends DaoCrud<ColaboradorProduto> {
 		OrmTranslator translator = new OrmTranslator(fields);
 		whereParams.put(translator.getColumn("colaboradorIdPessoa"), idColaborador);
 		return getRelacionamento(Produto.class,"produtoIdProduto",whereParams);
-	}
-	
-	@Override
-	public ColaboradorProduto pesquisar(Object key) {
-		if (key == null) {
-			return null;
-		}
-		List<ColaboradorProduto> lista;
-		try {
-			Long id = Long.parseLong(String.valueOf(key));
-			ColaboradorProduto find = new ColaboradorProduto();
-			find.setCodigo(id);
-			OrmFormat orm = new OrmFormat(find);
-			IQuery query = CrudQuery.getSelectQuery(ColaboradorProduto.class, orm.formatNotNull(), "*");
-			lista = getSqlExecutor().executarQuery(query.getQuery(),query.getParams(), 1);
-			if (lista.size() == 1) {
-				return lista.get(0);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 }

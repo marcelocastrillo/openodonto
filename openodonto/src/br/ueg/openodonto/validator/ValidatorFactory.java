@@ -1,7 +1,20 @@
 package br.ueg.openodonto.validator;
 
+import java.util.Iterator;
+import java.util.List;
+
 public class ValidatorFactory {
 
+	public static boolean checkInvalidPermiteds(List<Class<?>> invalidPermiteds,Validator validator){
+		Iterator<Class<?>> iterator  = invalidPermiteds.iterator();
+		boolean valid = true;
+		while(iterator.hasNext()){
+			Class<?> permited = iterator.next();
+			valid = valid && !permited.isAssignableFrom(validator.getSource().getClass());
+		}
+		return valid;
+	}
+	
 	public static Validator newNull(){
 		return new NullValidator("");
 	}

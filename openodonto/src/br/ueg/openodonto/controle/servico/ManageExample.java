@@ -16,6 +16,7 @@ import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.SearchFilter;
 import br.ueg.openodonto.util.WordFormatter;
 import br.ueg.openodonto.validator.Validator;
+import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManageExample<T> implements Serializable{
 	private static final long serialVersionUID = -9067163321882594609L;
@@ -56,20 +57,10 @@ public class ManageExample<T> implements Serializable{
 		return valid;
 	}
 	
-	private boolean checkInvalidPermiteds(List<Class<?>> invalidPermiteds,Validator validator){
-		Iterator<Class<?>> iterator  = invalidPermiteds.iterator();
-		boolean valid = true;
-		while(iterator.hasNext()){
-			Class<?> permited = iterator.next();
-			valid = valid && !permited.isAssignableFrom(validator.getSource().getClass());
-		}
-		return valid;
-	}
-	
 	private void notifyValidation(SearchFilter filter,InputField<?> inputField,List<Class<?>> invalidPermiteds){
 		for(Iterator<Validator> iterator = inputField.getValidators().iterator();iterator.hasNext();){
 			Validator validator = iterator.next();
-			if(!validator.isValid() && checkInvalidPermiteds(invalidPermiteds,validator)){
+			if(!validator.isValid() && ValidatorFactory.checkInvalidPermiteds(invalidPermiteds,validator)){
 				filter.displayValidationMessage(
 						WordFormatter.formatErrorMessage(
 								filter.getLabel(),

@@ -16,6 +16,8 @@ import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Dentista;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.servico.busca.Search;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterDentista extends ManageBeanGeral<Dentista> {
@@ -68,15 +70,23 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 	@Override
 	protected List<ValidationRequest> getCamposObrigatorios() {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
-		obrigatorios.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100, 5,true), "formDentista:entradaNome"));
+		obrigatorios.add(new ValidationRequest("nome", ValidatorFactory.newStrEmpty(), "formDentista:entradaNome"));
 		obrigatorios.add(new ValidationRequest("cro", ValidatorFactory.newStrEmpty(), "formDentista:entradaCro"));
-		obrigatorios.add(new ValidationRequest("especialidade",	ValidatorFactory.newStrRangeLen(150, 3,true),"formDentista:entradaEspecialidade"));
+		obrigatorios.add(new ValidationRequest("especialidade",	ValidatorFactory.newStrEmpty(),"formDentista:entradaEspecialidade"));
 		return obrigatorios;
 	}
 	
 	@Override
 	protected List<ValidationRequest> getCamposValidados(){
 		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
+		Class<?>[] allowed = {NullValidator.class,EmptyValidator.class};
+		validados.add(new ValidationRequest("observacao", ValidatorFactory.newStrMaxLen(500, true), "formDentista:inTextBoxObs",allowed));
+		validados.add(new ValidationRequest("email", ValidatorFactory.newEmail(45), "formDentista:entradaEmail",allowed));
+		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100,4, true), "formDentista:entradaNome"));
+		validados.add(new ValidationRequest("endereco", ValidatorFactory.newStrRangeLen(150,4, true), "formDentista:entradaEndereco",allowed));		
+		validados.add(new ValidationRequest("cidade", ValidatorFactory.newStrRangeLen(45,3, true), "formDentista:entradaCidade",allowed));
+		validados.add(new ValidationRequest("cro", ValidatorFactory.newNumSize(Integer.MAX_VALUE), "formDentista:entradaCro"));
+		validados.add(new ValidationRequest("especialidade",ValidatorFactory.newStrRangeLen(150,4, true),"formDentista:entradaEspecialidade"));
 		return validados;
 	}
 	

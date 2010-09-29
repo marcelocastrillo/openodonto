@@ -61,7 +61,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 			Savepoint save = null;
 			try {
 				getConnection().setAutoCommit(false);
-				save = getConnection().setSavepoint("Before Update Dentista - Savepoint");
+				save = getConnection().setSavepoint("Before Update - Savepoint");
 				beforeUpdate(o);
 				OrmFormat orm = new OrmFormat(o);
 				update(o, orm.formatKey());
@@ -94,11 +94,10 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 			Savepoint save = null;
 			try {
 				getConnection().setAutoCommit(false);
-				save = getConnection().setSavepoint(
-						"Before Insert Dentista - Savepoint");
+				save = getConnection().setSavepoint("Before Insert - Savepoint");
 				beforeInsert(o);
 				insert(o);
-				aferInsert(o);
+				afterInsert(o);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				if (save != null) {
@@ -112,7 +111,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 
 	}
 
-	protected void aferInsert(T o) throws Exception {
+	protected void afterInsert(T o) throws Exception {
 	}
 
 	@Override
@@ -179,6 +178,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	public void remover(T o) throws Exception {
 		Savepoint save = null;
 		try {
+			getConnection().setAutoCommit(false);
 			save = getConnection().setSavepoint("Before Remove - Savepoint");
 			OrmFormat orm = new OrmFormat(o);
 			Map<String, Object> params = orm.formatKey();
@@ -233,7 +233,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	 * Inicialmente faz uma consulta filtrando pelo exemplo de <E>;
 	 * Em seguida pega os resultados da consulta anterior e tenta relacionar cada resultado com <T>.
 	 * Usa o nome do field 'fname' para recuperar a foregin key da classe atual com a classe <E>
-	 * fornecendo assim a juncao inicial para a filtragem pelo exemplo de 'relacao'.
+	 * fornecendo assim a juncao inicial para a filtragem a partir do exemplo de 'relacao'.
 	 * @param <R>
 	 * @param <E>
 	 * @param example

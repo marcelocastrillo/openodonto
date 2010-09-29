@@ -33,7 +33,7 @@
 								</h:inputText>
 							</h:panelGrid>				
 							<h:panelGrid columns="1">
-							    <oo:label value="#{msg.ooDataInicioTrat}" for="dataInicioTratamento" required="true" />
+							    <oo:label value="#{msg.ooDataInicioTrat}" for="dataInicioTratamento"  />
 								<rich:calendar id="dataInicioTratamento" datePattern="dd/MM/yyyy" enableManualInput="false" value="#{manterPaciente.paciente.dataInicioTratamento}" inputStyle="width : 290px;" >
 									<f:converter converterId="SqlDateConverter" />
 								</rich:calendar>

@@ -59,7 +59,11 @@ select{
 }
 
 .oo-border-none{
-border : none;
+	border : none;
+}
+
+.oo-default-cursor{
+	cursor : default;
 }
 
 #modalStatusContentTable td{
