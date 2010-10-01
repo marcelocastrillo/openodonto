@@ -18,7 +18,7 @@
             </h:panelGroup>
         </f:facet>
 		<a4j:form  id="formAlterarSenha">
-		    <a4j:jsFunction name="change" reRender="gridPwds" action="#{manterUsuario.managePassword.acaoMudarSenha}" oncomplete="if(#{manterUsuario.managePassword.sucessChange}){Richfaces.hideModalPanel('painelAlterarSenha');}" />
+		    <a4j:jsFunction name="change" requestDelay="100" reRender="gridPwds" action="#{manterUsuario.managePassword.acaoMudarSenha}" oncomplete="if(#{manterUsuario.managePassword.sucessChange}){Richfaces.hideModalPanel('painelAlterarSenha');}" />
 			<rich:panel>
 			    <h:panelGrid columns="1" id="gridMessage">
 			        <rich:messages for="messageEditTelefone" id="messageEditTelefone" styleClass="oo-validation-messages" />
@@ -33,7 +33,7 @@
 			    </h:panelGrid>
 		        <div align="right" style="padding-top: 16px">
 				    <h:panelGroup>
-				        <a4j:commandButton onclick="change()" value="#{msg.manterUsuariosAcaoAlterar}" />
+				        <a4j:commandButton onclick="change();return false;" value="#{msg.manterUsuariosAcaoAlterar}" />
 				        <rich:spacer width="16px" />
 				        <a4j:commandButton id="btnCancelar" action="#{manterUsuario.managePassword.acaoCancelar}" oncomplete="Richfaces.hideModalPanel('painelAlterarSenha')" value="#{msg.manterUsuariosAcaoCancelar}" ajaxSingle="true"/>
 				    </h:panelGroup>

@@ -43,8 +43,16 @@ public class ValidatorFactory {
 		return new NullValidator(new EmptyValidator(""));
 	}
 	
-	public static Validator newNumSize(Integer max){
-		return new NullValidator(new NumberValidator(new NumberSizeValidator(0, max)));
+	public static Validator newNumRange(Integer max,Integer min){
+		return new NullValidator(new NumberValidator(new NumberSizeValidator(0, max,min)));
+	}
+	
+	public static Validator newNumMax(Integer max){
+		return new NullValidator(new NumberValidator(new NumberSizeValidator(0, max,0)));
+	}
+	
+	public static Validator newNumMin(Integer min){
+		return new NullValidator(new NumberValidator(new NumberSizeValidator(min, Integer.MAX_VALUE,min)));
 	}
 	
 	public static Validator newCpf(){

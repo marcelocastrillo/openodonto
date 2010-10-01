@@ -4,16 +4,19 @@ import br.ueg.openodonto.validator.tipo.NumericValidatorType;
 
 public class NumberSizeValidator extends AbstractValidator implements NumericValidatorType{
 	
-	private int size;
+	private int max;
+	private int min;
 	
-	public NumberSizeValidator(Validator validator, int size) {
+	public NumberSizeValidator(Validator validator, int max,int min) {
 		super(validator, validator.getValue());
-		this.size = size;
+		this.max = max;
+		this.min = min;
 	}
 	
-	public NumberSizeValidator(Object value, int size) {
+	public NumberSizeValidator(Object value, int max,int min) {
 		super(null, value);
-		this.size = size;
+		this.max = max;
+		this.min = min;
 	}
 	
 	@Override
@@ -23,8 +26,11 @@ public class NumberSizeValidator extends AbstractValidator implements NumericVal
 	
 	@Override
 	protected boolean validate() {
-		if(getValue().intValue() > size){
-			setErrorMsg("Numero muito grande : Máximo permitido = " + size);
+		if(getValue().intValue() > max){
+			setErrorMsg("Numero muito grande : Máximo permitido = " + max);
+			return false;
+		}else if(getValue().intValue() < min){
+			setErrorMsg("Numero muito pequeno : Minímo exigido = " + min);
 			return false;
 		}
 		return true;
