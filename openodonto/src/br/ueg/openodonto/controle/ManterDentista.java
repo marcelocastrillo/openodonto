@@ -71,7 +71,7 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 	protected List<ValidationRequest> getCamposObrigatorios() {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
 		obrigatorios.add(new ValidationRequest("nome", ValidatorFactory.newStrEmpty(), "formDentista:entradaNome"));
-		obrigatorios.add(new ValidationRequest("cro", ValidatorFactory.newStrEmpty(), "formDentista:entradaCro"));
+		obrigatorios.add(new ValidationRequest("cro", ValidatorFactory.newNumMin(1), "formDentista:entradaCro"));
 		obrigatorios.add(new ValidationRequest("especialidade",	ValidatorFactory.newStrEmpty(),"formDentista:entradaEspecialidade"));
 		return obrigatorios;
 	}
@@ -85,7 +85,7 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100,4, true), "formDentista:entradaNome"));
 		validados.add(new ValidationRequest("endereco", ValidatorFactory.newStrRangeLen(150,4, true), "formDentista:entradaEndereco",allowed));		
 		validados.add(new ValidationRequest("cidade", ValidatorFactory.newStrRangeLen(45,3, true), "formDentista:entradaCidade",allowed));
-		validados.add(new ValidationRequest("cro", ValidatorFactory.newNumSize(Integer.MAX_VALUE), "formDentista:entradaCro"));
+		validados.add(new ValidationRequest("cro", ValidatorFactory.newNumMax(Integer.MAX_VALUE), "formDentista:entradaCro"));
 		validados.add(new ValidationRequest("especialidade",ValidatorFactory.newStrRangeLen(150,4, true),"formDentista:entradaEspecialidade"));
 		return validados;
 	}

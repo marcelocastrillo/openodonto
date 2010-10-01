@@ -46,7 +46,7 @@ public class SearchableDentista extends AbstractSearchable<Dentista> {
 	}
 	
 	private void buildCroFilter(){
-		Validator validator = ValidatorFactory.newNumSize(Integer.MAX_VALUE);
+		Validator validator = ValidatorFactory.newNumMax(Integer.MAX_VALUE);
 		getFiltersMap().put("croFilter",buildBasicFilter("croFilter","CRO",validator));
 	}
 	
@@ -56,7 +56,7 @@ public class SearchableDentista extends AbstractSearchable<Dentista> {
 	}
 	
 	private void buildCodigoFilter(){
-		Validator validator = ValidatorFactory.newNumSize(Integer.MAX_VALUE);
+		Validator validator = ValidatorFactory.newNumMax(Integer.MAX_VALUE);
 		getFiltersMap().put("idFilter",buildBasicFilter("idFilter","Código",validator));
 	}
 

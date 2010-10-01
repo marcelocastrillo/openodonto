@@ -77,7 +77,7 @@ public class ManterUsuario extends ManageBeanGeral<Usuario> {
 	@Override
 	protected List<ValidationRequest> getCamposValidados(){
 		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
-		validados.add(new ValidationRequest("user",ValidatorFactory.newStrMaxLen(45,true), "formUsuario:entradaUser"));
+		validados.add(new ValidationRequest("user",ValidatorFactory.newStrRangeLen(45,4,true), "formUsuario:entradaUser"));
 		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100,4,true), "formUsuario:entradaNome"));
 		if(getManagePassword().getEnableChangePassword()){
 			validados.add(new ValidationRequest("senha",ValidatorFactory.newStrRangeLen(32,3,true), "formUsuario:entradaSenha"));

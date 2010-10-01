@@ -63,7 +63,7 @@ public class SearchablePaciente extends AbstractSearchable<Paciente>{
 	}
 	
 	private void buildCodigoFilter(){
-		Validator validator = ValidatorFactory.newNumSize(Integer.MAX_VALUE);
+		Validator validator = ValidatorFactory.newNumMax(Integer.MAX_VALUE);
 		getFiltersMap().put("idFilter",buildBasicFilter("idFilter","Código",validator));
 	}
 
