@@ -45,7 +45,7 @@ public class ManterDentista extends ManageBeanGeral<Dentista> {
 		this.manageTelefone = new ManageTelefone(getDentista().getTelefone(), this.getView());
 		this.search = new SearchBase<Dentista>(
 				new SearchableDentista(new ViewDisplayer("searchDefault",getView())),
-				"Buscar Paciente",
+				"Buscar Dentista",
 				"painelBusca");
 		this.personSearch = new SearchBase<Pessoa>(
 				new SearchablePessoa(new ViewDisplayer("searchPerson",getView())),

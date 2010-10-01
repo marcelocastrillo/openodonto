@@ -1,6 +1,7 @@
 package br.ueg.openodonto.controle;
 
 import java.io.Serializable;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -186,7 +187,11 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 				exibirPopUp(getView().getMessageFromResource("naoPodeRemover"));
 				getView().addLocalMessage("naoPodeRemover","saidaPadrao", true);
 				return;
-			}			
+			}
+		}catch(SQLIntegrityConstraintViolationException fke){
+			exibirPopUp("Registro Referenciado.");
+			getView().addLocalDynamicMenssage("Registro Referenciado.","saidaPadrao", true);
+			return;
 		} catch (Exception e) {
 			exibirPopUp("Não foi possivel remover o registro.");
 			getView().addLocalDynamicMenssage("Nao foi possivel remover o registro.","saidaPadrao", true);
