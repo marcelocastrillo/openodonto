@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<h:panelGroup>
+	<ui:param name="cxName" value="#{facesContext.externalContext.requestContextPath}" />
+	<ui:param name="bgDenteMapImg" value="#{cxName}#{msg.odontogramaDenteMapImg}" />
+	<ui:param name="bgFaceLeftImg" value="'#{cxName}#{msg.odontogramaDenteFaceEsquerdaImg}'" />
+	<ui:param name="bgFaceRightImg" value="'#{cxName}#{msg.odontogramaDenteFaceDireitaImg}'" />
+	<ui:param name="bgFaceTopImg" value="'#{cxName}#{msg.odontogramaDenteFaceSuperiorImg}'" />
+	<ui:param name="bgFaceBtnImg" value="'#{cxName}#{msg.odontogramaDenteFaceInferiorImg}'" />
+	<ui:param name="bgFaceCenterImg" value="'#{cxName}#{msg.odontogramaDenteFaceCentralImg}'" />
+	<script>
+	    function restoreBg(dom,img){
+	    	dom.src = img;
+	    }
+	</script>
+	<h:panelGrid>
+	    <h:panelGroup>
+	         <center>
+				<h:graphicImage value="#{graphicUp}" rendered="#{not empty graphicUp}" />
+			</center>
+		</h:panelGroup>
+		<f:verbatim>
+			<img id="#{id}" border="0" src="#{bgDenteMapImg}" usemap="#dente-map#{id}" />
+			<map id="dente-map#{id}" name="dente-map#{id}">
+				<area id="shapeA#{id}" shape="polygon" coords="0,0,11,11,11,39,0,50" href="#" onclick="alert('esquerda - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceLeftImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<area id="shapeB#{id}" shape="polygon" coords="0,0,11,11,39,11,50,0" href="#" onclick="alert('topo - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceTopImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<area id="shapeC#{id}" shape="polygon" coords="50,0,39,11,39,39,50,50" href="#" onclick="alert('direta - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceRightImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<area id="shapeD#{id}" shape="polygon" coords="50,50,39,39,11,39,0,50" href="#" onclick="alert('rodape - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceBtnImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<area id="shapeE#{id}" shape="rectangle" coords="11,11,39,39" href="#" onclick="alert('centro - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceCenterImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+			</map>			
+		</f:verbatim>
+	</h:panelGrid>
+</h:panelGroup>
+</ui:composition>
