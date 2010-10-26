@@ -13,27 +13,23 @@
 	<ui:param name="bgFaceTopImg" value="'#{cxName}#{msg.odontogramaDenteFaceSuperiorImg}'" />
 	<ui:param name="bgFaceBtnImg" value="'#{cxName}#{msg.odontogramaDenteFaceInferiorImg}'" />
 	<ui:param name="bgFaceCenterImg" value="'#{cxName}#{msg.odontogramaDenteFaceCentralImg}'" />
-	<script>
-	    function restoreBg(dom,img){
-	    	dom.src = img;
-	    }
-	</script>
 	<h:panelGrid>
-	    <h:panelGroup>
-	         <center>
-				<h:graphicImage value="#{graphicUp}" rendered="#{not empty graphicUp}" />
-			</center>
+	    <h:panelGroup layout="block" style="height: 150px;text-align : center;vertical-align: bottom; display: table-cell;" rendered="#{not empty graphicUp}">
+			<h:graphicImage value="#{graphicUp}" />
 		</h:panelGroup>
 		<f:verbatim>
 			<img id="#{id}" border="0" src="#{bgDenteMapImg}" usemap="#dente-map#{id}" />
 			<map id="dente-map#{id}" name="dente-map#{id}">
-				<area id="shapeA#{id}" shape="polygon" coords="0,0,11,11,11,39,0,50" href="#" onclick="alert('esquerda - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceLeftImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
-				<area id="shapeB#{id}" shape="polygon" coords="0,0,11,11,39,11,50,0" href="#" onclick="alert('topo - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceTopImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
-				<area id="shapeC#{id}" shape="polygon" coords="50,0,39,11,39,39,50,50" href="#" onclick="alert('direta - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceRightImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
-				<area id="shapeD#{id}" shape="polygon" coords="50,50,39,39,11,39,0,50" href="#" onclick="alert('rodape - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceBtnImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
-				<area id="shapeE#{id}" shape="rectangle" coords="11,11,39,39" href="#" onclick="alert('centro - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceCenterImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<area id="shapeA#{id}" shape="poly" coords="0,0,11,11,11,39,0,50" href="#" onclick="alert('esquerda - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceLeftImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<area id="shapeB#{id}" shape="poly" coords="0,0,11,11,39,11,50,0" href="#" onclick="alert('topo - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceTopImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<area id="shapeC#{id}" shape="poly" coords="50,0,39,11,39,39,50,50" href="#" onclick="alert('direta - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceRightImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<area id="shapeD#{id}" shape="poly" coords="50,50,39,39,11,39,0,50" href="#" onclick="alert('rodape - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceBtnImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<area id="shapeE#{id}" shape="rect" coords="11,11,39,39" href="#" onclick="alert('centro - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceCenterImg})" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
 			</map>			
 		</f:verbatim>
+	    <h:panelGroup layout="block" style="height: 150px;text-align : center;vertical-align: top; display: table-cell;" rendered="#{not empty graphicDown}">
+			<h:graphicImage value="#{graphicDown}" />
+		</h:panelGroup>
 	</h:panelGrid>
 </h:panelGroup>
 </ui:composition>
