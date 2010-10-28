@@ -280,8 +280,7 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 		}
 	}
 
-	private Map<String, Object> restoreInheritance(Class<?> type,
-			OrmFormat format) throws SQLException {
+	private Map<String, Object> restoreInheritance(Class<?> type, OrmFormat format) throws SQLException {
 		Map<String, Object> whereParams = format.formatKey();
 		IQuery query = CrudQuery.getSelectQuery(type, whereParams, "*");
 		ResultSet rs = executeQuery(query.getQuery(), query.getParams(), 1);
@@ -306,8 +305,7 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 		return lista;
 	}
 
-	public void update(T entity, Map<String, Object> whereParams)
-			throws SQLException {
+	public void update(T entity, Map<String, Object> whereParams) throws SQLException {
 		if (whereParams == null || whereParams.isEmpty()) {
 			throw new RuntimeException(
 					"Parametro WHERE obrigatorio. Caso contrario causaria alteração de todos os dados da tabela");
@@ -318,28 +316,32 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 		Iterator<Class<?>> iterator = sortedSet.iterator();
 		while (iterator.hasNext()) {
 			Class<?> type = iterator.next();
-			Map<String, Object> localParams = disjoinAttributes(object.get(type).keySet(), whereParams, type);
-			IQuery query = CrudQuery.getUpdateQuery(object.get(type),localParams, CrudQuery.getTableName(type));
-			execute(query);
+			updateFormated(object.get(type),type,whereParams);
 		}
+	}
+	
+	private void updateFormated(Map<String, Object> formatedType,Class<?> type,Map<String, Object> whereParams) throws SQLException{
+		Map<String, Object> localParams = disjoinAttributes(formatedType.keySet(), whereParams, type);
+		IQuery query = CrudQuery.getUpdateQuery(formatedType,localParams, CrudQuery.getTableName(type));
+		execute(query);
 	}
 
 	public void insert(T entity) throws SQLException {
 		OrmFormat format = new OrmFormat(entity);
 		Map<Class<?>, Map<String, Object>> object = format.formatDisjoin();
-		LinkedList<Class<?>> sortedSet = new LinkedList<Class<?>>(object
-				.keySet());
+		LinkedList<Class<?>> sortedSet = new LinkedList<Class<?>>(object.keySet());
 		Iterator<Class<?>> iterator = sortedSet.descendingIterator();
 		while (iterator.hasNext()) {
 			Class<?> type = iterator.next();
 			applyForwardKey(format, type, object);
 			Map<String, Object> readyInheritance;
 			if ((readyInheritance = restoreInheritance(type, format)) != null) {
+				Map<String, Object> whereParams = format.formatKey();
+				updateFormated(object.get(type),type,whereParams);
 				object.put(type, readyInheritance);
 				continue;
 			}
-			IQuery query = CrudQuery.getInsertQuery(object.get(type), CrudQuery
-					.getTableName(type));
+			IQuery query = CrudQuery.getInsertQuery(object.get(type), CrudQuery.getTableName(type));
 			Map<String, Object> generated = execute(query);
 			format.parse(generated);
 			for (String name : generated.keySet()) {

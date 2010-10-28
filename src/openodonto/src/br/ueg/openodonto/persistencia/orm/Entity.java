@@ -1,5 +1,7 @@
 package br.ueg.openodonto.persistencia.orm;
 
-public interface Entity {
+import java.io.Serializable;
+
+public interface Entity extends Serializable{
 
 }
