@@ -10,16 +10,18 @@ import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 @Table(name = "colaboradores_produtos")
 public class ColaboradorProduto implements Entity{
 
+	private static final long serialVersionUID = 7209381285412335343L;
+
 	@Column(name="id")
 	@Id(autoIncrement = IdIncrementType.IDENTITY)
 	private Long codigo;
 	
 	@Id
-	@Column(name="colaborador_id_pessoa",joinFields={@ForwardKey(tableField="id_pessoa",foreginField="colaborador_id_pessoa")})
+	@Column(name="fk_pessoa",joinFields={@ForwardKey(tableField="id_pessoa",foreginField="fk_pessoa")})
 	private Long colaboradorIdPessoa;
 	
 	@Id
-	@Column(name="produto_id_produto",joinFields={@ForwardKey(tableField="id_produto",foreginField="produto_id_produto")})
+	@Column(name="fk_produto",joinFields={@ForwardKey(tableField="id_produto",foreginField="fk_produto")})
 	private Long produtoIdProduto;
 		
 	public ColaboradorProduto(Long colaboradorIdPessoa, Long produtoIdProduto) {
