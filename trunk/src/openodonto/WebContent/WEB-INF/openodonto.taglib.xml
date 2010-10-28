@@ -22,4 +22,8 @@
 	    <tag-name>toothFaces</tag-name>
 	    <source>../cadastro/commons/odontograma/toothFaces.xhtml</source>
 	</tag>
+	<tag>
+	    <tag-name>map</tag-name>
+	    <handler-class>br.ueg.openodonto.web.tags.Map</handler-class>
+	</tag>
 </facelet-taglib>
