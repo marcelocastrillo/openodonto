@@ -5,7 +5,7 @@
  <!-- Componentes -->
 	<component>
 		<component-type>mapComponent</component-type>
-		<component-class>br.ueg.openodonto.web.tags.HTMLMap</component-class>
+		<component-class>br.ueg.openodonto.web.tags.HtmlMap</component-class>
 	</component>
  <!-- Conversores -->
  <converter>

@@ -7,7 +7,7 @@
 
     <f:view locale="pt_br" />
     <f:loadBundle var="msg" basename="br.ueg.openodonto.visao.i18n.messages" />
-
+    <ui:param name="list" value="#{manterListagem.cache}" />
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title><ui:insert name="title"><h:outputText value="#{msg.openOdontoTitle}" /></ui:insert></title>

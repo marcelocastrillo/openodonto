@@ -13,8 +13,16 @@ public class ManageListagem implements Serializable {
 
 	private static final long serialVersionUID = 7484584628436233933L;
 	private static Map<Class<?>, AbstractLista<?>> cache;
+	private static Map<String,String>              aliasMap;
 
+	public static final String[][] ALIAS = {
+	    {"ALIAS_DENTE" , "br.ueg.openodonto.dominio.constante.Dente"},
+	    {"ALIAS_FACE" , "br.ueg.openodonto.dominio.constante.Face"},
+	    {"ALIAS_UF" , "br.ueg.openodonto.dominio.constante.TiposUF"},
+	    {"ALIAS_TIPO_TEL","br.ueg.openodonto.dominio.constante.TiposTelefone"}};
+	
 	static{
+	    aliasMap = new HashMap<String, String>();
 		cache = new HashMap<Class<?>, AbstractLista<?>>() {
 			private static final long serialVersionUID = 4625686751396609699L;
 
@@ -26,15 +34,21 @@ public class ManageListagem implements Serializable {
 					return super.get(arg);
 			}
 
-		};		
+		};
+		configureAlias();
 	}	
 
+	private static void configureAlias(){
+	    for(String[] alias : ALIAS){
+	        aliasMap.put(alias[0], alias[1]);
+	    }
+	}
+	
 	private static <T> AbstractLista<T> getListaTipo(Class<T> classe) {
 		return new ListaTipo<T>(classe);
 	}
 
-	private static <T extends Entity> AbstractLista<T> getListaDominio(
-			Class<T> classe) {
+	private static <T extends Entity> AbstractLista<T> getListaDominio(Class<T> classe) {
 		return new ListaDominio<T>(classe);
 	}
 
@@ -66,9 +80,16 @@ public class ManageListagem implements Serializable {
 		Class<?> classe;
 		try {
 			classe = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Classe não encontrada", e);
+		} catch (ClassNotFoundException e) {			
+			if(className.startsWith("ALIAS") && aliasMap.containsKey(className)){
+			    try {
+                    classe = Class.forName(aliasMap.get(className));
+                } catch (ClassNotFoundException e1) {
+                    throw new RuntimeException("Classe não encontrada", e);
+                }
+			}else{
+			    throw new RuntimeException("Classe não encontrada", e);
+			}
 		}
 		return classe;
 	}
