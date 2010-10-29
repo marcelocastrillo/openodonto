@@ -2,6 +2,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:oo="http://code.google.com/p/openodonto"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
@@ -14,21 +15,25 @@
 	<ui:param name="bgFaceBtnImg" value="'#{cxName}#{msg.odontogramaDenteFaceInferiorImg}'" />
 	<ui:param name="bgFaceCenterImg" value="'#{cxName}#{msg.odontogramaDenteFaceCentralImg}'" />
 	<a4j:jsFunction name="popUpProcedimentos#{id}" action="#{manterPaciente.manageOdontograma.acaoManageProcedimento}" oncomplete="Richfaces.showModalPanel('procedimentosOdontograma')" reRender="nameFace">
-		<f:setPropertyActionListener value="#{dente.distal}" target="#{manterPaciente.manageOdontograma.face}" />
+		
 	<a4j:actionparam />
 	</a4j:jsFunction>
 	<h:panelGrid>
 	    <h:panelGroup layout="block" style="height: 150px;text-align : center;vertical-align: bottom; display: table-cell;" rendered="#{not empty graphicUp}">
 			<h:graphicImage value="#{graphicUp}" />
-		</h:panelGroup>		
-			<img id="#{id}" border="0" src="#{bgDenteMapImg}" usemap="#dente-map#{id}"/>
-			<map id="dente-map#{id}" name="dente-map#{id}">
-			    <area id="shapeA#{id}" shape="poly" coords="0,0,11,11,11,39,0,50" onclick="popUpProcedimentos#{id}()" onmouseover="restoreBg($('#{id}'),#{bgFaceLeftImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
-				<area id="shapeB#{id}" shape="poly" coords="0,0,11,11,39,11,50,0" onclick="alert('topo - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceTopImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>				
-				<area id="shapeC#{id}" shape="poly" coords="50,0,39,11,39,39,50,50" onclick="alert('direta - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceRightImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
-				<area id="shapeD#{id}" shape="poly" coords="50,50,39,39,11,39,0,50"  onclick="alert('rodape - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceBtnImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
-				<area id="shapeE#{id}" shape="rect" coords="11,11,39,39" onclick="alert('centro - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceCenterImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
-			</map>
+		</h:panelGroup>
+		    <f:verbatim>		
+				<img id="#{id}" border="0" src="#{bgDenteMapImg}" usemap="#dente-map#{id}"/>
+			</f:verbatim>
+			<oo:map name="dente-map#{id}" id="dente-map#{id}">
+				<a4j:commandLink id="shapeA#{id}" shape="poly" coords="0,0,11,11,11,39,0,50" action="#{manterPaciente.manageOdontograma.acaoManageProcedimento}" oncomplete="Richfaces.showModalPanel('procedimentosOdontograma')" reRender="nameFace" onmouseover="restoreBg($('#{id}'),#{bgFaceLeftImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')">
+					<f:setPropertyActionListener value="#{dente.distal}" target="#{manterPaciente.manageOdontograma.face}" />
+				</a4j:commandLink>
+				<a4j:commandLink id="shapeB#{id}" shape="poly" coords="0,0,11,11,39,11,50,0" onclick="alert('topo - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceTopImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<a4j:commandLink id="shapeC#{id}" shape="poly" coords="50,0,39,11,39,39,50,50" onclick="alert('direta - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceRightImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<a4j:commandLink id="shapeD#{id}" shape="poly" coords="50,50,39,39,11,39,0,50"  onclick="alert('rodape - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceBtnImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+				<a4j:commandLink id="shapeE#{id}" shape="rect" coords="11,11,39,39" onclick="alert('centro - #{id}')" onmouseover="restoreBg($('#{id}'),#{bgFaceCenterImg});this.style.cursor='pointer';" onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')"/>
+			</oo:map>
 	    <h:panelGroup layout="block" style="height: 150px;text-align : center;vertical-align: top; display: table-cell;" rendered="#{not empty graphicDown}">
 			<h:graphicImage value="#{graphicDown}" />
 		</h:panelGroup>
