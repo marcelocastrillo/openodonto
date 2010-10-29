@@ -17,7 +17,7 @@
 					<h:panelGrid columns="1">
 						<h:outputLabel value="#{msg.manageContactTipo}" for="tipoTelefonePainel" />
 						 <h:selectOneMenu id="tipoTelefonePainel" value="#{mBean.manageTelefone.editType}"  converter="simpleEntityConverter">
-							<t:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.TiposTelefone'].dominio}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
+							<t:selectItems value="#{list.ALIAS_TIPO_TEL.dominio}" var="tipo" itemLabel="#{tipo.descricao}" itemValue="#{tipo}" />
 						</h:selectOneMenu>
 					</h:panelGrid>
 					<h:panelGrid columns="1">

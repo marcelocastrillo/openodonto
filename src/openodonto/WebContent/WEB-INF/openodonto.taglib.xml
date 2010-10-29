@@ -19,13 +19,17 @@
 	    <source>../cadastro/commons/crud/label.xhtml</source>
 	</tag>
 	<tag>
-	    <tag-name>toothFaces</tag-name>
-	    <source>../cadastro/commons/odontograma/toothFaces.xhtml</source>
+	    <tag-name>toothMap</tag-name>
+	    <source>../cadastro/commons/odontograma/toothMap.xhtml</source>
 	</tag>
 	<tag>
-		<tag-name>map</tag-name>
-		<component>
+		<tag-name>map</tag-name>		
+		<component>			
 			<component-type>mapComponent</component-type>
 		</component>
+	</tag>
+	<tag>
+		<tag-name>area</tag-name>
+		<source>../cadastro/commons/odontograma/toothArea.xhtml</source>
 	</tag>
 </facelet-taglib>

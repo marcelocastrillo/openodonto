@@ -12,12 +12,12 @@ import java.util.List;
 public class ListaTipo<T> extends AbstractLista<T> {
 
     public ListaTipo(Class<T> classe) {
-	super(classe);
+        super(classe);
     }
 
     public List<T> getDominio() {
-	List<T> lista = new ArrayList<T>();
-	lista = Arrays.asList(classe.getEnumConstants());
-	return lista;
+        List<T> lista = new ArrayList<T>();
+        lista = Arrays.asList(classe.getEnumConstants());
+        return lista;
     }
 }
