@@ -80,4 +80,15 @@
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#cadastro#produto#index.xhtml"
   PATH="/cadastro/produto/index.xhtml" SHAPE="240,929,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules::8" SHAPE="32,913,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::8" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="manageProcedimento::#cadastro#procedimento#index.xhtml"
+    NAME="output" PATH="/cadastro/procedimento/index.xhtml"
+    TARGET="rules:#cadastro#procedimento#index.xhtml"
+    TITLE="manageProcedimento" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#cadastro#procedimento#index.xhtml"
+  PATH="/cadastro/procedimento/index.xhtml" SHAPE="240,1041,0,0" model-entity="JSFProcessGroup"/>
 </PROCESS>

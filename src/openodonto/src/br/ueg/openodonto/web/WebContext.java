@@ -2,6 +2,7 @@ package br.ueg.openodonto.web;
 
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.context.ExternalContext;
@@ -23,7 +24,7 @@ public class WebContext implements ApplicationContext {
 	}
 
 	protected HttpServletResponse getResponse() {
-		 FacesContext facesContext = FacesContext.getCurrentInstance();
+		FacesContext facesContext = FacesContext.getCurrentInstance();
 		ExternalContext externalContext = facesContext.getExternalContext();
 		return (HttpServletResponse) externalContext.getResponse();
 	}
@@ -70,6 +71,12 @@ public class WebContext implements ApplicationContext {
 	@Override
 	public void addAttribute(String name, Object value) {
 		getRequest().getSession().setAttribute(name, value);
+	}
+
+	@Override
+	public Locale getClientLocale() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		return facesContext.getViewRoot().getLocale();
 	}
 
 }

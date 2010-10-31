@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
 import java.util.ResourceBundle;
@@ -338,6 +339,11 @@ class UnitTestContext implements ApplicationContext{
 	@Override
 	public void addAttribute(String name, Object value) {
 		values.put(name, value);
+	}
+
+	@Override
+	public Locale getClientLocale() {
+		return Locale.getDefault();
 	}	
 }
 

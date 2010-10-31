@@ -1,6 +1,7 @@
 package br.ueg.openodonto.controle.context;
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Map;
 
 import br.ueg.openodonto.dominio.Usuario;
@@ -12,6 +13,8 @@ public interface ApplicationContext extends Serializable{
     String getParameter(String name);    
 
     Map<String, Object> getAttributes();
+    
+    Locale getClientLocale();
 
     void removeAttribute(String name);
 

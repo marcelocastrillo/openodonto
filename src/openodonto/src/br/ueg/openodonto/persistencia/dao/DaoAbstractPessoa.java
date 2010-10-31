@@ -6,6 +6,7 @@ import java.util.Map;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
+import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 
 public abstract class DaoAbstractPessoa<T extends Pessoa> extends DaoCrud<T>{
 
@@ -14,6 +15,15 @@ public abstract class DaoAbstractPessoa<T extends Pessoa> extends DaoCrud<T>{
 	public DaoAbstractPessoa(Class<T> classe) {
 		super(classe);
 	}
+	
+	public boolean isLastConstraintWithTelefone(List<String> referencias){
+		boolean lastWithThis = referencias.contains(CrudQuery.getTableName(getClasse())) &&
+		referencias.contains(CrudQuery.getTableName(Telefone.class))&&
+		referencias.size() == 2;
+		boolean justLast = referencias.contains(CrudQuery.getTableName(Telefone.class))&&
+		referencias.size() == 1;
+		return lastWithThis || justLast;
+	}	
 	
 	@Override
 	protected void afterUpdate(T o) throws Exception {
