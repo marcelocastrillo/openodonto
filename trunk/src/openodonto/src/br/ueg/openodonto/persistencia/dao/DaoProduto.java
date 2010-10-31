@@ -24,10 +24,10 @@ public class DaoProduto extends DaoCrud<Produto>{
 
 	@Override
 	public Produto getNewEntity() {
-		return new Produto(); // Melhor que reflexão
+		return new Produto();
 	}
 
-	public void updateRelationshipProduto(Colaborador colaborador) throws Exception{
+	public void updateRelationshipColaborador(Colaborador colaborador) throws Exception{
 		Long idColaborador = colaborador.getCodigo();
 		List<Produto> produtos = colaborador.getProdutos();
 		if(produtos != null){
@@ -48,11 +48,11 @@ public class DaoProduto extends DaoCrud<Produto>{
 	
 	private boolean containsPRelationship(List<ColaboradorProduto> cps,Produto produto){
 		ColaboradorProduto key = new ColaboradorProduto(null,produto.getCodigo());
-		int index = Collections.binarySearch(cps, key, new CCompatator());
+		int index = Collections.binarySearch(cps, key, new PCompatator());
 		return index >= 0;
 	}
 	
-	private class CCompatator implements Comparator<ColaboradorProduto>{
+	private class PCompatator implements Comparator<ColaboradorProduto>{
 		@Override
 		public int compare(ColaboradorProduto o1, ColaboradorProduto o2) {
 			return o1.getProdutoIdProduto().compareTo(o2.getProdutoIdProduto());

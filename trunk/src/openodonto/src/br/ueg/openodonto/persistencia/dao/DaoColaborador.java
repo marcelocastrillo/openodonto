@@ -6,6 +6,7 @@ import java.util.Map;
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
+import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.orm.Dao;
 
 @Dao(classe=Colaborador.class)
@@ -36,7 +37,7 @@ public class DaoColaborador extends DaoAbstractPessoa<Colaborador> {
 	
 	private void updateRelationship(Colaborador o) throws Exception{
 		DaoProduto daoProduto = (DaoProduto)DaoFactory.getInstance().getDao(Produto.class);
-		daoProduto.updateRelationshipProduto(o);		
+		daoProduto.updateRelationshipColaborador(o);		
 	}	
 	
 	@Override
@@ -50,7 +51,7 @@ public class DaoColaborador extends DaoAbstractPessoa<Colaborador> {
 	@Override
 	protected boolean beforeRemove(Colaborador o, Map<String, Object> params)throws Exception {
 		boolean tolerance = super.beforeRemove(o, params);
-		DaoColaboradorProduto daoCP = (DaoColaboradorProduto) DaoFactory.getInstance().getDao(ColaboradorProduto.class);
+		EntityManager<ColaboradorProduto> daoCP = DaoFactory.getInstance().getDao(ColaboradorProduto.class);
 		for(Produto produto : o.getProdutos()){
 			ColaboradorProduto cp = new ColaboradorProduto(o.getCodigo(),produto.getCodigo());
 			daoCP.remover(cp);

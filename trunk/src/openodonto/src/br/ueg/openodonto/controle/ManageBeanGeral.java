@@ -2,7 +2,11 @@ package br.ueg.openodonto.controle;
 
 import java.io.Serializable;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.Collections;
+import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +44,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 	private ApplicationView     view;
 	private String              msgBundle;
 	private boolean             canDelete;
+	private DecimalFormat       decimalFormat;
 
 	public ManageBeanGeral(Class<T> classe) {
 		this.classe = classe;
@@ -53,6 +58,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		this.backBean = fabricarNovoBean();
 		this.dao = DaoFactory.getInstance().getDao(classe);		
 		this.context = new WebContext();
+		decimalFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(getContext().getClientLocale());
 		initExtra();
 	}
 
@@ -235,6 +241,14 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		return context;
 	}
 
+	public Currency getCurrency(){
+		return Currency.getInstance(getContext().getClientLocale());
+	}
+	
+	public DecimalFormatSymbols getDecimalSymbols(){
+		return this.decimalFormat.getDecimalFormatSymbols();
+	}
+	
 	public void setContext(ApplicationContext context) {
 		this.context = context;
 	}

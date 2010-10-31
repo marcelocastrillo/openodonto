@@ -5,9 +5,10 @@ import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
+import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name = "procedimentos")
-public class Procedimento implements Entity{
+public class Procedimento implements Entity{ //Produto
 
 	private static final long serialVersionUID = 6129234981375738699L;
 
@@ -17,10 +18,15 @@ public class Procedimento implements Entity{
 	
 	private String nome;
 	
-	private String decricao;
+	private String descricao;
 	
-	private Double valor;
+	private Float valor;	
 	
+	public Procedimento(Long codigo) {
+		super();
+		this.codigo = codigo;
+	}
+
 	public Procedimento() {
 	}
 
@@ -40,19 +46,11 @@ public class Procedimento implements Entity{
 		this.nome = nome;
 	}
 
-	public String getDecricao() {
-		return decricao;
-	}
-
-	public void setDecricao(String decricao) {
-		this.decricao = decricao;
-	}
-
-	public Double getValor() {
+	public Float getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(Float valor) {
 		this.valor = valor;
 	}
 
@@ -62,7 +60,7 @@ public class Procedimento implements Entity{
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result
-				+ ((decricao == null) ? 0 : decricao.hashCode());
+				+ ((descricao == null) ? 0 : descricao.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
@@ -82,10 +80,10 @@ public class Procedimento implements Entity{
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
-		if (decricao == null) {
-			if (other.decricao != null)
+		if (descricao == null) {
+			if (other.descricao != null)
 				return false;
-		} else if (!decricao.equals(other.decricao))
+		} else if (!descricao.equals(other.descricao))
 			return false;
 		if (nome == null) {
 			if (other.nome != null)
@@ -102,8 +100,20 @@ public class Procedimento implements Entity{
 
 	@Override
 	public String toString() {
-		return "Procedimento [codigo=" + codigo + ", decricao=" + decricao
+		return "Procedimento [codigo=" + codigo + ", decricao=" + descricao
 				+ ", nome=" + nome + ", valor=" + valor + "]";
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	
+	public String getDescricaoResumida(){
+		return WordFormatter.abstractStr(getDescricao(), 30);
 	}
 	
 }

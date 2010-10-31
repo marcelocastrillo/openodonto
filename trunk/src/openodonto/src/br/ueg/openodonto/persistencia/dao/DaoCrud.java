@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import br.ueg.openodonto.dominio.Telefone;
+import br.ueg.openodonto.dominio.Procedimento;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
@@ -43,13 +43,11 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 		return executeQuery(query.getQuery(), query.getParams().toArray()).next();		
 	}
 	
-	public boolean isLastConstraintWithTelefone(List<String> referencias){
-		boolean lastWithThis = referencias.contains(CrudQuery.getTableName(getClasse())) &&
-		referencias.contains(CrudQuery.getTableName(Telefone.class))&&
-		referencias.size() == 2;
-		boolean justLast = referencias.contains(CrudQuery.getTableName(Telefone.class))&&
-		referencias.size() == 1;
-		return lastWithThis || justLast;
+	public T findByKey(OrmFormat orm) throws SQLException{
+		Map<String, Object> keyMap = orm.formatKey();
+		IQuery query = CrudQuery.getSelectQuery(Procedimento.class, keyMap);
+		List<T> results = getSqlExecutor().executarQuery(query.getQuery(), query.getParams(), 1);
+		return results.size() == 1 ? results.get(0) : null;
 	}
 	
 	protected void beforeUpdate(T o) throws Exception {
@@ -59,8 +57,11 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	public void alterar(T o) throws Exception {
 		if (o != null && exists(o)) {
 			Savepoint save = null;
+			boolean beforeAutoComit = getConnection().getAutoCommit();
 			try {
-				getConnection().setAutoCommit(false);
+				if(beforeAutoComit){
+					getConnection().setAutoCommit(false);
+				}
 				save = getConnection().setSavepoint("Before Update - Savepoint");
 				beforeUpdate(o);
 				OrmFormat orm = new OrmFormat(o);
@@ -73,7 +74,9 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 				}
 				throw ex;
 			}finally{
-				getConnection().setAutoCommit(true);
+				if(beforeAutoComit){
+					getConnection().setAutoCommit(true);
+				}
 			}			
 		} else if (o != null) {
 			inserir(o);
@@ -92,8 +95,11 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 			alterar(o);
 		} else if (o != null) {
 			Savepoint save = null;
+			boolean beforeAutoComit = getConnection().getAutoCommit();
 			try {
-				getConnection().setAutoCommit(false);
+				if(beforeAutoComit){
+					getConnection().setAutoCommit(false);
+				}
 				save = getConnection().setSavepoint("Before Insert - Savepoint");
 				beforeInsert(o);
 				insert(o);
@@ -105,7 +111,9 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 				}
 				throw ex;
 			}finally{
-				getConnection().setAutoCommit(true);
+				if(beforeAutoComit){
+					getConnection().setAutoCommit(true);
+				}
 			}			
 		}
 
@@ -177,8 +185,11 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	@Override
 	public void remover(T o) throws Exception {
 		Savepoint save = null;
+		boolean beforeAutoComit = getConnection().getAutoCommit();
 		try {
-			getConnection().setAutoCommit(false);
+			if(beforeAutoComit){
+				getConnection().setAutoCommit(false);
+			}
 			save = getConnection().setSavepoint("Before Remove - Savepoint");
 			OrmFormat orm = new OrmFormat(o);
 			Map<String, Object> params = orm.formatKey();
@@ -191,8 +202,11 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 				getConnection().rollback(save);
 			}
 			throw ex;
+		}finally{
+			if(beforeAutoComit){
+				getConnection().setAutoCommit(true);
+			}
 		}
-		getConnection().setAutoCommit(true);
 
 	}
 

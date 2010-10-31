@@ -1,16 +1,15 @@
 package br.ueg.openodonto.dominio;
 
 import java.sql.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.TreeSet;
 
-import br.ueg.openodonto.dominio.constante.Dente;
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Relationship;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
+import br.ueg.openodonto.util.OdontogramaDenteComparator;
 
 @Table(name = "Odontograma")
 public class Odontograma implements Entity {
@@ -34,11 +33,16 @@ public class Odontograma implements Entity {
 	private Date data;
 
 	@Relationship
-	private Map<String,Dente> dentes;
+	private TreeSet<OdontogramaDente> odontogramaDentes;
 	
+	public Odontograma(Long idPessoa) {
+		this();
+		this.idPessoa = idPessoa;
+	}
+
 	public Odontograma() {
-		dentes = new HashMap<String, Dente>();
-		dentes.put("dente18", Dente.DENTE_18);
+		super();
+		odontogramaDentes = new TreeSet<OdontogramaDente>(new OdontogramaDenteComparator());
 	}
 	
 	public Long getId() {
@@ -81,11 +85,19 @@ public class Odontograma implements Entity {
 		this.data = data;
 	}	
 	
+	public TreeSet<OdontogramaDente> getOdontogramaDentes() {
+		return odontogramaDentes;
+	}
+
+	public void setOdontogramaDentes(TreeSet<OdontogramaDente> odontogramaDentes) {
+		this.odontogramaDentes = odontogramaDentes;
+	}	
+	
 	@Override
 	public String toString() {
 		return "Odontograma [data=" + data + ", descricacao=" + descricacao
 				+ ", id=" + id + ", idPessoa=" + idPessoa + ", nome=" + nome
-				+ "]";
+				+ ", odontogramaDentes=" + odontogramaDentes + "]";
 	}
 	
 	@Override
@@ -99,6 +111,10 @@ public class Odontograma implements Entity {
 		result = prime * result
 				+ ((idPessoa == null) ? 0 : idPessoa.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime
+				* result
+				+ ((odontogramaDentes == null) ? 0 : odontogramaDentes
+						.hashCode());
 		return result;
 	}
 
@@ -136,14 +152,11 @@ public class Odontograma implements Entity {
 				return false;
 		} else if (!nome.equals(other.nome))
 			return false;
+		if (odontogramaDentes == null) {
+			if (other.odontogramaDentes != null)
+				return false;
+		} else if (!odontogramaDentes.equals(other.odontogramaDentes))
+			return false;
 		return true;
-	}
-
-	public Map<String, Dente> getDentes() {
-		return dentes;
-	}
-
-	public void setDentes(Map<String, Dente> dentes) {
-		this.dentes = dentes;
 	}
 }

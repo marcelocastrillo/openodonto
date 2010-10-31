@@ -24,13 +24,11 @@ public class DaoTelefone extends DaoCrud<Telefone> {
 			for (Telefone telefone : todos) {
 				if (!telefones.contains(telefone)) {
 					remover(telefone);
-					getConnection().setAutoCommit(false);
 				}
 			}
 			for (Telefone telefone : telefones) {
 				telefone.setIdPessoa(idPessoa);
 				alterar(telefone);
-				getConnection().setAutoCommit(false);
 			}
 		}
 	}
@@ -43,6 +41,6 @@ public class DaoTelefone extends DaoCrud<Telefone> {
 
 	@Override
 	public Telefone getNewEntity() {
-		return new Telefone(); //Melhor que reflexão
+		return new Telefone();
 	}
 }

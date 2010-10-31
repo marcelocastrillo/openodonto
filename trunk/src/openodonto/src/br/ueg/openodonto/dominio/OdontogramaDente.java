@@ -1,0 +1,168 @@
+package br.ueg.openodonto.dominio;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import br.ueg.openodonto.dominio.constante.Dente;
+import br.ueg.openodonto.dominio.constante.FaceDente;
+import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.Entity;
+import br.ueg.openodonto.persistencia.orm.Enumerator;
+import br.ueg.openodonto.persistencia.orm.Id;
+import br.ueg.openodonto.persistencia.orm.Relationship;
+import br.ueg.openodonto.persistencia.orm.value.EnumValue;
+import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
+
+public class OdontogramaDente implements Entity{ //Colaboradores
+
+	private static final long serialVersionUID = 7164270562064929889L;
+
+	@Column(name = "id_odontograma_dente")
+	@Id(autoIncrement = IdIncrementType.IDENTITY)
+	private Long codigo;	
+	
+	@Column(name = "dente")
+	@Enumerator(type = EnumValue.ORDINAL)
+	private Dente dente;
+	
+	@Column(name = "face")
+	@Enumerator(type = EnumValue.ORDINAL)
+	private FaceDente face;
+	
+	@Column(name="id_odontograma")
+	private Long idOdontograma;
+
+	@Relationship
+	private List<OdontogramaDenteProcedimento> procedimentos;
+	
+	private Map<OdontogramaDenteProcedimento,Procedimento> procedimentosMap;
+	
+	public OdontogramaDente(Long codigo) {
+		this();
+		this.codigo = codigo;
+	}
+
+	public OdontogramaDente() {
+		super();
+		procedimentos = new ArrayList<OdontogramaDenteProcedimento>();
+		procedimentosMap = new HashMap<OdontogramaDenteProcedimento, Procedimento>();
+	}
+	
+	public Long getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(Long codigo) {
+		this.codigo = codigo;
+	}
+
+	public Dente getDente() {
+		return dente;
+	}
+
+	public void setDente(Dente dente) {
+		this.dente = dente;
+	}	
+	
+	public Long getIdOdontograma() {
+		return idOdontograma;
+	}
+
+	public void setIdOdontograma(Long idOdontograma) {
+		this.idOdontograma = idOdontograma;
+	}
+
+	public FaceDente getFace() {
+		return face;
+	}
+
+	public void setFace(FaceDente face) {
+		this.face = face;
+	}
+	
+	public List<OdontogramaDenteProcedimento> getProcedimentos() {
+		return procedimentos;
+	}
+
+	public void setProcedimentos(List<OdontogramaDenteProcedimento> procedimentos) {
+		this.procedimentos = procedimentos;
+	}
+	
+	public Map<OdontogramaDenteProcedimento, Procedimento> getProcedimentosMap() {
+		return procedimentosMap;
+	}
+
+	public void setProcedimentosMap(
+			Map<OdontogramaDenteProcedimento, Procedimento> procedimentosMap) {
+		this.procedimentosMap = procedimentosMap;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((dente == null) ? 0 : dente.hashCode());
+		result = prime * result + ((face == null) ? 0 : face.hashCode());
+		result = prime * result
+				+ ((idOdontograma == null) ? 0 : idOdontograma.hashCode());
+		result = prime * result
+				+ ((procedimentos == null) ? 0 : procedimentos.hashCode());
+		result = prime
+				* result
+				+ ((procedimentosMap == null) ? 0 : procedimentosMap.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OdontogramaDente other = (OdontogramaDente) obj;
+		if (codigo == null) {
+			if (other.codigo != null)
+				return false;
+		} else if (!codigo.equals(other.codigo))
+			return false;
+		if (dente == null) {
+			if (other.dente != null)
+				return false;
+		} else if (!dente.equals(other.dente))
+			return false;
+		if (face == null) {
+			if (other.face != null)
+				return false;
+		} else if (!face.equals(other.face))
+			return false;
+		if (idOdontograma == null) {
+			if (other.idOdontograma != null)
+				return false;
+		} else if (!idOdontograma.equals(other.idOdontograma))
+			return false;
+		if (procedimentos == null) {
+			if (other.procedimentos != null)
+				return false;
+		} else if (!procedimentos.equals(other.procedimentos))
+			return false;
+		if (procedimentosMap == null) {
+			if (other.procedimentosMap != null)
+				return false;
+		} else if (!procedimentosMap.equals(other.procedimentosMap))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "OdontogramaDente [codigo=" + codigo + ", dente=" + dente
+				+ ", face=" + face + ", idOdontograma=" + idOdontograma
+				+ ", procedimentos=" + procedimentos + ", procedimentosMap="
+				+ procedimentosMap + "]";
+	}	
+}

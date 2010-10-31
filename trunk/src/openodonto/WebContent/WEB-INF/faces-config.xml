@@ -52,6 +52,11 @@
   <managed-bean-class>br.ueg.openodonto.controle.Login</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>manterProcedimento</managed-bean-name>
+  <managed-bean-class>br.ueg.openodonto.controle.ManterProcedimento</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
  <!-- Regras de navegação -->
  <navigation-rule>
   <navigation-case>
@@ -106,6 +111,13 @@
   <navigation-case>
    <from-outcome>manageUsuario</from-outcome>
    <to-view-id>/cadastro/usuario/index.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manageProcedimento</from-outcome>
+   <to-view-id>/cadastro/procedimento/index.xhtml</to-view-id>
    <redirect/>
   </navigation-case>
  </navigation-rule>

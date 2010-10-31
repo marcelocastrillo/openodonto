@@ -71,6 +71,12 @@ select{
 	font-weight:bold;
 }
 
+.oo-workpanel-facet-header-title{
+	color:white;
+	font-size:20px;
+	font-weight:bold;
+}
+
 #modalStatusContentTable td{
 	padding : 1px; 
 }
