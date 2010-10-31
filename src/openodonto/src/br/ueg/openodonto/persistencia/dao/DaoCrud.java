@@ -45,7 +45,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	
 	public T findByKey(OrmFormat orm) throws SQLException{
 		Map<String, Object> keyMap = orm.formatKey();
-		IQuery query = CrudQuery.getSelectQuery(Procedimento.class, keyMap);
+		IQuery query = CrudQuery.getSelectQuery(Procedimento.class, keyMap,"*");
 		List<T> results = getSqlExecutor().executarQuery(query.getQuery(), query.getParams(), 1);
 		return results.size() == 1 ? results.get(0) : null;
 	}

@@ -1,9 +1,12 @@
 package br.ueg.openodonto.persistencia.dao;
 
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 import br.ueg.openodonto.dominio.Odontograma;
+import br.ueg.openodonto.dominio.OdontogramaDente;
+import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.orm.Dao;
@@ -22,11 +25,62 @@ public class DaoOdontograma extends DaoCrud<Odontograma>{
 	public Odontograma getNewEntity() {
 		return new Odontograma();
 	}
+
+	@Override
+	protected void afterUpdate(Odontograma o) throws Exception {
+		updateRelationship(o);
+	}
 	
-	public List<Odontograma> getOdontogramasRelationshipPaciente(Long idPaciente) throws SQLException{
+	@Override
+	protected void afterInsert(Odontograma o) throws Exception {
+		updateRelationship(o);
+	}
+	
+	private void updateRelationship(Odontograma o) throws Exception{
+		DaoOdontogramaDente daoOD = (DaoOdontogramaDente) DaoFactory.getInstance().getDao(OdontogramaDente.class);
+		daoOD.updateRelationshipOdontograma(o.getOdontogramaDentes(),o.getId());
+	}
+	
+	@Override
+	protected void afterLoad(Odontograma o) throws Exception {
+		DaoOdontogramaDente daoOD = (DaoOdontogramaDente) DaoFactory.getInstance().getDao(OdontogramaDente.class);
+		TreeSet<OdontogramaDente> ods = daoOD.getRelacionamentoOdontograma(o.getId());
+		o.setOdontogramaDentes(ods);
+	}
+	
+	@Override
+	protected boolean beforeRemove(Odontograma o, Map<String, Object> params) throws Exception {
+		EntityManager<OdontogramaDente> daoOD = DaoFactory.getInstance().getDao(OdontogramaDente.class);
+		for (OdontogramaDente od : o.getOdontogramaDentes()) {
+			daoOD.remover(od);			
+		}
+		return true;
+	}
+	
+	@Override
+	public List<Odontograma> listar(boolean lazy, String... fields) {
+		EntityManager<OdontogramaDente> emOD = DaoFactory.getInstance().getDao(OdontogramaDente.class);
+		DaoOdontogramaDente daoOD = (DaoOdontogramaDente)emOD;
+		List<Odontograma> lista = super.listar(lazy, fields);
+		if (lista != null && !lazy) {
+			for (Odontograma odontograma : lista) {
+				try {
+					odontograma.setOdontogramaDentes(daoOD.getRelacionamentoOdontograma(odontograma.getId()));
+				} catch (Exception ex) {
+				}
+			}
+		}
+		return lista;
+	}
+	
+	public List<Odontograma> getOdontogramasRelationshipPaciente(Long idPaciente) throws Exception{
 		OrmFormat orm = new OrmFormat(new Odontograma(idPaciente));
 		IQuery query = CrudQuery.getSelectQuery(Odontograma.class, orm.formatNotNull(), "*");
-		return getSqlExecutor().executarQuery(query);
+		List<Odontograma> loads = getSqlExecutor().executarQuery(query);
+		for(Odontograma o : loads){
+			afterLoad(o);
+		}
+		return loads;
 	}
 	
 	public void updateRelationshipPaciente(List<Odontograma> odontogramas,Long idPaciente) throws Exception {

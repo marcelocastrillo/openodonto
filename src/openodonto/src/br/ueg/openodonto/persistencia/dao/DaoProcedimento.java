@@ -4,9 +4,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.OdontogramaDente;
 import br.ueg.openodonto.dominio.OdontogramaDenteProcedimento;
 import br.ueg.openodonto.dominio.Procedimento;
@@ -45,12 +46,19 @@ public class DaoProcedimento extends DaoCrud<Procedimento>{ //DaoProduto
 					daoODP.remover(odp);
 				}
 			}
-			for(OdontogramaDenteProcedimento odp : odontogramaDente.getProcedimentos()){
-				Procedimento procedimento = odontogramaDente.getProcedimentosMap().get(odp);
+			
+			
+			Iterator<Map.Entry<OdontogramaDenteProcedimento, Procedimento>> iterator = odontogramaDente.getProcedimentosMap().entrySet().iterator();			
+			while(iterator.hasNext()){
+				Map.Entry<OdontogramaDenteProcedimento, Procedimento> entry = iterator.next();
+				Procedimento procedimento = entry.getValue();
+				OdontogramaDenteProcedimento odp = entry.getKey(); 
 				if(!containsPRelationship(odps,procedimento)){
 					odp.setOdontogramaDenteId(odontogramaDenteId);
 					odp.setProcedimentoId(procedimento.getCodigo());
 					daoODP.inserir(odp);
+				}else{
+					daoODP.alterar(odp);
 				}
 			}
 		}
@@ -82,9 +90,9 @@ public class DaoProcedimento extends DaoCrud<Procedimento>{ //DaoProduto
 		}		
 	}
 	
-	private List<OdontogramaDenteProcedimento> getODPRelationship(OdontogramaDenteProcedimento example) throws SQLException{
+	public List<OdontogramaDenteProcedimento> getODPRelationship(OdontogramaDenteProcedimento example) throws SQLException{
 		OrmFormat format = new OrmFormat(example);
-		IQuery sql = CrudQuery.getSelectQuery(ColaboradorProduto.class, format.formatNotNull(), "*");
+		IQuery sql = CrudQuery.getSelectQuery(OdontogramaDenteProcedimento.class, format.formatNotNull(), "*");
 		return DaoFactory.getInstance().getDao(OdontogramaDenteProcedimento.class).getSqlExecutor().executarQuery(sql);
 	}
 	

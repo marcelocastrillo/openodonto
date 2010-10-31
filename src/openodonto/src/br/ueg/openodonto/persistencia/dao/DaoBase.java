@@ -130,8 +130,7 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 		return getGeneratedAutoIncremetValues(preparedStatement, table);
 	}
 
-	public Map<String, Object> formatResultSet(ResultSet rs)
-			throws SQLException {
+	public Map<String, Object> formatResultSet(ResultSet rs)throws SQLException {
 		if (rs != null) {
 			Map<String, Object> objects = new HashMap<String, Object>();
 			ResultSetMetaData meta = rs.getMetaData();
@@ -148,8 +147,7 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 	private List<String> getGeneratedNames(ResultSet rs) throws SQLException {
 		List<String> generatedNames = new ArrayList<String>();
 		while (rs.next()) {
-			boolean isAutoIncrement = rs.getString("IS_AUTOINCREMENT").equals(
-					"YES");
+			boolean isAutoIncrement = rs.getString("IS_AUTOINCREMENT").equals("YES");
 			if (isAutoIncrement) {
 				String name = rs.getString("COLUMN_NAME");
 				generatedNames.add(name);

@@ -1,7 +1,3 @@
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;

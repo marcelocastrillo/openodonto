@@ -1,6 +1,5 @@
 package br.ueg.openodonto.persistencia.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -49,24 +48,10 @@ public class DaoPaciente extends DaoAbstractPessoa<Paciente>{
 	@Override
 	protected void afterInsert(Paciente o) throws Exception {
 		super.afterInsert(o);
-		insertRelationshipOdontograma(o);
-		insertRelationshipAnaminese(o);
-		insertRelationshipPlanejamento(o);
-	}
-	
-	private void insertRelationshipOdontograma(Paciente o) throws Exception{
-		EntityManager<Odontograma> entityManagerOdontograma = DaoFactory.getInstance().getDao(Odontograma.class);
-		DaoOdontograma daoOdontograma = (DaoOdontograma)entityManagerOdontograma;
-		daoOdontograma.updateRelationshipPaciente(o.getOdontogramas(), o.getCodigo());
-	}
-	
-	private void insertRelationshipAnaminese(Paciente o){
-		
-	}
-	
-	private void insertRelationshipPlanejamento(Paciente o){
-		
-	}
+		updateRelationshipOdontograma(o);
+		updateRelationshipAnaminese(o);
+		updateRelationshipPlanejamento(o);
+	}	
 	
 	@Override
 	public List<Paciente> listar(boolean lazy, String... fields) {
@@ -95,7 +80,7 @@ public class DaoPaciente extends DaoAbstractPessoa<Paciente>{
 		loadPlanejamento(o);
 	}
 
-	private void loadOdontograma(Paciente o) throws SQLException{
+	private void loadOdontograma(Paciente o) throws Exception{
 		EntityManager<Odontograma> entityManagerOdontograma = DaoFactory.getInstance().getDao(Odontograma.class);
 		DaoOdontograma daoOdontograma = (DaoOdontograma)entityManagerOdontograma;
 		List<Odontograma> odontogramas = daoOdontograma.getOdontogramasRelationshipPaciente(o.getCodigo());

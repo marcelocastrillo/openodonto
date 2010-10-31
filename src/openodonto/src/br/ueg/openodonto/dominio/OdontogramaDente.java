@@ -1,8 +1,6 @@
 package br.ueg.openodonto.dominio;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import br.ueg.openodonto.dominio.constante.Dente;
@@ -12,9 +10,11 @@ import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.Enumerator;
 import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Relationship;
+import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
+@Table(name = "odontograma_dentes")
 public class OdontogramaDente implements Entity{ //Colaboradores
 
 	private static final long serialVersionUID = 7164270562064929889L;
@@ -35,18 +35,28 @@ public class OdontogramaDente implements Entity{ //Colaboradores
 	private Long idOdontograma;
 
 	@Relationship
-	private List<OdontogramaDenteProcedimento> procedimentos;
+	private Map<OdontogramaDenteProcedimento,Procedimento> procedimentosMap;	
 	
-	private Map<OdontogramaDenteProcedimento,Procedimento> procedimentosMap;
+	public OdontogramaDente(Long idOdontograma,Dente dente, FaceDente face) {
+		this(dente,face);
+		this.idOdontograma = idOdontograma;
+	}
+	
+	public OdontogramaDente(Dente dente, FaceDente face) {
+		this();
+		this.dente = dente;
+		this.face = face;
+	}
+
 	
 	public OdontogramaDente(Long codigo) {
 		this();
 		this.codigo = codigo;
 	}
+	
 
 	public OdontogramaDente() {
 		super();
-		procedimentos = new ArrayList<OdontogramaDenteProcedimento>();
 		procedimentosMap = new HashMap<OdontogramaDenteProcedimento, Procedimento>();
 	}
 	
@@ -82,14 +92,6 @@ public class OdontogramaDente implements Entity{ //Colaboradores
 		this.face = face;
 	}
 	
-	public List<OdontogramaDenteProcedimento> getProcedimentos() {
-		return procedimentos;
-	}
-
-	public void setProcedimentos(List<OdontogramaDenteProcedimento> procedimentos) {
-		this.procedimentos = procedimentos;
-	}
-	
 	public Map<OdontogramaDenteProcedimento, Procedimento> getProcedimentosMap() {
 		return procedimentosMap;
 	}
@@ -108,8 +110,6 @@ public class OdontogramaDente implements Entity{ //Colaboradores
 		result = prime * result + ((face == null) ? 0 : face.hashCode());
 		result = prime * result
 				+ ((idOdontograma == null) ? 0 : idOdontograma.hashCode());
-		result = prime * result
-				+ ((procedimentos == null) ? 0 : procedimentos.hashCode());
 		result = prime
 				* result
 				+ ((procedimentosMap == null) ? 0 : procedimentosMap.hashCode());
@@ -145,11 +145,6 @@ public class OdontogramaDente implements Entity{ //Colaboradores
 				return false;
 		} else if (!idOdontograma.equals(other.idOdontograma))
 			return false;
-		if (procedimentos == null) {
-			if (other.procedimentos != null)
-				return false;
-		} else if (!procedimentos.equals(other.procedimentos))
-			return false;
 		if (procedimentosMap == null) {
 			if (other.procedimentosMap != null)
 				return false;
@@ -162,7 +157,6 @@ public class OdontogramaDente implements Entity{ //Colaboradores
 	public String toString() {
 		return "OdontogramaDente [codigo=" + codigo + ", dente=" + dente
 				+ ", face=" + face + ", idOdontograma=" + idOdontograma
-				+ ", procedimentos=" + procedimentos + ", procedimentosMap="
-				+ procedimentosMap + "]";
+				+ ", procedimentosMap=" + procedimentosMap + "]";
 	}	
 }
