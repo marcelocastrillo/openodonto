@@ -49,6 +49,7 @@ public class Paciente extends Pessoa {
 	}
 
 	public Paciente(Long codigo) {
+		this();
 		setCodigo(codigo);
 	}
 

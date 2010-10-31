@@ -11,7 +11,7 @@ import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 import br.ueg.openodonto.util.OdontogramaDenteComparator;
 
-@Table(name = "Odontograma")
+@Table(name = "odontogramas")
 public class Odontograma implements Entity {
 
 	private static final long serialVersionUID = 6394723722499152433L;
@@ -34,6 +34,11 @@ public class Odontograma implements Entity {
 
 	@Relationship
 	private TreeSet<OdontogramaDente> odontogramaDentes;
+	
+	public Odontograma(Long idPessoa,Long id) {
+		this(idPessoa);
+		this.id = id;
+	}
 	
 	public Odontograma(Long idPessoa) {
 		this();

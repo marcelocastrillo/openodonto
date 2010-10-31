@@ -27,18 +27,20 @@ public abstract class DaoAbstractPessoa<T extends Pessoa> extends DaoCrud<T>{
 	
 	@Override
 	protected void afterUpdate(T o) throws Exception {
+		updateRelationship(o);
+	}
+	
+	@Override
+	protected void afterInsert(T o) throws Exception {
+		updateRelationship(o);
+	}
+
+	private void updateRelationship(T o) throws Exception{
 		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
 		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
 	}
 	
-	@Override
-	protected void afterInsert(T o) throws Exception {
-		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
-		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
-	}
-
 	@Override
 	public List<T> listar(boolean lazy, String... fields) {
 		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);

@@ -65,9 +65,11 @@ public class WordFormatter {
 	}
 
 	public static String clear(String s) {
-		s = s.replaceAll("[\\s{2}&&[^2]]", " ");
-		s = s.replaceAll("[\\W&&[^ ]]", "");
-		s = s.trim();
+		if(s != null){
+			s = s.replaceAll("[\\s{2}&&[^2]]", " ");
+			s = s.replaceAll("[\\W&&[^ ]]", "");
+			s = s.trim();
+		}
 		return s;
 	}
 
