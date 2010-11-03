@@ -36,7 +36,7 @@
         	</h:panelGrid>
         </rich:panel>
         </center>
-        <a4j:form id="formProcedimentosOdontograma" ajaxSubmit="true" >
+        <a4j:form id="formProcedimentosOdontograma" ajaxSubmit="true" >        
        	<oo:maskMoney name="moneyMask" time="onJScall" />
         <center>
             <h:panelGrid>
@@ -82,7 +82,7 @@
                 	    	<h:outputText value="Observacao" />
                 	    </f:facet>                	    
                 		<h:panelGroup layout="block" style="text-align : center">                	    
-                	   		<rich:inplaceInput onmouseover="alert('#{odp.odp.observacao}')" id="inplaceObs" viewClass="oo-odontograma-procedimentos-inplace" inputWidth="150px" onblur="align_div(this.parentNode.parentNode,'center')" onchange="$('formProcedimentosOdontograma').submit();reloadObs()" oneditactivation="jQuery(this.firstChild).val('#{odp.odp.observacao}');align_div(this.parentNode,'left');" value="#{odp.observacao}"/>            	    	
+                	   		<rich:inplaceInput onmouseover="tooltip.show('#{odp.odp.observacao}');" onmouseout="tooltip.hide();" id="inplaceObs" viewClass="oo-odontograma-procedimentos-inplace" inputWidth="150px" onblur="align_div(this.parentNode.parentNode,'center')" onchange="$('formProcedimentosOdontograma').submit();reloadObs()" oneditactivation="jQuery(this.firstChild).val('#{odp.odp.observacao}');align_div(this.parentNode,'left');" value="#{odp.observacao}"/>            	    	
                 		</h:panelGroup>
                 	</rich:column>
                 	<rich:column width="100">
