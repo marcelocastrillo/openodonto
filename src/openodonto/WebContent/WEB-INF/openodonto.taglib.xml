@@ -45,6 +45,10 @@
 		<source>../cadastro/commons/odontograma/menuAspecto.xhtml</source>
 	</tag>
 	<tag>
+		<tag-name>pluginToolTip</tag-name>
+		<source>../cadastro/commons/crud/pluginToolTip.xhtml</source>
+	</tag>
+	<tag>
 		<tag-name>maskMoney</tag-name>
 		<source>../cadastro/commons/crud/maskMoney.xhtml</source>
 	</tag>

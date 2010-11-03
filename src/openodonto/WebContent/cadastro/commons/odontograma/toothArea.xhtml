@@ -10,12 +10,15 @@
 		coords="#{coords}" action="#{manage.acaoManageProcedimento}"
 		oncomplete="Richfaces.showModalPanel('procedimentosOdontograma')"
 		reRender="formProcedimentosOdontograma,procedimentosOdontogramaMeta"
-		onmouseover="restoreBg($('#{formName}:#{id}'),#{bgHighlightImg});this.style.cursor='pointer';"
-		onmouseout="restoreBg($('#{formName}:#{id}'),'#{cxName}#{bgDenteMapImg}')"
-		title="#{manage.viewMetaAdapter[numero].procedimentos[face]} procedimento(s).">	
+		onmouseover="restoreBg($('#{formName}:#{id}'),#{bgHighlightImg});this.style.cursor='pointer';tooltip.show('#{manage.viewMetaAdapter[numero].procedimentos[face]} procedimento(s).');"
+		onmouseout="restoreBg($('#{formName}:#{id}'),'#{cxName}#{bgDenteMapImg}');tooltip.hide();">	
 		<f:setPropertyActionListener value="#{numero}" target="#{manage.numero}">
 		    <f:convertNumber integerOnly="true" type="number" maxIntegerDigits="2" minIntegerDigits="1" />
 		</f:setPropertyActionListener>
 		<f:setPropertyActionListener value="#{face}" target="#{manage.face}" />
 	</a4j:commandLink>
+	<!-- var pos = $("#myimage").position();  returns an object with the attribute top and left
+	pos.top;   top offset position
+	pos.left;  left offset position
+	 -->
 </ui:composition>
