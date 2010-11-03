@@ -49,6 +49,7 @@
         <ui:include src="/cadastro/commons/crud/actions.xhtml"/>
     </ui:define>
     <ui:define name="outOfFormContent">
+        <ui:param name="manage" value="#{manterPaciente.manageOdontograma}" />        
         <ui:include src="/cadastro/commons/contato/edit.xhtml" />
         <ui:include src="/cadastro/commons/odontograma/procedimentos.xhtml" />
         <oo:search search="#{mBean.search}" />

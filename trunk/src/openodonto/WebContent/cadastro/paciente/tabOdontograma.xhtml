@@ -7,6 +7,37 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 	<rich:panel styleClass="oo-crud-decore-panel">
+		<a4j:loadScript src="/js/jquery.price_format.1.3.js" />
+		<ui:param name="cxName" value="#{facesContext.externalContext.requestContextPath}" />
+		<ui:param name="bgDenteRoot" value="#{msg.odontogramaDenteRootImg}" />
+		<ui:param name="bgDenteRootSelected" value="#{msg.odontogramaDenteRoorSelectImg}" />
+		<ui:param name="bgDenteMapImg" value="#{msg.odontogramaDenteMapImg}" />
+		<ui:param name="bgFaceLeftImg" value="'#{cxName}#{msg.odontogramaDenteFaceEsquerdaImg}'" />
+		<ui:param name="bgFaceRightImg" value="'#{cxName}#{msg.odontogramaDenteFaceDireitaImg}'" />
+		<ui:param name="bgFaceTopImg" value="'#{cxName}#{msg.odontogramaDenteFaceSuperiorImg}'" />
+		<ui:param name="bgFaceBtnImg" value="'#{cxName}#{msg.odontogramaDenteFaceInferiorImg}'" />
+		<ui:param name="bgFaceCenterImg" value="'#{cxName}#{msg.odontogramaDenteFaceCentralImg}'" />
+		<ui:param name="manage" value="#{manterPaciente.manageOdontograma}" />
+		<rich:panel>
+		<h:panelGrid columns="4" id="gridOdontogramaMeta">
+		    <h:panelGroup layout="block" rendered="#{not empty manage.odontograma.id}">
+				<h:outputLabel value="Codigo : " style="font-weight : bold" />
+				<h:outputText value="#{manage.odontograma.id}" />
+			</h:panelGroup>
+			<h:panelGroup layout="block" rendered="#{not empty manage.odontograma.nome}">
+				<h:outputLabel value="Nome : " style="font-weight : bold" />
+				<h:outputText value="#{manage.odontograma.nome}" />
+			</h:panelGroup>
+			<h:panelGroup layout="block" rendered="#{not empty manage.odontograma.data}">
+				<h:outputLabel value="Data : " style="font-weight : bold" />
+				<h:outputText value="#{manage.odontograma.data}" />
+			</h:panelGroup>
+			<h:panelGroup layout="block" rendered="#{not empty manage.odontograma.descricao}">
+				<h:outputLabel value="Descricao : " style="font-weight : bold" />
+				<h:outputText value="#{manage.odontograma.descricaoResumida}" />
+			</h:panelGroup>
+		</h:panelGrid>
+		</rich:panel>
     	<center>
         	<h:panelGrid id="gridOdontograma">
         	    <h:panelGrid columns="16">        	    	        	    	
@@ -47,6 +78,57 @@
         	    	<oo:toothMap numero="38" graphicDown="#{msg.odontogramaDente38}"/>
         	    </h:panelGrid>
         	</h:panelGrid>
+        </center>
+        <rich:separator/>
+        <center>
+        <h:panelGrid>
+            <h:outputText value="Odontogramas : " />
+        	<h:panelGrid columns="1">
+        	    <rich:dataTable id="listaOdontogramas" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" width="608px"  rows="5" value="#{manage.odontogramas}" var="odontograma">
+				  	<a4j:support event="onRowClick" reRender="gridOdontograma,gridOdontogramaMeta" rendered="#{not empty odontograma}">
+   	    				<f:setPropertyActionListener value="#{odontograma}" target="#{manage.odontograma}" />
+   					</a4j:support>
+        	        <rich:column width="50px">
+        	        	<f:facet name="header">
+        	        	     <h:outputText value="Codigo" />
+        	        	</f:facet>
+        	        	<h:panelGroup layout="block" style="text-align : center">
+        	        		<h:outputText value="#{odontograma.id}" />
+        	        	</h:panelGroup>
+        	        </rich:column>
+        	        <rich:column width="175px">
+        	        	<f:facet name="header">
+        	        	     <h:outputText value="Nome" />
+        	        	</f:facet>
+        	        	<h:panelGroup layout="block" style="text-align : center">
+        	        		<h:outputText value="#{odontograma.nome}" />
+        	        	</h:panelGroup>
+        	        </rich:column>
+        	        <rich:column width="75px">
+        	        	<f:facet name="header">
+        	        	     <h:outputText value="Data" />
+        	        	</f:facet>
+        	        	<h:panelGroup layout="block" style="text-align : center">        	        	
+        	        		<h:outputText value="#{odontograma.data}" />	
+        	        	</h:panelGroup>
+        	        </rich:column>
+        	        <rich:column width="300px">
+        	        	<f:facet name="header">
+        	        	     <h:outputText value="Descricao" />
+        	        	</f:facet>
+        	        	<h:panelGroup layout="block" style="text-align : center">
+        	        		<h:outputText value="#{odontograma.descricaoResumida}" />
+        	        	</h:panelGroup>
+        	        </rich:column>
+        	    </rich:dataTable>
+				<rich:datascroller for="listaOdontogramas" maxPages="20" align="center" id="dataScrollerOdontograma"  />
+				<h:panelGroup style="text-align : right" layout="block">
+					<a4j:commandButton value="Adicionar" image="#{msg.imgBotaoAdd}" onclick="" >
+						<rich:toolTip value="Adicionar Odontograma" />
+					</a4j:commandButton>
+				</h:panelGroup>
+        	</h:panelGrid>
+        </h:panelGrid>
         </center>
     </rich:panel>
 </ui:composition>	

@@ -24,14 +24,14 @@ public class ManageOdontogramaTest {
 		Paciente paciente = new Paciente(2L);
 		daoPaciente.load(paciente);	
 		
-		/*
+		
 		OdontogramaDente od = new OdontogramaDente(Dente.DENTE_38, FaceDente.OCLUSAL);		
 		OdontogramaDenteProcedimento odp = new OdontogramaDenteProcedimento();
 		odp.setData(new Date(System.currentTimeMillis()));
 		odp.setStatus(TipoStatusProcedimento.NAO_REALIZADO);
 		od.getProcedimentosMap().put(odp, new Procedimento(5L));
 		paciente.getOdontogramas().get(0).getOdontogramaDentes().add(od);		
-		 */
+		
 
 		/*
 		for(OdontogramaDenteProcedimento odp : paciente.getOdontogramas().get(0).getOdontogramaDentes().last().getProcedimentosMap().keySet()){

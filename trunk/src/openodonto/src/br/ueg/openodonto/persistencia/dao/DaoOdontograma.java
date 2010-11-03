@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.dominio.OdontogramaDente;
+import br.ueg.openodonto.dominio.OdontogramaDenteAspecto;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
@@ -39,6 +40,8 @@ public class DaoOdontograma extends DaoCrud<Odontograma>{
 	private void updateRelationship(Odontograma o) throws Exception{
 		DaoOdontogramaDente daoOD = (DaoOdontogramaDente) DaoFactory.getInstance().getDao(OdontogramaDente.class);
 		daoOD.updateRelationshipOdontograma(o.getOdontogramaDentes(),o.getId());
+		DaoOdontogramaDenteAspecto daoODA = (DaoOdontogramaDenteAspecto) DaoFactory.getInstance().getDao(OdontogramaDenteAspecto.class);
+		daoODA.updateRelationshipOdontograma(o.getAspectos(), o.getId());
 	}
 	
 	@Override
@@ -46,6 +49,9 @@ public class DaoOdontograma extends DaoCrud<Odontograma>{
 		DaoOdontogramaDente daoOD = (DaoOdontogramaDente) DaoFactory.getInstance().getDao(OdontogramaDente.class);
 		TreeSet<OdontogramaDente> ods = daoOD.getRelacionamentoOdontograma(o.getId());
 		o.setOdontogramaDentes(ods);
+		DaoOdontogramaDenteAspecto daoODA = (DaoOdontogramaDenteAspecto) DaoFactory.getInstance().getDao(OdontogramaDenteAspecto.class);
+		List<OdontogramaDenteAspecto> aspectos = daoODA.getAscpectosRelationshipOdontograma(o.getId());
+		o.setAspectos(aspectos);
 	}
 	
 	@Override

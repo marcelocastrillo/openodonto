@@ -8,78 +8,16 @@ public enum Dente {
 	DENTE_48(48,"Terceiro Molar"),	DENTE_47(47,"Segundo Molar"),	DENTE_46(46,"Primeiro Molar"),	DENTE_45(45,"Segundo Pré-Molar"),	DENTE_44(44,"Primeiro Pré-Molar"),	DENTE_43(43,"Canino"),	DENTE_42(42,"Incisivo Lateral"),	DENTE_41(41,"Incisivo Central"),
 	DENTE_31(31,"Incisivo Central"),	DENTE_32(32,"Incisivo Lateral"),	DENTE_33(33,"Canino"),	DENTE_34(34,"Primeiro Pré-Molar"),	DENTE_35(35,"Segundo Pré-Molar"),	DENTE_36(36,"Primeiro Molar"),	DENTE_37(37,"Segundo Molar"),	DENTE_38(38,"Terceiro Molar");
 		
-	private FaceDente   lingual;
-	private FaceDente   vestibular;
-	private FaceDente   mesial;
-	private FaceDente   distal;
-	private FaceDente   oclusal;
-	private Integer     numero;
-	private String      nome;
+
+	private Integer     		numero;
+	private String      		nome;
+	
 	
 	private Dente(Integer numero,String nome) {
 		this.nome = nome;
 		this.numero = numero;
 	}
-	
-	public void setGenericFace(FaceDente face){
-	    switch (face) {
-        case DISTAL:
-            setDistal(face);
-            break;
-        case MESIAL:
-            setMesial(face);
-            break;
-        case LIGUAL:
-            setLingual(face);
-            break;
-        case OCLUSAL:
-            setOclusal(face);
-            break;
-        case VESTIBULAR:
-            setVestibular(face);
-            break;
-        }
-	}
-	
-	public FaceDente getLingual() {
-		return lingual;
-	}
 
-	public void setLingual(FaceDente lingual) {
-		this.lingual = lingual;
-	}
-
-	public FaceDente getVestibular() {
-		return vestibular;
-	}
-
-	public void setVestibular(FaceDente vestibular) {
-		this.vestibular = vestibular;
-	}
-
-	public FaceDente getMesial() {
-		return mesial;
-	}
-
-	public void setMesial(FaceDente mesial) {
-		this.mesial = mesial;
-	}
-
-	public FaceDente getDistal() {
-		return distal;
-	}
-
-	public void setDistal(FaceDente distal) {
-		this.distal = distal;
-	}
-
-	public FaceDente getOclusal() {
-		return oclusal;
-	}
-
-	public void setOclusal(FaceDente oclusal) {
-		this.oclusal = oclusal;
-	}
 
 	public Integer getNumero() {
 		return numero;
@@ -168,11 +106,11 @@ public enum Dente {
         }
 	}
 	
+	
+	
 	@Override
 	public String toString() {
 		return "Dente [nome=" + nome + ", numero=" + numero	+ "]";
 	}	
-	
-	
 	
 }

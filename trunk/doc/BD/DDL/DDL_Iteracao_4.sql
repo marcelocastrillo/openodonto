@@ -218,19 +218,19 @@ DROP TABLE IF EXISTS `openodonto`.`odontograma_dentes` ;
 CREATE  TABLE IF NOT EXISTS `openodonto`.`odontograma_dentes` (
   `dente` INT(2) NOT NULL ,
   `face` INT(2) NOT NULL ,
-  `id_odontograma` INT(10) NOT NULL ,
+  `fk_odontograma` INT(10) NOT NULL ,
   `id_odontograma_dente` INT(10) NOT NULL AUTO_INCREMENT ,
   PRIMARY KEY (`id_odontograma_dente`) ,
   CONSTRAINT `fk_odontograma_dentes_odontograma1`
-    FOREIGN KEY (`id_odontograma` )
+    FOREIGN KEY (`fk_odontograma` )
     REFERENCES `openodonto`.`odontogramas` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_odontograma_dentes_odontograma1` ON `openodonto`.`odontograma_dentes` (`id_odontograma` ASC) ;
+CREATE INDEX `fk_odontograma_dentes_odontograma1` ON `openodonto`.`odontograma_dentes` (`fk_odontograma` ASC) ;
 
-CREATE UNIQUE INDEX `ix_dente` ON `openodonto`.`odontograma_dentes` (`dente` ASC, `face` ASC, `id_odontograma` ASC) ;
+CREATE UNIQUE INDEX `ix_dente` ON `openodonto`.`odontograma_dentes` (`dente` ASC, `face` ASC, `fk_odontograma` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -245,6 +245,7 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`procedimentos_dentes` (
   `valor` FLOAT NULL ,
   `data_procedimento` DATETIME NULL ,
   `status` INT(2) NULL ,
+  `obs` VARCHAR(300) NULL ,
   PRIMARY KEY (`id`) ,
   CONSTRAINT `fk_procedimentos_has_procedimentos_odontograma_procedimentos1`
     FOREIGN KEY (`fk_procedimento` )
@@ -261,6 +262,26 @@ ENGINE = InnoDB;
 CREATE INDEX `fk_procedimentos_has_procedimentos_odontograma_procedimentos1` ON `openodonto`.`procedimentos_dentes` (`fk_procedimento` ASC) ;
 
 CREATE INDEX `fk_procedimentos_dentes_odontograma_dentes1` ON `openodonto`.`procedimentos_dentes` (`fk_odontograma_dente` ASC) ;
+
+
+-- -----------------------------------------------------
+-- Table `openodonto`.`odontograma_aspectos`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `openodonto`.`odontograma_aspectos` ;
+
+CREATE  TABLE IF NOT EXISTS `openodonto`.`odontograma_aspectos` (
+  `dente` INT(2) NOT NULL ,
+  `fk_odontograma` INT(10) NOT NULL ,
+  `aspecto` INT(2) NULL ,
+  PRIMARY KEY (`dente`, `fk_odontograma`) ,
+  CONSTRAINT `fk_odontograma_aspecto_odontogramas1`
+    FOREIGN KEY (`fk_odontograma` )
+    REFERENCES `openodonto`.`odontogramas` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_odontograma_aspecto_odontogramas1` ON `openodonto`.`odontograma_aspectos` (`fk_odontograma` ASC) ;
 
 
 

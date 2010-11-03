@@ -6,37 +6,48 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-<h:panelGroup>
-	<ui:param name="cxName" value="#{facesContext.externalContext.requestContextPath}" />
+<h:panelGroup id="block-#{numero}">	
 	<ui:param name="id" value="dente#{numero}" />
-	<ui:param name="bgDenteMapImg" value="#{cxName}#{msg.odontogramaDenteMapImg}" />
-	<ui:param name="bgFaceLeftImg" value="'#{cxName}#{msg.odontogramaDenteFaceEsquerdaImg}'" />
-	<ui:param name="bgFaceRightImg" value="'#{cxName}#{msg.odontogramaDenteFaceDireitaImg}'" />
-	<ui:param name="bgFaceTopImg" value="'#{cxName}#{msg.odontogramaDenteFaceSuperiorImg}'" />
-	<ui:param name="bgFaceBtnImg" value="'#{cxName}#{msg.odontogramaDenteFaceInferiorImg}'" />
-	<ui:param name="bgFaceCenterImg" value="'#{cxName}#{msg.odontogramaDenteFaceCentralImg}'" />
-	<ui:param name="manage" value="#{manterPaciente.manageOdontograma}" />
 	<h:panelGrid>
+	    <h:panelGroup layout="block" rendered="#{not empty graphicUp}">	    	
+	    	<h:graphicImage value="#{msg.odontogramaInfoBlueImg}" rendered="#{manage.viewMetaAdapter[numero].implante}" style="position : relative ; top :  28px" />
+	    	<h:graphicImage value="#{msg.odontogramaInfoRedImg}" rendered="#{manage.viewMetaAdapter[numero].extraido}" style="position : relative ; top :  28px" />
+	    </h:panelGroup>
 	    <h:panelGroup layout="block" style="height: 150px;text-align : center;vertical-align: bottom; display: table-cell;" rendered="#{not empty graphicUp}">
-			<h:graphicImage value="#{graphicUp}"/>
+			<h:graphicImage id="graphicUp-#{numero}" value="#{graphicUp}" style="position : relative ; top : 15px">
+			</h:graphicImage>
 		</h:panelGroup>
 		<h:panelGroup layout="block" style="text-align : center" rendered="#{not empty graphicDown}">
 			<h:outputText value="#{numero}" styleClass="oo-odontograma-numero-dente" />
 		</h:panelGroup>
-		<f:verbatim>		
-			<img id="#{id}" border="0" src="#{bgDenteMapImg}" usemap="#dente-map#{id}"/>
-		</f:verbatim>
+        
+        <oo:procMark id="#{id}" up="#{not empty graphicUp}"/>
+		<oo:root idroot="#{id}_root_up" show="#{not empty graphicUp}" />		
+		<h:graphicImage id="#{id}" value="#{bgDenteMapImg}" usemap="#dente-map#{id}" style="border-style: none;position : relative;z-index : 2" />
+		<oo:root idroot="#{id}_root_down" show="#{not empty graphicDown}"/>
+		<oo:procMark id="#{id}" down="#{not empty graphicDown}"/>
+
 		<h:panelGroup layout="block" style="text-align : center" rendered="#{not empty graphicUp}">
 			<h:outputText value="#{numero}" styleClass="oo-odontograma-numero-dente" />
 		</h:panelGroup>
 	    <h:panelGroup layout="block" style="height: 150px;text-align : center;vertical-align: top; display: table-cell;" rendered="#{not empty graphicDown}">	    	
-			<h:graphicImage value="#{graphicDown}" />
+			<h:graphicImage id="graphicDown-#{numero}" value="#{graphicDown}" style="position : relative ; bottom : 15px" />			
 		</h:panelGroup>
 	</h:panelGrid>
+	<h:panelGroup layout="block" rendered="#{not empty graphicDown}">
+    	<h:graphicImage id="aspecto-imlp-#{numero}" value="#{msg.odontogramaInfoBlueImg}" rendered="#{manage.viewMetaAdapter[numero].implante}" style="position : relative ; bottom :  96px;">
+    		<rich:toolTip value="Dente Implantado" for="aspecto-imlp-#{numero}" />
+    	</h:graphicImage>
+	    <h:graphicImage id="aspecto-ext-#{numero}" value="#{msg.odontogramaInfoRedImg}" rendered="#{manage.viewMetaAdapter[numero].extraido}" style="position : relative ; bottom :  96px;z-index : 3">
+	    	<rich:toolTip for="aspecto-ext-#{numero}" value="Dente Extraido" />
+	    </h:graphicImage>
+	</h:panelGroup>
+	<oo:menuAspecto attach="graphic#{not empty graphicUp ? 'Up' : 'Down'}-#{numero}" />
+	
 	<oo:map name="dente-map#{id}" id="dente-map#{id}">		
-		<oo:area shape="poly" coords="0,0,11,11,11,39,0,50" bgHighlightImg="#{bgFaceLeftImg}" face="distal" />		
+		<oo:area shape="poly" coords="0,0,11,11,11,39,0,50" bgHighlightImg="#{bgFaceLeftImg}" face="mesial" />		
 		<oo:area shape="poly" coords="0,0,11,11,39,11,50,0" bgHighlightImg="#{bgFaceTopImg}" face="lingual" />
-		<oo:area shape="poly" coords="50,0,39,11,39,39,50,50" bgHighlightImg="#{bgFaceRightImg}" face="mesial" />
+		<oo:area shape="poly" coords="50,0,39,11,39,39,50,50" bgHighlightImg="#{bgFaceRightImg}" face="distal" />
 		<oo:area shape="poly" coords="50,50,39,39,11,39,0,50" bgHighlightImg="#{bgFaceBtnImg}" face="vestibular" />
 		<oo:area shape="rect" coords="11,11,39,39" bgHighlightImg="#{bgFaceCenterImg}" face="oclusal" />		
 	</oo:map>

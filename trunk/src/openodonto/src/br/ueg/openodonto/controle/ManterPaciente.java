@@ -58,11 +58,13 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		this.personSearch.addSearchListener(new CommonSearchPessoaHandler());
 		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
 		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this.getView());
-		this.manageOdontograma = new ManageOdontograma();
+		this.manageOdontograma = new ManageOdontograma(getPaciente().getOdontogramas(), this.getView());
 	}
 
 	protected void carregarExtra() {
 		manageTelefone.setTelefones(getPaciente().getTelefone());
+		manageOdontograma.setOdontogramas(getPaciente().getOdontogramas());
+		manageOdontograma.loadLastOdontograma();
 	}
 
 	protected List<String> getCamposFormatados() {

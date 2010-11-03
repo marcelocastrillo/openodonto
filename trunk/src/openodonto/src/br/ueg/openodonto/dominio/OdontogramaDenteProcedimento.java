@@ -13,7 +13,7 @@ import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Table(name = "procedimentos_dentes")
-public class OdontogramaDenteProcedimento implements Entity{ //ColaboradorProduto
+public class OdontogramaDenteProcedimento implements Entity{
 
 	private static final long serialVersionUID = -2263101580965612324L;
 
@@ -36,6 +36,8 @@ public class OdontogramaDenteProcedimento implements Entity{ //ColaboradorProdut
 	@Column(name="data_procedimento")
 	private Date data;
 	
+	@Column(name="obs")
+	private String observacao;
 		
 	public OdontogramaDenteProcedimento(Long procedimentoId,Long odontogramaDenteId) {
 		this();
@@ -49,8 +51,7 @@ public class OdontogramaDenteProcedimento implements Entity{ //ColaboradorProdut
 	}
 	
 	public OdontogramaDenteProcedimento() {
-	}
-
+	}	
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -99,71 +100,20 @@ public class OdontogramaDenteProcedimento implements Entity{ //ColaboradorProdut
 		this.data = data;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result + ((data == null) ? 0 : data.hashCode());
-		result = prime
-				* result
-				+ ((odontogramaDenteId == null) ? 0 : odontogramaDenteId
-						.hashCode());
-		result = prime * result
-				+ ((procedimentoId == null) ? 0 : procedimentoId.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
-		return result;
+	public String getObservacao() {
+		return observacao;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		OdontogramaDenteProcedimento other = (OdontogramaDenteProcedimento) obj;
-		if (codigo == null) {
-			if (other.codigo != null)
-				return false;
-		} else if (!codigo.equals(other.codigo))
-			return false;
-		if (data == null) {
-			if (other.data != null)
-				return false;
-		} else if (!data.equals(other.data))
-			return false;
-		if (odontogramaDenteId == null) {
-			if (other.odontogramaDenteId != null)
-				return false;
-		} else if (!odontogramaDenteId.equals(other.odontogramaDenteId))
-			return false;
-		if (procedimentoId == null) {
-			if (other.procedimentoId != null)
-				return false;
-		} else if (!procedimentoId.equals(other.procedimentoId))
-			return false;
-		if (status == null) {
-			if (other.status != null)
-				return false;
-		} else if (!status.equals(other.status))
-			return false;
-		if (valor == null) {
-			if (other.valor != null)
-				return false;
-		} else if (!valor.equals(other.valor))
-			return false;
-		return true;
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
 	}
 
 	@Override
 	public String toString() {
-		return "ProcedimentoDente [codigo=" + codigo + ", data=" + data
-				+ ", odontogramaDenteId=" + odontogramaDenteId
-				+ ", procedimentoId=" + procedimentoId + ", status=" + status
-				+ ", valor=" + valor + "]";
+		return "OdontogramaDenteProcedimento [codigo=" + codigo + ", data="
+				+ data + ", observacao=" + observacao + ", odontogramaDenteId="
+				+ odontogramaDenteId + ", procedimentoId=" + procedimentoId
+				+ ", status=" + status + ", valor=" + valor + "]";
 	}
 	
 }

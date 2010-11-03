@@ -17,8 +17,7 @@ public class ListaDominioFiltrada<T extends Entity> extends AbstractLista<T> {
     private List<Object> params;
     private String query;
 
-    public ListaDominioFiltrada(Class<T> classe, String query,
-	    List<Object> params) {
+    public ListaDominioFiltrada(Class<T> classe, String query,  List<Object> params) {
 	super(classe);
 	this.params = params;
 	this.query = query;
@@ -28,14 +27,13 @@ public class ListaDominioFiltrada<T extends Entity> extends AbstractLista<T> {
 	this(classe, null, null);
     }
 
-    public List<T> getDominio() {
+    public List<T> getRefreshDominio() {
 	if (params == null || query == null)
 	    return new ArrayList<T>();
 	EntityManager<T> daoDominio = DaoFactory.getInstance().getDao(
 		getClasse());
 	try {
-	    return daoDominio.getSqlExecutor().executarNamedQuery(query,
-		    params, "*");
+	    return daoDominio.getSqlExecutor().executarNamedQuery(query, params, "*");
 	} catch (Exception ex) {
 	    ex.printStackTrace();
 	}
@@ -49,5 +47,11 @@ public class ListaDominioFiltrada<T extends Entity> extends AbstractLista<T> {
     public void setParams(List<Object> params) {
 	this.params = params;
     }
+
+	@Override
+	public boolean isChangeable() {
+		return true;
+	}
+
 
 }

@@ -2,7 +2,7 @@ package br.ueg.openodonto.dominio.constante;
 
 public enum FaceDente {
 	
-	LIGUAL("Lingual ou Palatina"),VESTIBULAR("Vestibular"),MESIAL("Mesial"),DISTAL("Distal"),OCLUSAL("Oclusal ou Incisal");
+	LINGUAL("Lingual ou Palatina"),VESTIBULAR("Vestibular"),MESIAL("Mesial"),DISTAL("Distal"),OCLUSAL("Oclusal ou Incisal"),ROOT("Raiz");
 	
 	private String nome;
 	
@@ -11,11 +11,6 @@ public enum FaceDente {
 	}
 	
 	public String getNome() {
-		return nome;
-	}
-	
-	@Override
-	public String toString() {
 		return nome;
 	}
 	

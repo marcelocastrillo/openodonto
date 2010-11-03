@@ -14,20 +14,24 @@ import br.ueg.openodonto.persistencia.orm.Entity;
  */
 public class ListaDominio<T extends Entity> extends AbstractLista<T> {
 
-    public ListaDominio(Class<T> classe) {
-	super(classe);
-    }
-
-    public List<T> getDominio() {
-	EntityManager<T> daoDominio = DaoFactory.getInstance().getDao(
-		getClasse());
-	List<T> lista = new ArrayList<T>();
-	try {
-	    lista = daoDominio.listar();
-	} catch (Exception e) {
-	    e.printStackTrace();
+	public ListaDominio(Class<T> classe) {
+		super(classe);
 	}
-	return lista;
-    }
 
+	public List<T> getRefreshDominio() {
+		EntityManager<T> daoDominio = DaoFactory.getInstance().getDao(
+				getClasse());
+		List<T> lista = new ArrayList<T>();
+		try {
+			lista = daoDominio.listar();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
+	@Override
+	public boolean isChangeable() {
+		return true;
+	}
 }

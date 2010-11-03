@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:component xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:oo="http://code.google.com/p/openodonto"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-	<rich:modalPanel id="procedimentosOdontograma" autosized="false" width="240" height="240" resizeable="false">
+	<rich:modalPanel id="procedimentosOdontograma" autosized="true" width="640" resizeable="false">
 	    <f:facet name="header">
 		    <h:outputText value="Odontograma Procedimentos" />
         </f:facet>
@@ -17,6 +18,84 @@
 				</a4j:commandButton>
             </h:panelGroup>
         </f:facet>
-        <h:outputText id="nameFace" value="Dente : #{manterPaciente.manageOdontograma.dente} - Face : #{manterPaciente.manageOdontograma.faceObj}" />
+        <center>        
+        <rich:panel id="procedimentosOdontogramaMeta">
+        	<h:panelGrid columns="3">
+        		<h:panelGroup layout="block">
+        		    <h:outputLabel value="Dente Nome : " style="font-weight : bold"/>
+        		    <h:outputText value="#{manage.od.dente.nome}" />
+        		</h:panelGroup>
+        		<h:panelGroup layout="block">
+        		    <h:outputLabel value="Dente Numero : " style="font-weight : bold"/>
+        		    <h:outputText value="#{manage.od.dente.numero}" />
+        		</h:panelGroup>
+        		<h:panelGroup layout="block">
+        		    <h:outputLabel value="Face : " style="font-weight : bold" />
+        		    <h:outputText value="#{manage.od.face.nome}" />
+        		</h:panelGroup>
+        	</h:panelGrid>
+        </rich:panel>
+        </center>
+        <a4j:form id="formProcedimentosOdontograma" ajaxSubmit="true" >
+       	<oo:maskMoney name="moneyMask" time="onJScall" />
+        <center>
+            <h:panelGrid>
+                <a4j:jsFunction name="reloadObs" reRender="listaProcedimentosOdontograma" />
+                <rich:scrollableDataTable rowKeyVar="row" id="listaProcedimentosOdontograma" value="#{manage.procedimentos}" var="odp" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" width="660px" height="230px" rows="10" >                    
+                	<rich:column width="36px">
+                	    <h:panelGroup layout="block" style="text-align : center">
+						<a4j:commandButton value="#{msg.manageContactAcaoRemover}" action="#{manage.acaoRemoverOdp}" reRender="listaProcedimentosOdontograma" image="#{msg.imgBotaoMiniRemove}">
+							    <f:setPropertyActionListener value="#{odp}" target="#{manage.procedimento}" />
+							</a4j:commandButton>                	    	
+                	    </h:panelGroup>
+                	</rich:column>
+                	<rich:column width="150px">
+                	    <f:facet name="header">
+                	    	<h:outputText value="Nome" />
+                	    </f:facet>
+                	    <h:panelGroup layout="block" style="text-align : center">
+                	    	<h:outputText id="procNome" value="#{odp.procedimento.nome}" >
+                	    	    <rich:toolTip for="procNome" value="#{odp.procedimento.descricao}" />
+                	    	</h:outputText>
+                	    </h:panelGroup>
+                	</rich:column>
+                	<rich:column width="135px">
+                	    <f:facet name="header">
+                	    	<h:outputText value="Status" />
+                	    </f:facet>
+                	    <h:panelGroup layout="block" style="text-align : center">
+                	    	<h:selectOneMenu enableManualInput="false" id="selectStatusProc" value="#{odp.odp.status}" onchange="$('formProcedimentosOdontograma').submit();" converter="simpleEntityConverter" >
+                	    		<t:selectItems id="itemsEstado" value="#{list.ALIAS_STATUS_PROC.dominio}" var="status" itemLabel="#{status.nome}" itemValue="#{status}" />
+                	    	</h:selectOneMenu>
+                	    </h:panelGroup>
+                	</rich:column>
+                	<rich:column width="80px">
+                	    <f:facet name="header">
+                	    	<h:outputText value="Data" />
+                	    </f:facet>
+                	    <h:panelGroup layout="block" style="text-align : center">
+                	    	<h:outputText value="#{odp.odp.data}" />
+                	    </h:panelGroup>
+                	</rich:column>
+                	<rich:column width="150px">
+                	    <f:facet name="header">
+                	    	<h:outputText value="Observacao" />
+                	    </f:facet>                	    
+                		<h:panelGroup layout="block" style="text-align : center">                	    
+                	   		<rich:inplaceInput onmouseover="alert('#{odp.odp.observacao}')" id="inplaceObs" viewClass="oo-odontograma-procedimentos-inplace" inputWidth="150px" onblur="align_div(this.parentNode.parentNode,'center')" onchange="$('formProcedimentosOdontograma').submit();reloadObs()" oneditactivation="jQuery(this.firstChild).val('#{odp.odp.observacao}');align_div(this.parentNode,'left');" value="#{odp.observacao}"/>            	    	
+                		</h:panelGroup>
+                	</rich:column>
+                	<rich:column width="100">
+                	    <f:facet name="header">
+                	    	<h:outputText value="Valor" />
+                	    </f:facet>
+                	    <h:panelGroup layout="block" style="text-align : center">
+                	    	<rich:inplaceInput inputWidth="100" id="inplaceProcEntradaValor" value="#{odp.valor}"  onblur="align_div(this.parentNode.parentNode,'center')" onchange="$('formProcedimentosOdontograma').submit();" oneditactivation="align_div(this.parentNode,'left');moneyMask(this.firstChild)" />
+                	    </h:panelGroup>
+                	</rich:column>
+                </rich:scrollableDataTable>
+            </h:panelGrid>
+        </center>
+        </a4j:form>
 	</rich:modalPanel>
-</ui:component>
+</ui:composition>

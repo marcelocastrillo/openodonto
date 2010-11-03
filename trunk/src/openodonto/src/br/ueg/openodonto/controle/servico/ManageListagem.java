@@ -19,7 +19,8 @@ public class ManageListagem implements Serializable {
 	    {"ALIAS_DENTE" , "br.ueg.openodonto.dominio.constante.Dente"},
 	    {"ALIAS_FACE" , "br.ueg.openodonto.dominio.constante.Face"},
 	    {"ALIAS_UF" , "br.ueg.openodonto.dominio.constante.TiposUF"},
-	    {"ALIAS_TIPO_TEL","br.ueg.openodonto.dominio.constante.TiposTelefone"}};
+	    {"ALIAS_TIPO_TEL","br.ueg.openodonto.dominio.constante.TiposTelefone"},
+	    {"ALIAS_STATUS_PROC","br.ueg.openodonto.dominio.constante.TipoStatusProcedimento"}};
 	
 	static{
 	    aliasMap = new HashMap<String, String>();
@@ -63,9 +64,6 @@ public class ManageListagem implements Serializable {
 			cache.put(classe, lista);
 		} else {
 			lista = (AbstractLista<T>) cache.get(classe);
-		}
-		if (lista.isOld()) {
-			lista.refreshDominio(null);
 		}
 		return lista;
 	}
