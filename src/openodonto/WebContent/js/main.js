@@ -48,7 +48,9 @@ function dataTabeMouseOver(row){
 	row.style.backgroundColor='#F1F1F1';
 	row.style.cursor='pointer';	
 }
-
 function restoreBg(dom,img){
 	dom.src = img;
+}
+function align_div(element,position){
+	jQuery(element).css('text-align',position);
 }

@@ -31,7 +31,7 @@ public class OdontogramaDente implements Entity{ //Colaboradores
 	@Enumerator(type = EnumValue.ORDINAL)
 	private FaceDente face;
 	
-	@Column(name="id_odontograma")
+	@Column(name="fk_odontograma")
 	private Long idOdontograma;
 
 	@Relationship

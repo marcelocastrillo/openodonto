@@ -12,13 +12,13 @@
 	</ui:define>
 	<ui:param name="workPanel" value="#{msg.manterProcedimentos}" />
 	<ui:param name="mBean"     value="#{manterProcedimento}" />
-	<ui:param name="formName"  value="#{manterProcedimento.view.formName}" />
-	<ui:param name="currency" value="#{facesContext.viewRoot.locale}"/>
-	<ui:define name="work">
-		<a4j:loadScript src="/js/jquery.price_format.1.3.js" />    
+	<ui:param name="formName"  value="#{manterProcedimento.view.formName}" />	
+	<ui:define name="work">		
 	    <a4j:keepAlive beanName="manterProcedimento"/>
 	    <a4j:jsFunction name="popUp" action="#{manterProcedimento.acaoShowed}" oncomplete="exibirMensagem('#{manterProcedimento.view.popUpMsg}')"/>
 	    <div align="center">
+	        <a4j:loadScript src="/js/jquery.price_format.1.3.js" />
+	        <oo:maskMoney name="maskMoney" selector=".maskMoney" time="onload" />
 			<rich:panel styleClass="oo-crud-decore-panel" >				
 				<center>
 					<h:panelGrid columns="1">				
@@ -33,8 +33,7 @@
 							</h:panelGrid>
 							<h:panelGrid columns="1">
 							    <oo:label value="#{msg.procedimentoValor}" for="entradaValor"  required="true"/>
-							    <h:inputText id="entradaValor" value="#{manterProcedimento.procedimento.valor}" style=" width : 118px;">
-							   		<rich:jQuery query="priceFormat({prefix: '#{mBean.currency.symbol} ',centsSeparator: '#{mBean.decimalSymbols.monetaryDecimalSeparator}',thousandsSeparator: '#{mBean.decimalSymbols.groupingSeparator}',centsLimit:#{mBean.currency.defaultFractionDigits}})" selector="#entradaValor" timing="onload" />
+							    <h:inputText id="entradaValor" value="#{manterProcedimento.procedimento.valor}" style=" width : 118px;" styleClass="maskMoney">
 							        <f:convertNumber type="currency" />
 							    </h:inputText>
 							</h:panelGrid>

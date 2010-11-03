@@ -9,10 +9,10 @@
 	<a4j:commandLink id="shape-#{face}-#{id}" shape="#{shape}"
 		coords="#{coords}" action="#{manage.acaoManageProcedimento}"
 		oncomplete="Richfaces.showModalPanel('procedimentosOdontograma')"
-		reRender="nameFace"
-		onclick="restoreBg($('#{id}'),#{bgHighlightImg})"
-		onmouseover="restoreBg($('#{id}'),#{bgHighlightImg});this.style.cursor='pointer';"
-		onmouseout="restoreBg($('#{id}'),'#{bgDenteMapImg}')">
+		reRender="formProcedimentosOdontograma,procedimentosOdontogramaMeta"
+		onmouseover="restoreBg($('#{formName}:#{id}'),#{bgHighlightImg});this.style.cursor='pointer';"
+		onmouseout="restoreBg($('#{formName}:#{id}'),'#{cxName}#{bgDenteMapImg}')"
+		title="#{manage.viewMetaAdapter[numero].procedimentos[face]} procedimento(s).">	
 		<f:setPropertyActionListener value="#{numero}" target="#{manage.numero}">
 		    <f:convertNumber integerOnly="true" type="number" maxIntegerDigits="2" minIntegerDigits="1" />
 		</f:setPropertyActionListener>

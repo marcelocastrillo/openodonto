@@ -32,4 +32,20 @@
 		<tag-name>area</tag-name>
 		<source>../cadastro/commons/odontograma/toothArea.xhtml</source>
 	</tag>
+	<tag>
+		<tag-name>root</tag-name>
+		<source>../cadastro/commons/odontograma/rootArea.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>procMark</tag-name>
+		<source>../cadastro/commons/odontograma/procMark.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>menuAspecto</tag-name>
+		<source>../cadastro/commons/odontograma/menuAspecto.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>maskMoney</tag-name>
+		<source>../cadastro/commons/crud/maskMoney.xhtml</source>
+	</tag>
 </facelet-taglib>

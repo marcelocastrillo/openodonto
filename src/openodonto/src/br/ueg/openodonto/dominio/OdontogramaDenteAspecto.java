@@ -1,0 +1,116 @@
+package br.ueg.openodonto.dominio;
+
+import br.ueg.openodonto.dominio.constante.Dente;
+import br.ueg.openodonto.dominio.constante.TipoAscpectoDente;
+import br.ueg.openodonto.persistencia.orm.Column;
+import br.ueg.openodonto.persistencia.orm.Entity;
+import br.ueg.openodonto.persistencia.orm.Enumerator;
+import br.ueg.openodonto.persistencia.orm.Table;
+import br.ueg.openodonto.persistencia.orm.value.EnumValue;
+
+@Table(name="odontograma_aspectos")
+public class OdontogramaDenteAspecto implements Entity{
+
+	private static final long serialVersionUID = 336260993547724226L;
+	
+	@Column(name="dente")
+	@Enumerator(type=EnumValue.ORDINAL)
+	private Dente dente;
+	
+	@Column(name="aspecto")
+	@Enumerator(type=EnumValue.ORDINAL)	
+	private TipoAscpectoDente aspecto;
+	
+	@Column(name="fk_odontograma")
+	private Long idOdontograma;	
+	
+	public OdontogramaDenteAspecto(Dente dente) {
+		this(dente,null);
+		this.dente = dente;
+	}
+
+	public OdontogramaDenteAspecto(Long idOdontograma) {
+		this(null,idOdontograma);
+		this.idOdontograma = idOdontograma;
+	}
+
+	public OdontogramaDenteAspecto(Dente dente, Long idOdontograma) {
+		this();
+		this.dente = dente;
+		this.idOdontograma = idOdontograma;
+	}
+
+	public OdontogramaDenteAspecto() {
+		super();
+	}
+
+	public Dente getDente() {
+		return dente;
+	}
+
+	public void setDente(Dente dente) {
+		this.dente = dente;
+	}
+
+	public TipoAscpectoDente getAspecto() {
+		return aspecto;
+	}
+
+	public void setAspecto(TipoAscpectoDente aspecto) {
+		this.aspecto = aspecto;
+	}
+
+	public Long getIdOdontograma() {
+		return idOdontograma;
+	}
+
+	public void setIdOdontograma(Long idOdontograma) {
+		this.idOdontograma = idOdontograma;
+	}
+
+	@Override
+	public String toString() {
+		return "OdontogramaDenteAspecto [aspecto=" + aspecto + ", dente="
+				+ dente + ", idOdontograma=" + idOdontograma + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((aspecto == null) ? 0 : aspecto.hashCode());
+		result = prime * result + ((dente == null) ? 0 : dente.hashCode());
+		result = prime * result
+				+ ((idOdontograma == null) ? 0 : idOdontograma.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OdontogramaDenteAspecto other = (OdontogramaDenteAspecto) obj;
+		if (aspecto == null) {
+			if (other.aspecto != null)
+				return false;
+		} else if (!aspecto.equals(other.aspecto))
+			return false;
+		if (dente == null) {
+			if (other.dente != null)
+				return false;
+		} else if (!dente.equals(other.dente))
+			return false;
+		if (idOdontograma == null) {
+			if (other.idOdontograma != null)
+				return false;
+		} else if (!idOdontograma.equals(other.idOdontograma))
+			return false;
+		return true;
+	}
+	
+
+}

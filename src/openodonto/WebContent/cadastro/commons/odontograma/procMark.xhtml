@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:oo="http://code.google.com/p/openodonto"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+	<h:panelGroup layout="block" rendered="#{up}" >
+		<h:graphicImage  value="#{manage.viewMetaAdapter[numero].procedimentos['distal'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;top : 58px;" />
+		<h:graphicImage  value="#{manage.viewMetaAdapter[numero].procedimentos['lingual'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;left : 10px; top : 38px;" />
+		<h:graphicImage  value="#{manage.viewMetaAdapter[numero].procedimentos['mesial'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;top : 58px;left : 20px;" />
+		<h:graphicImage  value="#{manage.viewMetaAdapter[numero].procedimentos['vestibular'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative; right : 10px ; top : 78px;" />
+		<h:graphicImage  value="#{manage.viewMetaAdapter[numero].procedimentos['oclusal'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative; right : 20px ; top : 58px;" />
+		<h:graphicImage  value="#{manage.viewMetaAdapter[numero].procedimentos['root'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;right:30px;top:19px" />
+	</h:panelGroup>
+	<h:panelGroup layout="block" rendered="#{down}" >
+		<h:graphicImage value="#{manage.viewMetaAdapter[numero].procedimentos['distal'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;bottom:58px;" />
+		<h:graphicImage value="#{manage.viewMetaAdapter[numero].procedimentos['lingual'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;left : 10px;bottom:38px;" />
+		<h:graphicImage value="#{manage.viewMetaAdapter[numero].procedimentos['mesial'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;left : 20px;bottom:58px;" />
+		<h:graphicImage value="#{manage.viewMetaAdapter[numero].procedimentos['vestibular'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;right : 10px;bottom:78px;"/>
+		<h:graphicImage value="#{manage.viewMetaAdapter[numero].procedimentos['oclusal'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;right : 20px;bottom : 58px" />
+		<h:graphicImage value="#{manage.viewMetaAdapter[numero].procedimentos['root'] > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;right:30px;bottom:19px" />
+	</h:panelGroup>
+</ui:composition>

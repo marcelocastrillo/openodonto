@@ -1,6 +1,8 @@
 package br.ueg.openodonto.dominio;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 import br.ueg.openodonto.persistencia.orm.Column;
@@ -10,6 +12,7 @@ import br.ueg.openodonto.persistencia.orm.Relationship;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 import br.ueg.openodonto.util.OdontogramaDenteComparator;
+import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name = "odontogramas")
 public class Odontograma implements Entity {
@@ -27,13 +30,16 @@ public class Odontograma implements Entity {
 	private String nome;
 
 	@Column(name = "descricao")
-	private String descricacao;
+	private String descricao;
 
 	@Column(name = "data")
 	private Date data;
 
 	@Relationship
 	private TreeSet<OdontogramaDente> odontogramaDentes;
+	
+	@Relationship
+	private List<OdontogramaDenteAspecto> aspectos;
 	
 	public Odontograma(Long idPessoa,Long id) {
 		this(idPessoa);
@@ -47,6 +53,7 @@ public class Odontograma implements Entity {
 
 	public Odontograma() {
 		super();
+		aspectos = new ArrayList<OdontogramaDenteAspecto>();
 		odontogramaDentes = new TreeSet<OdontogramaDente>(new OdontogramaDenteComparator());
 	}
 	
@@ -64,14 +71,6 @@ public class Odontograma implements Entity {
 
 	public void setIdPessoa(Long idPessoa) {
 		this.idPessoa = idPessoa;
-	}
-
-	public String getDescricacao() {
-		return descricacao;
-	}
-
-	public void setDescricacao(String descricacao) {
-		this.descricacao = descricacao;
 	}
 
 	public String getNome() {
@@ -98,20 +97,42 @@ public class Odontograma implements Entity {
 		this.odontogramaDentes = odontogramaDentes;
 	}	
 	
-	@Override
-	public String toString() {
-		return "Odontograma [data=" + data + ", descricacao=" + descricacao
-				+ ", id=" + id + ", idPessoa=" + idPessoa + ", nome=" + nome
-				+ ", odontogramaDentes=" + odontogramaDentes + "]";
+	public String getDescricaoResumida(){
+		return WordFormatter.abstractStr(getDescricao(), 100);
+	}	
+	
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public List<OdontogramaDenteAspecto> getAspectos() {
+		return aspectos;
+	}
+
+	public void setAspectos(List<OdontogramaDenteAspecto> aspectos) {
+		this.aspectos = aspectos;
 	}
 	
+	@Override
+	public String toString() {
+		return "Odontograma [aspectos=" + aspectos + ", data=" + data
+				+ ", descricao=" + descricao + ", id=" + id + ", idPessoa="
+				+ idPessoa + ", nome=" + nome + ", odontogramaDentes="
+				+ odontogramaDentes + "]";
+	}	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((aspectos == null) ? 0 : aspectos.hashCode());
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		result = prime * result
-				+ ((descricacao == null) ? 0 : descricacao.hashCode());
+				+ ((descricao == null) ? 0 : descricao.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result
 				+ ((idPessoa == null) ? 0 : idPessoa.hashCode());
@@ -132,15 +153,20 @@ public class Odontograma implements Entity {
 		if (getClass() != obj.getClass())
 			return false;
 		Odontograma other = (Odontograma) obj;
+		if (aspectos == null) {
+			if (other.aspectos != null)
+				return false;
+		} else if (!aspectos.equals(other.aspectos))
+			return false;
 		if (data == null) {
 			if (other.data != null)
 				return false;
 		} else if (!data.equals(other.data))
 			return false;
-		if (descricacao == null) {
-			if (other.descricacao != null)
+		if (descricao == null) {
+			if (other.descricao != null)
 				return false;
-		} else if (!descricacao.equals(other.descricacao))
+		} else if (!descricao.equals(other.descricao))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -164,4 +190,5 @@ public class Odontograma implements Entity {
 			return false;
 		return true;
 	}
+
 }

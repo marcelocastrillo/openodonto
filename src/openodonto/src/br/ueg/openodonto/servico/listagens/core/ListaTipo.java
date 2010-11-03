@@ -15,9 +15,14 @@ public class ListaTipo<T> extends AbstractLista<T> {
         super(classe);
     }
 
-    public List<T> getDominio() {
+    public List<T> getRefreshDominio(){
         List<T> lista = new ArrayList<T>();
         lista = Arrays.asList(classe.getEnumConstants());
         return lista;
     }
+
+	@Override
+	public boolean isChangeable() {
+		return false;
+	}
 }
