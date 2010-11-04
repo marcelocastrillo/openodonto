@@ -60,6 +60,10 @@ public class DaoOdontograma extends DaoCrud<Odontograma>{
 		for (OdontogramaDente od : o.getOdontogramaDentes()) {
 			daoOD.remover(od);			
 		}
+		EntityManager<OdontogramaDenteAspecto> daoODA = DaoFactory.getInstance().getDao(OdontogramaDenteAspecto.class);
+		for(OdontogramaDenteAspecto oda : o.getAspectos()){
+		    daoODA.remover(oda);
+		}
 		return true;
 	}
 	

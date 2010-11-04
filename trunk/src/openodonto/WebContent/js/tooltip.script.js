@@ -39,7 +39,7 @@ var tooltip=function(){
 				t.style.display = 'block';
 				b.style.display = 'block';
 			}
-			if(tt.offsetWidth > maxw){tt.style.width = maxw + 'px'}
+			if(tt.offsetWidth > maxw){tt.style.width = maxw + 'px';}
 			h = parseInt(tt.offsetHeight) + top;
 			clearInterval(tt.timer);
 			tt.timer = setInterval(function(){tooltip.fade(1)},timer);

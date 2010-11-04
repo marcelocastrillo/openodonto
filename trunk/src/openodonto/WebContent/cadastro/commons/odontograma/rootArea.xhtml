@@ -9,12 +9,11 @@
 	<a4j:commandLink action="#{manage.acaoManageProcedimento}"
 		reRender="formProcedimentosOdontograma,procedimentosOdontogramaMeta" id="root-#{idroot}" 
 		oncomplete="Richfaces.showModalPanel('procedimentosOdontograma')"
-		onmouseover="restoreBg($('#{formName}:#{idroot}'),'#{cxName}#{bgDenteRootSelected}');this.style.cursor='pointer';"
-		onmouseout="restoreBg($('#{formName}:#{idroot}'),'#{cxName}#{bgDenteRoot}')"
+		onmouseover="restoreBg($('#{formName}:#{idroot}'),'#{cxName}#{bgDenteRootSelected}');this.style.cursor='pointer';tooltip.show('#{meta.root} procedimento(s).');"
+		onmouseout="restoreBg($('#{formName}:#{idroot}'),'#{cxName}#{bgDenteRoot}');tooltip.hide();"
 		style="#{style}">
-		<h:graphicImage rendered="#{show}" id="#{idroot}" value="#{bgDenteRoot}" style="border-style: none;position:relative ; z-index : 2" />
-		<f:setPropertyActionListener value="#{numero}"
-			target="#{manage.numero}">
+		<h:graphicImage rendered="#{show}" id="#{idroot}" value="#{bgDenteRoot}" style="border-style: none;position:relative ; z-index : 1" />
+		<f:setPropertyActionListener value="#{numero}" target="#{manage.numero}">
 			<f:convertNumber integerOnly="true" type="number" maxIntegerDigits="2" minIntegerDigits="1" />
 		</f:setPropertyActionListener>
 		<f:setPropertyActionListener value="root" target="#{manage.face}" />

@@ -5,8 +5,10 @@ import br.ueg.openodonto.dominio.constante.TipoAscpectoDente;
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.Enumerator;
+import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.EnumValue;
+import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Table(name="odontograma_aspectos")
 public class OdontogramaDenteAspecto implements Entity{
@@ -15,14 +17,16 @@ public class OdontogramaDenteAspecto implements Entity{
 	
 	@Column(name="dente")
 	@Enumerator(type=EnumValue.ORDINAL)
+	@Id(autoIncrement=IdIncrementType.IDENTITY)	
 	private Dente dente;
+	
+	@Id(autoIncrement=IdIncrementType.IDENTITY)
+	@Column(name="fk_odontograma")
+	private Long idOdontograma; 
 	
 	@Column(name="aspecto")
 	@Enumerator(type=EnumValue.ORDINAL)	
 	private TipoAscpectoDente aspecto;
-	
-	@Column(name="fk_odontograma")
-	private Long idOdontograma;	
 	
 	public OdontogramaDenteAspecto(Dente dente) {
 		this(dente,null);
