@@ -8,42 +8,65 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 <h:panelGroup id="block-#{numero}">	
 	<ui:param name="id" value="dente#{numero}" />
+	<ui:param name="meta" value="#{manage.viewMetaAdapter[numero]}"/>
 	<h:panelGrid>
-	    <h:panelGroup layout="block" rendered="#{not empty graphicUp}">	    	
-	    	<h:graphicImage value="#{msg.odontogramaInfoBlueImg}" rendered="#{manage.viewMetaAdapter[numero].implante}" style="position : relative ; top :  28px" />
-	    	<h:graphicImage value="#{msg.odontogramaInfoRedImg}" rendered="#{manage.viewMetaAdapter[numero].extraido}" style="position : relative ; top :  28px" />
+	    <!-- (I) informando aspecto para dentes superiores  -->
+	    <h:panelGroup layout="block" rendered="#{not empty graphicUp}" style="position : relative" >
+	    	<h:graphicImage id="aspecto-imlp-up-#{numero}" value="#{msg.odontogramaInfoBlueImg}" rendered="#{meta.implante}" style="position : absolute ; top :  96px" >
+	    		<rich:toolTip value="Dente Implantado" for="aspecto-imlp-up-#{numero}" />
+	    	</h:graphicImage>
+	    	<h:graphicImage id="aspecto-ext-up-#{numero}" value="#{msg.odontogramaInfoRedImg}" rendered="#{meta.extraido}" style="position : absolute ; top :  96px" >
+	    		<rich:toolTip value="Dente Extraido" for="aspecto-ext-up-#{numero}" />
+	    	</h:graphicImage>
 	    </h:panelGroup>
+	    
+	    <!-- Desenho dente superior  -->
 	    <h:panelGroup layout="block" style="height: 150px;text-align : center;vertical-align: bottom; display: table-cell;" rendered="#{not empty graphicUp}">
 			<h:graphicImage id="graphicUp-#{numero}" value="#{graphicUp}" style="position : relative ; top : 15px">
 			</h:graphicImage>
 		</h:panelGroup>
+		
+		<!-- Numero dente inferior  -->
 		<h:panelGroup layout="block" style="text-align : center" rendered="#{not empty graphicDown}">
 			<h:outputText value="#{numero}" styleClass="oo-odontograma-numero-dente" />
-		</h:panelGroup>
+		</h:panelGroup>		
         
+        <!-- Bolinhas vermelhas UP -->
         <oo:procMark id="#{id}" up="#{not empty graphicUp}"/>
-		<oo:root idroot="#{id}_root_up" show="#{not empty graphicUp}" />		
+        <!-- Raiz UP -->
+		<oo:root idroot="#{id}_root_up" show="#{not empty graphicUp}" />
+		<!-- Imagen geometrica -->		
 		<h:graphicImage id="#{id}" value="#{bgDenteMapImg}" usemap="#dente-map#{id}" style="border-style: none;position : relative;z-index : 2" />
+		<!-- Raiz DOWN -->
 		<oo:root idroot="#{id}_root_down" show="#{not empty graphicDown}"/>
+		<!-- Bolinhas vermelhas Down -->
 		<oo:procMark id="#{id}" down="#{not empty graphicDown}"/>
 
+		<!-- Numero dente superior  -->
 		<h:panelGroup layout="block" style="text-align : center" rendered="#{not empty graphicUp}">
 			<h:outputText value="#{numero}" styleClass="oo-odontograma-numero-dente" />
 		</h:panelGroup>
+		
+		<!-- Desenho dente inferior  -->
 	    <h:panelGroup layout="block" style="height: 150px;text-align : center;vertical-align: top; display: table-cell;" rendered="#{not empty graphicDown}">	    	
-			<h:graphicImage id="graphicDown-#{numero}" value="#{graphicDown}" style="position : relative ; bottom : 15px" />			
+			<h:graphicImage id="graphicDown-#{numero}" value="#{graphicDown}" />			
 		</h:panelGroup>
-	</h:panelGrid>
-	<h:panelGroup layout="block" rendered="#{not empty graphicDown}">
-    	<h:graphicImage id="aspecto-imlp-#{numero}" value="#{msg.odontogramaInfoBlueImg}" rendered="#{manage.viewMetaAdapter[numero].implante}" style="position : relative ; bottom :  96px;">
-    		<rich:toolTip value="Dente Implantado" for="aspecto-imlp-#{numero}" />
-    	</h:graphicImage>
-	    <h:graphicImage id="aspecto-ext-#{numero}" value="#{msg.odontogramaInfoRedImg}" rendered="#{manage.viewMetaAdapter[numero].extraido}" style="position : relative ; bottom :  96px;z-index : 3">
-	    	<rich:toolTip for="aspecto-ext-#{numero}" value="Dente Extraido" />
-	    </h:graphicImage>
-	</h:panelGroup>
+		
+		<!-- (I) informando aspecto para dentes inferiores  -->
+		<h:panelGroup layout="block" rendered="#{not empty graphicDown}" style="position : relative">
+	    	<h:graphicImage id="aspecto-imlp-down-#{numero}" value="#{msg.odontogramaInfoBlueImg}" rendered="#{meta.implante}" style="position : absolute ; bottom :  96px">
+	    		<rich:toolTip value="Dente Implantado" for="aspecto-imlp-down-#{numero}" />
+	    	</h:graphicImage>
+		    <h:graphicImage id="aspecto-ext-down-#{numero}" value="#{msg.odontogramaInfoRedImg}" rendered="#{meta.extraido}" style="position : absolute ; bottom :  96px">
+		    	<rich:toolTip value="Dente Extraido" for="aspecto-ext-down-#{numero}" />
+		    </h:graphicImage>
+		</h:panelGroup>		
+	</h:panelGrid>	
+
+	<!-- Menu de contexto setar aspecto -->
 	<oo:menuAspecto attach="graphic#{not empty graphicUp ? 'Up' : 'Down'}-#{numero}" />
 	
+	<!-- Mapeamento imagem geometrica dente -->
 	<oo:map name="dente-map#{id}" id="dente-map#{id}">		
 		<oo:area shape="poly" coords="0,0,11,11,11,39,0,50" bgHighlightImg="#{bgFaceLeftImg}" face="mesial" />		
 		<oo:area shape="poly" coords="0,0,11,11,39,11,50,0" bgHighlightImg="#{bgFaceTopImg}" face="lingual" />

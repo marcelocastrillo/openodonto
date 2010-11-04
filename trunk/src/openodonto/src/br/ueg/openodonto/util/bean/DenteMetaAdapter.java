@@ -41,6 +41,30 @@ public class DenteMetaAdapter {
 		return procedimentos;
 	}
 
+	public Integer getDistal(){
+	    return procedimentos.get("distal");
+	}
+	
+	public Integer getOclusal(){
+	    return procedimentos.get("oclusal");
+	}
+	
+	public Integer getMesial(){
+	    return procedimentos.get("mesial");
+	}
+	
+	public Integer getVestibular(){
+	    return procedimentos.get("vestibular");
+	}
+	
+	public Integer getLingual(){
+	    return procedimentos.get("lingual");
+	}
+	
+	public Integer getRoot(){
+	    return procedimentos.get("root");
+	}
+	
 	public void setProcedimentos(Map<String, Integer> procedimentos) {
 		this.procedimentos = procedimentos;
 	}
