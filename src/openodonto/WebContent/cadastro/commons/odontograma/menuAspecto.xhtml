@@ -6,7 +6,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-    <rich:contextMenu event="oncontextmenu" attachTo="#{attach}" submitMode="ajax">
+    <rich:contextMenu event="oncontextmenu" attachTo="#{attach}" submitMode="ajax" style="z-index : 2">
     	<rich:menuItem value="Extraido" action="#{manterPaciente.manageOdontograma.acaoMudarAspecto}" reRender="block-#{numero}" >
    			<f:facet name="icon">    			
            		<h:graphicImage value="#{manage.viewMetaAdapter[numero].extraido ? msg.imgMenuItemChecked : msg.imgMenuItemNChecked}" />            	

@@ -6,20 +6,13 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-	<h:panelGroup layout="block" rendered="#{up}" style="position : relative" >
-		<h:graphicImage  value="#{meta.distal > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;top : 58px;" />
-		<h:graphicImage  value="#{meta.lingual > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;left : 10px; top : 38px;" />
-		<h:graphicImage  value="#{meta.mesial > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;top : 58px;left : 20px;" />
-		<h:graphicImage  value="#{meta.vestibular > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative; right : 10px ; top : 78px;" />
-		<h:graphicImage  value="#{meta.oclusal > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative; right : 20px ; top : 58px;" />
-		<h:graphicImage  value="#{meta.root > 0 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : relative;right:30px;top:19px" />
-	</h:panelGroup>
-	<h:panelGroup layout="block" rendered="#{down}" style="position : relative">
-		<h:graphicImage value="#{meta.distal > -1 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : absolute;bottom : 35px;rigth : 5px" />
-		<h:graphicImage value="#{meta.lingual > -1 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : absolute" />
-		<h:graphicImage value="#{meta.mesial > -1 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : absolute" />
-		<h:graphicImage value="#{meta.vestibular > -1 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : absolute"/>
-		<h:graphicImage value="#{meta.oclusal > -1 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : absolute" />
-		<h:graphicImage value="#{meta.root > -1 ? msg.odontogramaRedPointImg : msg.odontogramaTransPointImg}" style="z-index : 1;border-style: none;position : absolute" />
+	<ui:param name="rootPos" value="#{up ? 'bottom : 58px' : down ? 'top : 60px' : ''}" />
+	<h:panelGroup>
+		<h:graphicImage rendered="#{meta.distal > 0}" value="#{msg.odontogramaRedPointImg}" style="border-style: none;position : absolute;top : 20px" />
+		<h:graphicImage rendered="#{meta.lingual > 0}" value="#{msg.odontogramaRedPointImg}" style="border-style: none;position : absolute ; left : 20px" />
+		<h:graphicImage rendered="#{meta.mesial > 0}" value="#{msg.odontogramaRedPointImg}" style="border-style: none;position : absolute;top : 20px;left : 40px" />
+		<h:graphicImage rendered="#{meta.vestibular > 0}" value="#{msg.odontogramaRedPointImg}" style="border-style: none;position : absolute;top : 40px ;left : 20px"/>
+		<h:graphicImage rendered="#{meta.oclusal > 0}" value="#{msg.odontogramaRedPointImg}" style="border-style: none;position : absolute;top : 20px;left : 20px" />
+		<h:graphicImage rendered="#{meta.root > 0}" value="#{msg.odontogramaRedPointImg}" style="border-style: none;position : absolute; #{rootPos} ; left : 20px" />
 	</h:panelGroup>
 </ui:composition>
