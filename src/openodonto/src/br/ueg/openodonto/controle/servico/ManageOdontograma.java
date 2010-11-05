@@ -35,6 +35,8 @@ public class ManageOdontograma {
 	private List<Odontograma> 				odontogramas;
 	private Map<String,DenteMetaAdapter>    viewMetaAdapter;
 	
+	private Procedimento                    procedimentoAdd;
+	
 	private Object row;
 	
 	
@@ -301,6 +303,11 @@ public class ManageOdontograma {
 	private class OdontogramaDateComparator implements Comparator<Odontograma>{
 		@Override
 		public int compare(Odontograma o1, Odontograma o2) {
+			if(o1 == null || o1.getData() == null){
+				return -1;
+			}else if (o2 == null || o2.getData() == null){
+				return 1;
+			}
 			return o1.getData().compareTo(o2.getData());
 		}
 		

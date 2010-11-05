@@ -20,6 +20,7 @@ public class ManageListagem implements Serializable {
 	    {"ALIAS_FACE" , "br.ueg.openodonto.dominio.constante.Face"},
 	    {"ALIAS_UF" , "br.ueg.openodonto.dominio.constante.TiposUF"},
 	    {"ALIAS_TIPO_TEL","br.ueg.openodonto.dominio.constante.TiposTelefone"},
+	    {"ALIAS_PROC","br.ueg.openodonto.dominio.Procedimento"},
 	    {"ALIAS_STATUS_PROC","br.ueg.openodonto.dominio.constante.TipoStatusProcedimento"}};
 	
 	static{

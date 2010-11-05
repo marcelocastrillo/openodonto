@@ -35,9 +35,32 @@
         		</h:panelGroup>
         	</h:panelGrid>
         </rich:panel>
-        </center>
+        </center>                
         <a4j:form id="formProcedimentosOdontograma" ajaxSubmit="true" >        
        	<oo:maskMoney name="moneyMask" time="onJScall" />
+       	
+        <rich:panel>
+            <h:panelGrid>
+                <h:panelGrid>
+                	<oo:label value="Procedimento" />
+                	<rich:comboBox value="#{manage.procedimentoAdd}" enableManualInput="false" converter="simpleEntityConverter"  >
+                		<t:selectItems value="#{list.ALIAS_PROC.dominio}" var="procedimento" itemLabel="#{procedimento.nome}" itemValue="#{procedimento}" />
+                	</rich:comboBox>
+                </h:panelGrid>
+                <h:panelGrid>
+                	<h:outputLabel value="Status" />
+                	<h:selectOneMenu enableManualInput="false" id="selectStatusProc" value="#{odp.odp.status}" onchange="$('formProcedimentosOdontograma').submit();" converter="simpleEntityConverter" >
+                		<t:selectItems id="itemsEstado" value="#{list.ALIAS_STATUS_PROC.dominio}" var="status" itemLabel="#{status.nome}" itemValue="#{status}" />
+                	</h:selectOneMenu>             
+                </h:panelGrid>
+                <h:outputLabel value="Data" />                
+                <oo:label value="Valor" />
+            </h:panelGrid>
+            <h:panelGrid>
+            	<oo:label value="Observacao" />
+            </h:panelGrid>
+        </rich:panel>
+               	
         <center>
             <h:panelGrid>
                 <a4j:jsFunction name="reloadObs" reRender="listaProcedimentosOdontograma" />
@@ -82,7 +105,7 @@
                 	    	<h:outputText value="Observacao" />
                 	    </f:facet>                	    
                 		<h:panelGroup layout="block" style="text-align : center">                	    
-                	   		<rich:inplaceInput onviewactivation="alert('View Actv')" onmouseover="tooltip.show('#{odp.odp.observacao}');" onmouseout="tooltip.hide();" id="inplaceObs" viewClass="oo-odontograma-procedimentos-inplace" inputWidth="150px" onblur="align_div(this.parentNode.parentNode,'center')" onchange="$('formProcedimentosOdontograma').submit();reloadObs()" oneditactivation="jQuery(this.firstChild).val('#{odp.odp.observacao}');align_div(this.parentNode,'left');" value="#{odp.observacao}"/>            	    	
+                	   		<rich:inplaceInput onmouseover="tooltip.show('#{odp.odp.observacao}');" onmouseout="tooltip.hide();" id="inplaceObs" viewClass="oo-odontograma-procedimentos-inplace" inputWidth="150px" onblur="align_div(this.parentNode.parentNode,'center')" onchange="$('formProcedimentosOdontograma').submit();reloadObs()" oneditactivation="jQuery(this.firstChild).val('#{odp.odp.observacao}');align_div(this.parentNode,'left');" value="#{odp.observacao}"/>            	    	
                 		</h:panelGroup>
                 	</rich:column>
                 	<rich:column width="100">
