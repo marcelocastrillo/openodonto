@@ -19,8 +19,7 @@ public class ListaDominio<T extends Entity> extends AbstractLista<T> {
 	}
 
 	public List<T> getRefreshDominio() {
-		EntityManager<T> daoDominio = DaoFactory.getInstance().getDao(
-				getClasse());
+		EntityManager<T> daoDominio = DaoFactory.getInstance().getDao(getClasse());
 		List<T> lista = new ArrayList<T>();
 		try {
 			lista = daoDominio.listar();
