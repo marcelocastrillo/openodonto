@@ -86,7 +86,7 @@
             <h:outputText value="Odontogramas : " />
         	<h:panelGrid columns="1">
         	    <rich:dataTable id="listaOdontogramas" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" width="608px"  rows="5" value="#{manage.odontogramas}" var="odontograma">
-				  	<a4j:support event="onRowClick" reRender="gridOdontograma,gridOdontogramaMeta" rendered="#{not empty odontograma}">
+				  	<a4j:support event="onRowClick" reRender="gridOdontograma,gridOdontogramaMeta" action="#{manage.updateMeta}" rendered="#{not empty odontograma}">
    	    				<f:setPropertyActionListener value="#{odontograma}" target="#{manage.odontograma}" />
    					</a4j:support>
         	        <rich:column width="50px">
