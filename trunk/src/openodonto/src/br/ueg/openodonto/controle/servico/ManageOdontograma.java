@@ -17,6 +17,7 @@ import br.ueg.openodonto.dominio.Procedimento;
 import br.ueg.openodonto.dominio.constante.Dente;
 import br.ueg.openodonto.dominio.constante.FaceDente;
 import br.ueg.openodonto.dominio.constante.TipoAscpectoDente;
+import br.ueg.openodonto.dominio.constante.TipoStatusProcedimento;
 import br.ueg.openodonto.util.bean.DenteMetaAdapter;
 import br.ueg.openodonto.util.bean.ProcedimentoDenteAdapter;
 import br.ueg.openodonto.visao.ApplicationView;
@@ -36,8 +37,10 @@ public class ManageOdontograma {
 	private Map<String,DenteMetaAdapter>    viewMetaAdapter;
 	
 	private Procedimento                    procedimentoAdd;
-	
-	private Object row;
+	private Float                           valorAdd;
+	private String                          observacaoAdd;
+	private TipoStatusProcedimento          statusAdd;
+	private Date                            dataAdd;
 	
 	
 	public ManageOdontograma(List<Odontograma> odontogramas,ApplicationView view) {
@@ -52,6 +55,7 @@ public class ManageOdontograma {
 		this.odontograma.setData(new Date(System.currentTimeMillis()));
 		this.odontograma.setNome("Odontograam Padrão");
 		this.odontograma.setDescricao("Primeira configuração do odontograma do paciente.");
+		initAdd();
 	}
 
 	public void acaoMudarAspecto(){
@@ -97,7 +101,29 @@ public class ManageOdontograma {
 	}
 	
 	public void acaoAddOdp(){
-		
+		OdontogramaDenteProcedimento odp = new OdontogramaDenteProcedimento();
+		odp.setData(dataAdd);
+		odp.setObservacao(observacaoAdd);
+		odp.setProcedimentoId(procedimentoAdd.getCodigo());
+		odp.setStatus(statusAdd);
+		odp.setValor(valorAdd);
+		if(procedimentos != null && odontograma != null){
+			odontograma.getOdontogramaDentes();
+			procedimentos.add(new ProcedimentoDenteAdapter(odp, procedimentoAdd));
+		}		
+	}
+	
+	public void acaoCopiaValor(){
+		if(procedimentoAdd != null && procedimentoAdd.getValor() != null){
+			setValorAdd(procedimentoAdd.getValor());
+		}
+	}
+	
+	private void initAdd(){
+		procedimentoAdd = new Procedimento();
+		valorAdd = 0.0f;
+		this.statusAdd = TipoStatusProcedimento.NAO_REALIZADO;
+		this.dataAdd = new Date(System.currentTimeMillis());
 	}
 	
 	public void acaoManageProcedimento(){
@@ -292,7 +318,46 @@ public class ManageOdontograma {
 	public void setViewMetaAdapter(Map<String, DenteMetaAdapter> viewMetaAdapter) {
 		this.viewMetaAdapter = viewMetaAdapter;
 	}
+	public Procedimento getProcedimentoAdd() {
+		return procedimentoAdd;
+	}
 
+	public void setProcedimentoAdd(Procedimento procedimentoAdd) {
+		this.procedimentoAdd = procedimentoAdd;
+	}
+
+	public Float getValorAdd() {
+		return valorAdd;
+	}
+
+	public void setValorAdd(Float valorAdd) {
+		this.valorAdd = valorAdd;
+	}
+
+	public String getObservacaoAdd() {
+		return observacaoAdd;
+	}
+
+	public void setObservacaoAdd(String observacaoAdd) {
+		this.observacaoAdd = observacaoAdd;
+	}
+	
+	public TipoStatusProcedimento getStatusAdd() {
+		return statusAdd;
+	}
+
+	public void setStatusAdd(TipoStatusProcedimento statusAdd) {
+		this.statusAdd = statusAdd;
+	}
+
+	public Date getDataAdd() {
+		return dataAdd;
+	}
+
+	public void setDataAdd(Date dataAdd) {
+		this.dataAdd = dataAdd;
+	}
+	
 	private class OdontogramaDenteAspectoComparator implements Comparator<OdontogramaDenteAspecto>{
 		@Override
 		public int compare(OdontogramaDenteAspecto o1,	OdontogramaDenteAspecto o2) {
@@ -309,16 +374,7 @@ public class ManageOdontograma {
 				return 1;
 			}
 			return o1.getData().compareTo(o2.getData());
-		}
-		
+		}		
 	}
-	public Object getRow() {
-		return row;
-	}
-
-	public void setRow(Object row) {
-		this.row = row;
-	}
-	
 	
 }

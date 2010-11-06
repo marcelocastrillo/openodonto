@@ -10,6 +10,7 @@ import br.ueg.openodonto.controle.busca.CommonSearchProcedimentoHandler;
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchableProcedimento;
 import br.ueg.openodonto.controle.busca.ViewDisplayer;
+import br.ueg.openodonto.controle.servico.ManageListagem;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Procedimento;
 import br.ueg.openodonto.servico.busca.Search;
@@ -49,6 +50,12 @@ public class ManterProcedimento extends ManageBeanGeral<Procedimento>{
 	protected List<String> getCamposFormatados() {
 		String[] formatados = {"nome"};
 		return Arrays.asList(formatados);
+	}
+	
+	@Override
+	public void acaoSalvar() {
+		super.acaoSalvar();
+		ManageListagem.getLista("ALIAS_PROC").refreshDominio();
 	}
 	
 	@Override

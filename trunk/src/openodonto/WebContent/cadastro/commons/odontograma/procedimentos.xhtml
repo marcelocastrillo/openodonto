@@ -38,36 +38,54 @@
         </center>                
         <a4j:form id="formProcedimentosOdontograma" ajaxSubmit="true" >        
        	<oo:maskMoney name="moneyMask" time="onJScall" />
-       	
+       	<a4j:jsFunction name="copiaValor" action="#{manage.acaoCopiaValor}" reRender="entradaValor"/>
         <rich:panel>
-            <h:panelGrid>
+        	<center>
+            <h:panelGrid columns="6">
                 <h:panelGrid>
-                	<oo:label value="Procedimento" />
-                	<rich:comboBox value="#{manage.procedimentoAdd}" enableManualInput="false" converter="simpleEntityConverter"  >
-                		<t:selectItems value="#{list.ALIAS_PROC.dominio}" var="procedimento" itemLabel="#{procedimento.nome}" itemValue="#{procedimento}" />
-                	</rich:comboBox>
+                	<oo:label value="Procedimento" for="labelProcedimento" />
+                	<rich:inplaceSelect id="inplaceProcedimento"  value="#{manage.procedimentoAdd}" onviewactivated="copiaValor()" defaultLabel="Selecione um procedimento" converter="simpleEntityConverter">
+                		<t:selectItems id="itemsProcedimentos" value="#{list.ALIAS_PROC.dominio}" var="procedimento" itemLabel="#{procedimento.nome}" itemValue="#{procedimento}"/>
+                	</rich:inplaceSelect>
                 </h:panelGrid>
+                <rich:spacer width="16px" />
                 <h:panelGrid>
                 	<h:outputLabel value="Status" />
-                	<h:selectOneMenu enableManualInput="false" id="selectStatusProc" value="#{odp.odp.status}" onchange="$('formProcedimentosOdontograma').submit();" converter="simpleEntityConverter" >
-                		<t:selectItems id="itemsEstado" value="#{list.ALIAS_STATUS_PROC.dominio}" var="status" itemLabel="#{status.nome}" itemValue="#{status}" />
-                	</h:selectOneMenu>             
+                	<rich:inplaceSelect id="inplaceStatusProcedimento" defaultLabel="Selecione um status" value="#{manage.statusAdd}" converter="simpleEntityConverter"  >
+                		<t:selectItems id="itemsStatusProcedimentos" value="#{list.ALIAS_STATUS_PROC.dominio}" var="status" itemLabel="#{status.nome}" itemValue="#{status}" />
+                	</rich:inplaceSelect>             
                 </h:panelGrid>
-                <h:outputLabel value="Data" />                
-                <oo:label value="Valor" />
+                <rich:spacer width="16px" />
+                <h:panelGrid>
+                	<oo:label value="Valor" for="entradaValor" />
+					<h:inputText id="entradaValor" value="#{manage.valorAdd}" style=" width : 80px;" onfocus="moneyMask(this)" styleClass="maskMoney">
+						<f:convertNumber type="currency" />
+					</h:inputText>
+                </h:panelGrid>
+                <h:panelGrid>
+                	<h:outputLabel value="Data" />
+                	<rich:calendar inputStyle="width : 80px" datePattern="dd/MM/yyyy" enableManualInput="false" zindex="101" value="#{manage.dataAdd}">
+                		<f:converter converterId="SqlDateConverter" />
+                	</rich:calendar>
+                </h:panelGrid>                
             </h:panelGrid>
             <h:panelGrid>
-            	<oo:label value="Observacao" />
+            	<oo:label value="Observacao" for="entradaObservacao" />
+            	<h:inputTextarea value="#{manage.observacaoAdd}" style="width : 400px" />
             </h:panelGrid>
+            </center>
+            <h:panelGroup style="width : 600px;text-align : right" layout="block">
+            	<h:commandButton action="#{manage.acaoAddOdp}" value="Adicionar" />
+            </h:panelGroup>
         </rich:panel>
-               	
+        <rich:panel>       	
         <center>
             <h:panelGrid>
                 <a4j:jsFunction name="reloadObs" reRender="listaProcedimentosOdontograma" />
                 <rich:scrollableDataTable rowKeyVar="row" id="listaProcedimentosOdontograma" value="#{manage.procedimentos}" var="odp" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" width="660px" height="230px" rows="10" >                    
                 	<rich:column width="36px">
                 	    <h:panelGroup layout="block" style="text-align : center">
-							<a4j:commandButton value="#{msg.manageContactAcaoRemover}" action="#{manage.acaoRemoverOdp}" reRender="listaProcedimentosOdontograma" image="#{msg.imgBotaoMiniRemove}">
+							<a4j:commandButton value="#{msg.manageContactAcaoRemover}" action="#{manage.acaoRemoverOdp}" reRender="listaProcedimentosOdontograma,gridOdontograma" image="#{msg.imgBotaoMiniRemove}">
 							    <f:setPropertyActionListener value="#{odp}" target="#{manage.procedimento}" />
 							</a4j:commandButton>                	    	
                 	    </h:panelGroup>
@@ -88,7 +106,7 @@
                 	    </f:facet>
                 	    <h:panelGroup layout="block" style="text-align : center">
                 	    	<h:selectOneMenu enableManualInput="false" id="selectStatusProc" value="#{odp.odp.status}" onchange="$('formProcedimentosOdontograma').submit();" converter="simpleEntityConverter" >
-                	    		<t:selectItems id="itemsEstado" value="#{list.ALIAS_STATUS_PROC.dominio}" var="status" itemLabel="#{status.nome}" itemValue="#{status}" />
+                	    		<t:selectItems id="itemsStatus" value="#{list.ALIAS_STATUS_PROC.dominio}" var="status" itemLabel="#{status.nome}" itemValue="#{status}" />
                 	    	</h:selectOneMenu>
                 	    </h:panelGroup>
                 	</rich:column>
@@ -119,6 +137,7 @@
                 </rich:scrollableDataTable>
             </h:panelGrid>
         </center>
+        </rich:panel>
         </a4j:form>
 	</rich:modalPanel>
 </ui:composition>
