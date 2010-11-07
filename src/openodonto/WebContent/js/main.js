@@ -54,3 +54,39 @@ function restoreBg(dom,img){
 function align_div(element,position){
 	jQuery(element).css('text-align',position);
 }
+
+function showComp(element){
+	var dom = jQuery(element);
+	dom.show();
+}
+
+function toggleComp(element){
+	var dom = jQuery(element);
+	var state = dom.css('display');
+	if(state == 'none'){
+		dom.show("fast");
+	}else{
+		dom.hide("fast");
+	}
+}
+
+function toggleChkBox(element){
+	var dom = jQuery(element);
+	var checked = dom.is(':checked');
+	dom.attr('checked',!checked);
+}
+
+function setCaretToEnd (e) {
+    var control = $((e.target ? e.target : e.srcElement).id);
+    if (control.createTextRange) {
+        var range = control.createTextRange();
+        range.collapse(false);
+        range.select();
+    }
+    else if (control.setSelectionRange) {
+        control.focus();
+        var length = control.value.length;
+        control.setSelectionRange(length, length);
+    }
+    control.selectionStart = control.selectionEnd = control.value.length;
+}

@@ -78,8 +78,13 @@ select{
 	font-weight:bold;
 }
 
-.oo-odontograma-procedimentos-inplace{
+.oo-odontograma-procedimentos{
 	font-size:14px;
+}
+
+.oo-panel-body-tgg{
+	height : 32px;
+	padding : 0px;
 }
 
 #modalStatusContentTable td{

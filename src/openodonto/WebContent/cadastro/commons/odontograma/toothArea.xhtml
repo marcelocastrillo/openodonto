@@ -8,10 +8,10 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 	<a4j:commandLink id="shape-#{face}-#{id}" shape="#{shape}"
 		coords="#{coords}" action="#{manage.acaoManageProcedimento}"
-		oncomplete="Richfaces.showModalPanel('procedimentosOdontograma')"
-		reRender="formProcedimentosOdontograma,procedimentosOdontogramaMeta"
-		onmouseover="restoreBg($('#{formName}:#{id}'),#{bgHighlightImg});this.style.cursor='pointer';tooltip.show('#{meta.procedimentos[face]} procedimento(s).');"
-		onmouseout="restoreBg($('#{formName}:#{id}'),'#{cxName}#{bgDenteMapImg}');tooltip.hide();">	
+		oncomplete="Richfaces.showModalPanel('procedimentosOdontograma',{top:'32px'})"
+		reRender="formProcedimentosOdontograma,procedimentosOdontogramaMeta,dataScrollerProcedimentosOdontograma"
+		onmouseover="restoreBg($('#{formName}:#{id}'),#{bgHighlightImg});this.style.cursor='pointer';"
+		onmouseout="restoreBg($('#{formName}:#{id}'),'#{cxName}#{bgDenteMapImg}');" title="#{meta.procedimentos[face]} procedimento(s).">	
 		<f:setPropertyActionListener value="#{numero}" target="#{manage.numero}">
 		    <f:convertNumber integerOnly="true" type="number" maxIntegerDigits="2" minIntegerDigits="1" />
 		</f:setPropertyActionListener>

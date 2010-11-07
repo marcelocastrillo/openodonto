@@ -1,25 +1,54 @@
 package br.ueg.openodonto.util.bean;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 
 import br.ueg.openodonto.dominio.OdontogramaDenteProcedimento;
 import br.ueg.openodonto.dominio.Procedimento;
+import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.util.WordFormatter;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
+import br.ueg.openodonto.validator.Validator;
+import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ProcedimentoDenteAdapter {
 
 	private OdontogramaDenteProcedimento 	odp;
+	private String                          abstractObservacao;
 	private Procedimento                 	procedimento;
 	private String                          valor;
 	private DecimalFormat                   dcf;
-	
-	public ProcedimentoDenteAdapter(OdontogramaDenteProcedimento odp,Procedimento procedimento) {
+	private DateFormat                      df;
+	private MessageDisplayer 				displayer;
+	private Validator               		validatorObs;
+
+	public ProcedimentoDenteAdapter(OdontogramaDenteProcedimento odp,Procedimento procedimento,MessageDisplayer displayer) {
 		this();
-		this.odp = odp;
+		this.displayer = displayer;
+		this.odp = odp;		
 		this.procedimento = procedimento;
+		this.validatorObs = ValidatorFactory.newStrMaxLen(300, false);
+		df = new SimpleDateFormat("dd/MM/yyyy");
+		formatObs();
 	}
 
+	private boolean isValidObs(){
+		boolean valid = true;		
+		Class<?>[] allowed = {NullValidator.class,EmptyValidator.class};
+		if(!validatorObs.isValid() && ValidatorFactory.checkInvalidPermiteds(validatorObs, allowed)){
+			getDisplayer().display("* Observação : " + validatorObs.getErrorMessage());
+			valid = false;
+		}
+		return valid;
+	}
+	
+	public void formatObs(){
+		this.abstractObservacao = WordFormatter.abstractStr(getObservacao(), 36);
+	}
+	
 	public ProcedimentoDenteAdapter() {
 		super();
 		this.dcf = (DecimalFormat) NumberFormat.getCurrencyInstance();
@@ -38,12 +67,21 @@ public class ProcedimentoDenteAdapter {
 		this.procedimento = procedimento;
 	}
 	public String getObservacao(){
-		return WordFormatter.abstractStr(getOdp().getObservacao(), 30);
+		return getOdp().getObservacao();
 	}
 	public void setObservacao(String observacao){
-		if(observacao != null && !observacao.equals(getObservacao())){
+		validatorObs.setValue(observacao);
+		if(isValidObs()){
 			getOdp().setObservacao(observacao);
 		}
+	}
+	public String getAbstractObservacao() {
+		return abstractObservacao;
+	}
+	public void setAbstractObservacao(String abstractObservacao) {
+	}
+	public MessageDisplayer getDisplayer() {
+		return displayer;
 	}
 	private void formatValor(){
 		if(valor == null && getOdp().getValor() != null){
@@ -66,6 +104,16 @@ public class ProcedimentoDenteAdapter {
 				e.printStackTrace();
 			}
 		}
-	}	
-	
+	}
+	public String getData(){		
+		if(getOdp().getData() != null ){
+			try{
+				return df.format(getOdp().getData());
+			}catch (Exception e) {
+				return "";
+			}
+		}else{
+			return "";
+		}
+	}
 }

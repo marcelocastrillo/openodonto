@@ -11,11 +11,19 @@ public enum Dente {
 
 	private Integer     		numero;
 	private String      		nome;
+	private boolean             superior;
+	private boolean             inferior;
+	private boolean             left;
+	private boolean             right;
 	
 	
 	private Dente(Integer numero,String nome) {
 		this.nome = nome;
 		this.numero = numero;
+		this.left = computeSide() == 0;
+		this.right = computeSide() == 1;
+		this.superior = computeHem() == 0;
+		this.inferior = computeHem() == 1;
 	}
 
 
@@ -34,7 +42,27 @@ public enum Dente {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
+	private int computeSide(){
+		if(numero < 18 && numero > 11){
+			return 0;
+		}else if(numero > 21 && numero < 28){
+			return 1;
+		}else{
+			return -1;
+		}
+	}
 
+	private int computeHem(){
+		if(numero > 10 && numero < 30){
+			return 0;
+		}else if(numero > 30 && numero < 50){
+			return 1;
+		}else{
+			return -1;
+		}
+	}
+	
 	public static Dente getDente(Integer numero){
 	    switch (numero) {
         case 11:
@@ -107,10 +135,26 @@ public enum Dente {
 	}
 	
 	
-	
 	@Override
 	public String toString() {
 		return "Dente [nome=" + nome + ", numero=" + numero	+ "]";
-	}	
-	
+	}
+
+
+	public boolean isSuperior() {
+		return superior;
+	}
+
+	public boolean isInferior() {
+		return inferior;
+	}
+
+	public boolean isLeft() {
+		return left;
+	}
+
+	public boolean isRight() {
+		return right;
+	}
+
 }

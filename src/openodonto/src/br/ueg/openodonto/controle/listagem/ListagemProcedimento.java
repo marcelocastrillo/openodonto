@@ -1,6 +1,8 @@
 package br.ueg.openodonto.controle.listagem;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import br.ueg.openodonto.dominio.Procedimento;
@@ -17,9 +19,10 @@ public class ListagemProcedimento extends ListaDominio<Procedimento> {
 	@Override
 	public List<Procedimento> getRefreshDominio() {
 		EntityManager<Procedimento> daoDominio = DaoFactory.getInstance().getDao(getClasse());
-		List<Procedimento> lista = new ArrayList<Procedimento>();
+		List<Procedimento> lista = new ArrayList<Procedimento>();		
 		try {
 			lista = daoDominio.listar(true, "codigo","nome","valor");
+			Collections.sort(lista, new ProcedimentoNomeComparator());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -31,4 +34,26 @@ public class ListagemProcedimento extends ListaDominio<Procedimento> {
 		return false;
 	}
 
+	private class ProcedimentoNomeComparator implements Comparator<Procedimento>{
+		@Override
+		public int compare(Procedimento o1, Procedimento o2) {
+			if(o1 == o2){
+				return 0;
+			}else if(o1 == null){
+				return -1;
+			}else if(o2 == null){
+				return 1;
+			}else if(o1.getNome() == o2.getNome()){
+				return 0;
+			}else if(o1.getNome() == null || o1.getNome().isEmpty()){
+				return -1;
+			}else if(o2.getNome() == null || o2.getNome().isEmpty()){
+				return 1;
+			}else{
+				return o1.getNome().compareTo(o2.getNome());
+			}
+		}
+		
+	}
+	
 }

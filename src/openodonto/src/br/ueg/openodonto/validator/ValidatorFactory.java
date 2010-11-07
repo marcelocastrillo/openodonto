@@ -1,10 +1,15 @@
 package br.ueg.openodonto.validator;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 public class ValidatorFactory {
 
+	public static boolean checkInvalidPermiteds(Validator validator,Class<?>... invalidPermiteds){
+		return checkInvalidPermiteds(Arrays.asList(invalidPermiteds),validator);
+	}
+	
 	public static boolean checkInvalidPermiteds(List<Class<?>> invalidPermiteds,Validator validator){
 		Iterator<Class<?>> iterator  = invalidPermiteds.iterator();
 		boolean valid = true;
@@ -69,5 +74,5 @@ public class ValidatorFactory {
 	
 	public static Validator newEmail(){
 		return newEmail(Integer.MAX_VALUE);
-	}
+	}	
 }

@@ -10,11 +10,11 @@ public class DenteMetaAdapter {
 	
 	private Dente                   dente;
 	private TipoAscpectoDente       ascpecto;
-	private Map<String,Integer>     procedimentos;	
+	private Map<String,Integer>     procedimentos;
 
-	public DenteMetaAdapter() {
-		setAscpecto(TipoAscpectoDente.NORMAL);
-		procedimentos = new HashMap<String, Integer>(5);
+	public DenteMetaAdapter() {		
+		this.ascpecto = TipoAscpectoDente.NORMAL;
+		this.procedimentos = new HashMap<String, Integer>(5);		
 	}
 	
 	public Dente getDente() {
