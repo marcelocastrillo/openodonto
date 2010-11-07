@@ -7,15 +7,16 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 	<a4j:commandLink action="#{manage.acaoManageProcedimento}"
-		reRender="formProcedimentosOdontograma,dataScrollerProcedimentosOdontograma,procedimentosOdontogramaMeta" id="root-#{idroot}" 
+		reRender="formProcedimentosOdontograma,procedimentosOdontogramaMeta" id="root-#{idroot}" 
 		oncomplete="Richfaces.showModalPanel('procedimentosOdontograma',{top:'32px'})"
 		onmouseover="restoreBg($('#{formName}:#{idroot}'),'#{cxName}#{bgDenteRootSelected}');this.style.cursor='pointer';"
-		onmouseout="restoreBg($('#{formName}:#{idroot}'),'#{cxName}#{bgDenteRoot}');"
+		onmouseout="restoreBg($('#{formName}:#{idroot}'),'#{cxName}#{bgDenteRooImg}');"
 		style="#{style}" title="#{meta.procedimentos['root']} procedimento(s).">
-		<h:graphicImage rendered="#{show}" id="#{idroot}" value="#{bgDenteRoot}" style="border-style: none;position:relative ; z-index : 1" />
+		<h:graphicImage rendered="#{show and meta.normal}" id="#{idroot}" value="#{bgDenteRooImg}" style="border-style: none;position:relative ; z-index : 1" />		
 		<f:setPropertyActionListener value="#{numero}" target="#{manage.numero}">
 			<f:convertNumber integerOnly="true" type="number" maxIntegerDigits="2" minIntegerDigits="1" />
 		</f:setPropertyActionListener>
 		<f:setPropertyActionListener value="root" target="#{manage.face}" />
 	</a4j:commandLink>
+	<h:graphicImage rendered="#{show and !meta.normal}" id="#{idroot}-disabled" value="#{bgDenteRootDisableImg}"/>
 </ui:composition>

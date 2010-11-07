@@ -36,9 +36,10 @@
 		<oo:root idroot="#{id}_root_up" show="#{not empty graphicUp}" />
 		<h:panelGroup layout="block" style="position : relative ;">
 			<!-- Bolinhas vermelhas-->
-			<oo:procMark id="#{id}" down="#{not empty graphicDown}" up="#{not empty graphicUp}"/>
+			<oo:procMark id="#{id}" down="#{not empty graphicDown}" up="#{not empty graphicUp}" show="#{meta.normal}"/>
 			<!-- Imagen geometrica -->		
-			<h:graphicImage id="#{id}" value="#{bgDenteMapImg}" usemap="#dente-map#{id}" style="border-style: none;position : relative;z-index : 1" />
+			<h:graphicImage id="#{id}" rendered="#{meta.normal}" value="#{bgDenteMapImg}" usemap="#dente-map#{id}" style="border-style: none;position : relative;z-index : 1" />
+			<h:graphicImage id="#{id}-disabled" rendered="#{!meta.normal}" value="#{bgDenteMapDisableImg}"/>
         </h:panelGroup>
 		<!-- Raiz DOWN -->
 		<oo:root idroot="#{id}_root_down" show="#{not empty graphicDown}"/>

@@ -2,6 +2,7 @@ package br.ueg.openodonto.controle.servico;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 import br.ueg.openodonto.dominio.Odontograma;
@@ -82,20 +84,24 @@ public class ManageOdontograma {
 		Dente dente = evaluateDente();
 		TipoAscpectoDente aspecto = evaluateAspecto();
 	    if(dente != null && aspecto != null && odontograma != null && odontograma.getAspectos() != null){
-	    	OdontogramaDenteAspectoComparator comparator = new OdontogramaDenteAspectoComparator();
-	    	OdontogramaDenteAspecto key = new OdontogramaDenteAspecto(dente);
-	    	Collections.sort(odontograma.getAspectos(), comparator);
-	    	int index = Collections.binarySearch(odontograma.getAspectos(),key,comparator);	    	
-	    	if(index >= 0){
-	    		OdontogramaDenteAspecto oda = odontograma.getAspectos().get(index);
-	    		oda.setAspecto(aspecto);	    		
-	    	}else{
-	    		OdontogramaDenteAspecto oda = new OdontogramaDenteAspecto(dente,odontograma.getId());
-	    		oda.setAspecto(aspecto);
-	    		odontograma.getAspectos().add(oda);
-	    	}
+	    	OdontogramaDenteAspectoComparator comparator = new OdontogramaDenteAspectoComparator();	    	
+	    	setDenteAspecto(dente, aspecto, comparator);	    	
 	    	updateMeta();
 	    }	    
+	}
+
+	private void setDenteAspecto(Dente dente, TipoAscpectoDente aspecto,OdontogramaDenteAspectoComparator comparator) {
+		OdontogramaDenteAspecto key = new OdontogramaDenteAspecto(dente);
+		Collections.sort(odontograma.getAspectos(), comparator);
+		int index = Collections.binarySearch(odontograma.getAspectos(),key,comparator);	    	
+		if(index >= 0){
+			OdontogramaDenteAspecto oda = odontograma.getAspectos().get(index);
+			oda.setAspecto(aspecto);	    		
+		}else{
+			OdontogramaDenteAspecto oda = new OdontogramaDenteAspecto(dente,odontograma.getId());
+			oda.setAspecto(aspecto);
+			odontograma.getAspectos().add(oda);
+		}
 	}
 	
 	public void acaoRemoverOdp(){
@@ -246,23 +252,49 @@ public class ManageOdontograma {
 		return null;
 	}
 	
-	public void acaoRemoverTodosSuperior(){		
+	public void acaoRemoverTodosSuperior(){
+		batChangeAspect(getAllByHem(STATUS_HEM.UP),TipoAscpectoDente.EXTRAIDO);
 	}
 	
 	public void acaoRemoverTodosInferior(){
-		
+		batChangeAspect(getAllByHem(STATUS_HEM.DOWN),TipoAscpectoDente.EXTRAIDO);
 	}
 	
 	public void acaoImplantarTodosSuperior(){
-		
+		batChangeAspect(getAllByHem(STATUS_HEM.UP),TipoAscpectoDente.IMPLANTE);		
 	}
 	
 	public void acaoImplantarTodosInferior(){
-		
+		batChangeAspect(getAllByHem(STATUS_HEM.DOWN),TipoAscpectoDente.IMPLANTE);
 	}
 	
-	private List<Dente> getAllByHem(byte){
-		
+	public void acaoNormalizarTodosSuperior(){
+		batChangeAspect(getAllByHem(STATUS_HEM.UP),TipoAscpectoDente.NORMAL);
+	}
+	
+	public void acaoNormalizarTodosInferior(){
+		batChangeAspect(getAllByHem(STATUS_HEM.DOWN),TipoAscpectoDente.NORMAL);
+	}
+	
+	public void batChangeAspect(List<Dente> dentes,TipoAscpectoDente aspecto){
+		boolean has = false;
+		OdontogramaDenteAspectoComparator comparator = new OdontogramaDenteAspectoComparator();		
+		for(Dente dente : dentes){
+		    if(dente != null && aspecto != null && odontograma != null && odontograma.getAspectos() != null){
+		    	has = true;
+		    	setDenteAspecto(dente, aspecto, comparator);    		    	
+		    }			
+		}
+	    if(has){
+	    	updateMeta();
+	    }    
+	}
+	
+	private List<Dente> getAllByHem(STATUS_HEM hem){
+		Predicate predicate = new HemPredicate(hem);
+		List<Dente> dentes = new ArrayList<Dente>(Arrays.asList(Dente.values()));
+		CollectionUtils.filter(dentes, predicate);
+		return dentes;
 	}
 	
 	
@@ -524,9 +556,9 @@ public class ManageOdontograma {
 			return o1.getData().compareTo(o2.getData());
 		}		
 	}
-	private class OdontogramaDenteAspectBatProject implements Predicate{
+	public class HemPredicate implements Predicate{
 		private STATUS_HEM hem;
-		public OdontogramaDenteAspectBatProject(STATUS_HEM hem) {
+		public HemPredicate(STATUS_HEM hem) {
 			if(hem == null){
 				throw new IllegalArgumentException("Não pode ser nulo");
 			}
@@ -534,10 +566,17 @@ public class ManageOdontograma {
 		}
 		@Override
 		public boolean evaluate(Object o) {
-			if(this.hem == STATUS_HEM.UP){
-				
+			if(o == null){
+				return false;
+			}			
+			Dente dente = (Dente)o;
+			if(hem == STATUS_HEM.UP){
+				return dente.isSuperior();
+			}else if(hem == STATUS_HEM.DOWN){
+				return dente.isInferior();
+			}else{
+				return false;
 			}
-			return false;
 		}
 	}
 	private enum STATUS_HEM{
