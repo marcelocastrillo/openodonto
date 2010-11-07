@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.Predicate;
+
 import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.dominio.OdontogramaDente;
 import br.ueg.openodonto.dominio.OdontogramaDenteAspecto;
@@ -18,21 +20,27 @@ import br.ueg.openodonto.dominio.constante.Dente;
 import br.ueg.openodonto.dominio.constante.FaceDente;
 import br.ueg.openodonto.dominio.constante.TipoAscpectoDente;
 import br.ueg.openodonto.dominio.constante.TipoStatusProcedimento;
+import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.util.bean.DenteMetaAdapter;
 import br.ueg.openodonto.util.bean.ProcedimentoDenteAdapter;
-import br.ueg.openodonto.visao.ApplicationView;
+import br.ueg.openodonto.util.bean.StatusOdontogramaFilter;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
+import br.ueg.openodonto.validator.Validator;
+import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManageOdontograma {
 
 	private Odontograma 					odontograma;
 	private OdontogramaDente    			od;
-	private List<ProcedimentoDenteAdapter>  procedimentos;
+	private List<ProcedimentoDenteAdapter>  procedimentos;	
+	private List<StatusOdontogramaFilter>   odontogramaStatusFilters;
 	private ProcedimentoDenteAdapter   	    procedimento;
 	private String 							nome;	
 	private String               			aspecto;
 	private Integer 						numero;
 	private String 							face;
-	private ApplicationView 				view;
+	private MessageDisplayer 				displayer;
 	private List<Odontograma> 				odontogramas;
 	private Map<String,DenteMetaAdapter>    viewMetaAdapter;
 	
@@ -42,12 +50,23 @@ public class ManageOdontograma {
 	private TipoStatusProcedimento          statusAdd;
 	private Date                            dataAdd;
 	
+	private Validator                       validatorProcedimento;
+	private Validator                       validatorValor;
+	private Validator                       validatorObs;
 	
-	public ManageOdontograma(List<Odontograma> odontogramas,ApplicationView view) {
-		this.view = view;
+	private String                          filterStatusAdd;
+	private String                          filterProcedimentoAdd;
+	private String                          filterDataAdd;
+	private String                          filterObservacaoAdd;
+	private String                          filterValorAdd;	
+	
+	public ManageOdontograma(List<Odontograma> odontogramas,MessageDisplayer displayer) {
+		this.displayer = displayer;
 		this.viewMetaAdapter = new HashMap<String, DenteMetaAdapter>();
 		this.odontogramas = odontogramas;
+		this.odontogramaStatusFilters = new ArrayList<StatusOdontogramaFilter>();
 		loadLastOdontograma();
+		initValidatorAdd();
 	}	
 
 	private void makeDefaultOdontograma(){
@@ -56,6 +75,7 @@ public class ManageOdontograma {
 		this.odontograma.setNome("Odontograam Padrão");
 		this.odontograma.setDescricao("Primeira configuração do odontograma do paciente.");
 		initAdd();
+		initOdontogramaStatusFilter();
 	}
 
 	public void acaoMudarAspecto(){
@@ -100,17 +120,43 @@ public class ManageOdontograma {
 		}
 	}
 	
-	public void acaoAddOdp(){
+	public void acaoAddOdp(){		
+		if(!isValidAdd()){
+			return;
+		}		
 		OdontogramaDenteProcedimento odp = new OdontogramaDenteProcedimento();
 		odp.setData(dataAdd);
 		odp.setObservacao(observacaoAdd);
 		odp.setProcedimentoId(procedimentoAdd.getCodigo());
 		odp.setStatus(statusAdd);
-		odp.setValor(valorAdd);
-		if(procedimentos != null && odontograma != null){
-			odontograma.getOdontogramaDentes();
-			procedimentos.add(new ProcedimentoDenteAdapter(odp, procedimentoAdd));
-		}		
+		odp.setValor(valorAdd);		
+		if(procedimentos != null && getOd() != null){
+			getOd().getProcedimentosMap().put(odp, procedimentoAdd);
+			procedimentos.add(new ProcedimentoDenteAdapter(odp, procedimentoAdd,getDisplayer()));
+		}
+		updateMeta();
+		initAdd();		
+	}
+	
+	private boolean isValidAdd(){
+		boolean valid = true;
+		validatorProcedimento.setValue(procedimentoAdd);
+		validatorValor.setValue(valorAdd);
+		validatorObs.setValue(observacaoAdd);
+		if (!validatorProcedimento.isValid()) {
+			getDisplayer().display("* Procedimento : " + validatorProcedimento.getErrorMessage());
+			valid = valid && false;
+		}
+		if (!validatorValor.isValid()) {
+			getDisplayer().display("* Valor : " + validatorValor.getErrorMessage());
+			valid = valid && false;
+		}
+		Class<?>[] allowed = {NullValidator.class,EmptyValidator.class};
+		if(!validatorObs.isValid() && ValidatorFactory.checkInvalidPermiteds(validatorObs, allowed)){
+			getDisplayer().display("* Observação : " + validatorObs.getErrorMessage());
+			valid = valid && false;
+		}
+		return valid;
 	}
 	
 	public void acaoCopiaValor(){
@@ -120,10 +166,17 @@ public class ManageOdontograma {
 	}
 	
 	private void initAdd(){
-		procedimentoAdd = new Procedimento();
-		valorAdd = 0.0f;
+		this.procedimentoAdd = null;
+		this.valorAdd = 0.0f;
 		this.statusAdd = TipoStatusProcedimento.NAO_REALIZADO;
 		this.dataAdd = new Date(System.currentTimeMillis());
+		this.observacaoAdd = "";		
+	}
+	
+	private void initValidatorAdd(){
+		validatorProcedimento = ValidatorFactory.newNull();
+		validatorValor = ValidatorFactory.newNumMin(0);
+		validatorObs = ValidatorFactory.newStrMaxLen(300, false);
 	}
 	
 	public void acaoManageProcedimento(){
@@ -138,6 +191,7 @@ public class ManageOdontograma {
 	    		}
 	    	}
 	    	if(!finded){
+	    		odontograma.getOdontogramaDentes().add(selected);
 	    		setOd(selected);
 	    	}
 	    }
@@ -146,7 +200,7 @@ public class ManageOdontograma {
 	    	Iterator<Map.Entry<OdontogramaDenteProcedimento,Procedimento>> iterator = getOd().getProcedimentosMap().entrySet().iterator();
 	    	while(iterator.hasNext()){
 	    		Map.Entry<OdontogramaDenteProcedimento,Procedimento> entry = iterator.next();	    		
-	    		procedimentos.add(new ProcedimentoDenteAdapter(entry.getKey(), entry.getValue()));
+	    		procedimentos.add(new ProcedimentoDenteAdapter(entry.getKey(), entry.getValue(),getDisplayer()));
 	    	}
 	    }
 	}
@@ -192,6 +246,26 @@ public class ManageOdontograma {
 		return null;
 	}
 	
+	public void acaoRemoverTodosSuperior(){		
+	}
+	
+	public void acaoRemoverTodosInferior(){
+		
+	}
+	
+	public void acaoImplantarTodosSuperior(){
+		
+	}
+	
+	public void acaoImplantarTodosInferior(){
+		
+	}
+	
+	private List<Dente> getAllByHem(byte){
+		
+	}
+	
+	
 	public void updateMeta(){
 		if(this.odontograma != null &&
 				this.odontograma.getAspectos() != null &&
@@ -204,7 +278,9 @@ public class ManageOdontograma {
 				if(od.getDente() != null && od.getFace() != null && od.getProcedimentosMap() != null){
 					DenteMetaAdapter meta = this.viewMetaAdapter.get(od.getDente().getNumero().toString());
 					if(meta != null){
-						meta.getProcedimentos().put(od.getFace().toString().toLowerCase(),od.getProcedimentosMap().size());
+						if(odontogramaStatusFilters != null){
+							meta.getProcedimentos().put(od.getFace().toString().toLowerCase(),countProcByActiveStatus(od.getProcedimentosMap()));
+						}						
 					}
 				}
 			}			
@@ -217,7 +293,15 @@ public class ManageOdontograma {
 				}				
 			}
 		}
-	}	
+	}
+	
+	private void initOdontogramaStatusFilter() {
+		odontogramaStatusFilters.clear();
+		for(TipoStatusProcedimento tipo : TipoStatusProcedimento.values()){
+			odontogramaStatusFilters.add(new StatusOdontogramaFilter(tipo));
+		}		
+		Collections.sort(odontogramaStatusFilters);
+	}
 	
 	private void initializeViewMeta(){
 		this.viewMetaAdapter.clear();
@@ -234,6 +318,21 @@ public class ManageOdontograma {
 			meta.getProcedimentos().put(face.toString().toLowerCase(),0);
 		}
 		return meta;
+	}
+	
+	private int countProcByActiveStatus(Map<OdontogramaDenteProcedimento, Procedimento> map){
+		int count = 0; 
+		for(OdontogramaDenteProcedimento odp : map.keySet()){			
+			TipoStatusProcedimento odpStatus = odp.getStatus();
+			StatusOdontogramaFilter key = new StatusOdontogramaFilter(odpStatus);
+			int index = Collections.binarySearch(odontogramaStatusFilters, key);
+			if(odpStatus == null || index < 0){
+				count++;
+			}else if(odontogramaStatusFilters.get(index).getFilter()){
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	public void loadLastOdontograma(){
@@ -270,13 +369,7 @@ public class ManageOdontograma {
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-	public ApplicationView getView() {
-		return view;
-	}
-	public void setView(ApplicationView view) {
-		this.view = view;
-	}
+	}	
 	public List<Odontograma> getOdontogramas() {
 		return odontogramas;
 	}
@@ -358,6 +451,61 @@ public class ManageOdontograma {
 		this.dataAdd = dataAdd;
 	}
 	
+	public MessageDisplayer getDisplayer() {
+		return displayer;
+	}
+
+	public void setDisplayer(MessageDisplayer displayer) {
+		this.displayer = displayer;
+	}
+	
+	public String getFilterStatusAdd() {
+		return filterStatusAdd;
+	}
+
+	public void setFilterStatusAdd(String filterStatusAdd) {
+		this.filterStatusAdd = filterStatusAdd;
+	}
+	
+	public String getFilterProcedimentoAdd() {
+		return filterProcedimentoAdd;
+	}
+
+	public void setFilterProcedimentoAdd(String filterProcedimentoAdd) {
+		this.filterProcedimentoAdd = filterProcedimentoAdd;
+	}
+
+	public String getFilterObservacaoAdd() {
+		return filterObservacaoAdd;
+	}
+
+	public void setFilterObservacaoAdd(String filterObservacaoAdd) {
+		this.filterObservacaoAdd = filterObservacaoAdd;
+	}
+
+	public String getFilterValorAdd() {
+		return filterValorAdd;
+	}
+
+	public void setFilterValorAdd(String filterValorAdd) {
+		this.filterValorAdd = filterValorAdd;
+	}
+	
+	public String getFilterDataAdd() {
+		return filterDataAdd;
+	}
+
+	public void setFilterDataAdd(String filterDataAdd) {
+		this.filterDataAdd = filterDataAdd;
+	}
+	public List<StatusOdontogramaFilter> getOdontogramaStatusFilters() {
+		return odontogramaStatusFilters;
+	}
+
+	public void setOdontogramaStatusFilters(
+			List<StatusOdontogramaFilter> odontogramaStatusFilters) {
+		this.odontogramaStatusFilters = odontogramaStatusFilters;
+	}	
 	private class OdontogramaDenteAspectoComparator implements Comparator<OdontogramaDenteAspecto>{
 		@Override
 		public int compare(OdontogramaDenteAspecto o1,	OdontogramaDenteAspecto o2) {
@@ -376,5 +524,23 @@ public class ManageOdontograma {
 			return o1.getData().compareTo(o2.getData());
 		}		
 	}
-	
+	private class OdontogramaDenteAspectBatProject implements Predicate{
+		private STATUS_HEM hem;
+		public OdontogramaDenteAspectBatProject(STATUS_HEM hem) {
+			if(hem == null){
+				throw new IllegalArgumentException("Não pode ser nulo");
+			}
+			this.hem = hem;
+		}
+		@Override
+		public boolean evaluate(Object o) {
+			if(this.hem == STATUS_HEM.UP){
+				
+			}
+			return false;
+		}
+	}
+	private enum STATUS_HEM{
+		UP,DOWN;
+	}
 }

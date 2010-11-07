@@ -2,6 +2,7 @@ package br.ueg.openodonto.visao.converter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,23 +19,27 @@ import org.apache.myfaces.custom.selectitems.UISelectItems;
 public class SimpleIndexConverter implements Converter {
 
     private int index = -1;
+    private Map<Object , Integer> cache;
+    
+    public SimpleIndexConverter() {
+    	cache = new HashMap<Object, Integer>();
+	}
 
-    public Object getAsObject(FacesContext ctx, UIComponent component,
-	    String value) {
-
-	SelectItem selectedItem = this
-		.getSelectedItemByIndex(component, value == null
-			|| value.isEmpty() ? -1 : Integer.parseInt(value));
-	if (selectedItem != null)
-	    return selectedItem.getValue();
-
-	return null;
+    public Object getAsObject(FacesContext ctx, UIComponent component, String value) {
+    	SelectItem selectedItem = this.getSelectedItemByIndex(component, value == null || value.isEmpty() ? -1 : Integer.parseInt(value));
+    	if (selectedItem != null){
+    		return selectedItem.getValue();
+    	}
+    	return null;
     }
 
-    public String getAsString(FacesContext ctx, UIComponent component,
-	    Object value) {
-	index++;
-	return String.valueOf(index);
+    public String getAsString(FacesContext ctx, UIComponent component, Object value) {
+    	Integer index;
+    	if((index = cache.get(value)) == null){
+    		index = ++this.index;
+    		cache.put(value, index);    		
+    	}    	
+    	return String.valueOf(index);
     }
 
     /**

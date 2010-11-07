@@ -58,7 +58,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		this.personSearch.addSearchListener(new CommonSearchPessoaHandler());
 		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
 		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this.getView());
-		this.manageOdontograma = new ManageOdontograma(getPaciente().getOdontogramas(), this.getView());
+		this.manageOdontograma = new ManageOdontograma(getPaciente().getOdontogramas(), new ViewDisplayer("manageProcOdontograma",this.getView()));
 	}
 
 	protected void carregarExtra() {
@@ -83,7 +83,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	protected List<ValidationRequest> getCamposValidados(){
 		List<ValidationRequest> validados = new ArrayList<ValidationRequest>();
 		Class<?>[] allowed = {NullValidator.class,EmptyValidator.class};
-		validados.add(new ValidationRequest("observacao", ValidatorFactory.newStrMaxLen(500, true), "formPaciente:inTextBoxObs",allowed));
+		validados.add(new ValidationRequest("observacao", ValidatorFactory.newStrMaxLen(500, false), "formPaciente:inTextBoxObs",allowed));
 		validados.add(new ValidationRequest("email", ValidatorFactory.newEmail(45), "formPaciente:entradaEmail",allowed));
 		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100,4, true), "formPaciente:entradaNome"));
 		validados.add(new ValidationRequest("endereco", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaEndereco",allowed));		

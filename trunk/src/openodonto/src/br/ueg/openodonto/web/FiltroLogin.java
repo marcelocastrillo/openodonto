@@ -27,6 +27,7 @@ public class FiltroLogin implements Filter {
 			Usuario usuario = new Usuario();
 			usuario.setNome("Vinicius G G R");
 			httpRequest.getSession().setAttribute("usuarioSessao", usuario);
+			chain.doFilter(request, response);
 			/*
 			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 			httpServletResponse.sendRedirect(httpRequest.getContextPath()+ "/faces/login/login.xhtml");
