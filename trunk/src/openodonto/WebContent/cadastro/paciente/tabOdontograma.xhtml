@@ -11,9 +11,11 @@
 		<a4j:loadScript src="/js/jquery.price_format.1.3.js" />
 		<oo:pluginToolTip/>
 		<ui:param name="cxName" value="#{facesContext.externalContext.requestContextPath}" />
-		<ui:param name="bgDenteRoot" value="#{msg.odontogramaDenteRootImg}" />
+		<ui:param name="bgDenteRooImg" value="#{msg.odontogramaDenteRootImg}" />
+		<ui:param name="bgDenteRootDisableImg" value="#{msg.odontogramaDenteRootDisableImg}" />
 		<ui:param name="bgDenteRootSelected" value="#{msg.odontogramaDenteRoorSelectImg}" />
 		<ui:param name="bgDenteMapImg" value="#{msg.odontogramaDenteMapImg}" />
+		<ui:param name="bgDenteMapDisableImg" value="#{msg.odontogramaDenteMapDisableImg}"/>
 		<ui:param name="bgFaceLeftImg" value="'#{cxName}#{msg.odontogramaDenteFaceEsquerdaImg}'" />
 		<ui:param name="bgFaceRightImg" value="'#{cxName}#{msg.odontogramaDenteFaceDireitaImg}'" />
 		<ui:param name="bgFaceTopImg" value="'#{cxName}#{msg.odontogramaDenteFaceSuperiorImg}'" />
@@ -103,9 +105,11 @@
 		        	    	    <h:outputText value="Todos superiores" />
 		        	    	    <rich:spacer height="8px" />
 		        	    	    <h:panelGroup layout="block">
-		        	    			<a4j:commandButton image="#{msg.odontogramaInfoRedImg}"  reRender="gridDentesSuperiores" value="Extraido" action="#{manage.acaoRemoverTodosSuperior}" />
+		        	    			<a4j:commandButton image="#{msg.odontogramaInfoRedImg}" onmouseover="tooltip.show('Extraidos')" onmouseout="tooltip.hide();" reRender="gridDentesSuperiores" value="Extraido" action="#{manage.acaoRemoverTodosSuperior}" />
 		        	    			<rich:spacer width="8px" />
-		        	    			<a4j:commandButton image="#{msg.odontogramaInfoBlueImg}" reRender="gridDentesSuperiores" value="Implantar" action="#{manage.acaoImplantarTodosSuperior}"/>
+		        	    			<a4j:commandButton image="#{msg.odontogramaInfoBlueImg}" onmouseover="tooltip.show('Implantadados')" onmouseout="tooltip.hide();" reRender="gridDentesSuperiores" value="Implantado" action="#{manage.acaoImplantarTodosSuperior}"/>
+		        	    			<rich:spacer width="8px" />
+		        	    			<a4j:commandButton image="#{msg.odontogramaInfoGrayImg}" onmouseover="tooltip.show('Normais')" onmouseout="tooltip.hide();" reRender="gridDentesSuperiores" value="Normal" action="#{manage.acaoNormalizarTodosSuperior}" />
 		        	    		</h:panelGroup>
 		        	    	</h:panelGrid>
 	        	    </rich:panel>
@@ -115,9 +119,11 @@
 					    	<h:outputText value="Todos inferiores" />
 					    	<rich:spacer height="8px" />
 					    	<h:panelGroup layout="block">
-		        	    		<a4j:commandButton image="#{msg.odontogramaInfoRedImg}" reRender="gridDentesInferiores" value="Extraido"  action="#{manage.acaoRemoverTodosInferior}" />
+		        	    		<a4j:commandButton image="#{msg.odontogramaInfoRedImg}" onmouseover="tooltip.show('Extraidos')" onmouseout="tooltip.hide();" reRender="gridDentesInferiores" value="Extraido"  action="#{manage.acaoRemoverTodosInferior}" />
 		        	    		<rich:spacer width="8px" />
-		        	    		<a4j:commandButton image="#{msg.odontogramaInfoBlueImg}" reRender="gridDentesInferiores" value="Implantar"   action="#{manage.acaoImplantarTodosInferior}" />
+		        	    		<a4j:commandButton image="#{msg.odontogramaInfoBlueImg}" onmouseover="tooltip.show('Implantados')" onmouseout="tooltip.hide();" reRender="gridDentesInferiores" value="Implantado"   action="#{manage.acaoImplantarTodosInferior}" />
+		        	    		<rich:spacer width="8px" />
+		        	    		<a4j:commandButton image="#{msg.odontogramaInfoGrayImg}" onmouseover="tooltip.show('Normais')" onmouseout="tooltip.hide();" reRender="gridDentesInferiores" value="Normal" action="#{manage.acaoNormalizarTodosInferior}"  />
 					    	</h:panelGroup>
 	        	    	</h:panelGrid>
 	        	    </rich:panel>

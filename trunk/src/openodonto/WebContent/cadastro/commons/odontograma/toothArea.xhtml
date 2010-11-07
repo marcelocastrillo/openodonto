@@ -9,7 +9,7 @@
 	<a4j:commandLink id="shape-#{face}-#{id}" shape="#{shape}"
 		coords="#{coords}" action="#{manage.acaoManageProcedimento}"
 		oncomplete="Richfaces.showModalPanel('procedimentosOdontograma',{top:'32px'})"
-		reRender="formProcedimentosOdontograma,procedimentosOdontogramaMeta,dataScrollerProcedimentosOdontograma"
+		reRender="formProcedimentosOdontograma,procedimentosOdontogramaMeta"
 		onmouseover="restoreBg($('#{formName}:#{id}'),#{bgHighlightImg});this.style.cursor='pointer';"
 		onmouseout="restoreBg($('#{formName}:#{id}'),'#{cxName}#{bgDenteMapImg}');" title="#{meta.procedimentos[face]} procedimento(s).">	
 		<f:setPropertyActionListener value="#{numero}" target="#{manage.numero}">
