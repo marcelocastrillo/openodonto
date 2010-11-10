@@ -14,7 +14,7 @@
         </f:facet>
         <f:facet name="controls">
             <h:panelGroup>
-				<a4j:commandButton image="#{msg.imgBotaoFechar}" reRender="#{formName}" value="#{msg.acaoFechar}" id="hidelinkProcedimentos" styleClass="hidelink">
+				<a4j:commandButton image="#{msg.imgBotaoFechar}" reRender="gridOdontograma" value="#{msg.acaoFechar}" id="hidelinkProcedimentos" styleClass="hidelink">
 					<rich:componentControl for="procedimentosOdontograma" attachTo="hidelinkProcedimentos" operation="hide" event="onclick"/>
 				</a4j:commandButton>
             </h:panelGroup>
@@ -73,7 +73,7 @@
             </h:panelGrid>
             <h:panelGrid>
             	<oo:label value="Observacao" for="entradaObservacao" />
-            	<h:inputTextarea value="#{manage.observacaoAdd}" style="width : 400px" styleClass="oo-odontograma-procedimentos" />
+            	<h:inputTextarea id="entradaObservacao" value="#{manage.observacaoAdd}" style="width : 400px" styleClass="oo-odontograma-procedimentos" />
             </h:panelGrid>
             </center>
             <rich:spacer height="8px" />
@@ -103,6 +103,7 @@
                     					<f:selectItem itemLabel="Todos" itemValue="Todos" />
                         				<t:selectItems value="#{list.ALIAS_PROC.dominio}" var="procedimento" itemLabel="#{procedimento.nome}" itemValue="#{procedimento.nome}" />
                         				<a4j:support event="onkeyup" reRender="listaProcedimentosOdontograma" ignoreDupResponses="true" requestDelay="700" oncomplete="showComp(#{rich:element('procedimentoFilter')}.firstChild);setCaretToEnd(event);"/>
+                        				<a4j:support event="onchange" reRender="listaProcedimentosOdontograma" ignoreDupResponses="true" requestDelay="700" oncomplete="showComp(#{rich:element('procedimentoFilter')}.firstChild);setCaretToEnd(event);"/>
                     				</rich:comboBox>
                     			</center>
                     		</t:div>                	    	

@@ -133,6 +133,43 @@
         <rich:separator height="2px" style="padding-bottom : 16px "/>
         <center>
         <h:panelGrid>
+            <rich:togglePanel switchType="client" stateOrder="add,form">
+     			<f:facet name="add">
+     				<h:panelGroup style="text-align : right" layout="block">
+           				<rich:toggleControl>
+                			<h:graphicImage id="pic" style="border-style : none" value="#{msg.imgBotaoAdd}" onmouseover="tooltip.show('Adicionar Odontograma')" onmouseout="tooltip.hide()" />
+            			</rich:toggleControl>
+            		</h:panelGroup>
+     			</f:facet>
+     			<f:facet name="form">
+     				<f:subview>
+     				    <center>
+     					<rich:panel >
+	     					<h:panelGroup style="text-align : right" layout="block">
+	     						<rich:toggleControl switchToState="add" styleClass="rich-stglpnl-marker" >
+				            		<h:graphicImage id="hideOadd" style="border-style : none" value="#{msg.imgBotaoFechar}" onmouseover="tooltip.show('Esconder cadastro')" onmouseout="tooltip.hide()" />
+	     						</rich:toggleControl>     						
+	     					</h:panelGroup>
+     						<h:panelGrid columns="3">
+     							<h:panelGrid>
+     								<oo:label for="entradaONome" value="Nome : " />
+     								<h:inputText id="entradaONome" value="#{manage.nomeOAdd}" style="width : 284px" />
+     							</h:panelGrid>
+     							<rich:spacer width="8px" />
+     							<h:panelGrid>
+     								<oo:label for="entradaOData" value="Data" />
+     								<h:inputText id="entradaOData" value="#{manage.dataOadd}" style="width : 96px" />
+     							</h:panelGrid>
+     						</h:panelGrid>
+     						<h:panelGrid>
+     						    <oo:label for="entradaODescricao" value="Descricao" />
+     							<h:inputTextarea id="entradaODescricao" value="#{manage.descricaoOAdd}" style="width : 400px" />
+     						</h:panelGrid>
+     					</rich:panel>
+     					</center>
+     				</f:subview>
+     			</f:facet>
+     		</rich:togglePanel>
             <h:outputText value="Odontogramas : " />
         	<h:panelGrid columns="1">
         	    <rich:dataTable id="listaOdontogramas" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" width="608px"  rows="5" value="#{manage.odontogramas}" var="odontograma">
@@ -173,11 +210,6 @@
         	        </rich:column>
         	    </rich:dataTable>
 				<rich:datascroller for="listaOdontogramas" maxPages="20" align="center" id="dataScrollerOdontograma"  />
-				<h:panelGroup style="text-align : right" layout="block">
-					<a4j:commandButton value="Adicionar" image="#{msg.imgBotaoAdd}" onclick="" >
-						<rich:toolTip value="Adicionar Odontograma" />
-					</a4j:commandButton>
-				</h:panelGroup>
         	</h:panelGrid>
         </h:panelGrid>
         </center>

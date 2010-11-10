@@ -52,6 +52,10 @@ public class ManageOdontograma {
 	private TipoStatusProcedimento          statusAdd;
 	private Date                            dataAdd;
 	
+	private String                          descricaoOAdd;
+	private Date                            dataOadd;
+	private String                          nomeOAdd;
+	
 	private Validator                       validatorProcedimento;
 	private Validator                       validatorValor;
 	private Validator                       validatorObs;
@@ -533,7 +537,25 @@ public class ManageOdontograma {
 	public List<StatusOdontogramaFilter> getOdontogramaStatusFilters() {
 		return odontogramaStatusFilters;
 	}
+	public void setDescricaoOAdd(String descricaoOAdd) {
+		this.descricaoOAdd = descricaoOAdd;
+	}
 
+	public Date getDataOadd() {
+		return dataOadd;
+	}
+
+	public void setDataOadd(Date dataOadd) {
+		this.dataOadd = dataOadd;
+	}
+
+	public String getNomeOAdd() {
+		return nomeOAdd;
+	}
+
+	public void setNomeOAdd(String nomeOAdd) {
+		this.nomeOAdd = nomeOAdd;
+	}
 	public void setOdontogramaStatusFilters(
 			List<StatusOdontogramaFilter> odontogramaStatusFilters) {
 		this.odontogramaStatusFilters = odontogramaStatusFilters;
@@ -582,4 +604,8 @@ public class ManageOdontograma {
 	private enum STATUS_HEM{
 		UP,DOWN;
 	}
+	public String getDescricaoOAdd() {
+		return descricaoOAdd;
+	}
+	
 }
