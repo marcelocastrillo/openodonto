@@ -85,7 +85,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		Class<?>[] allowed = {NullValidator.class,EmptyValidator.class};
 		validados.add(new ValidationRequest("observacao", ValidatorFactory.newStrMaxLen(500, false), "formPaciente:inTextBoxObs",allowed));
 		validados.add(new ValidationRequest("email", ValidatorFactory.newEmail(45), "formPaciente:entradaEmail",allowed));
-		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100,4, true), "formPaciente:entradaNome"));
+		validados.add(new ValidationRequest("nome", ValidatorFactory.newStrRangeLen(100,4, false), "formPaciente:entradaNome"));
 		validados.add(new ValidationRequest("endereco", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaEndereco",allowed));		
 		validados.add(new ValidationRequest("referencia", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaReferencia",allowed));
 		validados.add(new ValidationRequest("responsavel", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaResponavel",allowed));		
