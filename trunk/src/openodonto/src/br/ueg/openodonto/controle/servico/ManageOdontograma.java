@@ -32,7 +32,7 @@ import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManageOdontograma {
-
+	
 	private Odontograma 					odontograma;
 	private OdontogramaDente    			od;
 	private List<ProcedimentoDenteAdapter>  procedimentos;	
@@ -52,19 +52,26 @@ public class ManageOdontograma {
 	private TipoStatusProcedimento          statusAdd;
 	private Date                            dataAdd;
 	
+	private Validator                       validatorProcedimento;
+	private Validator                       validatorValor;
+	private Validator                       validatorObs;
+	
 	private String                          descricaoOAdd;
 	private Date                            dataOadd;
 	private String                          nomeOAdd;
 	
-	private Validator                       validatorProcedimento;
-	private Validator                       validatorValor;
-	private Validator                       validatorObs;
+	private Validator                       validatorONome;
+	private Validator                       validatorOData;
+	private Validator                       validatorODesc;
 	
 	private String                          filterStatusAdd;
 	private String                          filterProcedimentoAdd;
 	private String                          filterDataAdd;
 	private String                          filterObservacaoAdd;
-	private String                          filterValorAdd;	
+	private String                          filterValorAdd;
+	
+	private String                          filterNomeOAdd;
+	private String                          filterDescricaoOAdd;
 	
 	public ManageOdontograma(List<Odontograma> odontogramas,MessageDisplayer displayer) {
 		this.displayer = displayer;
@@ -72,7 +79,7 @@ public class ManageOdontograma {
 		this.odontogramas = odontogramas;
 		this.odontogramaStatusFilters = new ArrayList<StatusOdontogramaFilter>();
 		loadLastOdontograma();
-		initValidatorAdd();
+		initValidator();
 	}	
 
 	private void makeDefaultOdontograma(){
@@ -80,7 +87,7 @@ public class ManageOdontograma {
 		this.odontograma.setData(new Date(System.currentTimeMillis()));
 		this.odontograma.setNome("Odontograam Padrão");
 		this.odontograma.setDescricao("Primeira configuração do odontograma do paciente.");
-		initAdd();
+		initAddOdp();
 		initOdontogramaStatusFilter();
 	}
 
@@ -130,8 +137,46 @@ public class ManageOdontograma {
 		}
 	}
 	
+	public void acaoAddOdontograma(){
+		if(!isValidOdontogramaAdd()){
+			return;
+		}
+		Odontograma odontograma = new Odontograma();
+		odontograma.setData(getDataOadd());
+		odontograma.setDescricao(getDescricaoOAdd());
+		odontograma.setNome(getNomeOAdd());
+		if(odontogramas != null){
+			odontogramas.add(odontograma);
+		}
+		initAddOdontograma();
+	}
+	
+	private boolean isValidOdontogramaAdd(){
+		boolean valid = true;
+		validatorOData.setValue(getDataOadd());
+		validatorODesc.setValue(getDescricaoOAdd());
+		validatorONome.setValue(getNomeOAdd());
+		String formName = getDisplayer().getView().getProperties().get("formularioSaida");
+		
+		if(!validatorONome.isValid()){
+			getDisplayer().getView().addResourceDynamicMenssage("* Nome : " + validatorONome.getErrorMessage(), formName+":subViewAddOdontograma:entradaONome");
+		}
+		
+		if (!validatorOData.isValid()) {
+			getDisplayer().getView().addResourceDynamicMenssage("* Data : " + validatorOData.getErrorMessage(), formName+":subViewAddOdontograma:entradaOData");
+			valid = valid && false;
+		}
+		
+		Class<?>[] allowed = {NullValidator.class,EmptyValidator.class};
+		if(!validatorODesc.isValid() && ValidatorFactory.checkInvalidPermiteds(validatorODesc, allowed)){
+			getDisplayer().getView().addResourceDynamicMenssage("* Descrição : " + validatorODesc.getErrorMessage(),formName+":entradaODescricao");
+			valid = valid && false;
+		}
+		return valid;
+	}
+	
 	public void acaoAddOdp(){		
-		if(!isValidAdd()){
+		if(!isValidOdpAdd()){
 			return;
 		}		
 		OdontogramaDenteProcedimento odp = new OdontogramaDenteProcedimento();
@@ -145,10 +190,10 @@ public class ManageOdontograma {
 			procedimentos.add(new ProcedimentoDenteAdapter(odp, procedimentoAdd,getDisplayer()));
 		}
 		updateMeta();
-		initAdd();		
+		initAddOdp();		
 	}
 	
-	private boolean isValidAdd(){
+	private boolean isValidOdpAdd(){
 		boolean valid = true;
 		validatorProcedimento.setValue(procedimentoAdd);
 		validatorValor.setValue(valorAdd);
@@ -175,7 +220,7 @@ public class ManageOdontograma {
 		}
 	}
 	
-	private void initAdd(){
+	private void initAddOdp(){
 		this.procedimentoAdd = null;
 		this.valorAdd = 0.0f;
 		this.statusAdd = TipoStatusProcedimento.NAO_REALIZADO;
@@ -183,10 +228,19 @@ public class ManageOdontograma {
 		this.observacaoAdd = "";		
 	}
 	
-	private void initValidatorAdd(){
+	private void initAddOdontograma(){
+		nomeOAdd = null;
+		descricaoOAdd = null;
+		dataOadd = null;
+	}
+	
+	private void initValidator(){
 		validatorProcedimento = ValidatorFactory.newNull();
 		validatorValor = ValidatorFactory.newNumMin(0);
 		validatorObs = ValidatorFactory.newStrMaxLen(300, false);
+		validatorOData = ValidatorFactory.newNull();
+		validatorODesc = ValidatorFactory.newStrMaxLen(500, false);
+		validatorONome = ValidatorFactory.newStrRangeLen(150, 4, true);
 	}
 	
 	public void acaoManageProcedimento(){
@@ -556,10 +610,25 @@ public class ManageOdontograma {
 	public void setNomeOAdd(String nomeOAdd) {
 		this.nomeOAdd = nomeOAdd;
 	}
-	public void setOdontogramaStatusFilters(
-			List<StatusOdontogramaFilter> odontogramaStatusFilters) {
+	public void setOdontogramaStatusFilters(List<StatusOdontogramaFilter> odontogramaStatusFilters) {
 		this.odontogramaStatusFilters = odontogramaStatusFilters;
 	}	
+	public String getFilterNomeOAdd() {
+		return filterNomeOAdd;
+	}
+
+	public void setFilterNomeOAdd(String filterNomeOAdd) {
+		this.filterNomeOAdd = filterNomeOAdd;
+	}
+
+	public String getFilterDescricaoOAdd() {
+		return filterDescricaoOAdd;
+	}
+
+	public void setFilterDescricaoOAdd(String filterDescricaoOAdd) {
+		this.filterDescricaoOAdd = filterDescricaoOAdd;
+	}
+
 	private class OdontogramaDenteAspectoComparator implements Comparator<OdontogramaDenteAspecto>{
 		@Override
 		public int compare(OdontogramaDenteAspecto o1,	OdontogramaDenteAspecto o2) {
@@ -606,6 +675,6 @@ public class ManageOdontograma {
 	}
 	public String getDescricaoOAdd() {
 		return descricaoOAdd;
-	}
+	}	
 	
 }
