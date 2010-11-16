@@ -63,7 +63,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 
 	protected void carregarExtra() {
 		manageTelefone.setTelefones(getPaciente().getTelefone());
-		manageOdontograma.setOdontogramas(getPaciente().getOdontogramas());
+		manageOdontograma.setOdontogramas(manageOdontograma.wrapOdontogramas(getPaciente().getOdontogramas()));
 		manageOdontograma.loadLastOdontograma();
 	}
 

@@ -17,7 +17,7 @@ import br.ueg.openodonto.util.WordFormatter;
 @Table(name = "odontogramas")
 public class Odontograma implements Entity {
 
-	private static final long serialVersionUID = 6394723722499152433L;
+	private static final long serialVersionUID = 6394723722499152433L;	
 
 	@Column(name = "id")
 	@Id(autoIncrement = IdIncrementType.IDENTITY)
@@ -39,7 +39,7 @@ public class Odontograma implements Entity {
 	private TreeSet<OdontogramaDente> odontogramaDentes;
 	
 	@Relationship
-	private List<OdontogramaDenteAspecto> aspectos;
+	private List<OdontogramaDenteAspecto> aspectos;	
 	
 	public Odontograma(Long idPessoa,Long id) {
 		this(idPessoa);
@@ -55,7 +55,7 @@ public class Odontograma implements Entity {
 		super();
 		aspectos = new ArrayList<OdontogramaDenteAspecto>();
 		odontogramaDentes = new TreeSet<OdontogramaDente>(new OdontogramaDenteComparator());
-	}
+	}	
 	
 	public Long getId() {
 		return id;
@@ -189,6 +189,6 @@ public class Odontograma implements Entity {
 		} else if (!odontogramaDentes.equals(other.odontogramaDentes))
 			return false;
 		return true;
-	}
+	}	
 
 }

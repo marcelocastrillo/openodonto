@@ -102,7 +102,9 @@ public class OrmResolver {
 		Map<String, Object> map = new HashMap<String, Object>();
 		OrmTranslator translator = new OrmTranslator(fields);
 		for (Field field : fields) {
-			if (hasAnnotation(field, Relationship.class)) {
+			if(hasAnnotation(field, Transient.class)){
+				continue;
+			}else if (hasAnnotation(field, Relationship.class)) {
 				// TODO tratar relacionamentos
 			} else {
 				String column = getSimpleColumnName(field,translator);
@@ -217,10 +219,9 @@ public class OrmResolver {
 		OrmTranslator translator = new OrmTranslator(fields);
 		for (String column : values.keySet()) {
 			Field field = translator.getFieldByColumnName(column);
-			if(field == null){
+			if(field == null || hasAnnotation(field, Transient.class)){
 				continue;
-			}
-			if (hasAnnotation(field, Relationship.class)) {
+			}else if (hasAnnotation(field, Relationship.class)) {
 				// TODO tratar relacionamentos
 			} else {
 				setBeanValue(field, values.get(column));
