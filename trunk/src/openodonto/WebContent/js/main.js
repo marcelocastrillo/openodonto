@@ -90,3 +90,8 @@ function setCaretToEnd (e) {
     }
     control.selectionStart = control.selectionEnd = control.value.length;
 }
+
+function isValidDate(element){
+	re = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+	return element.value.match(re) || element.value == "__/__/____";
+}

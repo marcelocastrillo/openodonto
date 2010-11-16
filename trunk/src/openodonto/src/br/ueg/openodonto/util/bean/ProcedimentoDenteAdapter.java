@@ -16,12 +16,12 @@ import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ProcedimentoDenteAdapter {
 
+	private static final DateFormat         df = new SimpleDateFormat("dd/MM/yyyy");
 	private OdontogramaDenteProcedimento 	odp;
 	private String                          abstractObservacao;
 	private Procedimento                 	procedimento;
 	private String                          valor;
-	private DecimalFormat                   dcf;
-	private DateFormat                      df;
+	private DecimalFormat                   dcf;	
 	private MessageDisplayer 				displayer;
 	private Validator               		validatorObs;
 
@@ -31,7 +31,6 @@ public class ProcedimentoDenteAdapter {
 		this.odp = odp;		
 		this.procedimento = procedimento;
 		this.validatorObs = ValidatorFactory.newStrMaxLen(300, false);
-		df = new SimpleDateFormat("dd/MM/yyyy");
 		formatObs();
 	}
 

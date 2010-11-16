@@ -141,7 +141,7 @@
 	                	        <h:commandButton image="#{msg.imgBotaoPesquisarTabela}" style="padding-left : 8px" onclick="toggleComp(#{rich:element('dataFilter')})" />
                 	        	<center>
                 	        	    <h:inputText id="dataFilter" value="#{manage.filterDataAdd}" style="width : 80px;display : none" >
-                	        	    	<a4j:support event="onchange" reRender="listaProcedimentosOdontograma" ignoreDupResponses="true" requestDelay="700" oncomplete="showComp(#{rich:element('dataFilter')});setCaretToEnd(event);" />
+                	        	    	<a4j:support onsubmit="if(!isValidDate(#{rich:element('dataFilter')})){return false;}" event="onkeyup" reRender="listaProcedimentosOdontograma" ignoreDupResponses="true" requestDelay="700" oncomplete="showComp(#{rich:element('dataFilter')});setCaretToEnd(event);" />
                 	        	    	<rich:jQuery selector="#dataFilter" query="mask('99/99/9999')" timing="onload" />                	        	    	
                 	        	    </h:inputText>
                     			</center>

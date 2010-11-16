@@ -38,10 +38,9 @@ public class OrmTranslator {
 
 	private void resolveColumns() {
 		for (Field field : fields) {
-			if (OrmResolver.hasAnnotation(field , Relationship.class)) {
-				Class<?> type = field.getType();
-				if(Entity.class.isAssignableFrom(type)){
-				}
+			if(OrmResolver.hasAnnotation(field , Transient.class)){
+				continue;
+			}else if (OrmResolver.hasAnnotation(field , Relationship.class)) {
 				// TODO tratar relacionamentos
 			} else {
 				String fullColumnName = getColumn(field);
