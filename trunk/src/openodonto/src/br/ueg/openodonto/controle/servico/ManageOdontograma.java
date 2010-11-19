@@ -46,6 +46,7 @@ public class ManageOdontograma {
 	private MessageDisplayer 				displayer;
 	private List<OdontogramaAdapter>    	odontogramas;
 	private List<Odontograma>    	        odontogramasTarget;
+	private OdontogramaAdapter                     odontogramaDelete;
 	private Map<String,DenteMetaAdapter>    viewMetaAdapter;
 	
 	private Procedimento                    procedimentoAdd;
@@ -147,6 +148,19 @@ public class ManageOdontograma {
 	    	}
 			setProcedimento(null);
 		}
+	}
+	
+	public void acaoRemoverOdontograma(){
+		if(this.odontogramaDelete != null){
+			odontogramas.remove(odontogramaDelete);
+			odontogramasTarget.remove(odontogramaDelete.getOdontograma());
+			if(odontogramaDelete.getOdontograma() == odontograma){
+				loadLastOdontograma();
+			}    		
+    	}else{
+    		throw new RuntimeException("Falha ao excluir.");
+    	}
+		setOdontogramaDelete(null);
 	}
 	
 	public void acaoAddOdontograma(){
@@ -253,7 +267,7 @@ public class ManageOdontograma {
 		validatorObs = ValidatorFactory.newStrMaxLen(300, false);
 		validatorOData = ValidatorFactory.newNull();
 		validatorODesc = ValidatorFactory.newStrMaxLen(500, false);
-		validatorONome = ValidatorFactory.newStrRangeLen(150, 4, true);
+		validatorONome = ValidatorFactory.newStrRangeLen(150, 4, false);
 	}
 	
 	public void acaoManageProcedimento(){
@@ -661,6 +675,14 @@ public class ManageOdontograma {
 	public void setFilterDataOAdd(String filterDataOAdd) {
 		this.filterDataOAdd = filterDataOAdd;
 	}
+
+	public OdontogramaAdapter getOdontogramaDelete() {
+		return odontogramaDelete;
+	}
+
+	public void setOdontogramaDelete(OdontogramaAdapter odontogramaDelete) {
+		this.odontogramaDelete = odontogramaDelete;
+	}	
 	
 	private class OdontogramaDenteAspectoComparator implements Comparator<OdontogramaDenteAspecto>{
 		@Override
@@ -708,6 +730,6 @@ public class ManageOdontograma {
 	}
 	public String getDescricaoOAdd() {
 		return descricaoOAdd;
-	}
+	}	
 	
 }

@@ -186,9 +186,16 @@
         	<a4j:region>
         		<rich:messages id="#{manage.displayer.output}" for="#{manage.displayer.output}"  styleClass="oo-validation-messages" />
         	    <rich:dataTable id="listaOdontogramas" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" width="608px"  rows="5" value="#{manage.odontogramas}" var="adapter">
-				  	<a4j:support event="onRowClick" reRender="gridOdontograma,gridOdontogramaMeta" action="#{manage.updateMeta}" rendered="#{not empty adapter}">
+				  	<a4j:support status="status" event="onRowDblClick" reRender="gridOdontograma,gridOdontogramaMeta" action="#{manage.updateMeta}" rendered="#{not empty adapter}">
    	    				<f:setPropertyActionListener value="#{adapter}" target="#{manage.odontogramaAdapter}" />
    					</a4j:support>
+                	<rich:column width="36px">
+                	    <h:panelGroup layout="block" style="text-align : center">
+							<a4j:commandButton status="status" value="#{msg.manageContactAcaoRemover}" onclick="if(!confirm('#{msg.DesejaExcluir}')){return false}" action="#{manage.acaoRemoverOdontograma}" reRender="gridOdontogramaMeta,listaOdontogramas,gridOdontograma" image="#{msg.imgBotaoMiniRemove}" onmouseover="tooltip.show('Remover');" onmouseout="tooltip.hide()">
+							    <f:setPropertyActionListener value="#{adapter}" target="#{manage.odontogramaDelete}" />
+							</a4j:commandButton>                	    	
+                	    </h:panelGroup>
+                	</rich:column>
         	        <rich:column width="175px" filterExpression="#{(empty manage.filterNomeOAdd) or (manage.filterNomeOAdd eq '') ? true : fn:containsIgnoreCase(adapter.odontograma.nome , manage.filterNomeOAdd)}">
         	        	<f:facet name="header">
         	        		<t:div>
@@ -202,7 +209,11 @@
         	        		</t:div>        	        	     
         	        	</f:facet>
         	        	<h:panelGroup layout="block" style="text-align : center">
-        	        		<h:outputText value="#{adapter.odontograma.nome}" />
+                	   		<rich:inplaceInput onmouseover="tooltip.show('#{adapter.nome}');" onmouseout="tooltip.hide();" id="inplaceNome" viewClass="oo-odontograma-procedimentos" inputWidth="165px" onblur="align_div(this.parentNode.parentNode,'center')" oneditactivation="jQuery(this.firstChild).val('#{adapter.nome}');align_div(this.parentNode,'left');" value="#{adapter.abstractNome}">
+                	   			<a4j:support event="onchange" action="#{adapter.formatNome}" reRender="inplaceNome">
+                	   				<a4j:actionparam name="nome" value="jQuery(#{rich:element('inplaceNome')}.firstChild).val()" noEscape="true" assignTo="#{adapter.nome}" /> 
+                	   			</a4j:support>
+                	   		</rich:inplaceInput>        	        	
         	        	</h:panelGroup>
         	        </rich:column>
         	        <rich:column width="75px" filterExpression="#{(empty manage.filterDataOAdd) or (manage.filterDataOAdd eq '__/__/____') ? true : adapter.data eq manage.filterDataOAdd}">
@@ -235,7 +246,7 @@
         	        		</t:div>        	        		
         	        	</f:facet>
                 		<h:panelGroup layout="block" style="text-align : center">                	    
-                	   		<rich:inplaceInput onmouseover="tooltip.show('#{adapter.descricao}');" onmouseout="tooltip.hide();" id="inplaceDesc" viewClass="oo-odontograma-procedimentos" inputWidth="310px" onblur="align_div(this.parentNode.parentNode,'center')" oneditactivation="jQuery(this.firstChild).val('#{adapter.descricao}');align_div(this.parentNode,'left');" value="#{adapter.abstractDescricao}">
+                	   		<rich:inplaceInput onmouseover="tooltip.show('#{adapter.descricao}');" onmouseout="tooltip.hide();" id="inplaceDesc" viewClass="oo-odontograma-procedimentos" inputWidth="280px" onblur="align_div(this.parentNode.parentNode,'center')" oneditactivation="jQuery(this.firstChild).val('#{adapter.descricao}');align_div(this.parentNode,'left');" value="#{adapter.abstractDescricao}">
                 	   			<a4j:support event="onchange" action="#{adapter.formatDescricao}" reRender="inplaceDesc">
                 	   				<a4j:actionparam name="desc" value="jQuery(#{rich:element('inplaceDesc')}.firstChild).val()" noEscape="true" assignTo="#{adapter.descricao}" /> 
                 	   			</a4j:support>
