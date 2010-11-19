@@ -17,18 +17,37 @@ public class OdontogramaAdapter {
 	
 	private Odontograma   		odontograma;	
 	private String        		abstractDescricao;
+	private String              abstractNome;
+	private Validator 			validatorNome;
 	private Validator     		validatorDesc;
-	private MessageDisplayer 	displayer;
+	private MessageDisplayer 	displayer;	
 	
 	public OdontogramaAdapter(Odontograma odontograma,MessageDisplayer displayer) {
 		validatorDesc = ValidatorFactory.newStrMaxLen(500, false);
+		validatorNome = ValidatorFactory.newStrRangeLen(150, 4, false);
 		this.odontograma = odontograma;
 		this.displayer = displayer;
 		formatDescricao();
+		formatNome();
 	}
 	
 	public void formatDescricao(){
-		this.abstractDescricao = WordFormatter.abstractStr(getDescricao(), 36);
+		this.abstractDescricao = WordFormatter.abstractStr(getDescricao(), 40);
+	}
+	
+	public void formatNome(){
+		this.abstractNome = WordFormatter.abstractStr(getNome(), 20);
+	}
+	
+	public String getNome(){
+		return getOdontograma().getNome();
+	}
+	
+	public void setNome(String nome){
+		validatorNome.setValue(nome);
+		if(isValidNome()){
+			getOdontograma().setNome(nome);
+		}
 	}
 	
 	public String getDescricao() {
@@ -40,6 +59,18 @@ public class OdontogramaAdapter {
 		if(isValidDec()){
 			getOdontograma().setDescricao(descricao);
 		}
+	}
+	
+	private boolean isValidNome(){
+		boolean valid = true;
+		String formName = getDisplayer().getView().getProperties().get("formularioSaida");
+		if(!validatorNome.isValid()){
+			getDisplayer().getView().addResourceDynamicMenssage("* Nome : " +
+					validatorNome.getErrorMessage(),
+					formName+":"+getDisplayer().getOutput());
+			valid = false;
+		}
+		return valid;
 	}
 	
 	private boolean isValidDec(){
@@ -80,14 +111,21 @@ public class OdontogramaAdapter {
 	}
 
 	public void setAbstractDescricao(String abstractDescricao) {
-	}
-
+	}	
+	
 	public MessageDisplayer getDisplayer() {
 		return displayer;
 	}
 
 	public void setDisplayer(MessageDisplayer displayer) {
 		this.displayer = displayer;
+	}
+
+	public String getAbstractNome() {
+		return abstractNome;
+	}
+
+	public void setAbstractNome(String abstractNome) {
 	}	
 	
 }

@@ -45,7 +45,7 @@
         	<center>
             <h:panelGrid columns="6">
                 <h:panelGrid>
-                	<oo:label value="Procedimento" for="labelProcedimento" required="true" />
+                	<oo:label value="Procedimento" for="inplaceProcedimento" required="true" />
                 	<rich:inplaceSelect id="inplaceProcedimento" changedClass="oo-odontograma-procedimentos" viewClass="oo-odontograma-procedimentos"  value="#{manage.procedimentoAdd}" onviewactivated="copiaValor()" defaultLabel="Selecione um procedimento" converter="simpleEntityConverter">
                 		<t:selectItems id="itemsProcedimentos" value="#{list.ALIAS_PROC.dominio}" var="procedimento" itemLabel="#{procedimento.nome}" itemValue="#{procedimento}"/>
                 	</rich:inplaceSelect>
@@ -88,7 +88,7 @@
                 <rich:dataTable  rowKeyVar="row" id="listaProcedimentosOdontograma" value="#{manage.procedimentos}" var="odp" onRowMouseOver="dataTabeMouseOver(this)" onRowMouseOut="dataTabeMouseOut(this,'#{a4jSkin.tableBackgroundColor}')" width="720px" rows="10" >
                 	<rich:column width="36px">
                 	    <h:panelGroup layout="block" style="text-align : center">
-							<a4j:commandButton value="#{msg.manageContactAcaoRemover}" action="#{manage.acaoRemoverOdp}" reRender="listaProcedimentosOdontograma,block-#{manage.od.dente.numero}" image="#{msg.imgBotaoMiniRemove}" onmouseover="tooltip.show('Remover');" onmouseout="tooltip.hide()">
+							<a4j:commandButton value="#{msg.manageContactAcaoRemover}" onclick="if(!confirm('#{msg.DesejaExcluir}')){return false}" action="#{manage.acaoRemoverOdp}" reRender="listaProcedimentosOdontograma,block-#{manage.od.dente.numero}" image="#{msg.imgBotaoMiniRemove}" onmouseover="tooltip.show('Remover');" onmouseout="tooltip.hide()">
 							    <f:setPropertyActionListener value="#{odp}" target="#{manage.procedimento}" />
 							</a4j:commandButton>                	    	
                 	    </h:panelGroup>
