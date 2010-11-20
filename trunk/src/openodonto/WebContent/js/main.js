@@ -65,6 +65,7 @@ function toggleComp(element){
 	var state = dom.css('display');
 	if(state == 'none'){
 		dom.show("fast");
+		element.focus();
 	}else{
 		dom.hide("fast");
 	}
