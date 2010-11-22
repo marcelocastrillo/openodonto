@@ -21,6 +21,7 @@ public class ManageListagem implements Serializable {
 	    {"ALIAS_FACE" , "br.ueg.openodonto.dominio.constante.FaceDente"},
 	    {"ALIAS_UF" , "br.ueg.openodonto.dominio.constante.TiposUF"},
 	    {"ALIAS_TIPO_TEL","br.ueg.openodonto.dominio.constante.TiposTelefone"},
+	    {"ALIAS_CAT","br.ueg.openodonto.dominio.constante.CategoriaProduto"},
 	    {"ALIAS_PROC",new ListagemProcedimento()},
 	    {"ALIAS_STATUS_PROC","br.ueg.openodonto.dominio.constante.TipoStatusProcedimento"}};
 	

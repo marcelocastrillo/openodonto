@@ -1,8 +1,5 @@
 import java.sql.Date;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-
 import br.ueg.openodonto.dominio.OdontogramaDente;
 import br.ueg.openodonto.dominio.OdontogramaDenteProcedimento;
 import br.ueg.openodonto.dominio.Paciente;
@@ -45,22 +42,6 @@ public class ManageOdontogramaTest {
 		
 		daoPaciente.alterar(paciente);
 		daoPaciente.closeConnection();
-	}
-	
-	private static class OOPredicate implements Predicate{
-		
-		private Long codigo;
-		
-		public OOPredicate(Long codigo) {
-			this.codigo = codigo;
-		}
-		
-		@Override
-		public boolean evaluate(Object o) {
-			OdontogramaDente od = (OdontogramaDente) o;
-			return od.getCodigo().equals(codigo);
-		}
-		
 	}
 	
 }

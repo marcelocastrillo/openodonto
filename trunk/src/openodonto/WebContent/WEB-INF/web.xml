@@ -19,7 +19,10 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>/faces/*</url-pattern>
 	</servlet-mapping>
-
+	<context-param>
+   		<param-name>com.sun.faces.expressionFactory</param-name>
+   		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+	</context-param>
 	<!-- Facelets -->
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>

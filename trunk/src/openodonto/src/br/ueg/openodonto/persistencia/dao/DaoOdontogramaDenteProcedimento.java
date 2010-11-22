@@ -15,7 +15,7 @@ import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 
 @Dao(classe=OdontogramaDenteProcedimento.class)
-public class DaoOdontogramaDenteProcedimento extends DaoCrud<OdontogramaDenteProcedimento>{//DaoColaboradorProduto
+public class DaoOdontogramaDenteProcedimento extends DaoCrud<OdontogramaDenteProcedimento>{
 	
 	private static final long serialVersionUID = -5700425577933939399L;
 
@@ -50,13 +50,13 @@ public class DaoOdontogramaDenteProcedimento extends DaoCrud<OdontogramaDentePro
 		return getRelacionamento(OdontogramaDente.class,"odontogramaDenteId",whereParams);		
 	}
 	
-	public List<OdontogramaDenteProcedimento> getOdontogramaDenteProcedimentosRelationshipOdontogramaDente(Long odontogramaDenteId) throws SQLException{
+	public List<OdontogramaDenteProcedimento> getODPRelationshipOD(Long odontogramaDenteId) throws SQLException{
 		OrmFormat orm = new OrmFormat(new OdontogramaDenteProcedimento(null, odontogramaDenteId));
 		IQuery query = CrudQuery.getSelectQuery(OdontogramaDenteProcedimento.class, orm.formatNotNull(), "*");
 		return getSqlExecutor().executarQuery(query);		
 	}
 	
-	public List<OdontogramaDenteProcedimento> getOdontogramaDenteProcedimentosRelationshipProcedimento(Long procedimentoId) throws SQLException{
+	public List<OdontogramaDenteProcedimento> getODPRelationshipProcedimento(Long procedimentoId) throws SQLException{
 		OrmFormat orm = new OrmFormat(new OdontogramaDenteProcedimento(procedimentoId, null));
 		IQuery query = CrudQuery.getSelectQuery(OdontogramaDenteProcedimento.class, orm.formatNotNull(), "*");
 		return getSqlExecutor().executarQuery(query);

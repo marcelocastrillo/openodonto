@@ -15,6 +15,14 @@
 		<rich:menuItem submitMode="ajax" action="managePaciente">
 			<h:outputText value="#{msg.cadastroPaciente}" />
 		</rich:menuItem>
+		<rich:menuGroup value="#{msg.manageAnamneseMenugroup}" >
+			<rich:menuItem submitMode="ajax" action="manageQuestao">
+				<h:outputText value="#{msg.manageAnamneseMenuQuestoes}" />
+			</rich:menuItem>			
+			<rich:menuItem submitMode="ajax" action="manageQuestionario">
+				<h:outputText value="#{msg.manageAnamneseMenuQuestionario}" />
+			</rich:menuItem>
+		</rich:menuGroup>
 		<rich:menuItem submitMode="ajax" action="manageDentista">
 			<h:outputText value="#{msg.cadastroDentista}" />
 		</rich:menuItem>

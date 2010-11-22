@@ -43,9 +43,13 @@ public class Paciente extends Pessoa {
 
 	@Relationship
 	private List<Odontograma> odontogramas;
+	
+	@Relationship
+	private List<QuestionarioAnamnese> anamneses;
 
 	public Paciente() {
 		this.odontogramas = new ArrayList<Odontograma>();
+		this.anamneses = new ArrayList<QuestionarioAnamnese>();
 	}
 
 	public Paciente(Long codigo) {
@@ -124,13 +128,22 @@ public class Paciente extends Pessoa {
 
 	public void setOdontogramas(List<Odontograma> odontogramas) {
 		this.odontogramas = odontogramas;
-	}	
-	
+	}
+
+	public List<QuestionarioAnamnese> getAnamneses() {
+		return anamneses;
+	}
+
+	public void setAnamneses(List<QuestionarioAnamnese> anamneses) {
+		this.anamneses = anamneses;
+	}
+
 	@Override
 	public String toString() {
-		return "Paciente [cpf=" + cpf + ", dataInicioTratamento="
-				+ dataInicioTratamento + ", dataNascimento=" + dataNascimento
-				+ ", dataRetorno=" + dataRetorno + ", dataTerminoTratamento="
+		return "Paciente [anamneses=" + anamneses + ", cpf=" + cpf
+				+ ", dataInicioTratamento=" + dataInicioTratamento
+				+ ", dataNascimento=" + dataNascimento + ", dataRetorno="
+				+ dataRetorno + ", dataTerminoTratamento="
 				+ dataTerminoTratamento + ", observacao=" + observacao
 				+ ", odontogramas=" + odontogramas + ", referencia="
 				+ referencia + ", responsavel=" + responsavel + "]";
@@ -140,6 +153,8 @@ public class Paciente extends Pessoa {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result
+				+ ((anamneses == null) ? 0 : anamneses.hashCode());
 		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
 		result = prime
 				* result
@@ -173,6 +188,11 @@ public class Paciente extends Pessoa {
 		if (getClass() != obj.getClass())
 			return false;
 		Paciente other = (Paciente) obj;
+		if (anamneses == null) {
+			if (other.anamneses != null)
+				return false;
+		} else if (!anamneses.equals(other.anamneses))
+			return false;
 		if (cpf == null) {
 			if (other.cpf != null)
 				return false;
@@ -221,4 +241,6 @@ public class Paciente extends Pessoa {
 		return true;
 	}
 
+	
+	
 }

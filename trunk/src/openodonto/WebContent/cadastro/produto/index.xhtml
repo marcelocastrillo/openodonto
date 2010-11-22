@@ -33,7 +33,7 @@
 							    <oo:label value="#{msg.categoriaProduto}" for="selectCategoria"  required="true"/>
 							    <h:selectOneMenu style="width : 120px;" id="selectCategoria" value="#{manterProduto.produto.categoria}" converter="simpleEntityConverter">
 							        <f:selectItem itemLabel="#{msg.ooSelecione}" itemValue="" />
-							        <t:selectItems value="#{manterListagem.cache['br.ueg.openodonto.dominio.constante.CategoriaProduto'].dominio}" var="categoria" itemLabel="#{categoria.descricao}" itemValue="#{categoria}" />
+							        <t:selectItems value="#{list.ALIAS_CAT.dominio}" var="categoria" itemLabel="#{categoria.descricao}" itemValue="#{categoria}" />
 							    </h:selectOneMenu>
 							</h:panelGrid>
 					    </h:panelGrid>
