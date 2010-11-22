@@ -54,7 +54,7 @@ public class DaoOdontogramaDente extends DaoCrud<OdontogramaDente> { // DaoColab
 	@Override
 	protected void afterLoad(OdontogramaDente o) throws Exception {
 		DaoOdontogramaDenteProcedimento daoODP = (DaoOdontogramaDenteProcedimento) DaoFactory.getInstance().getDao(OdontogramaDenteProcedimento.class);
-		List<OdontogramaDenteProcedimento> procedimentos = daoODP.getOdontogramaDenteProcedimentosRelationshipOdontogramaDente(o.getCodigo());
+		List<OdontogramaDenteProcedimento> procedimentos = daoODP.getODPRelationshipOD(o.getCodigo());
 		Map<OdontogramaDenteProcedimento,Procedimento> procedimentosMap = new HashMap<OdontogramaDenteProcedimento, Procedimento>();
 		DaoProcedimento daoP = (DaoProcedimento) DaoFactory.getInstance().getDao(Procedimento.class);
 		for(OdontogramaDenteProcedimento odp : procedimentos){

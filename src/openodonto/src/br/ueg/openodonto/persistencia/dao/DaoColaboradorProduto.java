@@ -8,7 +8,10 @@ import java.util.Map;
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
+import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
+import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.orm.Dao;
+import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 
 @Dao(classe=ColaboradorProduto.class)
@@ -53,6 +56,18 @@ public class DaoColaboradorProduto  extends DaoCrud<ColaboradorProduto> {
 		OrmTranslator translator = new OrmTranslator(fields);
 		whereParams.put(translator.getColumn("colaboradorIdPessoa"), idColaborador);
 		return getRelacionamento(Produto.class,"produtoIdProduto",whereParams);
+	}
+	
+	public List<ColaboradorProduto> getCPRelationshipProduto(Long idProduto) throws SQLException{
+		OrmFormat format = new OrmFormat(new ColaboradorProduto(null, idProduto));
+		IQuery sql = CrudQuery.getSelectQuery(ColaboradorProduto.class, format.formatNotNull(), "*");
+		return DaoFactory.getInstance().getDao(ColaboradorProduto.class).getSqlExecutor().executarQuery(sql);
+	}
+	
+	public List<ColaboradorProduto> getCPRelationshipColaborador(Long idColaborador) throws SQLException{
+		OrmFormat format = new OrmFormat(new ColaboradorProduto(idColaborador, null));
+		IQuery sql = CrudQuery.getSelectQuery(ColaboradorProduto.class, format.formatNotNull(), "*");
+		return DaoFactory.getInstance().getDao(ColaboradorProduto.class).getSqlExecutor().executarQuery(sql);
 	}
 
 }

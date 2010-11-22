@@ -3,10 +3,10 @@
                               "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 <faces-config>
  <!-- Componentes -->
-	<component>
-		<component-type>mapComponent</component-type>
-		<component-class>br.ueg.openodonto.web.tags.HtmlMap</component-class>
-	</component>
+ <component>
+  <component-type>mapComponent</component-type>
+  <component-class>br.ueg.openodonto.web.tags.HtmlMap</component-class>
+ </component>
  <!-- Conversores -->
  <converter>
   <converter-id>SqlDateConverter</converter-id>
@@ -15,6 +15,10 @@
  <converter>
   <converter-id>simpleEntityConverter</converter-id>
   <converter-class>br.ueg.openodonto.visao.converter.SimpleIndexConverter</converter-class>
+ </converter>
+ <converter>
+  <converter-id>questaoConverter</converter-id>
+  <converter-class>br.ueg.openodonto.visao.converter.QuestaoQuestionarioConverter</converter-class>
  </converter>
  <!-- ManagedBeans -->
  <managed-bean>
@@ -57,6 +61,16 @@
   <managed-bean-class>br.ueg.openodonto.controle.ManterProcedimento</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>manterQuestaoAnamnese</managed-bean-name>
+  <managed-bean-class>br.ueg.openodonto.controle.ManterQuestaoAnamnese</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>manterQuestionarioAnamnese</managed-bean-name>
+  <managed-bean-class>br.ueg.openodonto.controle.ManterQuestionarioAnamnese</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
  <!-- Regras de navegação -->
  <navigation-rule>
   <navigation-case>
@@ -85,14 +99,14 @@
    <to-view-id>/cadastro/dentista/index.xhtml</to-view-id>
    <redirect/>
   </navigation-case>
- </navigation-rule> 
+ </navigation-rule>
  <navigation-rule>
   <navigation-case>
    <from-outcome>manageProduto</from-outcome>
    <to-view-id>/cadastro/produto/index.xhtml</to-view-id>
    <redirect/>
   </navigation-case>
- </navigation-rule> 
+ </navigation-rule>
  <navigation-rule>
   <navigation-case>
    <from-outcome>manageFornecedor</from-outcome>
@@ -118,6 +132,18 @@
   <navigation-case>
    <from-outcome>manageProcedimento</from-outcome>
    <to-view-id>/cadastro/procedimento/index.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <navigation-case>
+   <from-outcome>manageQuestao</from-outcome>
+   <to-view-id>/cadastro/anamnese/questao/index.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>manageQuestionario</from-outcome>
+   <to-view-id>/cadastro/anamnese/questionario/index.xhtml</to-view-id>
    <redirect/>
   </navigation-case>
  </navigation-rule>
