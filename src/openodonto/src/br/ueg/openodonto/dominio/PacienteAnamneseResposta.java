@@ -11,7 +11,7 @@ import br.ueg.openodonto.persistencia.orm.value.EnumValue;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 
 @Table(name="paciente_anamnese_respostas")
-public class PacienteAnamneseRespostas implements Entity{
+public class PacienteAnamneseResposta implements Entity{
 
 	private static final long serialVersionUID = -6522681709270082326L;
 	
@@ -32,19 +32,19 @@ public class PacienteAnamneseRespostas implements Entity{
 	@Column(name="fk_pacientes",joinFields={@ForwardKey(tableField="id_pessoa",foreginField="fk_pacientes")})
 	private Long pacienteId;	
 	
-	public PacienteAnamneseRespostas(Long codigo) {
+	public PacienteAnamneseResposta(Long codigo) {
 		this();
 		this.codigo = codigo;
 	}
 
-	public PacienteAnamneseRespostas(Long questaoAnamneseId, Long questionarioAnamneseId, Long pacienteId) {
+	public PacienteAnamneseResposta(Long questaoAnamneseId, Long questionarioAnamneseId, Long pacienteId) {
 		this();
 		this.questaoAnamneseId = questaoAnamneseId;
 		this.questionarioAnamneseId = questionarioAnamneseId;
 		this.pacienteId = pacienteId;
 	}
 
-	public PacienteAnamneseRespostas() {
+	public PacienteAnamneseResposta() {
 	}
 	
 	public Long getCodigo() {
@@ -123,7 +123,7 @@ public class PacienteAnamneseRespostas implements Entity{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PacienteAnamneseRespostas other = (PacienteAnamneseRespostas) obj;
+		PacienteAnamneseResposta other = (PacienteAnamneseResposta) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;

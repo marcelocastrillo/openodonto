@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import br.ueg.openodonto.dominio.PacienteAnamneseRespostas;
+import br.ueg.openodonto.dominio.PacienteAnamneseResposta;
 import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestaoAnamnese;
 import br.ueg.openodonto.dominio.QuestaoQuestionarioAnamnese;
@@ -16,23 +16,21 @@ public class QuestionarioAnamneseAdapter {
 	private PacienteQuestionarioAnamnese 					pqa;
 	private QuestionarioAnamnese 							qa;
 	private List<QuestionarioQuestaoAdapter> 				questoes;
-	private Map<QuestaoAnamnese,PacienteAnamneseRespostas>  respostas;
 
 	public QuestionarioAnamneseAdapter(PacienteQuestionarioAnamnese pqa,QuestionarioAnamnese qa,Map<QuestaoQuestionarioAnamnese, QuestaoAnamnese> questoes) {
 		this.pqa = pqa;
 		this.qa = qa;
 		this.questoes = new ArrayList<QuestionarioQuestaoAdapter>();
-		this.respostas = pqa.getRespotas();
-		for(Entry<QuestaoQuestionarioAnamnese, QuestaoAnamnese> entry : questoes.entrySet()){
-			this.questoes.add(new QuestionarioQuestaoAdapter(entry.getKey(), entry.getValue()));
-			PacienteAnamneseRespostas resposta;
+		for(Entry<QuestaoQuestionarioAnamnese, QuestaoAnamnese> entry : questoes.entrySet()){			
+			PacienteAnamneseResposta resposta;
 			if((resposta = pqa.getRespotas().get(entry.getKey())) == null){
-				resposta = new PacienteAnamneseRespostas(
+				resposta = new PacienteAnamneseResposta(
 						entry.getKey().getQuestaoAnamneseId(),
 						entry.getKey().getQuestionarioAnamneseId(),
 						null);
+				pqa.getRespotas().put(entry.getValue(), resposta);
 			}
-			respostas.put(entry.getValue(), resposta);
+			this.questoes.add(new QuestionarioQuestaoAdapter(entry.getKey(), entry.getValue(),resposta));
 		}
 	}
 
@@ -56,9 +54,7 @@ public class QuestionarioAnamneseAdapter {
 	public void setQuestoes(List<QuestionarioQuestaoAdapter> questoes) {
 		this.questoes = questoes;
 	}
-	public Map<QuestaoAnamnese, PacienteAnamneseRespostas> getRespostas() {
-		return respostas;
-	}
+
 	@Override
 	public String toString() {
 		return "QuestionarioAnamneseAdapter [pqa=" + pqa + ", qa=" + qa

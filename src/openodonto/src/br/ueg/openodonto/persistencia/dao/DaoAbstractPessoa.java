@@ -39,23 +39,7 @@ public abstract class DaoAbstractPessoa<T extends Pessoa> extends DaoCrud<T>{
 		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
 		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
 		daoTelefone.updateRelationshipPessoa(o.getTelefone(), o.getCodigo());
-	}
-	
-	@Override
-	public List<T> listar(boolean lazy, String... fields) {
-		EntityManager<Telefone> entityManagerTelefone = DaoFactory.getInstance().getDao(Telefone.class);
-		DaoTelefone daoTelefone = (DaoTelefone) entityManagerTelefone;
-		List<T> lista = super.listar(lazy, fields);
-		if (lista != null && !lazy) {
-			for (T pessoa : lista) {
-				try {
-					pessoa.setTelefone(daoTelefone.getTelefonesRelationshipPessoa(pessoa.getCodigo()));
-				} catch (Exception ex) {
-				}
-			}
-		}
-		return lista;
-	}
+	}	
 	
 	@Override
 	public void afterLoad(T o) throws Exception {

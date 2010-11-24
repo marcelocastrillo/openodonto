@@ -140,6 +140,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 					try {
 						afterLoad(t);
 					} catch (Exception ex) {
+					    ex.printStackTrace();
 					}
 				}
 			}
@@ -153,7 +154,7 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 	
 	@Override
 	public List<T> listar() {
-		return listar(true, "*");
+		return listar(false, "*");
 	}
 
 	protected void afterList() throws Exception {

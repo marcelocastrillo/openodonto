@@ -19,7 +19,7 @@ public class ListagemQuestionarioAnamnese extends ListaDominio<QuestionarioAnamn
 		EntityManager<QuestionarioAnamnese> daoDominio = DaoFactory.getInstance().getDao(getClasse());
 		List<QuestionarioAnamnese> lista = new ArrayList<QuestionarioAnamnese>();		
 		try {
-			lista = daoDominio.listar(false, "*");
+			lista = daoDominio.listar(true, "codigo","nome");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

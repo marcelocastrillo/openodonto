@@ -1,11 +1,14 @@
 package br.ueg.openodonto.persistencia.dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.dominio.Paciente;
@@ -75,24 +78,30 @@ public class DaoQuestionarioAnamnese extends DaoCrud<QuestionarioAnamnese> {
 	}
 
 	public void updateRelationshipPaciente(Paciente paciente) throws Exception {
-		Long pacienteId = paciente.getCodigo();
-		/*TODO
-		List<QuestionarioAnamnese> questionarios = paciente.getAnamneses();
-		if(questionarios != null){
-			DaoPacienteQuestionarioAnamnese daoPQA = (DaoPacienteQuestionarioAnamnese) DaoFactory.getInstance().getDao(PacienteQuestionarioAnamnese.class);
-			List<PacienteQuestionarioAnamnese> pqas =  daoPQA.getPQARelationshipPaciente(pacienteId);
+		Long pacienteId = paciente.getCodigo();	
+		List<QuestionarioAnamnese> questionarios = new ArrayList<QuestionarioAnamnese>(paciente.getAnamneses().values());	
+		if(questionarios != null){		    
+			DaoPacienteQuestionarioAnamnese daoPQA = (DaoPacienteQuestionarioAnamnese) DaoFactory.getInstance().getDao(PacienteQuestionarioAnamnese.class);			
+			List<PacienteQuestionarioAnamnese> pqas =  daoPQA.getPQARelationshipPaciente(pacienteId);			
 			for(PacienteQuestionarioAnamnese pqa : pqas){
 				if(!containsPQARelationship(questionarios,pqa)){
 					daoPQA.remover(pqa);
 				}
-			}			
-			for(QuestionarioAnamnese questionario : questionarios){
-				if(!containsQARelationship(pqas,questionario)){
-					daoPQA.inserir(new PacienteQuestionarioAnamnese(pacienteId, questionario.getCodigo()));
-				}
+			}
+			Iterator<Entry<PacienteQuestionarioAnamnese, QuestionarioAnamnese>> iterator = paciente.getAnamneses().entrySet().iterator();
+			while(iterator.hasNext()){
+			    Entry<PacienteQuestionarioAnamnese, QuestionarioAnamnese> entry = iterator.next();
+			    PacienteQuestionarioAnamnese pqa = entry.getKey();
+			    QuestionarioAnamnese questionario = entry.getValue();
+			    if(!containsQARelationship(pqas, questionario)){
+			        pqa.setPacienteId(pacienteId);
+			        pqa.setQuestionarioAnamneseId(questionario.getCodigo());
+			        daoPQA.inserir(pqa);
+			    }else{
+			        daoPQA.alterar(pqa);
+			    }
 			}			
 		}
-		*/
 	}
 
 	private boolean containsQARelationship(	List<PacienteQuestionarioAnamnese> pqas,QuestionarioAnamnese questionario) {
@@ -117,7 +126,7 @@ public class DaoQuestionarioAnamnese extends DaoCrud<QuestionarioAnamnese> {
 		return index >= 0;
 	}
 
-	public List<QuestionarioAnamnese> getQuestionariosAnamnesesRelationshipPaciente(Long idPaciente) throws Exception {
+	public List<QuestionarioAnamnese> getQARelationshipPaciente(Long idPaciente) throws Exception {
 		OrmFormat orm = new OrmFormat(new Odontograma(idPaciente));
 		IQuery query = CrudQuery.getSelectQuery(QuestionarioAnamnese.class, orm.formatNotNull(), "*");
 		List<QuestionarioAnamnese> loads = getSqlExecutor().executarQuery(query);
