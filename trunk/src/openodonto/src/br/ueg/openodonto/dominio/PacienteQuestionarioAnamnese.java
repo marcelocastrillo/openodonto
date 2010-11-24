@@ -24,7 +24,7 @@ public class PacienteQuestionarioAnamnese implements Entity,Comparable<PacienteQ
 	private Long questionarioAnamneseId;
 	
 	@Relationship
-	private Map<QuestaoAnamnese,PacienteAnamneseRespostas> 	respotas;
+	private Map<QuestaoAnamnese,PacienteAnamneseResposta> 	respotas;
 	
 	public PacienteQuestionarioAnamnese(Long pacienteId,Long questionarioAnamneseId) {
 		this();
@@ -33,7 +33,7 @@ public class PacienteQuestionarioAnamnese implements Entity,Comparable<PacienteQ
 	}
 
 	public PacienteQuestionarioAnamnese() {
-		this.respotas = new HashMap<QuestaoAnamnese, PacienteAnamneseRespostas>();
+		this.respotas = new HashMap<QuestaoAnamnese, PacienteAnamneseResposta>();
 	}
 	
 	public Long getPacienteId() {
@@ -52,11 +52,11 @@ public class PacienteQuestionarioAnamnese implements Entity,Comparable<PacienteQ
 		this.questionarioAnamneseId = questionarioAnamneseId;
 	}
 
-	public Map<QuestaoAnamnese, PacienteAnamneseRespostas> getRespotas() {
+	public Map<QuestaoAnamnese, PacienteAnamneseResposta> getRespotas() {
 		return respotas;
 	}
 
-	public void setRespotas(Map<QuestaoAnamnese, PacienteAnamneseRespostas> respotas) {
+	public void setRespotas(Map<QuestaoAnamnese, PacienteAnamneseResposta> respotas) {
 		this.respotas = respotas;
 	}
 

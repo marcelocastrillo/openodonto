@@ -48,7 +48,7 @@ public class DaoQuestaoAnamnese extends DaoCrud<QuestaoAnamnese> { //DaoProduto
 			while(iterator.hasNext()){
 				Entry<QuestaoQuestionarioAnamnese, QuestaoAnamnese> entry = iterator.next();
 				QuestaoAnamnese questao = entry.getValue();
-				QuestaoQuestionarioAnamnese qqa = entry.getKey(); 
+				QuestaoQuestionarioAnamnese qqa = entry.getKey();
 				if(!containsQARelationship(qqas,questao)){
 					qqa.setQuestionarioAnamneseId(questionarioAnamneseId);
 					qqa.setQuestaoAnamneseId(questao.getCodigo());

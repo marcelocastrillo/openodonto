@@ -14,6 +14,6 @@ public class DaoPessoa extends DaoAbstractPessoa<Pessoa>{
 	
 	@Override
 	public Pessoa getNewEntity() {
-		return new Pessoa(); // Melhor que reflexão
+		return new Pessoa();
 	}
 }

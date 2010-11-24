@@ -7,7 +7,6 @@ import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestionarioAnamnese;
-import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
 import br.ueg.openodonto.persistencia.orm.Dao;
 
@@ -53,25 +52,6 @@ public class DaoPaciente extends DaoAbstractPessoa<Paciente>{
 		updateRelationshipOdontograma(o);
 		updateRelationshipAnaminese(o);
 		updateRelationshipPlanejamento(o);
-	}	
-	
-	@Override
-	public List<Paciente> listar(boolean lazy, String... fields) {
-		DaoTelefone daoTelefone = (DaoTelefone)DaoFactory.getInstance().getDao(Telefone.class);
-		//DaoQuestionarioAnamnese daoQA = (DaoQuestionarioAnamnese) DaoFactory.getInstance().getDao(QuestionarioAnamnese.class);
-		DaoOdontograma daoOdontograma = (DaoOdontograma)DaoFactory.getInstance().getDao(Odontograma.class);
-		List<Paciente> lista = super.listar(lazy, fields);
-		if (lista != null && !lazy) {
-			for (Paciente paciente : lista) {
-				try {
-					paciente.setTelefone(daoTelefone.getTelefonesRelationshipPessoa(paciente.getCodigo()));
-					paciente.setOdontogramas(daoOdontograma.getOdontogramasRelationshipPaciente(paciente.getCodigo()));
-					//TODO paciente.setAnamneses(daoQA.getQuestionariosAnamnesesRelationshipPaciente(paciente.getCodigo()));
-				} catch (Exception ex) {
-				}
-			}
-		}
-		return lista;
 	}
 	
 	@Override
@@ -116,13 +96,11 @@ public class DaoPaciente extends DaoAbstractPessoa<Paciente>{
 		}
 	}
 	
-	private void removeAnamise(Paciente o) throws Exception{
-		/*TODO
-		EntityManager<QuestionarioAnamnese> entityManagerQA = DaoFactory.getInstance().getDao(QuestionarioAnamnese.class);
-		for(QuestionarioAnamnese qa : o.getAnamneses()){
-			entityManagerQA.remover(qa);
-		}
-		*/
+	private void removeAnamise(Paciente o) throws Exception{		
+		EntityManager<PacienteQuestionarioAnamnese> entityManagerPQA = DaoFactory.getInstance().getDao(PacienteQuestionarioAnamnese.class);
+		for(PacienteQuestionarioAnamnese pqa : o.getAnamneses().keySet()){
+		    entityManagerPQA.remover(pqa);
+		}		
 	}
 	
 	private void removePlanejamento(Paciente o){		
