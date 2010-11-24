@@ -9,8 +9,9 @@ public class QuestionarioQuestaoAdapter implements Serializable{
 
 	private static final long serialVersionUID = -2704691912645827351L;
 	
-	private QuestaoQuestionarioAnamnese qqa;
-	private QuestaoAnamnese             qa;	
+	private QuestaoQuestionarioAnamnese 						qqa;
+	private QuestaoAnamnese             						qa;
+	
 	public QuestionarioQuestaoAdapter(QuestaoQuestionarioAnamnese qqa,	QuestaoAnamnese qa) {
 		this.qqa = qqa;
 		this.qa = qa;

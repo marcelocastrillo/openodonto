@@ -5,6 +5,7 @@ import java.util.Map;
 
 import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.dominio.Paciente;
+import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestionarioAnamnese;
 import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.persistencia.EntityManager;
@@ -57,7 +58,7 @@ public class DaoPaciente extends DaoAbstractPessoa<Paciente>{
 	@Override
 	public List<Paciente> listar(boolean lazy, String... fields) {
 		DaoTelefone daoTelefone = (DaoTelefone)DaoFactory.getInstance().getDao(Telefone.class);
-		DaoQuestionarioAnamnese daoQA = (DaoQuestionarioAnamnese) DaoFactory.getInstance().getDao(QuestionarioAnamnese.class);
+		//DaoQuestionarioAnamnese daoQA = (DaoQuestionarioAnamnese) DaoFactory.getInstance().getDao(QuestionarioAnamnese.class);
 		DaoOdontograma daoOdontograma = (DaoOdontograma)DaoFactory.getInstance().getDao(Odontograma.class);
 		List<Paciente> lista = super.listar(lazy, fields);
 		if (lista != null && !lazy) {
@@ -65,7 +66,7 @@ public class DaoPaciente extends DaoAbstractPessoa<Paciente>{
 				try {
 					paciente.setTelefone(daoTelefone.getTelefonesRelationshipPessoa(paciente.getCodigo()));
 					paciente.setOdontogramas(daoOdontograma.getOdontogramasRelationshipPaciente(paciente.getCodigo()));
-					paciente.setAnamneses(daoQA.getQuestionariosAnamnesesRelationshipPaciente(paciente.getCodigo()));
+					//TODO paciente.setAnamneses(daoQA.getQuestionariosAnamnesesRelationshipPaciente(paciente.getCodigo()));
 				} catch (Exception ex) {
 				}
 			}
@@ -88,7 +89,12 @@ public class DaoPaciente extends DaoAbstractPessoa<Paciente>{
 	
 	private void loadAnaminese(Paciente o) throws Exception{
 		DaoQuestionarioAnamnese daoQA = (DaoQuestionarioAnamnese) DaoFactory.getInstance().getDao(QuestionarioAnamnese.class);
-		o.setAnamneses(daoQA.getQuestionariosAnamnesesRelationshipPaciente(o.getCodigo()));
+		DaoPacienteQuestionarioAnamnese daoPQA = (DaoPacienteQuestionarioAnamnese) DaoFactory.getInstance().getDao(PacienteQuestionarioAnamnese.class);
+		List<PacienteQuestionarioAnamnese> pqas = daoPQA.getPQARelationshipPaciente(o.getCodigo());
+		for(PacienteQuestionarioAnamnese pqa : pqas){
+			QuestionarioAnamnese qa = daoQA.findByKey(pqa.getQuestionarioAnamneseId());
+			o.getAnamneses().put(pqa, qa);
+		}
 	}
 	
 	private void loadPlanejamento(Paciente o){		
@@ -111,10 +117,12 @@ public class DaoPaciente extends DaoAbstractPessoa<Paciente>{
 	}
 	
 	private void removeAnamise(Paciente o) throws Exception{
+		/*TODO
 		EntityManager<QuestionarioAnamnese> entityManagerQA = DaoFactory.getInstance().getDao(QuestionarioAnamnese.class);
 		for(QuestionarioAnamnese qa : o.getAnamneses()){
 			entityManagerQA.remover(qa);
 		}
+		*/
 	}
 	
 	private void removePlanejamento(Paciente o){		

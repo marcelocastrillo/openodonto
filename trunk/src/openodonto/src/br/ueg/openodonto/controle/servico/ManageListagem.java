@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.ueg.openodonto.controle.listagem.ListagemProcedimento;
+import br.ueg.openodonto.controle.listagem.ListagemQuestionarioAnamnese;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.servico.listagens.core.AbstractLista;
 import br.ueg.openodonto.servico.listagens.core.ListaDominio;
@@ -22,7 +23,9 @@ public class ManageListagem implements Serializable {
 	    {"ALIAS_UF" , "br.ueg.openodonto.dominio.constante.TiposUF"},
 	    {"ALIAS_TIPO_TEL","br.ueg.openodonto.dominio.constante.TiposTelefone"},
 	    {"ALIAS_CAT","br.ueg.openodonto.dominio.constante.CategoriaProduto"},
+	    {"ALIAS_RESP_ANAMN","br.ueg.openodonto.dominio.constante.TiposRespostaAnamnese"},	    
 	    {"ALIAS_PROC",new ListagemProcedimento()},
+	    {"ALIAS_QUEST",new ListagemQuestionarioAnamnese()},
 	    {"ALIAS_STATUS_PROC","br.ueg.openodonto.dominio.constante.TipoStatusProcedimento"}};
 	
 	static{

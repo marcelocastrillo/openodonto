@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:oo="http://code.google.com/p/openodonto"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+    <rich:panel styleClass="oo-crud-decore-panel">
+        <ui:param name="manage" value="#{mBean.manageQA}" />
+    	<oo:pluginToolTip/>
+        <center>
+            <h:panelGrid id="gridAnamnese">
+                <h:panelGrid columns="3">
+                    <h:selectOneMenu value="#{manage.add}" converter="simpleEntityConverter">
+                    	<t:selectItems value="#{list.ALIAS_QUEST.dominio}" var="questionario" itemLabel="#{questionario.nome}" itemValue="#{questionario}" />
+                    </h:selectOneMenu>
+                	<rich:spacer width="16px" />
+					<h:panelGrid columns="1">
+						<rich:spacer height="8"/>
+						<h:panelGrid columns="3">
+							<a4j:commandButton  image="/images/add.jpg" action="#{manage.acaoAddAnamnese(manage.add)}" reRender="listaAnamneses" value="#{msg.manageContactAcaoInserir}" />
+							<rich:spacer width="16"/>
+							<rich:message id="messageAnamnese" for="messageAnamnese" styleClass="oo-validation-messages"/>
+						</h:panelGrid>
+					</h:panelGrid>
+                </h:panelGrid>                
+                <rich:separator height="1px" style="padding-top : 8px;padding-bottom : 8px" />
+                <h:panelGrid>
+                	<rich:scrollableDataTable width="500px" id="listaAnamneses" rows="5" height="150px" value="#{manage.questionariosAdapter}" var="adapter">
+                		<a4j:support event="onRowClick" reRender="panelAnamnese" rendered="#{not empty adapter}">
+                			<f:setPropertyActionListener target="#{manage.anamnese}" value="#{adapter}" />
+                		</a4j:support>
+                		<rich:column width="175px">
+                			<f:facet name="header">
+                				<h:outputText value="Nome" />
+                			</f:facet>
+                			<center>
+                				<h:outputText value="#{adapter.qa.nome}" />
+                			</center>
+                		</rich:column>
+                		<rich:column width="320px" >
+                			<f:facet name="header">
+                				<h:outputText value="Descricao" />
+                			</f:facet>
+                			<center>
+	                			<span onmouseover="tooltip.show('#{adapter.qa.descricao}')" onmouseout="tooltip.hide()">
+		    						<h:outputText id="currentAnamneseDesc" value="#{adapter.qa.descricaoResumida}" />
+		    					</span>
+	    					</center>
+                		</rich:column>
+                	</rich:scrollableDataTable>
+                </h:panelGrid>
+             </h:panelGrid>
+        </center>
+    </rich:panel>
+	<rich:panel id="panelAnamnese"  style="border-top: none;" styleClass="oo-crud-decore-panel">
+	    <h:panelGrid columns="2">
+	    	<h:panelGroup layout="block" rendered="#{not empty manage.anamnese.qa.nome}">
+	    		<h:outputLabel for="currentAnamneseNome" value="#{msg.ooNome} : " style="font-weight : bold"  />
+	    		<h:outputText id="currentAnamneseNome" value="#{manage.anamnese.qa.nome}" />
+	    	</h:panelGroup>
+	    	<h:panelGroup layout="block" rendered="#{not empty manage.anamnese.qa.descricao}">
+	    		<h:outputLabel for="currentAnamneseDesc" value="#{msg.produtoDescricao} : " style="font-weight : bold" />
+	    		<span onmouseover="tooltip.show('#{manage.anamnese.qa.descricao}')" onmouseout="tooltip.hide()">
+	    			<h:outputText id="currentAnamneseDesc" value="#{manage.anamnese.qa.descricaoResumida}" />
+	    		</span>
+	    	</h:panelGroup>
+	    </h:panelGrid>		
+		<rich:dataGrid rendered="#{not empty manage.questionariosAdapter}" value="#{manage.anamnese.questoes}" var="questao" columns="1" >
+			<h:panelGrid>
+			    <h:outputLabel value="#{questao.qa.pergunta}"/>
+				<h:selectOneRadio value="#{manage.anamnese.respostas[questao.qa].resposta}" converter="simpleEntityConverter" style="font-size : 14px">
+					<t:selectItems value="#{list.ALIAS_RESP_ANAMN.dominio}" var="resposta" itemLabel="#{resposta.value}" itemValue="#{resposta}" />
+				</h:selectOneRadio>
+			</h:panelGrid>		
+		</rich:dataGrid>
+	</rich:panel>
+</ui:composition>

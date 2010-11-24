@@ -135,6 +135,14 @@ public abstract class DaoCrud<T extends Entity> extends DaoBase<T> {
 			getConnection().setReadOnly(true);
 			beforeList();
 			tList = listar(fields);
+			if (tList != null && !lazy) {
+				for (T t : tList) {
+					try {
+						afterLoad(t);
+					} catch (Exception ex) {
+					}
+				}
+			}
 			afterList();
 			getConnection().setReadOnly(false);
 		} catch (Exception e) {
