@@ -15,6 +15,7 @@ import br.ueg.openodonto.controle.busca.SearchableQuestaoAnamnese;
 import br.ueg.openodonto.controle.busca.SearchableQuestionarioAnamnese;
 import br.ueg.openodonto.controle.busca.SelectableSearchBase;
 import br.ueg.openodonto.controle.busca.ViewDisplayer;
+import br.ueg.openodonto.controle.servico.ManageListagem;
 import br.ueg.openodonto.controle.servico.ManageQuestaoQuestionario;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.QuestaoAnamnese;
@@ -69,6 +70,7 @@ public class ManterQuestionarioAnamnese extends ManageBeanGeral<QuestionarioAnam
 	public void acaoSalvar() {
 		getManageQuestao().syncListOrder();
 		super.acaoSalvar();
+		ManageListagem.getLista("ALIAS_QUEST").refreshDominio();
 	}
 	
 	@Override

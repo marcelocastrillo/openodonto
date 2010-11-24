@@ -13,6 +13,7 @@ import br.ueg.openodonto.controle.busca.SearchablePaciente;
 import br.ueg.openodonto.controle.busca.SearchablePessoa;
 import br.ueg.openodonto.controle.busca.ViewDisplayer;
 import br.ueg.openodonto.controle.servico.ManageOdontograma;
+import br.ueg.openodonto.controle.servico.ManageQuestionarioAnamnese;
 import br.ueg.openodonto.controle.servico.ManageTelefone;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Paciente;
@@ -28,6 +29,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	
 	private ManageTelefone                manageTelefone;
 	private ManageOdontograma             manageOdontograma;
+	private ManageQuestionarioAnamnese    manageQA;
 	private static Map<String, String>    params;
 	private Search<Paciente>              search;
 	private Search<Pessoa>                personSearch;
@@ -58,11 +60,13 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		this.personSearch.addSearchListener(new CommonSearchPessoaHandler());
 		this.personSearch.addSearchListener(new SearchPessoaSelectedHandler());
 		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this.getView());
-		this.manageOdontograma = new ManageOdontograma(getPaciente().getOdontogramas(), new ViewDisplayer("manageProcOdontograma",this.getView()));
+		this.manageOdontograma = new ManageOdontograma(getPaciente().getOdontogramas(), getView());
+		this.manageQA = new ManageQuestionarioAnamnese(getPaciente().getAnamneses(),getView());
 	}
 
 	protected void carregarExtra() {
 		manageTelefone.setTelefones(getPaciente().getTelefone());
+		manageQA.setQuestionariosAnamnese(getPaciente().getAnamneses());
 		manageOdontograma.setOdontogramas(manageOdontograma.wrapOdontogramas(getPaciente().getOdontogramas()));
 		manageOdontograma.loadLastOdontograma();
 	}
@@ -120,6 +124,10 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	
 	public void setManageTelefone(ManageTelefone manageTelefone) {
 		this.manageTelefone = manageTelefone;
+	}
+	
+	public ManageQuestionarioAnamnese getManageQA() {
+		return manageQA;
 	}
 	
 }

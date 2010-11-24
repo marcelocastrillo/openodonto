@@ -1,5 +1,8 @@
 package br.ueg.openodonto.dominio;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
@@ -8,7 +11,7 @@ import br.ueg.openodonto.persistencia.orm.Relationship;
 import br.ueg.openodonto.persistencia.orm.Table;
 
 @Table(name="paciente_anamnese")
-public class PacienteQuestionarioAnamnese implements Entity{
+public class PacienteQuestionarioAnamnese implements Entity,Comparable<PacienteQuestionarioAnamnese>{
 	
 	private static final long serialVersionUID = -1345966759980880798L;
 	
@@ -21,7 +24,7 @@ public class PacienteQuestionarioAnamnese implements Entity{
 	private Long questionarioAnamneseId;
 	
 	@Relationship
-	private PacienteAnamnese anamnese;
+	private Map<QuestaoAnamnese,PacienteAnamneseRespostas> 	respotas;
 	
 	public PacienteQuestionarioAnamnese(Long pacienteId,Long questionarioAnamneseId) {
 		this();
@@ -30,6 +33,7 @@ public class PacienteQuestionarioAnamnese implements Entity{
 	}
 
 	public PacienteQuestionarioAnamnese() {
+		this.respotas = new HashMap<QuestaoAnamnese, PacienteAnamneseRespostas>();
 	}
 	
 	public Long getPacienteId() {
@@ -46,21 +50,29 @@ public class PacienteQuestionarioAnamnese implements Entity{
 
 	public void setQuestionarioAnamneseId(Long questionarioAnamneseId) {
 		this.questionarioAnamneseId = questionarioAnamneseId;
-	}	
-	
-	public PacienteAnamnese getAnamnese() {
-		return anamnese;
 	}
 
-	public void setAnamnese(PacienteAnamnese anamnese) {
-		this.anamnese = anamnese;
+	public Map<QuestaoAnamnese, PacienteAnamneseRespostas> getRespotas() {
+		return respotas;
+	}
+
+	public void setRespotas(Map<QuestaoAnamnese, PacienteAnamneseRespostas> respotas) {
+		this.respotas = respotas;
+	}
+
+	@Override
+	public int compareTo(PacienteQuestionarioAnamnese o) {
+		if(o == null){
+			return 1;
+		}
+		return this.getQuestionarioAnamneseId().compareTo(o.getQuestionarioAnamneseId());
 	}
 	
 	@Override
 	public String toString() {
-		return "PacienteQuestionarioAnamnese [anamnese=" + anamnese
-				+ ", pacienteId=" + pacienteId + ", questionarioAnamneseId="
-				+ questionarioAnamneseId + "]";
+		return "PacienteQuestionarioAnamnese [pacienteId=" + pacienteId
+				+ ", questionarioAnamneseId=" + questionarioAnamneseId
+				+ ", respotas=" + respotas + "]";
 	}
 
 	@Override
@@ -68,13 +80,13 @@ public class PacienteQuestionarioAnamnese implements Entity{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((anamnese == null) ? 0 : anamnese.hashCode());
-		result = prime * result
 				+ ((pacienteId == null) ? 0 : pacienteId.hashCode());
 		result = prime
 				* result
 				+ ((questionarioAnamneseId == null) ? 0
 						: questionarioAnamneseId.hashCode());
+		result = prime * result
+				+ ((respotas == null) ? 0 : respotas.hashCode());
 		return result;
 	}
 
@@ -87,11 +99,6 @@ public class PacienteQuestionarioAnamnese implements Entity{
 		if (getClass() != obj.getClass())
 			return false;
 		PacienteQuestionarioAnamnese other = (PacienteQuestionarioAnamnese) obj;
-		if (anamnese == null) {
-			if (other.anamnese != null)
-				return false;
-		} else if (!anamnese.equals(other.anamnese))
-			return false;
 		if (pacienteId == null) {
 			if (other.pacienteId != null)
 				return false;
@@ -101,6 +108,11 @@ public class PacienteQuestionarioAnamnese implements Entity{
 			if (other.questionarioAnamneseId != null)
 				return false;
 		} else if (!questionarioAnamneseId.equals(other.questionarioAnamneseId))
+			return false;
+		if (respotas == null) {
+			if (other.respotas != null)
+				return false;
+		} else if (!respotas.equals(other.respotas))
 			return false;
 		return true;
 	}

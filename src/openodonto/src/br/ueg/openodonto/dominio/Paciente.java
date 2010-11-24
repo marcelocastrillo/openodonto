@@ -2,7 +2,9 @@ package br.ueg.openodonto.dominio;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
@@ -45,11 +47,11 @@ public class Paciente extends Pessoa {
 	private List<Odontograma> odontogramas;
 	
 	@Relationship
-	private List<QuestionarioAnamnese> anamneses;
+	private Map<PacienteQuestionarioAnamnese,QuestionarioAnamnese> anamneses;
 
 	public Paciente() {
 		this.odontogramas = new ArrayList<Odontograma>();
-		this.anamneses = new ArrayList<QuestionarioAnamnese>();
+		this.anamneses = new HashMap<PacienteQuestionarioAnamnese, QuestionarioAnamnese>();
 	}
 
 	public Paciente(Long codigo) {
@@ -130,13 +132,15 @@ public class Paciente extends Pessoa {
 		this.odontogramas = odontogramas;
 	}
 
-	public List<QuestionarioAnamnese> getAnamneses() {
+	public Map<PacienteQuestionarioAnamnese, QuestionarioAnamnese> getAnamneses() {
 		return anamneses;
 	}
 
-	public void setAnamneses(List<QuestionarioAnamnese> anamneses) {
+	public void setAnamneses(
+			Map<PacienteQuestionarioAnamnese, QuestionarioAnamnese> anamneses) {
 		this.anamneses = anamneses;
 	}
+
 
 	@Override
 	public String toString() {
@@ -239,8 +243,6 @@ public class Paciente extends Pessoa {
 		} else if (!responsavel.equals(other.responsavel))
 			return false;
 		return true;
-	}
-
-	
+	}	
 	
 }

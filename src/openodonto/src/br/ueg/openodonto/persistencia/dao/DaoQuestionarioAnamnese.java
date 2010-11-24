@@ -1,5 +1,6 @@
 package br.ueg.openodonto.persistencia.dao;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -30,6 +31,11 @@ public class DaoQuestionarioAnamnese extends DaoCrud<QuestionarioAnamnese> {
 	@Override
 	public QuestionarioAnamnese getNewEntity() {
 		return new QuestionarioAnamnese();
+	}
+	
+	public QuestionarioAnamnese findByKey(Long codigo) throws SQLException {
+		OrmFormat format = new OrmFormat(new QuestionarioAnamnese(codigo));
+		return super.findByKey(format);
 	}
 	
 	@Override
@@ -70,6 +76,7 @@ public class DaoQuestionarioAnamnese extends DaoCrud<QuestionarioAnamnese> {
 
 	public void updateRelationshipPaciente(Paciente paciente) throws Exception {
 		Long pacienteId = paciente.getCodigo();
+		/*TODO
 		List<QuestionarioAnamnese> questionarios = paciente.getAnamneses();
 		if(questionarios != null){
 			DaoPacienteQuestionarioAnamnese daoPQA = (DaoPacienteQuestionarioAnamnese) DaoFactory.getInstance().getDao(PacienteQuestionarioAnamnese.class);
@@ -78,13 +85,14 @@ public class DaoQuestionarioAnamnese extends DaoCrud<QuestionarioAnamnese> {
 				if(!containsPQARelationship(questionarios,pqa)){
 					daoPQA.remover(pqa);
 				}
-			}
+			}			
 			for(QuestionarioAnamnese questionario : questionarios){
 				if(!containsQARelationship(pqas,questionario)){
 					daoPQA.inserir(new PacienteQuestionarioAnamnese(pacienteId, questionario.getCodigo()));
 				}
-			}
+			}			
 		}
+		*/
 	}
 
 	private boolean containsQARelationship(	List<PacienteQuestionarioAnamnese> pqas,QuestionarioAnamnese questionario) {

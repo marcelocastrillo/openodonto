@@ -13,6 +13,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
+import br.ueg.openodonto.controle.busca.ViewDisplayer;
 import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.dominio.OdontogramaDente;
 import br.ueg.openodonto.dominio.OdontogramaDenteAspecto;
@@ -31,6 +32,7 @@ import br.ueg.openodonto.validator.EmptyValidator;
 import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
+import br.ueg.openodonto.visao.ApplicationView;
 
 public class ManageOdontograma {
 	
@@ -46,7 +48,7 @@ public class ManageOdontograma {
 	private MessageDisplayer 				displayer;
 	private List<OdontogramaAdapter>    	odontogramas;
 	private List<Odontograma>    	        odontogramasTarget;
-	private OdontogramaAdapter                     odontogramaDelete;
+	private OdontogramaAdapter              odontogramaDelete;
 	private Map<String,DenteMetaAdapter>    viewMetaAdapter;
 	
 	private Procedimento                    procedimentoAdd;
@@ -77,8 +79,8 @@ public class ManageOdontograma {
 	private String                          filterDataOAdd;
 	private String                          filterDescricaoOAdd;
 	
-	public ManageOdontograma(List<Odontograma> odontogramas,MessageDisplayer displayer) {
-		this.displayer = displayer;
+	public ManageOdontograma(List<Odontograma> odontogramas,ApplicationView view) {
+		this.displayer = new ViewDisplayer("manageProcOdontograma" , view);
 		this.viewMetaAdapter = new HashMap<String, DenteMetaAdapter>();		
 		this.odontogramas = wrapOdontogramas(odontogramas);
 		this.odontogramaStatusFilters = new ArrayList<StatusOdontogramaFilter>();

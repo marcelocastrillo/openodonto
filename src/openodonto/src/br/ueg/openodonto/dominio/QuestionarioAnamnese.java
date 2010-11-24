@@ -9,6 +9,7 @@ import br.ueg.openodonto.persistencia.orm.Id;
 import br.ueg.openodonto.persistencia.orm.Relationship;
 import br.ueg.openodonto.persistencia.orm.Table;
 import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
+import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name="questionario_anamnese")
 public class QuestionarioAnamnese  implements Entity{
@@ -52,6 +53,9 @@ public class QuestionarioAnamnese  implements Entity{
 	public String getDescricao() {
 		return descricao;
 	}
+	public String getDescricaoResumida(){
+		return WordFormatter.abstractStr(getDescricao(), 60);
+	}	
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
