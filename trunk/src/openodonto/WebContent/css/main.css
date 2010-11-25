@@ -21,6 +21,11 @@ select{
 	font-weight:bold;
 }
 
+.oo-index-questionario-anamnese{
+	font-weight:bold;
+	font-size: 14px;
+}
+
 .oo-query-time-messages{
 	width : 120px;
 	font-size : 9px	

@@ -69,11 +69,17 @@
 	    	</h:panelGroup>
 	    </h:panelGrid>		
 		<rich:dataGrid rendered="#{not empty manage.questionariosAdapter}" value="#{manage.anamnese.questoes}" var="questao" columns="1" >
-			<h:panelGrid>
-			    <h:outputLabel value="#{questao.qa.pergunta}"/>
-				<h:selectOneRadio value="#{questao.resposta.resposta}" converter="simpleEntityConverter" style="font-size : 14px">
-					<t:selectItems value="#{list.ALIAS_RESP_ANAMN.dominio}" var="resposta" itemLabel="#{resposta.value}" itemValue="#{resposta}" />
-				</h:selectOneRadio>
+			<h:panelGrid width="480">
+				<h:panelGroup layout="block" style="width : 476px">
+					<h:outputLabel value="#{questao.qqa.index + 1}. " styleClass="oo-index-questionario-anamnese" />
+			    	<h:outputLabel value="#{questao.qa.pergunta}" style="font-size : 14px" />
+			    </h:panelGroup>
+			    <rich:spacer height="8px" />
+			    <h:panelGroup style="text-align : center">
+					<h:selectOneRadio value="#{questao.resposta.resposta}" converter="simpleEntityConverter" style="font-size : 14px">
+						<t:selectItems value="#{list.ALIAS_RESP_ANAMN.dominio}" var="resposta" itemLabel="#{resposta.value}" itemValue="#{resposta}" />
+					</h:selectOneRadio>
+				</h:panelGroup>
 			</h:panelGrid>		
 		</rich:dataGrid>
 	</rich:panel>
