@@ -9,7 +9,6 @@ import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.PacienteAnamneseResposta;
 import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestaoAnamnese;
-import br.ueg.openodonto.dominio.QuestaoQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestionarioAnamnese;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
@@ -47,15 +46,10 @@ public class DaoPacienteQuestionarioAnamnese extends DaoCrud<PacienteQuestionari
 	}
 	
 	@Override
-	protected void afterLoad(PacienteQuestionarioAnamnese o) throws Exception {
-	    //TODO LOAD PACIENTE RESPOSTAS
-	    DaoQuestaoQuestionarioAnamnese daoQQA = (DaoQuestaoQuestionarioAnamnese)DaoFactory.getInstance().getDao(QuestaoQuestionarioAnamnese.class);
+	protected void afterLoad(PacienteQuestionarioAnamnese o) throws Exception {	    
 	    DaoPacienteAnamneseRespostas daoPAR = (DaoPacienteAnamneseRespostas) DaoFactory.getInstance().getDao(PacienteAnamneseResposta.class);
-	    Map<QuestaoAnamnese,PacienteAnamneseResposta> QuestaoRespostasMap = new HashMap<QuestaoAnamnese, PacienteAnamneseResposta>();
-	    List<QuestaoAnamnese> questoes = null;
-	    for(QuestaoAnamnese questao : questoes){
-	        daoPAR.getRespostasRelationshipPQA(o.getPacienteId(),o.getQuestionarioAnamneseId(),questao.getCodigo());
-	    }
+	    Map<QuestaoAnamnese,PacienteAnamneseResposta> questaoRespostasMap = daoPAR.getRespostasRelationshipPQA(o.getPacienteId(),o.getQuestionarioAnamneseId());
+	    o.setRespotas(questaoRespostasMap);
 	    
 	}
 	
