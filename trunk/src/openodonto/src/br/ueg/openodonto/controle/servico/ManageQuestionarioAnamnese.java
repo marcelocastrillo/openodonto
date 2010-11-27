@@ -50,6 +50,9 @@ public class ManageQuestionarioAnamnese {
 	}
 	
 	public void acaoAddAnamnese(Long codigo){
+		if(alreadyAddAnamnese(codigo)){
+			return;
+		}
 		PacienteQuestionarioAnamnese pqa = new PacienteQuestionarioAnamnese(null,codigo);
 		DaoQuestionarioAnamnese daoQA = (DaoQuestionarioAnamnese) DaoFactory.getInstance().getDao(QuestionarioAnamnese.class);
 		QuestionarioAnamnese novo = new QuestionarioAnamnese(codigo);
@@ -60,6 +63,21 @@ public class ManageQuestionarioAnamnese {
         }
 		this.questionariosAnamnese.put(pqa , novo);
 		this.anamnese = addAdapter(pqa,novo);
+	}
+	
+	private boolean alreadyAddAnamnese(Long codigo){
+		boolean already = false;
+		for(QuestionarioAnamneseAdapter qqa : questionariosAdapter){
+			if(qqa.getQa().getCodigo().equals(codigo)){
+				already = true;
+				break;
+			}
+		}
+		if(already){
+			String saida = this.view.getProperties().get("formularioSaida") + ":" + "comboQuestionariosAnamnese";
+			getView().addResourceDynamicMenssage("* O questionário selecionado ja foi adicionado a lista. ",	saida);
+		}
+		return already;
 	}
 	
 	public ApplicationView getView() {

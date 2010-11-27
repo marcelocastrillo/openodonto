@@ -35,8 +35,8 @@ public class DaoQuestaoAnamnese extends DaoCrud<QuestaoAnamnese> { //DaoProduto
 
 	public void updateRelationshipQuestionarioAnamnese(QuestionarioAnamnese questionarioAnamnese) throws Exception {
 		Long questionarioAnamneseId = questionarioAnamnese.getCodigo();
-		List<QuestaoAnamnese> questoes = new ArrayList<QuestaoAnamnese>(questionarioAnamnese.getQuestoes().values());
-		if(questoes != null){
+		if(questionarioAnamnese.getQuestoes() != null){
+			List<QuestaoAnamnese> questoes = new ArrayList<QuestaoAnamnese>(questionarioAnamnese.getQuestoes().values());
 			DaoQuestaoQuestionarioAnamnese daoQQA = (DaoQuestaoQuestionarioAnamnese) DaoFactory.getInstance().getDao(QuestaoQuestionarioAnamnese.class);
 			List<QuestaoQuestionarioAnamnese> qqas =   daoQQA.getQQARelationshipQA(questionarioAnamneseId);
 			for(QuestaoQuestionarioAnamnese qqa : qqas){

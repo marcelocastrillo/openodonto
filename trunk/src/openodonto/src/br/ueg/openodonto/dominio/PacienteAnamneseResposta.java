@@ -23,6 +23,9 @@ public class PacienteAnamneseResposta implements Entity{
 	@Enumerator(type=EnumValue.ORDINAL)
 	private TiposRespostaAnamnese resposta;
 	
+	@Column(name="observacao")
+	private String observacao;
+	
 	@Column(name="fk_questao_anamnese",joinFields={@ForwardKey(tableField="id",foreginField="fk_questao_anamnese")})
 	private Long questaoAnamneseId;
 	
@@ -86,11 +89,21 @@ public class PacienteAnamneseResposta implements Entity{
 	public void setPacienteId(Long pacienteId) {
 		this.pacienteId = pacienteId;
 	}
+	
+	
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
 
 	@Override
 	public String toString() {
-		return "PacienteAnamneseRespostas [codigo=" + codigo + ", pacienteId="
-				+ pacienteId + ", questaoAnamneseId=" + questaoAnamneseId
+		return "PacienteAnamneseResposta [codigo=" + codigo + ", observacao="
+				+ observacao + ", pacienteId=" + pacienteId
+				+ ", questaoAnamneseId=" + questaoAnamneseId
 				+ ", questionarioAnamneseId=" + questionarioAnamneseId
 				+ ", resposta=" + resposta + "]";
 	}
@@ -100,6 +113,8 @@ public class PacienteAnamneseResposta implements Entity{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result
+				+ ((observacao == null) ? 0 : observacao.hashCode());
 		result = prime * result
 				+ ((pacienteId == null) ? 0 : pacienteId.hashCode());
 		result = prime
@@ -128,6 +143,11 @@ public class PacienteAnamneseResposta implements Entity{
 			if (other.codigo != null)
 				return false;
 		} else if (!codigo.equals(other.codigo))
+			return false;
+		if (observacao == null) {
+			if (other.observacao != null)
+				return false;
+		} else if (!observacao.equals(other.observacao))
 			return false;
 		if (pacienteId == null) {
 			if (other.pacienteId != null)

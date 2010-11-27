@@ -96,4 +96,10 @@ public class DaoPacienteQuestionarioAnamnese extends DaoCrud<PacienteQuestionari
 		return getSqlExecutor().executarQuery(query);
 	}
 
+	public List<PacienteQuestionarioAnamnese> getPQARelationshipPAR(Long pacienteId, Long questionarioAnamneseId) throws SQLException {
+		OrmFormat orm = new OrmFormat(new PacienteQuestionarioAnamnese(pacienteId, questionarioAnamneseId));
+		IQuery query = CrudQuery.getSelectQuery(PacienteQuestionarioAnamnese.class, orm.formatNotNull(), "*");
+		return getSqlExecutor().executarQuery(query);
+	}
+
 }
