@@ -1,6 +1,7 @@
 package br.ueg.openodonto.persistencia.dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,6 @@ import java.util.Map;
 import br.ueg.openodonto.dominio.PacienteAnamneseResposta;
 import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestaoAnamnese;
-import br.ueg.openodonto.dominio.QuestaoQuestionarioAnamnese;
 import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 import br.ueg.openodonto.persistencia.dao.sql.IQuery;
 import br.ueg.openodonto.persistencia.orm.Dao;
@@ -29,8 +29,17 @@ public class DaoPacienteAnamneseRespostas extends DaoCrud<PacienteAnamneseRespos
 		return new PacienteAnamneseResposta();
 	}
 	
-	public void updateRelationshipPQA(PacienteQuestionarioAnamnese pqa){
-	    //TODO CRUD Respostas
+	public void updateRelationshipPQA(PacienteQuestionarioAnamnese pqa) throws SQLException{
+		Long pacienteId = pqa.getPacienteId();
+		Long questionarioAnamneseId = pqa.getQuestionarioAnamneseId();
+		if(pqa.getRespotas() != null){
+			List<PacienteAnamneseResposta> respostas = new ArrayList<PacienteAnamneseResposta>(pqa.getRespotas().values());
+			DaoPacienteQuestionarioAnamnese daoPQA = (DaoPacienteQuestionarioAnamnese) DaoFactory.getInstance().getDao(PacienteQuestionarioAnamnese.class);			
+			List<PacienteQuestionarioAnamnese> pqas = daoPQA.getPQARelationshipPAR(pacienteId, questionarioAnamneseId); 
+			//TODO Acabar método
+		}
+
+
 	}
 
 	public Map<QuestaoAnamnese,PacienteAnamneseResposta> getRespostasRelationshipPQA(Long pacienteId,Long questionarioAnamneseId) throws SQLException{

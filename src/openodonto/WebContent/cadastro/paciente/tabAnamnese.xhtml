@@ -12,19 +12,15 @@
     	<oo:pluginToolTip/>
         <center>
             <h:panelGrid id="gridAnamnese">
-                <h:panelGrid columns="3">
-                    <h:selectOneMenu value="#{manage.add}" style=" width : 240px;">
-                    	<t:selectItems value="#{list.ALIAS_QUEST.dominio}" var="questionario" itemLabel="#{questionario.nome}" itemValue="#{questionario.codigo}" />
-                    </h:selectOneMenu>
-                	<rich:spacer width="16px" />
-					<h:panelGrid columns="1">
-						<rich:spacer height="8"/>
-						<h:panelGrid columns="3">
-							<a4j:commandButton  image="/images/add.jpg" action="#{manage.acaoAddAnamnese(manage.add)}" reRender="listaAnamneses,panelAnamnese" value="#{msg.manageContactAcaoInserir}" />
-							<rich:spacer width="16"/>
-							<rich:message id="messageAnamnese" for="messageAnamnese" styleClass="oo-validation-messages"/>
-						</h:panelGrid>
-					</h:panelGrid>
+                <h:panelGrid columns="1">
+               		<oo:label for="comboQuestionariosAnamnese" value="#{msg.manageAnamneseMenuQuestionario} : " />
+               		<h:panelGrid columns="3">
+	                    <h:selectOneMenu id="comboQuestionariosAnamnese" value="#{manage.add}" style=" width : 460px;">
+	                    	<t:selectItems value="#{list.ALIAS_QUEST.dominio}" var="questionario" itemLabel="#{questionario.nome}" itemValue="#{questionario.codigo}" />
+	                    </h:selectOneMenu>
+	                    <rich:spacer width="8px" />
+   						<a4j:commandButton  image="/images/add.jpg" action="#{manage.acaoAddAnamnese(manage.add)}" reRender="listaAnamneses,panelAnamnese" value="#{msg.manageContactAcaoInserir}" />
+  					</h:panelGrid>
                 </h:panelGrid>                
                 <rich:separator height="1px" style="padding-top : 8px;padding-bottom : 8px" />
                 <h:panelGrid>
@@ -57,17 +53,18 @@
     </rich:panel>
 	<rich:panel id="panelAnamnese"  style="border-top: none;" styleClass="oo-crud-decore-panel">
 	    <h:panelGrid columns="2">
-	    	<h:panelGroup layout="block" rendered="#{not empty manage.anamnese.qa.nome}">
+	    	<h:panelGroup layout="block" rendered="#{not empty manage.anamnese.qa.nome}" style="font-size : 16px">
 	    		<h:outputLabel for="currentAnamneseNome" value="#{msg.ooNome} : " style="font-weight : bold"  />
 	    		<h:outputText id="currentAnamneseNome" value="#{manage.anamnese.qa.nome}" />
 	    	</h:panelGroup>
-	    	<h:panelGroup layout="block" rendered="#{not empty manage.anamnese.qa.descricao}">
+	    	<h:panelGroup layout="block" rendered="#{not empty manage.anamnese.qa.descricao}" style="font-size : 16px">
 	    		<h:outputLabel for="currentAnamneseDesc" value="#{msg.produtoDescricao} : " style="font-weight : bold" />
 	    		<span onmouseover="tooltip.show('#{manage.anamnese.qa.descricao}')" onmouseout="tooltip.hide()">
 	    			<h:outputText id="currentAnamneseDesc" value="#{manage.anamnese.qa.descricaoResumida}" />
 	    		</span>
 	    	</h:panelGroup>
-	    </h:panelGrid>		
+	    </h:panelGrid>
+	    <rich:spacer height="16px" />		
 		<rich:dataGrid rendered="#{not empty manage.questionariosAdapter}" value="#{manage.anamnese.questoes}" var="questao" columns="1" >
 			<h:panelGrid width="480">
 				<h:panelGroup layout="block" style="width : 476px">
@@ -75,11 +72,15 @@
 			    	<h:outputLabel value="#{questao.qa.pergunta}" style="font-size : 14px" />
 			    </h:panelGroup>
 			    <rich:spacer height="8px" />
-			    <h:panelGroup style="text-align : center">
-					<h:selectOneRadio value="#{questao.resposta.resposta}" converter="simpleEntityConverter" style="font-size : 14px">
-						<t:selectItems value="#{list.ALIAS_RESP_ANAMN.dominio}" var="resposta" itemLabel="#{resposta.value}" itemValue="#{resposta}" />
-					</h:selectOneRadio>
-				</h:panelGroup>
+			    <h:panelGrid columns="1">
+			    		<h:panelGrid columns="2">
+			    			<rich:spacer width="100px" />
+							<h:selectOneRadio value="#{questao.resposta.resposta}" converter="simpleEntityConverter" style="font-size : 14px;width : 300px">
+								<t:selectItems value="#{list.ALIAS_RESP_ANAMN.dominio}" var="resposta" itemLabel="#{resposta.value}" itemValue="#{resposta}" />
+							</h:selectOneRadio>
+						</h:panelGrid>
+					<h:inputTextarea value="#{questao.resposta.observacao}" style="width : 476px" />
+				</h:panelGrid>
 			</h:panelGrid>		
 		</rich:dataGrid>
 	</rich:panel>
