@@ -2,8 +2,6 @@ package br.ueg.openodonto.persistencia.dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +32,9 @@ public class DaoProcedimento extends DaoCrud<Procedimento>{
 	}
 
 	public void updateRelationshipOdontogramaDente(OdontogramaDente odontogramaDente) throws Exception{
-		Long odontogramaDenteId = odontogramaDente.getCodigo();
-		List<Procedimento> procedimentos = new ArrayList<Procedimento>(odontogramaDente.getProcedimentosMap().values());
-		if(procedimentos != null){
+		Long odontogramaDenteId = odontogramaDente.getCodigo();		
+		if(odontogramaDente.getProcedimentosMap() != null){
+			List<Procedimento> procedimentos = new ArrayList<Procedimento>(odontogramaDente.getProcedimentosMap().values());
 			DaoOdontogramaDenteProcedimento daoODP = (DaoOdontogramaDenteProcedimento)DaoFactory.getInstance().getDao(OdontogramaDenteProcedimento.class);
 			List<OdontogramaDenteProcedimento> odps =  daoODP.getODPRelationshipOD(odontogramaDenteId);
 			for(OdontogramaDenteProcedimento odp : odps){
@@ -61,25 +59,21 @@ public class DaoProcedimento extends DaoCrud<Procedimento>{
 	}
 	
 	private boolean containsPRelationship(List<OdontogramaDenteProcedimento> odps,Procedimento procedimento){
-		OdontogramaDenteProcedimento key = new OdontogramaDenteProcedimento(procedimento.getCodigo(),null);
-		int index = Collections.binarySearch(odps, key, new Comparator<OdontogramaDenteProcedimento>() {
-			@Override
-			public int compare(OdontogramaDenteProcedimento o1, OdontogramaDenteProcedimento o2) {
-				return o1.getProcedimentoId().compareTo(o2.getProcedimentoId());
+		for(Iterator<OdontogramaDenteProcedimento> iterator = odps.iterator();iterator.hasNext();){
+			if(iterator.next().getProcedimentoId().equals(procedimento.getCodigo())){
+				return true;
 			}
-		});
-		return index >= 0;
+		}
+		return false;
 	}
 	
 	private boolean containsODPRelationship(List<Procedimento> procedimentos,OdontogramaDenteProcedimento odp){
-		Procedimento key = new Procedimento(odp.getProcedimentoId());
-		int index = Collections.binarySearch(procedimentos, key, new Comparator<Procedimento>() {
-			@Override
-			public int compare(Procedimento o1, Procedimento o2) {
-				return o1.getCodigo().compareTo(o2.getCodigo());
-			}		
-		});
-		return index >= 0;
+		for(Iterator<Procedimento> iterator = procedimentos.iterator();iterator.hasNext();){
+			if(iterator.next().getCodigo().equals(odp.getProcedimentoId())){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public List<Procedimento> getProcedimentosRelationshipOdontogramaDente(Long odontogramaDenteId)throws SQLException {

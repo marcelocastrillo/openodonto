@@ -40,7 +40,7 @@ public class DaoPacienteQuestionarioAnamnese extends DaoCrud<PacienteQuestionari
 	    updateRelationship(o);
 	}
 
-	private void updateRelationship(PacienteQuestionarioAnamnese o){
+	private void updateRelationship(PacienteQuestionarioAnamnese o) throws Exception{
 	    DaoPacienteAnamneseRespostas daoPAR = (DaoPacienteAnamneseRespostas) DaoFactory.getInstance().getDao(PacienteAnamneseResposta.class);
 	    daoPAR.updateRelationshipPQA(o);
 	}
@@ -84,10 +84,14 @@ public class DaoPacienteQuestionarioAnamnese extends DaoCrud<PacienteQuestionari
 		return getRelacionamento(QuestionarioAnamnese.class,"questionarioAnamneseId",whereParams);
 	}
 	
-	public List<PacienteQuestionarioAnamnese> getPQARelationshipPaciente(Long pacienteId) throws SQLException {
+	public List<PacienteQuestionarioAnamnese> getPQARelationshipPaciente(Long pacienteId) throws Exception {
 		OrmFormat orm = new OrmFormat(new PacienteQuestionarioAnamnese(pacienteId, null));
 		IQuery query = CrudQuery.getSelectQuery(PacienteQuestionarioAnamnese.class, orm.formatNotNull(), "*");
-		return getSqlExecutor().executarQuery(query);
+		List<PacienteQuestionarioAnamnese> loads = getSqlExecutor().executarQuery(query);
+		for(PacienteQuestionarioAnamnese pqa : loads){
+			afterLoad(pqa);
+		}
+		return loads;
 	}
 	
 	public List<PacienteQuestionarioAnamnese> getPQARelationshipQA(Long questionarioAnamneseId) throws SQLException {

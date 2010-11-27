@@ -205,6 +205,8 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 	private Object getTypeSyncValue(ResultSet rs, int i) throws SQLException {
 		ResultSetMetaData meta = rs.getMetaData();
 		switch (meta.getColumnType(i)) {
+		case Types.BIT:
+			return rs.getByte(i);
 		case Types.BOOLEAN:
 			return rs.getBoolean(i);
 		case Types.CHAR:

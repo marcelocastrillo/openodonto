@@ -49,6 +49,15 @@ public class ManageQuestionarioAnamnese {
 		return adapter;
 	}
 	
+	public void acaoRemoveAnamnese(QuestionarioAnamneseAdapter adapter){
+		if(questionariosAdapter.remove(adapter)){
+			questionariosAnamnese.remove(adapter.getPqa());
+			if(anamnese == adapter){
+				loadFirstAnamnese();
+			}
+		}
+	}
+	
 	public void acaoAddAnamnese(Long codigo){
 		if(alreadyAddAnamnese(codigo)){
 			return;

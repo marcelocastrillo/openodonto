@@ -49,6 +49,7 @@ public class ManageQuestaoQuestionario {
 		QuestaoComparator comparator = new QuestaoComparator();
 		List<QuestaoAnamnese> questoes = new ArrayList<QuestaoAnamnese>(this.questoes.values());
 		for(QuestaoAnamnese questao : associated){
+			Collections.sort(questoes,comparator);
 			if(Collections.binarySearch(questoes, questao,comparator) < 0){
 				QuestaoQuestionarioAnamnese qqa = new QuestaoQuestionarioAnamnese(questao.getCodigo(), null);
 				qqa.setIndex(this.questoes.size());

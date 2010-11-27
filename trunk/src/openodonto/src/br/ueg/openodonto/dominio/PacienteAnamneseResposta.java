@@ -113,20 +113,6 @@ public class PacienteAnamneseResposta implements Entity{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result
-				+ ((observacao == null) ? 0 : observacao.hashCode());
-		result = prime * result
-				+ ((pacienteId == null) ? 0 : pacienteId.hashCode());
-		result = prime
-				* result
-				+ ((questaoAnamneseId == null) ? 0 : questaoAnamneseId
-						.hashCode());
-		result = prime
-				* result
-				+ ((questionarioAnamneseId == null) ? 0
-						: questionarioAnamneseId.hashCode());
-		result = prime * result
-				+ ((resposta == null) ? 0 : resposta.hashCode());
 		return result;
 	}
 
@@ -143,31 +129,6 @@ public class PacienteAnamneseResposta implements Entity{
 			if (other.codigo != null)
 				return false;
 		} else if (!codigo.equals(other.codigo))
-			return false;
-		if (observacao == null) {
-			if (other.observacao != null)
-				return false;
-		} else if (!observacao.equals(other.observacao))
-			return false;
-		if (pacienteId == null) {
-			if (other.pacienteId != null)
-				return false;
-		} else if (!pacienteId.equals(other.pacienteId))
-			return false;
-		if (questaoAnamneseId == null) {
-			if (other.questaoAnamneseId != null)
-				return false;
-		} else if (!questaoAnamneseId.equals(other.questaoAnamneseId))
-			return false;
-		if (questionarioAnamneseId == null) {
-			if (other.questionarioAnamneseId != null)
-				return false;
-		} else if (!questionarioAnamneseId.equals(other.questionarioAnamneseId))
-			return false;
-		if (resposta == null) {
-			if (other.resposta != null)
-				return false;
-		} else if (!resposta.equals(other.resposta))
 			return false;
 		return true;
 	}
