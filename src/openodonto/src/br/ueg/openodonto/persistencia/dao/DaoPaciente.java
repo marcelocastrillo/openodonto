@@ -74,6 +74,7 @@ public class DaoPaciente extends DaoAbstractPessoa<Paciente>{
 		for(PacienteQuestionarioAnamnese pqa : pqas){
 			QuestionarioAnamnese qa = daoQA.findByKey(pqa.getQuestionarioAnamneseId());
 			daoQA.afterLoad(qa);
+			daoPQA.afterLoad(pqa);
 			o.getAnamneses().put(pqa, qa);
 		}
 	}

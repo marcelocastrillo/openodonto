@@ -77,6 +77,7 @@ public class ManageProduto {
 		List<Produto> conflic = new LinkedList<Produto>();
 		for(Produto produto : produtos){
 			if(categoriaColaborador.equals(produto.getCategoria())){
+				Collections.sort(this.produtos,comparator);
 				if(Collections.binarySearch(this.produtos, produto, comparator) < 0){
 					this.produtos.add(produto);
 				}

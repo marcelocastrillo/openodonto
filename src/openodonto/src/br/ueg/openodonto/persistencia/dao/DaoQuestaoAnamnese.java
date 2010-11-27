@@ -2,8 +2,6 @@ package br.ueg.openodonto.persistencia.dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -61,24 +59,20 @@ public class DaoQuestaoAnamnese extends DaoCrud<QuestaoAnamnese> { //DaoProduto
 	}
 
 	private boolean containsQARelationship(	List<QuestaoQuestionarioAnamnese> qqas, QuestaoAnamnese questao) {
-		QuestaoQuestionarioAnamnese key = new QuestaoQuestionarioAnamnese(questao.getCodigo(), null);
-		int index = Collections.binarySearch(qqas, key, new Comparator<QuestaoQuestionarioAnamnese>() {
-			@Override
-			public int compare(QuestaoQuestionarioAnamnese o1,QuestaoQuestionarioAnamnese o2) {
-				return o1.getQuestaoAnamneseId().compareTo(o2.getQuestaoAnamneseId());
+		for(Iterator<QuestaoQuestionarioAnamnese> iterator = qqas.iterator();iterator.hasNext();){
+			if(iterator.next().getQuestaoAnamneseId().equals(questao.getCodigo())){
+				return true;
 			}
-		});
-		return index >= 0;
+		}
+		return false;
 	}
 
 	private boolean containsQQARelationship(List<QuestaoAnamnese> questoes,	QuestaoQuestionarioAnamnese qqa) {
-		QuestaoAnamnese key = new QuestaoAnamnese(qqa.getQuestaoAnamneseId());
-		int index = Collections.binarySearch(questoes, key, new Comparator<QuestaoAnamnese>() {
-			@Override
-			public int compare(QuestaoAnamnese o1, QuestaoAnamnese o2) {
-				return o1.getCodigo().compareTo(o2.getCodigo());
+		for(Iterator<QuestaoAnamnese> iterator = questoes.iterator();iterator.hasNext();){
+			if(iterator.next().getCodigo().equals(qqa.getQuestaoAnamneseId())){
+				return true;
 			}
-		});
-		return index >= 0;
+		}
+		return false;
 	}
 }

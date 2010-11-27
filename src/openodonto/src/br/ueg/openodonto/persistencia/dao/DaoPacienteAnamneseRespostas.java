@@ -3,6 +3,7 @@ package br.ueg.openodonto.persistencia.dao;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,25 +30,43 @@ public class DaoPacienteAnamneseRespostas extends DaoCrud<PacienteAnamneseRespos
 		return new PacienteAnamneseResposta();
 	}
 	
-	public void updateRelationshipPQA(PacienteQuestionarioAnamnese pqa) throws SQLException{
+	public void updateRelationshipPQA(PacienteQuestionarioAnamnese pqa) throws Exception{
 		Long pacienteId = pqa.getPacienteId();
 		Long questionarioAnamneseId = pqa.getQuestionarioAnamneseId();
 		if(pqa.getRespotas() != null){
-			List<PacienteAnamneseResposta> respostas = new ArrayList<PacienteAnamneseResposta>(pqa.getRespotas().values());
-			DaoPacienteQuestionarioAnamnese daoPQA = (DaoPacienteQuestionarioAnamnese) DaoFactory.getInstance().getDao(PacienteQuestionarioAnamnese.class);			
-			List<PacienteQuestionarioAnamnese> pqas = daoPQA.getPQARelationshipPAR(pacienteId, questionarioAnamneseId); 
-			//TODO Acabar método
+			List<PacienteAnamneseResposta> respostas = new ArrayList<PacienteAnamneseResposta>(pqa.getRespotas().values());	
+			List<PacienteAnamneseResposta> todos = getRelationshipPQA(pacienteId, questionarioAnamneseId); 
+			for(PacienteAnamneseResposta resposta : todos){
+				if(!respostas.contains(resposta)){
+					remover(resposta);
+				}
+			}
+			for(Iterator<PacienteAnamneseResposta> iterator = respostas.iterator();iterator.hasNext();){				
+				PacienteAnamneseResposta respota = iterator.next();
+				if(!todos.contains(respota)){
+					respota.setPacienteId(pacienteId);
+					respota.setQuestionarioAnamneseId(questionarioAnamneseId);
+					inserir(respota);
+				}else{
+					alterar(respota);
+				}
+			}
 		}
 
 
 	}
 
-	public Map<QuestaoAnamnese,PacienteAnamneseResposta> getRespostasRelationshipPQA(Long pacienteId,Long questionarioAnamneseId) throws SQLException{
-		DaoQuestaoAnamnese daoQA = (DaoQuestaoAnamnese) DaoFactory.getInstance().getDao(QuestaoAnamnese.class);
+	public List<PacienteAnamneseResposta> getRelationshipPQA(Long pacienteId,Long questionarioAnamneseId) throws SQLException{		
 		OrmFormat orm = new OrmFormat(new PacienteAnamneseResposta(null, questionarioAnamneseId, pacienteId));
 		IQuery query = CrudQuery.getSelectQuery(PacienteAnamneseResposta.class, orm.formatNotNull(), "*");
 		List<PacienteAnamneseResposta> respostas = getSqlExecutor().executarQuery(query);
+		return respostas;
+	}
+	
+	public Map<QuestaoAnamnese,PacienteAnamneseResposta> getRespostasRelationshipPQA(Long pacienteId,Long questionarioAnamneseId) throws SQLException{
+		List<PacienteAnamneseResposta> respostas = getRelationshipPQA(pacienteId,questionarioAnamneseId);
 		Map<QuestaoAnamnese,PacienteAnamneseResposta> questaoRespostasMap = new HashMap<QuestaoAnamnese, PacienteAnamneseResposta>();
+		DaoQuestaoAnamnese daoQA = (DaoQuestaoAnamnese) DaoFactory.getInstance().getDao(QuestaoAnamnese.class);
 		for(PacienteAnamneseResposta resposta : respostas){
 			QuestaoAnamnese questao = daoQA.findByKey(resposta.getQuestaoAnamneseId());
 			if(questao != null){

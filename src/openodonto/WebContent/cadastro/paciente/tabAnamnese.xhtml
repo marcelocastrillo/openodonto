@@ -15,7 +15,7 @@
                 <h:panelGrid columns="1">
                		<oo:label for="comboQuestionariosAnamnese" value="#{msg.manageAnamneseMenuQuestionario} : " />
                		<h:panelGrid columns="3">
-	                    <h:selectOneMenu id="comboQuestionariosAnamnese" value="#{manage.add}" style=" width : 460px;">
+	                    <h:selectOneMenu id="comboQuestionariosAnamnese" value="#{manage.add}" style=" width : 480px;">
 	                    	<t:selectItems value="#{list.ALIAS_QUEST.dominio}" var="questionario" itemLabel="#{questionario.nome}" itemValue="#{questionario.codigo}" />
 	                    </h:selectOneMenu>
 	                    <rich:spacer width="8px" />
@@ -24,8 +24,8 @@
                 </h:panelGrid>                
                 <rich:separator height="1px" style="padding-top : 8px;padding-bottom : 8px" />
                 <h:panelGrid>
-                	<rich:scrollableDataTable width="500px" id="listaAnamneses" rows="5" height="150px" value="#{manage.questionariosAdapter}" var="adapter">
-                		<a4j:support event="onRowClick" reRender="panelAnamnese" rendered="#{not empty adapter}">
+                	<rich:scrollableDataTable width="518px" id="listaAnamneses" rows="5" height="150px" value="#{manage.questionariosAdapter}" var="adapter">
+                		<a4j:support event="onRowClick" eventsQueue="rowclick" reRender="panelAnamnese" rendered="#{not empty adapter}">
                 			<f:setPropertyActionListener target="#{manage.anamnese}" value="#{adapter}" />
                 		</a4j:support>
                 		<rich:column width="175px">
@@ -46,6 +46,9 @@
 		    					</span>
 	    					</center>
                 		</rich:column>
+		    			<rich:column width="16px" >
+							<a4j:commandButton image="#{msg.imgBotaoFechar}" eventsQueue="rowclick" action="#{manage.acaoRemoveAnamnese(adapter)}" reRender="listaAnamneses,panelAnamnese"/>
+		    			</rich:column>
                 	</rich:scrollableDataTable>
                 </h:panelGrid>
              </h:panelGrid>
@@ -65,7 +68,7 @@
 	    	</h:panelGroup>
 	    </h:panelGrid>
 	    <rich:spacer height="16px" />		
-		<rich:dataGrid rendered="#{not empty manage.questionariosAdapter}" value="#{manage.anamnese.questoes}" var="questao" columns="1" >
+		<rich:dataGrid id="gridQuestionario" rendered="#{not empty manage.questionariosAdapter}" value="#{manage.anamnese.questoes}" var="questao" columns="1" >
 			<h:panelGrid width="480">
 				<h:panelGroup layout="block" style="width : 476px">
 					<h:outputLabel value="#{questao.qqa.index + 1}. " styleClass="oo-index-questionario-anamnese" />
@@ -75,7 +78,7 @@
 			    <h:panelGrid columns="1">
 			    		<h:panelGrid columns="2">
 			    			<rich:spacer width="100px" />
-							<h:selectOneRadio value="#{questao.resposta.resposta}" converter="simpleEntityConverter" style="font-size : 14px;width : 300px">
+							<h:selectOneRadio value="#{questao.resposta.resposta}" converter="simpleEntityConverter" styleClass="#{questao.qqa.obrigatoria ? 'oo-negrito' : ''}" style="font-size : 14px;width : 300px">
 								<t:selectItems value="#{list.ALIAS_RESP_ANAMN.dominio}" var="resposta" itemLabel="#{resposta.value}" itemValue="#{resposta}" />
 							</h:selectOneRadio>
 						</h:panelGrid>

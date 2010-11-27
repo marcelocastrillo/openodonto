@@ -23,7 +23,7 @@ public class QuestionarioAnamneseAdapter {
 		this.questoes = new ArrayList<QuestionarioQuestaoAdapter>();
 		for(Entry<QuestaoQuestionarioAnamnese, QuestaoAnamnese> entry : questoes.entrySet()){			
 			PacienteAnamneseResposta resposta;
-			if((resposta = pqa.getRespotas().get(entry.getKey())) == null){
+			if((resposta = pqa.getRespotas().get(entry.getValue())) == null){
 				resposta = new PacienteAnamneseResposta(
 						entry.getKey().getQuestaoAnamneseId(),
 						entry.getKey().getQuestionarioAnamneseId(),

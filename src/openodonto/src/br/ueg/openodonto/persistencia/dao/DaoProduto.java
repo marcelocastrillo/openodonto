@@ -1,8 +1,7 @@
 package br.ueg.openodonto.persistencia.dao;
 
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import br.ueg.openodonto.dominio.Colaborador;
@@ -44,25 +43,21 @@ public class DaoProduto extends DaoCrud<Produto>{
 	}
 	
 	private boolean containsPRelationship(List<ColaboradorProduto> cps,Produto produto){
-		ColaboradorProduto key = new ColaboradorProduto(null,produto.getCodigo());
-		int index = Collections.binarySearch(cps, key, new Comparator<ColaboradorProduto>() {
-			@Override
-			public int compare(ColaboradorProduto o1, ColaboradorProduto o2) {
-				return o1.getProdutoIdProduto().compareTo(o2.getProdutoIdProduto());
+		for(Iterator<ColaboradorProduto> iterator = cps.iterator();iterator.hasNext();){
+			if(iterator.next().getProdutoIdProduto().equals(produto.getCodigo())){
+				return true;
 			}
-		});
-		return index >= 0;
+		}
+		return false;
 	}	
 	
 	private boolean containsCPRelationship(List<Produto> produtos,ColaboradorProduto cp){
-		Produto key = new Produto(cp.getProdutoIdProduto());
-		int index = Collections.binarySearch(produtos, key, new Comparator<Produto>() {
-			@Override
-			public int compare(Produto o1, Produto o2) {
-				return o1.getCodigo().compareTo(o2.getCodigo());
-			}
-		});
-		return index >= 0;
+		for(Iterator<Produto> iterator = produtos.iterator();iterator.hasNext();){
+			if(iterator.next().getCodigo().equals(cp.getProdutoIdProduto())){
+				return true;
+			}			
+		}
+		return false;
 	}
 	
 	public List<Produto> getProdutosRelationshipColaborador(Long idColaborador)throws SQLException {
