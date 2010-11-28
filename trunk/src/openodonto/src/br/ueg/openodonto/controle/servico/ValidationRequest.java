@@ -10,14 +10,18 @@ public class ValidationRequest {
 
 	private String            path;
 	private Validator         validator;
-	private String            out;
+	private String[]	      out;
 	private List<Class<?>>    invalidPermiteds;
 	
-	public ValidationRequest(String path, Validator validator, String out) {
+	public ValidationRequest(String path, Validator validator, String[] out) {
 		this.path = path;
 		this.validator = validator;
 		this.out = out;
 		this.invalidPermiteds = new ArrayList<Class<?>>();
+	}
+	
+	public ValidationRequest(String path, Validator validator, String out) {
+		this(path,validator,new String[]{out});
 	}
 	
 	public ValidationRequest(String path, Validator validator, String out,Class<?>... invalidPermiteds) {
@@ -25,7 +29,9 @@ public class ValidationRequest {
 		this.invalidPermiteds = Arrays.asList(invalidPermiteds);
 	}
 	
-	public ValidationRequest() {
+	public ValidationRequest(String path, Validator validator, String[] out,Class<?>... invalidPermiteds) {
+		this(path,validator,out);
+		this.invalidPermiteds = Arrays.asList(invalidPermiteds);
 	}
 	
 	public String getPath() {
@@ -40,16 +46,17 @@ public class ValidationRequest {
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
-	public String getOut() {
-		return out;
-	}
-	public void setOut(String out) {
-		this.out = out;
-	}
 	public List<Class<?>> getInvalidPermiteds() {
 		return invalidPermiteds;
 	}
 	public void setInvalidPermiteds(List<Class<?>> invalidPermiteds) {
 		this.invalidPermiteds = invalidPermiteds;
+	}
+	public String[] getOut() {
+		return out;
+	}
+
+	public void setOut(String[] out) {
+		this.out = out;
 	}	
 }

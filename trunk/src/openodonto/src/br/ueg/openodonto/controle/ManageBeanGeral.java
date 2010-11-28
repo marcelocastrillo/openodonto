@@ -124,9 +124,13 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		boolean returned = true;
 		for (ValidationRequest validation : validations) {
 			Validator validador = validation.getValidator();
-			validador.setValue(PBUtil.instance().getNestedProperty(getBackBean(), validation.getPath()));
+			if(validation.getPath() != null && !validation.getPath().isEmpty()){
+				validador.setValue(PBUtil.instance().getNestedProperty(getBackBean(), validation.getPath()));
+			}
 			if (!validador.isValid() && ValidatorFactory.checkInvalidPermiteds(validation.getInvalidPermiteds(),validador)) {
-				getView().addLocalDynamicMenssage("* " + validador.getErrorMessage(), validation.getOut(), false);
+				for(String out : validation.getOut()){
+					getView().addLocalDynamicMenssage("* " + validador.getErrorMessage(), out, false);
+				}				
 				returned = false;
 			}
 		}
@@ -171,9 +175,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			acaoSalvarExtra();
 			this.dao.alterar(this.backBean);
 		} catch (Exception ex) {
-			exibirPopUp(getView().getMessageFromResource("ErroSistema"));
-			getView().addLocalMessage("ErroSistema", "saidaPadrao", true);
-			ex.printStackTrace();
+			handleSalvarException(ex);
 			return;
 		} finally {
 			dao.closeConnection();
@@ -183,6 +185,12 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		getView().addLocalMessage(alredy ? "Atualizado" : "Cadastro", "saidaPadrao", true);
 	}
 
+	protected void handleSalvarException(Exception ex){
+		exibirPopUp(getView().getMessageFromResource("ErroSistema"));
+		getView().addLocalMessage("ErroSistema", "saidaPadrao", true);
+		ex.printStackTrace();
+	}
+	
 	public void acaoSalvarExtra() {}
 
 	public void acaoRemoverSim() {
