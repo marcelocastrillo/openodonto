@@ -59,6 +59,8 @@ public class ManageQuestionarioAnamnese {
 	private void loadFirstAnamnese(){
 		if(questionariosAnamnese != null && questionariosAnamnese.size() != 0){
 			anamnese = questionariosAdapter.get(0);
+		}else{
+			anamnese = null;
 		}
 	}	
 	
