@@ -1,0 +1,90 @@
+<mockup version="1.0" skin="sketch" measuredW="942" measuredH="533" mockupW="646" mockupH="486">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::TitleWindow" x="286" y="37" w="646" h="486" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Associar%20Quest%E3o</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::FieldSet" x="315" y="81" w="587" h="118" measuredW="200" measuredH="170" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Filtros</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::FieldSet" x="315" y="218" w="587" h="259" measuredW="200" measuredH="170" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Resultados</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Label" x="349" y="116" w="-1" h="-1" measuredW="61" measuredH="25" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>C%F3digo%20%3A%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::TextInput" x="683" y="113" w="187" h="-1" measuredW="79" measuredH="29" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::TextInput" x="415" y="113" w="159" h="-1" measuredW="79" measuredH="29" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::Label" x="605" y="115" w="-1" h="-1" measuredW="70" measuredH="25" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Quest%E3o%20%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="14" controlTypeID="com.balsamiq.mockups::Button" x="743" y="156" w="-1" h="-1" measuredW="66" measuredH="28" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Buscar</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::Button" x="815" y="156" w="-1" h="-1" measuredW="64" measuredH="28" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Limpar</text>
+      </controlProperties>
+    </control>
+    <control controlID="17" controlTypeID="com.balsamiq.mockups::HorizontalScrollBar" x="485" y="446" w="220" h="-1" measuredW="100" measuredH="16" zOrder="9" locked="false" isInGroup="-1"/>
+    <control controlID="19" controlTypeID="com.balsamiq.mockups::Button" x="658" y="156" w="-1" h="-1" measuredW="76" measuredH="28" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Associar</text>
+      </controlProperties>
+    </control>
+    <control controlID="22" controlTypeID="com.balsamiq.mockups::DataGrid" x="349" y="243" w="521" h="188" measuredW="397" measuredH="178" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%20%20%20%20%20%20%20%2CC%F3digo%2C%20Quest%E3o%0A%20%20%20%20%20%20%20%2C%201%2C%20Possui%20problemas%20de%20cora%E7%E3o%3F%0A%20%20%20%20%20%20%20%2C%203%2C%20Toma%20algum%20rem%E9dio%20controlado%3F%0A%20%20%20%20%20%20%20%2C%2010%2C%20Tem%20alergia%20de%20algum%20medicamento%3F%0A%20%20%20%20%20%20%20%2C%2013%2C%20Com%20qual%20frequ%EAncia%20visita%20seu%20dentista%3F%0A%20%20%20%20%20%20%20%2C%2021%2C%20Quando%20foi%20sua%20%FAltima%20visita%20ao%20dentista%3F</text>
+      </controlProperties>
+    </control>
+    <control controlID="25" controlTypeID="com.balsamiq.mockups::CheckBox" x="375" y="243" w="-1" h="-1" measuredW="25" measuredH="22" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="26" controlTypeID="com.balsamiq.mockups::CheckBox" x="375" y="269" w="-1" h="-1" measuredW="25" measuredH="22" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="27" controlTypeID="com.balsamiq.mockups::CheckBox" x="375" y="300" w="-1" h="-1" measuredW="25" measuredH="22" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="28" controlTypeID="com.balsamiq.mockups::CheckBox" x="375" y="326" w="-1" h="-1" measuredW="25" measuredH="22" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="29" controlTypeID="com.balsamiq.mockups::CheckBox" x="375" y="351" w="-1" h="-1" measuredW="25" measuredH="22" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="30" controlTypeID="com.balsamiq.mockups::CheckBox" x="375" y="388" w="-1" h="-1" measuredW="25" measuredH="22" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
