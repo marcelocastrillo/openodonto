@@ -60,11 +60,11 @@ public class ValidatorFactory {
 		return new NullValidator(new NumberValidator(new NumberSizeValidator(min, Integer.MAX_VALUE,min)));
 	}
 	
-	public static Validator newCpf(){
+	public static Validator newCpfFormat(){
 		return newStrMask("^[0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[-]?[0-9]{2}");//999.999.999-99
 	}
 	
-	public static Validator newCnpj(){
+	public static Validator newCnpjFormat(){
 		return newStrMask("^[0-9]{2}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[/]?[0-9]{4}[-]?[0-9]{2}");//99.999.999/9999-99
 	}
 	
@@ -74,5 +74,10 @@ public class ValidatorFactory {
 	
 	public static Validator newEmail(){
 		return newEmail(Integer.MAX_VALUE);
-	}	
+	}
+	
+	public static <T> Validator newDomain(List<T> domain){
+		return new NullValidator(new DomainValidator<T>(domain, null));
+	}
+	
 }

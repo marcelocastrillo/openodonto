@@ -10,12 +10,19 @@
     <rich:panel styleClass="oo-crud-decore-panel">
         <ui:param name="manage" value="#{mBean.manageQA}" />
     	<oo:pluginToolTip/>
-        <center>
+        <center>        
+            <a4j:outputPanel ajaxRendered="true">                
+				<h:dataTable id="anamneseValidationTable" value="#{manage.questionariosAdapter}" var="adapter">
+					<h:column>					
+						<rich:message id="qaValidation" for="qaValidation" styleClass="oo-validation-messages" />					
+					</h:column>
+				</h:dataTable>
+			</a4j:outputPanel>				
             <h:panelGrid id="gridAnamnese">
                 <h:panelGrid columns="1">
                		<oo:label for="comboQuestionariosAnamnese" value="#{msg.manageAnamneseMenuQuestionario} : " />
                		<h:panelGrid columns="3">
-	                    <h:selectOneMenu id="comboQuestionariosAnamnese" value="#{manage.add}" style=" width : 480px;">
+	                    <h:selectOneMenu id="comboQuestionariosAnamnese" value="#{manage.add}" style=" width : 500px;">
 	                    	<t:selectItems value="#{list.ALIAS_QUEST.dominio}" var="questionario" itemLabel="#{questionario.nome}" itemValue="#{questionario.codigo}" />
 	                    </h:selectOneMenu>
 	                    <rich:spacer width="8px" />
@@ -24,10 +31,15 @@
                 </h:panelGrid>                
                 <rich:separator height="1px" style="padding-top : 8px;padding-bottom : 8px" />
                 <h:panelGrid>
-                	<rich:scrollableDataTable width="518px" id="listaAnamneses" rows="5" height="150px" value="#{manage.questionariosAdapter}" var="adapter">
+                	<rich:scrollableDataTable width="540px" id="listaAnamneses" rows="5" height="150px" value="#{manage.questionariosAdapter}" var="adapter">
                 		<a4j:support event="onRowClick" eventsQueue="rowclick" reRender="panelAnamnese" rendered="#{not empty adapter}">
                 			<f:setPropertyActionListener target="#{manage.anamnese}" value="#{adapter}" />
                 		</a4j:support>
+                		<rich:column width="16px" id="columnActivatedStatus" style="border : none" >
+                			<a4j:outputPanel ajaxRendered="true">
+                				<h:graphicImage value="#{msg.imgMenuItemChecked}" rendered="#{adapter eq manage.anamnese}" />
+                			</a4j:outputPanel>
+                		</rich:column>
                 		<rich:column width="175px">
                 			<f:facet name="header">
                 				<h:outputText value="Nome" />
@@ -36,7 +48,7 @@
                 				<h:outputText value="#{adapter.qa.nome}" />
                 			</center>
                 		</rich:column>
-                		<rich:column width="320px" >
+                		<rich:column width="326px" >
                 			<f:facet name="header">
                 				<h:outputText value="Descricao" />
                 			</f:facet>
@@ -46,8 +58,10 @@
 		    					</span>
 	    					</center>
                 		</rich:column>
-		    			<rich:column width="16px" >
-							<a4j:commandButton image="#{msg.imgBotaoFechar}" eventsQueue="rowclick" action="#{manage.acaoRemoveAnamnese(adapter)}" reRender="listaAnamneses,panelAnamnese"/>
+		    			<rich:column width="16px" style="border-style : none" >
+		    				<center>
+								<a4j:commandButton image="#{msg.imgBotaoFechar}" eventsQueue="rowclick" action="#{manage.acaoRemoveAnamnese(adapter)}" reRender="listaAnamneses,panelAnamnese"/>
+							</center>
 		    			</rich:column>
                 	</rich:scrollableDataTable>
                 </h:panelGrid>
@@ -78,11 +92,11 @@
 			    <h:panelGrid columns="1">
 			    		<h:panelGrid columns="2">
 			    			<rich:spacer width="100px" />
-							<h:selectOneRadio value="#{questao.resposta.resposta}" converter="simpleEntityConverter" styleClass="#{questao.qqa.obrigatoria ? 'oo-negrito' : ''}" style="font-size : 14px;width : 300px">
+							<h:selectOneRadio id="answerQuestaoSelectRadio" value="#{questao.resposta.resposta}" converter="simpleEntityConverter" styleClass="#{questao.qqa.obrigatoria ? 'oo-negrito' : ''}" style="font-size : 14px;width : 300px">
 								<t:selectItems value="#{list.ALIAS_RESP_ANAMN.dominio}" var="resposta" itemLabel="#{resposta.value}" itemValue="#{resposta}" />
 							</h:selectOneRadio>
 						</h:panelGrid>
-					<h:inputTextarea value="#{questao.resposta.observacao}" style="width : 476px" />
+					<h:inputTextarea id="obsQuestaoTextarea" value="#{questao.resposta.observacao}" style="width : 476px" />
 				</h:panelGrid>
 			</h:panelGrid>		
 		</rich:dataGrid>

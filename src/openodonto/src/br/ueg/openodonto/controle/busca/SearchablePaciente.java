@@ -52,7 +52,7 @@ public class SearchablePaciente extends AbstractSearchable<Paciente>{
 	}
 	
 	private void buildCpfFilter(){
-		Validator validator = ValidatorFactory.newCpf();
+		Validator validator = ValidatorFactory.newCpfFormat();
 		InputMask mask = getMasksMap().get("cpf");
 		getFiltersMap().put("cpfFilter",buildBasicFilter("cpfFilter","CPF",mask,validator));
 	}

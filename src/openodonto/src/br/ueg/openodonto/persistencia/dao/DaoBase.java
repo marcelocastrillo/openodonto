@@ -204,30 +204,30 @@ public abstract class DaoBase<T extends Entity> implements Serializable,EntityMa
 
 	private Object getTypeSyncValue(ResultSet rs, int i) throws SQLException {
 		ResultSetMetaData meta = rs.getMetaData();
-		switch (meta.getColumnType(i)) {
-		case Types.BIT:
-			return rs.getByte(i);
-		case Types.BOOLEAN:
-			return rs.getBoolean(i);
-		case Types.CHAR:
-			return rs.getString(i);
-		case Types.DATE:
-			return rs.getDate(i);
-		case Types.DOUBLE:
-			return rs.getDouble(i);
-		case Types.FLOAT:
-			return rs.getFloat(i);
-		case Types.INTEGER:
-			return rs.getInt(i);
-		case Types.TIME:
-			return rs.getDate(i);
-		case Types.TIMESTAMP:
-			return rs.getDate(i);
-		case Types.VARCHAR:
-			return rs.getString(i);
-		default:
-			return rs.getObject(i);
+		Object value = rs.getObject(i);
+		if(value != null){
+			switch (meta.getColumnType(i)) {
+			case Types.BOOLEAN:
+				value = rs.getBoolean(i);break;				
+			case Types.CHAR:
+				value = rs.getString(i);break;
+			case Types.DATE:
+				value = rs.getDate(i);break;
+			case Types.DOUBLE:
+				value = rs.getDouble(i);break;
+			case Types.FLOAT:
+				value = rs.getFloat(i);break;
+			case Types.INTEGER:
+				value = rs.getInt(i);break;
+			case Types.TIME:
+				value = rs.getDate(i);break;
+			case Types.TIMESTAMP:
+				value = rs.getDate(i);break;
+			case Types.VARCHAR:
+				value = rs.getString(i);break;
+			}
 		}
+		return value;
 	}
 
 	protected List<String> referencedConstraint(Class<?> type, Map<String, Object> keyParams) throws SQLException {

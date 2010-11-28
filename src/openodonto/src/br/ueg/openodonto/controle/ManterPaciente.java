@@ -80,6 +80,10 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		List<ValidationRequest> obrigatorios = new ArrayList<ValidationRequest>();
 		obrigatorios.add((new ValidationRequest("nome", ValidatorFactory.newStrEmpty(),"formPaciente:entradaNome")));
 		obrigatorios.add(new ValidationRequest("cpf",ValidatorFactory.newStrEmpty(),"formPaciente:entradaCpf"));
+		ValidationRequest[] validationsAnamnese = getManageQA().getValidationsObrigatorio();
+		for(ValidationRequest vr : validationsAnamnese){
+			obrigatorios.add(vr);
+		}
 		return obrigatorios;
 	}
 	
@@ -94,7 +98,11 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		validados.add(new ValidationRequest("referencia", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaReferencia",allowed));
 		validados.add(new ValidationRequest("responsavel", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaResponavel",allowed));		
 		validados.add(new ValidationRequest("cidade", ValidatorFactory.newStrRangeLen(45,3, true), "formPaciente:entradaCidade",allowed));
-		validados.add(new ValidationRequest("cpf", ValidatorFactory.newCpf(), "formPaciente:entradaCpf"));
+		validados.add(new ValidationRequest("cpf", ValidatorFactory.newCpfFormat(), "formPaciente:entradaCpf"));
+		ValidationRequest[] validationsAnamnese = getManageQA().getValidationsValidados();
+		for(ValidationRequest vr : validationsAnamnese){
+			validados.add(vr);
+		}
 		return validados;
 	}
 	

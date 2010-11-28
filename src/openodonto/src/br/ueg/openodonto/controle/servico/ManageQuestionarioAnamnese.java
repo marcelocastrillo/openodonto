@@ -1,24 +1,53 @@
 package br.ueg.openodonto.controle.servico;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestionarioAnamnese;
+import br.ueg.openodonto.dominio.constante.TiposRespostaAnamnese;
 import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.persistencia.dao.DaoQuestionarioAnamnese;
 import br.ueg.openodonto.util.bean.QuestionarioAnamneseAdapter;
+import br.ueg.openodonto.util.bean.QuestionarioQuestaoAdapter;
+import br.ueg.openodonto.validator.AbstractValidator;
+import br.ueg.openodonto.validator.EmptyValidator;
+import br.ueg.openodonto.validator.NullValidator;
+import br.ueg.openodonto.validator.Validator;
+import br.ueg.openodonto.validator.ValidatorFactory;
+import br.ueg.openodonto.validator.tipo.ObjectValidatorType;
 import br.ueg.openodonto.visao.ApplicationView;
 
 public class ManageQuestionarioAnamnese {
 
+	private static final String PROPERTY_FAIL_SINGLE 	= "A questão : ";
+	private static final String PROPERTY_FAIL_PLURAL 	= "As questões : ";
+	private static final String MSG_FAIL_SINGLE 		= "msg_single";
+	private static final String MSG_FAIL_PLURAL 		= "msg_plural";
+	private static final Integer MAX_OBS_LENGTH         = 300;
+	
 	private Map<PacienteQuestionarioAnamnese,QuestionarioAnamnese>		questionariosAnamnese;
 	private List<QuestionarioAnamneseAdapter> 							questionariosAdapter;
 	private QuestionarioAnamneseAdapter									anamnese;
 	private Long                           								add;
 	private ApplicationView 											view;
+	private static Class<?>[] 											allowed = {NullValidator.class,EmptyValidator.class};
+	private static Map<String,String>                                   msgBundleValidationObs;
+	private static Map<String,String>                                   msgBundleValidationAns;
+
+	static{
+		msgBundleValidationObs = new HashMap<String, String>();
+		msgBundleValidationObs.put(MSG_FAIL_SINGLE, " possui observação com valor muito longo. Máximo permitido = "+MAX_OBS_LENGTH);
+		msgBundleValidationObs.put(MSG_FAIL_PLURAL, " possuem observação com valor muito longo. Máximo permitido = "+MAX_OBS_LENGTH);
+		msgBundleValidationAns = new HashMap<String, String>();
+		msgBundleValidationAns.put(MSG_FAIL_SINGLE, " é obrigatória.");
+		msgBundleValidationAns.put(MSG_FAIL_PLURAL, " são obrigatórias.");
+	}
 	
 	public ManageQuestionarioAnamnese(Map<PacienteQuestionarioAnamnese,QuestionarioAnamnese> anamneses, ApplicationView view) {
 		this.questionariosAnamnese = anamneses;
@@ -89,6 +118,64 @@ public class ManageQuestionarioAnamnese {
 		return already;
 	}
 	
+	public ValidationRequest[] getValidationsObrigatorio(){
+		return getValidations(VALIDATION_TYPE.OBRIGATORIOS);
+	}
+	
+	public ValidationRequest[] getValidationsValidados(){
+		return getValidations(VALIDATION_TYPE.VALIDADOS);
+	}
+	
+	protected ValidationRequest[] getValidations(VALIDATION_TYPE vType){
+		ValidationRequest[] validations = new ValidationRequest[questionariosAdapter.size()];
+		String form = this.view.getProperties().get("formularioSaida");
+		for(int i = 0;i < questionariosAdapter.size();i++){
+			Validator validator = null;
+			switch(vType){
+				case OBRIGATORIOS:
+					validator = getValidatorAnswer(questionariosAdapter.get(i)); 
+					break;
+				case VALIDADOS:
+					validator = getValidatorObservacao(questionariosAdapter.get(i));
+					break;
+			} 
+			validations[i] = new ValidationRequest(null, validator, form+":anamneseValidationTable:"+i+":qaValidation");
+		}
+		return validations;
+	}
+	
+	public Validator getValidatorObservacao(QuestionarioAnamneseAdapter adapter){
+		List<AnamneseValidationRequest> validations = new ArrayList<AnamneseValidationRequest>();
+		for(int i = 0 ; i < adapter.getQuestoes().size();i++){
+			QuestionarioQuestaoAdapter questaoAdapter = adapter.getQuestoes().get(i);
+			validations.add(new ObsValidationRequest(getObsValidator(), questaoAdapter));
+		}		
+		return new AnamneseValidator(validations,msgBundleValidationObs,adapter);
+	}
+	
+	public Validator getValidatorAnswer(QuestionarioAnamneseAdapter adapter){		
+		List<AnamneseValidationRequest> validations = new ArrayList<AnamneseValidationRequest>();
+		for(int i = 0 ; i < adapter.getQuestoes().size();i++){
+			QuestionarioQuestaoAdapter questaoAdapter = adapter.getQuestoes().get(i);
+			if(questaoAdapter.getQqa().getObrigatoria()){
+				validations.add(new AnswerValidationRequest(getAnswerValidator(), questaoAdapter));
+			}
+		}		
+		return new AnamneseValidator(validations,msgBundleValidationAns,adapter);
+	}
+
+	
+	private Validator getAnswerValidator(){
+		List<TiposRespostaAnamnese> domain = Arrays.asList(TiposRespostaAnamnese.values()); 
+		Validator ansValidator = ValidatorFactory.newDomain(domain);
+		return ansValidator;
+	}
+	
+	private Validator getObsValidator(){
+		Validator obsValidator = ValidatorFactory.newStrMaxLen(MAX_OBS_LENGTH, false);
+		return obsValidator;
+	}
+	
 	public ApplicationView getView() {
 		return view;
 	}
@@ -122,4 +209,118 @@ public class ManageQuestionarioAnamnese {
 		this.anamnese = anamnese;
 	}
 
+	protected enum VALIDATION_TYPE{
+		OBRIGATORIOS,VALIDADOS;
+	}
+	
+	protected abstract class AnamneseValidationRequest{
+		private Validator 					validator;
+		private QuestionarioQuestaoAdapter 	adapter;		
+		public AnamneseValidationRequest(Validator validator, QuestionarioQuestaoAdapter adapter) {
+			this.validator = validator;
+			this.adapter = adapter;
+		}
+
+		public abstract boolean isValid();
+
+		public Validator getValidator() {
+			return validator;
+		}
+
+		public void setValidator(Validator validator) {
+			this.validator = validator;
+		}
+
+		public QuestionarioQuestaoAdapter getAdapter() {
+			return adapter;
+		}
+
+		public void setAdapter(QuestionarioQuestaoAdapter adapter) {
+			this.adapter = adapter;
+		}
+	}
+	
+	protected class ObsValidationRequest extends AnamneseValidationRequest{
+		public ObsValidationRequest(Validator validator,QuestionarioQuestaoAdapter qqa) {
+			super(validator,qqa);
+			validator.setValue(qqa.getResposta().getObservacao());
+		}
+		@Override
+		public boolean isValid() {
+			return getValidator().isValid() || !ValidatorFactory.checkInvalidPermiteds(getValidator(),allowed);
+		}
+	}
+	
+	protected class AnswerValidationRequest extends AnamneseValidationRequest{
+		public AnswerValidationRequest(Validator validator,QuestionarioQuestaoAdapter qqa) {
+			super(validator,qqa);
+			validator.setValue(qqa.getResposta().getResposta());
+		}
+		@Override
+		public boolean isValid() {
+			return getValidator().isValid();
+		}		
+	}
+	
+	protected class AnamneseValidator extends AbstractValidator implements ObjectValidatorType{
+
+		private List<AnamneseValidationRequest> validations;
+		private Map<String,String> 				msgBunlde;
+		
+		public AnamneseValidator(List<AnamneseValidationRequest> validations,Map<String,String> msgBunlde,QuestionarioAnamneseAdapter value) {
+			this(null,validations,msgBunlde,value);
+		}		
+		
+		public AnamneseValidator(Validator next,List<AnamneseValidationRequest> validations,Map<String,String> msgBunlde,QuestionarioAnamneseAdapter value) {
+			super(next, value);
+			this.validations = validations;
+			this.msgBunlde = msgBunlde;
+		}
+
+		@Override
+		protected boolean validate() {
+			boolean valid = true;
+			QuestionarioAnamneseAdapter value = (QuestionarioAnamneseAdapter) getValue();
+			StringBuilder stb = new StringBuilder().append(value.getQa().getNome()).append(" : ");
+			List<Integer> fail = new ArrayList<Integer>();
+			for(AnamneseValidationRequest validator : validations){
+				if(!validator.isValid()){
+					fail.add(validator.getAdapter().getQqa().getIndex());
+					valid = false;
+				}
+			}			
+			if(!valid){
+				logInvalid(stb, fail);
+			}
+			return valid;
+		}
+
+		private void logInvalid(StringBuilder stb, List<Integer> fail) {
+			boolean many = fail.size() > 1;
+			stb.append(many ? PROPERTY_FAIL_PLURAL : PROPERTY_FAIL_SINGLE);
+			printIndexes(fail,stb);
+			stb.append(many ? msgBunlde.get(MSG_FAIL_PLURAL) : msgBunlde.get(MSG_FAIL_SINGLE));
+			setErrorMsg(stb.toString());
+		}
+		
+		private void printIndexes(List<Integer> indices , StringBuilder stb){
+			boolean first = true;
+			for(Iterator<Integer> iterator = indices.iterator();iterator.hasNext();){
+				boolean has = iterator.hasNext();
+				Integer index = iterator.next();
+				if(!first){
+					if(has && iterator.hasNext()){
+						stb.append(", ");
+					}else if(has && !iterator.hasNext()){
+						stb.append(" e ");
+					}
+				}
+				stb.append(index+1);
+				first = false;
+			}
+		}
+		
+
+	}
+	
 }

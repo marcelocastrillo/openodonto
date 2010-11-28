@@ -1,5 +1,6 @@
 package br.ueg.openodonto.controle;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -71,6 +72,16 @@ public class ManterQuestionarioAnamnese extends ManageBeanGeral<QuestionarioAnam
 		getManageQuestao().syncListOrder();
 		super.acaoSalvar();
 		ManageListagem.getLista("ALIAS_QUEST").refreshDominio();
+	}
+
+	@Override
+	protected void handleSalvarException(Exception ex) {
+		if(ex instanceof SQLIntegrityConstraintViolationException){
+			exibirPopUp("Questão(ões) Referenciada(s).");
+			getView().addLocalDynamicMenssage("Registro Referenciado.","saidaPadrao", true);
+		}else{
+			super.handleSalvarException(ex);
+		}
 	}
 	
 	@Override
