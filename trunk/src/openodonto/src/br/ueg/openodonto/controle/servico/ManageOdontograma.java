@@ -458,6 +458,7 @@ public class ManageOdontograma {
 		if(getOdontogramas().size() == 0){
 			makeDefaultOdontograma();
 			getOdontogramas().add(new OdontogramaAdapter(this.odontograma,getDisplayer()));
+			this.odontogramasTarget.add(this.odontograma);
 		}else{
 			Collections.sort(getOdontogramas(),new OdontogramaDateComparator());
 			setOdontograma(getOdontogramas().get(0).getOdontograma());

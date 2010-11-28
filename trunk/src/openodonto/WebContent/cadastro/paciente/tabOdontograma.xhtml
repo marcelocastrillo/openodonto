@@ -189,13 +189,6 @@
 				  	<a4j:support status="status" event="onRowDblClick" reRender="gridOdontograma,gridOdontogramaMeta" action="#{manage.updateMeta}" rendered="#{not empty adapter}">
    	    				<f:setPropertyActionListener value="#{adapter}" target="#{manage.odontogramaAdapter}" />
    					</a4j:support>
-                	<rich:column width="36px">
-                	    <h:panelGroup layout="block" style="text-align : center">
-							<a4j:commandButton status="status" value="#{msg.manageContactAcaoRemover}" onclick="if(!confirm('#{msg.DesejaExcluir}')){return false}" action="#{manage.acaoRemoverOdontograma}" reRender="gridOdontogramaMeta,listaOdontogramas,gridOdontograma" image="#{msg.imgBotaoMiniRemove}" onmouseover="tooltip.show('Remover');" onmouseout="tooltip.hide()">
-							    <f:setPropertyActionListener value="#{adapter}" target="#{manage.odontogramaDelete}" />
-							</a4j:commandButton>                	    	
-                	    </h:panelGroup>
-                	</rich:column>
         	        <rich:column width="175px" filterExpression="#{(empty manage.filterNomeOAdd) or (manage.filterNomeOAdd eq '') ? true : fn:containsIgnoreCase(adapter.odontograma.nome , manage.filterNomeOAdd)}">
         	        	<f:facet name="header">
         	        		<t:div>
@@ -252,7 +245,14 @@
                 	   			</a4j:support>
                 	   		</rich:inplaceInput>                	   		            	    	
                 		</h:panelGroup>
-        	        </rich:column>                	
+        	        </rich:column>
+                	<rich:column width="36px">
+                	    <h:panelGroup layout="block" style="text-align : center">
+							<a4j:commandButton status="status" value="#{msg.manageContactAcaoRemover}" onclick="if(!confirm('#{msg.DesejaExcluir}')){return false}" action="#{manage.acaoRemoverOdontograma}" reRender="gridOdontogramaMeta,listaOdontogramas,gridOdontograma" image="#{msg.imgBotaoMiniRemove}" onmouseover="tooltip.show('Remover');" onmouseout="tooltip.hide()">
+							    <f:setPropertyActionListener value="#{adapter}" target="#{manage.odontogramaDelete}" />
+							</a4j:commandButton>                	    	
+                	    </h:panelGroup>
+                	</rich:column>                	
         	    </rich:dataTable>
 				<rich:datascroller for="listaOdontogramas" maxPages="20" align="center" id="dataScrollerOdontograma"  />
 				</a4j:region>
