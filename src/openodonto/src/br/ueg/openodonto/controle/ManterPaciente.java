@@ -21,6 +21,8 @@ import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.validator.EmptyValidator;
 import br.ueg.openodonto.validator.NullValidator;
+import br.ueg.openodonto.validator.UniqueCpfValidator;
+import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {
@@ -33,6 +35,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	private static Map<String, String>    params;
 	private Search<Paciente>              search;
 	private Search<Pessoa>                personSearch;
+	private boolean                       cpfChanged;
 	
 	static{
 		params = new HashMap<String, String>();
@@ -98,12 +101,29 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		validados.add(new ValidationRequest("referencia", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaReferencia",allowed));
 		validados.add(new ValidationRequest("responsavel", ValidatorFactory.newStrRangeLen(150,4, true), "formPaciente:entradaResponavel",allowed));		
 		validados.add(new ValidationRequest("cidade", ValidatorFactory.newStrRangeLen(45,3, true), "formPaciente:entradaCidade",allowed));
-		validados.add(new ValidationRequest("cpf", ValidatorFactory.newCpfFormat(), "formPaciente:entradaCpf"));
+		validados.add(new ValidationRequest("cpf",ValidatorFactory.newCpf(),"formPaciente:entradaCpf"));		
 		ValidationRequest[] validationsAnamnese = getManageQA().getValidationsValidados();
 		for(ValidationRequest vr : validationsAnamnese){
 			validados.add(vr);
 		}
 		return validados;
+	}
+	
+	@Override
+	protected boolean checarCamposValidados() throws Exception {
+		boolean valid = super.checarCamposValidados();
+		if(valid && cpfChanged){
+			Validator unique = new UniqueCpfValidator<Paciente>(this.getBackBean());		
+			valid = valid && unique.isValid();
+			if(!valid){
+				getView().addLocalDynamicMenssage("* " + unique.getErrorMessage(), "formPaciente:entradaCpf", false);
+			}
+		}
+		return valid;
+	}
+	
+	public void notifyCpfChange(){
+		cpfChanged = true;
 	}
 	
 	public Search<Paciente> getSearch() {

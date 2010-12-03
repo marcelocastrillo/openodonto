@@ -16,6 +16,7 @@
 	    <a4j:loadScript src="/js/jquery.maskedinput-1.2.2.js" />
 	    <a4j:keepAlive beanName="manterPaciente"/>
 	    <a4j:jsFunction name="popUp" action="#{manterPaciente.acaoShowed}" oncomplete="exibirMensagem('#{manterPaciente.view.popUpMsg}')"/>
+	    <a4j:jsFunction name="changeCpf" action="#{manterPaciente.notifyCpfChange}" />
 	    <div align="center">
 			<rich:panel styleClass="oo-crud-decore-panel" >				
 				<center>
@@ -28,7 +29,7 @@
 							</h:panelGrid>           
 							<h:panelGrid columns="1">
 							    <oo:label value="#{msg.ooCpf}:" for="entradaCpf" required="true" />
-								<h:inputText value="#{manterPaciente.paciente.cpf}" id="entradaCpf" style="width : 160px;">
+								<h:inputText value="#{manterPaciente.paciente.cpf}" id="entradaCpf" style="width : 160px;" onchange="changeCpf()" >
 									<rich:jQuery selector="#entradaCpf" query="mask('999.999.999-99')" timing="onload" />
 								</h:inputText>
 							</h:panelGrid>				

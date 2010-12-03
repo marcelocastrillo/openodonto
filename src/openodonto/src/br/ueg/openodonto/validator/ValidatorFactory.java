@@ -61,11 +61,19 @@ public class ValidatorFactory {
 	}
 	
 	public static Validator newCpfFormat(){
-		return newStrMask("^[0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[-]?[0-9]{2}");//999.999.999-99
+		return newStrMask("^[0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[-]?[0-9]{2}$");//999.999.999-99
 	}
 	
 	public static Validator newCnpjFormat(){
-		return newStrMask("^[0-9]{2}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[/]?[0-9]{4}[-]?[0-9]{2}");//99.999.999/9999-99
+		return newStrMask("^[0-9]{2}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[/]?[0-9]{4}[-]?[0-9]{2}$");//99.999.999/9999-99
+	}
+	
+	public static Validator newCpf(){
+		return newCpfFormat().concat(new CpfValidator(null));
+	}
+	
+	public static Validator newCnpj(){
+		return newCnpjFormat().concat(new CnpjValidator(null));
 	}
 	
 	public static Validator newEmail(int max){
@@ -79,5 +87,5 @@ public class ValidatorFactory {
 	public static <T> Validator newDomain(List<T> domain){
 		return new NullValidator(new DomainValidator<T>(domain, null));
 	}
-	
+
 }

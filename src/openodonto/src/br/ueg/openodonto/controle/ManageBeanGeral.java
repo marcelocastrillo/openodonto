@@ -120,7 +120,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		}
 	}
 
-	private boolean evaluateValidators(List<ValidationRequest> validations) throws Exception{
+	protected boolean evaluateValidators(List<ValidationRequest> validations) throws Exception{
 		boolean returned = true;
 		for (ValidationRequest validation : validations) {
 			Validator validador = validation.getValidator();

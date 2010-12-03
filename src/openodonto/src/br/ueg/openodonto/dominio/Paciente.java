@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.ueg.openodonto.dominio.constante.PessoaFisica;
 import br.ueg.openodonto.persistencia.orm.Column;
 import br.ueg.openodonto.persistencia.orm.ForwardKey;
 import br.ueg.openodonto.persistencia.orm.Inheritance;
@@ -15,7 +16,7 @@ import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name = "pacientes")
 @Inheritance(joinFields = { @ForwardKey(tableField = "id_pessoa", foreginField = "id") })
-public class Paciente extends Pessoa {
+public class Paciente extends Pessoa implements PessoaFisica<Paciente>{
 
 	private static final long serialVersionUID = -8543328508793753975L;
 
@@ -59,10 +60,11 @@ public class Paciente extends Pessoa {
 		setCodigo(codigo);
 	}
 
+	@Override
 	public String getCpf() {
 		return cpf;
 	}
-
+	
 	public void setCpf(String cpf) {
 		cpf = WordFormatter.clear(cpf);
 		this.cpf = cpf;

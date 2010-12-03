@@ -7,12 +7,12 @@ package br.ueg.openodonto.dominio.constante;
 public enum TiposUF {
 
     AC("Acre"), AL("Alagoas"), AM("Amazonas"), AP("Amapá"), BA("Bahia"), CE(
-	    "Ceara"), DF("Distro Federeal"), ES("Espírito Santo"), GO("Goiás"), MA(
+	    "Ceara"), DF("Distrito Federeal"), ES("Espírito Santo"), GO("Goiás"), MA(
 	    "Maranhao"), MG("Minas Gerais"), MS("Mato Grosso do Sul"), MT(
 	    "Mato Grosso"), PA("Pará"), PB("Paraiba"), PE("Pernambuco"), PI(
 	    "Piauí"), PR("Parana"), RJ("Rio de Janeiro"), RN(
 	    "Rio Grande do Norte"), RO("Rondonia"), RR("Roraima"), RS(
-	    "Rio Grande do Sul"), SC("Santa Catarina"), SE("Segipe"), SP(
+	    "Rio Grande do Sul"), SC("Santa Catarina"), SE("Sergipe"), SP(
 	    "São Paulo"), TO("Tocantins");
 
     private String descricao;
