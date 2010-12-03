@@ -10,11 +10,31 @@ public abstract class AbstractValidator implements Validator{
 	private Object     value;
 
 	public AbstractValidator(Validator next, Object value) {
-		super();
-		this.next = next;
+		super();		
 		this.value = value;
-		checkAssociation();
+		queueNext(next);
 	}	
+	
+	private void queueNext(Validator next){
+		this.next = next;
+		checkAssociation();
+	}
+	
+	@Override
+	public Validator concatBegin(Validator next){
+		queueNext(next);
+		return this;
+	}
+	
+	@Override
+	public Validator concat(Validator next){
+		if(getNext() == null){
+			queueNext(next);
+		}else{
+			getNext().concat(next);
+		}
+		return this;
+	}
 	
 	private void checkAssociation(){
 		if(next != null){

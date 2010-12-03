@@ -7,4 +7,6 @@ public interface Validator {
 	Validator getSource();
 	Object getValue();
 	void setValue(Object value);
+	Validator concatBegin(Validator next);
+	Validator concat(Validator next);
 }

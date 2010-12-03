@@ -147,9 +147,9 @@ public class ManterColaborador extends ManageBeanGeral<Colaborador> {
 		validados.add(new ValidationRequest("endereco", ValidatorFactory.newStrRangeLen(150,4, true), "formColaborador:entradaEndereco",allowed));
 		validados.add(new ValidationRequest("cidade", ValidatorFactory.newStrRangeLen(45,3, true), "formColaborador:entradaCidade",allowed));
 		if(getTipoPessoa().isPf()){
-			validados.add(new ValidationRequest("cpf", ValidatorFactory.newCpfFormat(), "formColaborador:entradaCpf"));
+			validados.add(new ValidationRequest("cpf", ValidatorFactory.newCpf(), "formColaborador:entradaCpf"));
 		}else if(getTipoPessoa().isPj()){
-			validados.add(new ValidationRequest("cnpj", ValidatorFactory.newCnpjFormat(), "formColaborador:entradaCnpj"));
+			validados.add(new ValidationRequest("cnpj", ValidatorFactory.newCnpj(), "formColaborador:entradaCnpj"));
 		}	
 		return validados;
 	}
