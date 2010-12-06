@@ -53,7 +53,7 @@ public class UniqueCpfValidator<T extends Entity & PessoaFisica<T>> extends Abst
 			List<Map<String,Object>> result = dao.getSqlExecutor().executarUntypedQuery(query);
 			if(result.size() == 1){
 				OrmFormat format = new OrmFormat(getValue());
-				Map<String,Object> already = result.get(0);	
+				Map<String,Object> already = result.get(0);
 				Map<String,Object> local = format.format(fields);
 				boolean isSamePf = true;
 				OrmTranslator translator = new OrmTranslator(keyFields);				

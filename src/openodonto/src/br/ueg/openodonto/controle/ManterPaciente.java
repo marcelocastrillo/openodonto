@@ -35,7 +35,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 	private static Map<String, String>    params;
 	private Search<Paciente>              search;
 	private Search<Pessoa>                personSearch;
-	private boolean                       cpfChanged;
+	private String                        loadedCpf;
 	
 	static{
 		params = new HashMap<String, String>();
@@ -65,6 +65,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		this.manageTelefone = new ManageTelefone(getPaciente().getTelefone(), this.getView());
 		this.manageOdontograma = new ManageOdontograma(getPaciente().getOdontogramas(), getView());
 		this.manageQA = new ManageQuestionarioAnamnese(getPaciente().getAnamneses(),getView());
+		loadedCpf = getPaciente().getCpf();
 	}
 
 	protected void carregarExtra() {
@@ -72,6 +73,7 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		manageQA.setQuestionariosAnamnese(getPaciente().getAnamneses());
 		manageOdontograma.setOdontogramas(manageOdontograma.wrapOdontogramas(getPaciente().getOdontogramas()));
 		manageOdontograma.loadLastOdontograma();
+		loadedCpf = getPaciente().getCpf();
 	}
 
 	protected List<String> getCamposFormatados() {
@@ -109,10 +111,11 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 		return validados;
 	}
 	
+	
 	@Override
 	protected boolean checarCamposValidados() throws Exception {
 		boolean valid = super.checarCamposValidados();
-		if(valid && cpfChanged){
+		if(valid && cpfChanged()){
 			Validator unique = new UniqueCpfValidator<Paciente>(this.getBackBean());		
 			valid = valid && unique.isValid();
 			if(!valid){
@@ -120,10 +123,10 @@ public class ManterPaciente extends ManageBeanGeral<Paciente> {
 			}
 		}
 		return valid;
-	}
+	}	
 	
-	public void notifyCpfChange(){
-		cpfChanged = true;
+	private boolean cpfChanged(){
+	    return (loadedCpf == null && getPaciente().getCpf() != null) || !loadedCpf.equals(getPaciente().getCpf());
 	}
 	
 	public Search<Paciente> getSearch() {

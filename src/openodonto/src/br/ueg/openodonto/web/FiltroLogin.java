@@ -9,8 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
-import br.ueg.openodonto.dominio.Usuario;
+import javax.servlet.http.HttpServletResponse;
 
 public class FiltroLogin implements Filter {
 
@@ -24,14 +23,8 @@ public class FiltroLogin implements Filter {
 
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		if (httpRequest.getSession().getAttribute("usuarioSessao") == null) {
-			Usuario usuario = new Usuario();
-			usuario.setNome("Vinicius G G R");
-			httpRequest.getSession().setAttribute("usuarioSessao", usuario);
-			chain.doFilter(request, response);
-			/*
 			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 			httpServletResponse.sendRedirect(httpRequest.getContextPath()+ "/faces/login/login.xhtml");
-			*/
 		} else {
 			chain.doFilter(request, response);
 		}
