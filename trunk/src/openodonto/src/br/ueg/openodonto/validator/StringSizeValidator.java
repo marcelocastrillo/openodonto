@@ -29,7 +29,7 @@ public class StringSizeValidator extends AbstractValidator implements StringVali
 			setErrorMsg("Valor muito longo : Máximo permitido = " + max);
 			return false;
 		}else if(getValue().length() < min){
-			setErrorMsg("Valor muito curto : Minímo exigido = " + min);
+			setErrorMsg("Valor muito curto : Mínimo exigido = " + min);
 			return false;
 		}
 		return true;

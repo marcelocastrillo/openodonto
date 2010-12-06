@@ -45,10 +45,10 @@ public class Login implements Serializable{
 
 		} catch (LoginInvalidoException e) {
 			usuario.setSenha(null);
-			view.addResourceDynamicMenssage("Usuario/senha incorreto(s).",	"LoginForm:messageLogin");
+			view.addResourceDynamicMenssage("Usuário/senha incorreto(s).",	"LoginForm:messageLogin");
 		} catch (Exception e) {
 			usuario.setSenha(null);
-			view.addResourceDynamicMenssage("Usuario/senha incorreto(s).","Erro de causa desconhecida.");
+			view.addResourceDynamicMenssage("Usuário/senha incorreto(s).","Erro de causa desconhecida.");
 			e.printStackTrace();
 		}
 		return null;

@@ -15,7 +15,7 @@ public class NullValidator extends AbstractValidator implements ObjectValidatorT
 	@Override
 	protected boolean validate() {
 		if(getValue() == null){
-			setErrorMsg("O valor esta nulo.");
+			setErrorMsg("O valor está nulo.");
 			return false;
 		}
 		return true;

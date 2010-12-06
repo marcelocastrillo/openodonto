@@ -61,7 +61,7 @@ public class UniqueCpfValidator<T extends Entity & PessoaFisica<T>> extends Abst
 					isSamePf = isSamePf && already.get(translator.getColumn(field)).equals(local.get(field));
 				}
 				if(!isSamePf){
-					setErrorMsg("CPF já esta sendo usado.");
+					setErrorMsg("CPF já está sendo usado.");
 				}
 				return isSamePf;
 			}else if(result.size() > 1){

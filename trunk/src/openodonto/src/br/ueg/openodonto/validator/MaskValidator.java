@@ -26,7 +26,7 @@ public class MaskValidator extends AbstractValidator implements StringValidatorT
 	@Override
 	protected boolean validate() {
 		if(!getValue().matches(mask)){
-			setErrorMsg("O valor não tem o padrão esperado");
+			setErrorMsg("O valor não tem o padrão esperado.");
 			return false;
 		}
 		return true;
