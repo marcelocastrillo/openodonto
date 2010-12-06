@@ -143,7 +143,7 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`odontogramas` (
   `id_pessoa` INT(10) NOT NULL ,
   `nome` VARCHAR(150) NOT NULL ,
   `descricao` VARCHAR(500) NULL ,
-  `data` DATETIME NULL ,
+  `data` DATETIME NOT NULL ,
   PRIMARY KEY (`id`) ,
   CONSTRAINT `fk_odontograam_pacientes1`
     FOREIGN KEY (`id_pessoa` )
@@ -203,9 +203,9 @@ DROP TABLE IF EXISTS `openodonto`.`procedimentos` ;
 
 CREATE  TABLE IF NOT EXISTS `openodonto`.`procedimentos` (
   `id_procedimento` INT(10) NOT NULL AUTO_INCREMENT ,
-  `nome` VARCHAR(150) NULL ,
+  `nome` VARCHAR(150) NOT NULL ,
   `descricao` VARCHAR(300) NULL ,
-  `valor` FLOAT NULL ,
+  `valor` FLOAT NOT NULL ,
   PRIMARY KEY (`id_procedimento`) )
 ENGINE = InnoDB;
 
@@ -242,7 +242,7 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`procedimentos_dentes` (
   `id` INT(10) NOT NULL AUTO_INCREMENT ,
   `fk_procedimento` INT(10) NOT NULL ,
   `fk_odontograma_dente` INT(10) NOT NULL ,
-  `valor` FLOAT NULL ,
+  `valor` FLOAT NOT NULL ,
   `data_procedimento` DATETIME NULL ,
   `status` INT(2) NULL ,
   `obs` VARCHAR(300) NULL ,
@@ -272,7 +272,7 @@ DROP TABLE IF EXISTS `openodonto`.`odontograma_aspectos` ;
 CREATE  TABLE IF NOT EXISTS `openodonto`.`odontograma_aspectos` (
   `dente` INT(2) NOT NULL ,
   `fk_odontograma` INT(10) NOT NULL ,
-  `aspecto` INT(2) NULL ,
+  `aspecto` INT(2) NOT NULL DEFAULT 2 ,
   PRIMARY KEY (`dente`, `fk_odontograma`) ,
   CONSTRAINT `fk_odontograma_aspecto_odontogramas1`
     FOREIGN KEY (`fk_odontograma` )
