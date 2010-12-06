@@ -31,7 +31,7 @@ public class EmptyValidator extends AbstractValidator implements StringValidator
 	@Override
 	protected boolean validate() {
 		if(getValue().isEmpty()){
-			setErrorMsg("O valor esta vazio.");
+			setErrorMsg("O valor está vazio.");
 			return false;
 		}
 		if(trimmed & getValue().trim().isEmpty()){

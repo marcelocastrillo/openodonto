@@ -42,7 +42,7 @@ public class NumberValidator extends AbstractValidator implements NumericValidat
 			return false;
 		}
 		if(!numberPattern.matcher(strValue).matches()){
-			setErrorMsg("Não é um numero.");
+			setErrorMsg("Não é um número.");
 			return false;
 		}
 		return true;

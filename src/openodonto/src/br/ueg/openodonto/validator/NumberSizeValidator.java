@@ -27,10 +27,10 @@ public class NumberSizeValidator extends AbstractValidator implements NumericVal
 	@Override
 	protected boolean validate() {
 		if(getValue().intValue() > max){
-			setErrorMsg("Numero muito grande : Máximo permitido = " + max);
+			setErrorMsg("Número muito grande : Máximo permitido = " + max);
 			return false;
 		}else if(getValue().intValue() < min){
-			setErrorMsg("Numero muito pequeno : Minímo exigido = " + min);
+			setErrorMsg("Número muito pequeno : Mínimo exigido = " + min);
 			return false;
 		}
 		return true;
