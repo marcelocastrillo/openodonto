@@ -1,0 +1,131 @@
+<mockup version="1.0" skin="sketch" measuredW="1147" measuredH="544" mockupW="923" mockupH="466">
+  <controls>
+    <control controlID="113" controlTypeID="com.balsamiq.mockups::TitleWindow" x="214" y="68" w="923" h="466" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Odontograma%20Procedimentos</text>
+      </controlProperties>
+    </control>
+    <control controlID="114" controlTypeID="com.balsamiq.mockups::Label" x="344" y="101" w="-1" h="-1" measuredW="86" measuredH="25" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Dente%20Nome%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="115" controlTypeID="com.balsamiq.mockups::TextInput" x="430" y="99" w="-1" h="-1" measuredW="111" measuredH="29" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Incisivo%20Central</text>
+      </controlProperties>
+    </control>
+    <control controlID="116" controlTypeID="com.balsamiq.mockups::Label" x="558" y="102" w="-1" h="-1" measuredW="99" measuredH="25" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Dente%20N%FAmero%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="117" controlTypeID="com.balsamiq.mockups::TextInput" x="657" y="101" w="-1" h="-1" measuredW="30" measuredH="29" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>11</text>
+      </controlProperties>
+    </control>
+    <control controlID="118" controlTypeID="com.balsamiq.mockups::Label" x="702" y="106" w="-1" h="-1" measuredW="83" measuredH="25" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Dente%20Face%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="119" controlTypeID="com.balsamiq.mockups::TextInput" x="785" y="101" w="-1" h="-1" measuredW="121" measuredH="29" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Oclusal%20ou%20Incisal</text>
+      </controlProperties>
+    </control>
+    <control controlID="120" controlTypeID="com.balsamiq.mockups::DataGrid" x="298" y="393" w="-1" h="-1" measuredW="778" measuredH="58" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2C%20Nome%20do%20Procedimento%20%20%20%20%20%20%20%20%20%20%2C%20Status%2C%20Data%2C%20Observa%E7%E3o%20%20%20%20%20%20%20%20%20%20%20%2C%20Valor%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2C%20RESTAURACAO%2C%20N%E3o%20Realizado%2C%2011/12/2010%2C%20%20%20%20%20%20%20%20%20%20%20%2C%20R%24%2075</text>
+      </controlProperties>
+    </control>
+    <control controlID="121" controlTypeID="com.balsamiq.mockups::HorizontalScrollBar" x="577" y="474" w="261" h="-1" measuredW="100" measuredH="16" zOrder="8" locked="false" isInGroup="-1"/>
+    <control controlID="122" controlTypeID="com.balsamiq.mockups::SearchBox" x="559" y="397" w="25" h="-1" measuredW="25" measuredH="25" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="123" controlTypeID="com.balsamiq.mockups::SearchBox" x="766" y="395" w="25" h="-1" measuredW="25" measuredH="25" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="124" controlTypeID="com.balsamiq.mockups::SearchBox" x="672" y="396" w="25" h="-1" measuredW="25" measuredH="25" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="125" controlTypeID="com.balsamiq.mockups::Button" x="335" y="417" w="-1" h="-1" measuredW="32" measuredH="28" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>-</text>
+      </controlProperties>
+    </control>
+    <control controlID="126" controlTypeID="com.balsamiq.mockups::SearchBox" x="912" y="394" w="25" h="-1" measuredW="25" measuredH="25" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="127" controlTypeID="com.balsamiq.mockups::SearchBox" x="1036" y="394" w="25" h="-1" measuredW="25" measuredH="25" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="128" controlTypeID="com.balsamiq.mockups::Label" x="366" y="158" w="86" h="25" measuredW="85" measuredH="25" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Procedimento</text>
+      </controlProperties>
+    </control>
+    <control controlID="129" controlTypeID="com.balsamiq.mockups::Label" x="596" y="160" w="46" h="19" measuredW="46" measuredH="25" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Status</text>
+      </controlProperties>
+    </control>
+    <control controlID="130" controlTypeID="com.balsamiq.mockups::Label" x="886" y="157" w="-1" h="-1" measuredW="35" measuredH="25" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Data</text>
+      </controlProperties>
+    </control>
+    <control controlID="131" controlTypeID="com.balsamiq.mockups::Label" x="415" y="239" w="78" h="26" measuredW="78" measuredH="25" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Observa%E7%E3o</text>
+      </controlProperties>
+    </control>
+    <control controlID="132" controlTypeID="com.balsamiq.mockups::Label" x="755" y="157" w="53" h="25" measuredW="37" measuredH="25" zOrder="19" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Valor</text>
+      </controlProperties>
+    </control>
+    <control controlID="133" controlTypeID="com.balsamiq.mockups::TextInput" x="366" y="187" w="-1" h="-1" measuredW="177" measuredH="29" zOrder="20" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Selecione%20um%20procedimento</text>
+      </controlProperties>
+    </control>
+    <control controlID="134" controlTypeID="com.balsamiq.mockups::TextInput" x="596" y="187" w="-1" h="-1" measuredW="103" measuredH="29" zOrder="21" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>N%E3o%20Realizado</text>
+      </controlProperties>
+    </control>
+    <control controlID="135" controlTypeID="com.balsamiq.mockups::TextInput" x="755" y="187" w="-1" h="-1" measuredW="65" measuredH="29" zOrder="22" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>R%24%200%2C00</text>
+      </controlProperties>
+    </control>
+    <control controlID="136" controlTypeID="com.balsamiq.mockups::DateChooser" x="886" y="186" w="159" h="-1" measuredW="126" measuredH="29" zOrder="23" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>11/12/2010</text>
+      </controlProperties>
+    </control>
+    <control controlID="137" controlTypeID="com.balsamiq.mockups::Canvas" x="419" y="267" w="536" h="68" measuredW="100" measuredH="70" zOrder="24" locked="false" isInGroup="-1"/>
+    <control controlID="139" controlTypeID="com.balsamiq.mockups::TextInput" x="1111" y="68" w="26" h="-1" measuredW="21" measuredH="29" zOrder="25" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>x</text>
+      </controlProperties>
+    </control>
+    <control controlID="140" controlTypeID="com.balsamiq.mockups::Button" x="924" y="350" w="-1" h="-1" measuredW="81" measuredH="28" zOrder="26" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Adicionar</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
