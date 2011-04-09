@@ -2,8 +2,9 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
+DROP SCHEMA IF EXISTS `openodonto` ;
 CREATE SCHEMA IF NOT EXISTS `openodonto` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
-USE `openodonto`;
+USE `openodonto` ;
 
 -- -----------------------------------------------------
 -- Table `openodonto`.`pessoas`
@@ -37,14 +38,13 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`pacientes` (
   `referencia` VARCHAR(150) NULL ,
   `observacao` VARCHAR(500) NULL ,
   PRIMARY KEY (`id_pessoa`) ,
+  INDEX `fk_pacientes_pessoas` (`id_pessoa` ASC) ,
   CONSTRAINT `fk_pacientes_pessoas`
     FOREIGN KEY (`id_pessoa` )
     REFERENCES `openodonto`.`pessoas` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_pacientes_pessoas` ON `openodonto`.`pacientes` (`id_pessoa` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -57,14 +57,13 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`usuarios` (
   `user` VARCHAR(45) NOT NULL ,
   `senha` VARCHAR(32) NOT NULL ,
   PRIMARY KEY (`id_pessoa`) ,
+  INDEX `fk_usuarios_pessoas` (`id_pessoa` ASC) ,
   CONSTRAINT `fk_usuarios_pessoas`
     FOREIGN KEY (`id_pessoa` )
     REFERENCES `openodonto`.`pessoas` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_usuarios_pessoas` ON `openodonto`.`usuarios` (`id_pessoa` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -79,14 +78,13 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`telefones` (
   `tipo` INT(1) NULL ,
   `id_pessoa` INT(10) NOT NULL ,
   PRIMARY KEY (`id`) ,
+  INDEX `fk_telefones_pessoas1` (`id_pessoa` ASC) ,
   CONSTRAINT `fk_telefones_pessoas1`
     FOREIGN KEY (`id_pessoa` )
     REFERENCES `openodonto`.`pessoas` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_telefones_pessoas1` ON `openodonto`.`telefones` (`id_pessoa` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -102,14 +100,13 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`colaboradores` (
   `cpf` VARCHAR(11) NULL ,
   `cnpj` VARCHAR(14) NULL ,
   PRIMARY KEY (`id_pessoa`) ,
+  INDEX `fk_colaboradores_pessoas1` (`id_pessoa` ASC) ,
   CONSTRAINT `fk_colaboradores_pessoas1`
     FOREIGN KEY (`id_pessoa` )
     REFERENCES `openodonto`.`pessoas` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_colaboradores_pessoas1` ON `openodonto`.`colaboradores` (`id_pessoa` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -123,14 +120,13 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`dentistas` (
   `especialidade` VARCHAR(150) NULL ,
   `observacao` VARCHAR(500) NULL ,
   PRIMARY KEY (`id_pessoa`) ,
+  INDEX `fk_dentista_pessoas1` (`id_pessoa` ASC) ,
   CONSTRAINT `fk_dentista_pessoas1`
     FOREIGN KEY (`id_pessoa` )
     REFERENCES `openodonto`.`pessoas` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_dentista_pessoas1` ON `openodonto`.`dentistas` (`id_pessoa` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -145,14 +141,13 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`odontogramas` (
   `descricao` VARCHAR(500) NULL ,
   `data` DATETIME NOT NULL ,
   PRIMARY KEY (`id`) ,
+  INDEX `fk_odontograam_pacientes1` (`id_pessoa` ASC) ,
   CONSTRAINT `fk_odontograam_pacientes1`
     FOREIGN KEY (`id_pessoa` )
     REFERENCES `openodonto`.`pacientes` (`id_pessoa` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_odontograam_pacientes1` ON `openodonto`.`odontogramas` (`id_pessoa` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -178,6 +173,8 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`colaboradores_produtos` (
   `fk_pessoa` INT(10) NOT NULL ,
   `fk_produto` INT NOT NULL ,
   `id` INT(10) NOT NULL AUTO_INCREMENT ,
+  INDEX `fk_colaboradores_has_colaboradores` (`fk_pessoa` ASC) ,
+  INDEX `fk_colaboradores_has_produtos` (`fk_produto` ASC) ,
   PRIMARY KEY (`id`, `fk_produto`, `fk_pessoa`) ,
   CONSTRAINT `fk_colaboradores_has_colaboradores`
     FOREIGN KEY (`fk_pessoa` )
@@ -190,10 +187,6 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`colaboradores_produtos` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_colaboradores_has_colaboradores` ON `openodonto`.`colaboradores_produtos` (`fk_pessoa` ASC) ;
-
-CREATE INDEX `fk_colaboradores_has_produtos` ON `openodonto`.`colaboradores_produtos` (`fk_produto` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -220,17 +213,15 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`odontograma_dentes` (
   `face` INT(2) NOT NULL ,
   `fk_odontograma` INT(10) NOT NULL ,
   `id_odontograma_dente` INT(10) NOT NULL AUTO_INCREMENT ,
+  INDEX `fk_odontograma_dentes_odontograma1` (`fk_odontograma` ASC) ,
   PRIMARY KEY (`id_odontograma_dente`) ,
+  UNIQUE INDEX `ix_dente` (`dente` ASC, `face` ASC, `fk_odontograma` ASC) ,
   CONSTRAINT `fk_odontograma_dentes_odontograma1`
     FOREIGN KEY (`fk_odontograma` )
     REFERENCES `openodonto`.`odontogramas` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_odontograma_dentes_odontograma1` ON `openodonto`.`odontograma_dentes` (`fk_odontograma` ASC) ;
-
-CREATE UNIQUE INDEX `ix_dente` ON `openodonto`.`odontograma_dentes` (`dente` ASC, `face` ASC, `fk_odontograma` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -247,6 +238,8 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`procedimentos_dentes` (
   `status` INT(2) NULL ,
   `obs` VARCHAR(300) NULL ,
   PRIMARY KEY (`id`) ,
+  INDEX `fk_procedimentos_has_procedimentos_odontograma_procedimentos1` (`fk_procedimento` ASC) ,
+  INDEX `fk_procedimentos_dentes_odontograma_dentes1` (`fk_odontograma_dente` ASC) ,
   CONSTRAINT `fk_procedimentos_has_procedimentos_odontograma_procedimentos1`
     FOREIGN KEY (`fk_procedimento` )
     REFERENCES `openodonto`.`procedimentos` (`id_procedimento` )
@@ -259,10 +252,6 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`procedimentos_dentes` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_procedimentos_has_procedimentos_odontograma_procedimentos1` ON `openodonto`.`procedimentos_dentes` (`fk_procedimento` ASC) ;
-
-CREATE INDEX `fk_procedimentos_dentes_odontograma_dentes1` ON `openodonto`.`procedimentos_dentes` (`fk_odontograma_dente` ASC) ;
-
 
 -- -----------------------------------------------------
 -- Table `openodonto`.`odontograma_aspectos`
@@ -274,14 +263,13 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`odontograma_aspectos` (
   `fk_odontograma` INT(10) NOT NULL ,
   `aspecto` INT(2) NOT NULL DEFAULT 2 ,
   PRIMARY KEY (`dente`, `fk_odontograma`) ,
+  INDEX `fk_odontograma_aspecto_odontogramas1` (`fk_odontograma` ASC) ,
   CONSTRAINT `fk_odontograma_aspecto_odontogramas1`
     FOREIGN KEY (`fk_odontograma` )
     REFERENCES `openodonto`.`odontogramas` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_odontograma_aspecto_odontogramas1` ON `openodonto`.`odontograma_aspectos` (`fk_odontograma` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -306,6 +294,8 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`paciente_anamnese` (
   `fk_pacientes` INT(10) NOT NULL ,
   `fk_questionario_anamnese` INT(10) NOT NULL ,
   PRIMARY KEY (`fk_pacientes`, `fk_questionario_anamnese`) ,
+  INDEX `fk_paciente_anamnese_pacientes1` (`fk_pacientes` ASC) ,
+  INDEX `fk_paciente_anamnese_questionario_anamnese1` (`fk_questionario_anamnese` ASC) ,
   CONSTRAINT `fk_paciente_anamnese_pacientes1`
     FOREIGN KEY (`fk_pacientes` )
     REFERENCES `openodonto`.`pacientes` (`id_pessoa` )
@@ -317,10 +307,6 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`paciente_anamnese` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_paciente_anamnese_pacientes1` ON `openodonto`.`paciente_anamnese` (`fk_pacientes` ASC) ;
-
-CREATE INDEX `fk_paciente_anamnese_questionario_anamnese1` ON `openodonto`.`paciente_anamnese` (`fk_questionario_anamnese` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -343,9 +329,11 @@ DROP TABLE IF EXISTS `openodonto`.`questao_questionario_anamnese` ;
 CREATE  TABLE IF NOT EXISTS `openodonto`.`questao_questionario_anamnese` (
   `fk_questao_anamnese` INT(10) NOT NULL ,
   `fk_questionario_anamnese` INT(10) NOT NULL ,
-  `obrigatoria` TINYINT(1) NULL ,
+  `obrigatoria` TINYINT(1)  NULL ,
   `index` INT NULL ,
   PRIMARY KEY (`fk_questao_anamnese`, `fk_questionario_anamnese`) ,
+  INDEX `fk_questao_questionario_anamnese_questao_anamnese1` (`fk_questao_anamnese` ASC) ,
+  INDEX `fk_questao_questionario_anamnese_questionario_anamnese1` (`fk_questionario_anamnese` ASC) ,
   CONSTRAINT `fk_questao_questionario_anamnese_questao_anamnese1`
     FOREIGN KEY (`fk_questao_anamnese` )
     REFERENCES `openodonto`.`questao_anamnese` (`id_questao_anamnese` )
@@ -357,10 +345,6 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`questao_questionario_anamnese` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_questao_questionario_anamnese_questao_anamnese1` ON `openodonto`.`questao_questionario_anamnese` (`fk_questao_anamnese` ASC) ;
-
-CREATE INDEX `fk_questao_questionario_anamnese_questionario_anamnese1` ON `openodonto`.`questao_questionario_anamnese` (`fk_questionario_anamnese` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -376,6 +360,8 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`paciente_anamnese_respostas` (
   `fk_questionario_anamnese` INT(10) NOT NULL ,
   `fk_pacientes` INT(10) NOT NULL ,
   PRIMARY KEY (`id`) ,
+  INDEX `fk_paciente_anamnese_respostas_questao_questionario_anamnese` (`fk_questao_anamnese` ASC, `fk_questionario_anamnese` ASC) ,
+  INDEX `fk_paciente_anamnese_respostas_paciente_anamnese` (`fk_pacientes` ASC, `fk_questionario_anamnese` ASC) ,
   CONSTRAINT `fk_paciente_anamnese_respostas_questao_questionario_anamnese`
     FOREIGN KEY (`fk_questao_anamnese` , `fk_questionario_anamnese` )
     REFERENCES `openodonto`.`questao_questionario_anamnese` (`fk_questao_anamnese` , `fk_questionario_anamnese` )
@@ -387,10 +373,6 @@ CREATE  TABLE IF NOT EXISTS `openodonto`.`paciente_anamnese_respostas` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_paciente_anamnese_respostas_questao_questionario_anamnese` ON `openodonto`.`paciente_anamnese_respostas` (`fk_questao_anamnese` ASC, `fk_questionario_anamnese` ASC) ;
-
-CREATE INDEX `fk_paciente_anamnese_respostas_paciente_anamnese` ON `openodonto`.`paciente_anamnese_respostas` (`fk_pacientes` ASC, `fk_questionario_anamnese` ASC) ;
 
 
 
