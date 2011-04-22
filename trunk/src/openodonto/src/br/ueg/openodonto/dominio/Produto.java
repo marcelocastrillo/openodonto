@@ -4,15 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.simple.jdbc.Entity;
+import br.com.simple.jdbc.annotation.Column;
+import br.com.simple.jdbc.annotation.Enumerator;
+import br.com.simple.jdbc.annotation.Id;
+import br.com.simple.jdbc.annotation.Relationship;
+import br.com.simple.jdbc.annotation.Table;
+import br.com.simple.jdbc.annotation.type.EnumValue;
+import br.com.simple.jdbc.annotation.type.IdIncrementType;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
-import br.ueg.openodonto.persistencia.orm.Column;
-import br.ueg.openodonto.persistencia.orm.Entity;
-import br.ueg.openodonto.persistencia.orm.Enumerator;
-import br.ueg.openodonto.persistencia.orm.Id;
-import br.ueg.openodonto.persistencia.orm.Relationship;
-import br.ueg.openodonto.persistencia.orm.Table;
-import br.ueg.openodonto.persistencia.orm.value.EnumValue;
-import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
 import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name = "produtos")

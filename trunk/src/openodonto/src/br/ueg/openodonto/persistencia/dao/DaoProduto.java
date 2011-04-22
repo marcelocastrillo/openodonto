@@ -4,10 +4,12 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
+import br.com.simple.jdbc.annotation.Dao;
+import br.com.simple.jdbc.dao.DaoCrud;
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
-import br.ueg.openodonto.persistencia.orm.Dao;
 
 @Dao(classe=Produto.class)
 public class DaoProduto extends DaoCrud<Produto>{

@@ -3,11 +3,12 @@ package br.ueg.openodonto.persistencia.dao;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.annotation.Dao;
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.orm.Dao;
 
 @Dao(classe=Colaborador.class)
 public class DaoColaborador extends DaoAbstractPessoa<Colaborador> {

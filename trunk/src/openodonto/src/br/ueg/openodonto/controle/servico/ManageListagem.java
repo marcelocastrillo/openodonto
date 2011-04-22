@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.simple.jdbc.Entity;
 import br.ueg.openodonto.controle.listagem.ListagemProcedimento;
 import br.ueg.openodonto.controle.listagem.ListagemQuestionarioAnamnese;
-import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.servico.listagens.core.AbstractLista;
 import br.ueg.openodonto.servico.listagens.core.ListaDominio;
 import br.ueg.openodonto.servico.listagens.core.ListaTipo;

@@ -1,9 +1,9 @@
 package br.ueg.openodonto.dominio;
 
-import br.ueg.openodonto.persistencia.orm.Column;
-import br.ueg.openodonto.persistencia.orm.ForwardKey;
-import br.ueg.openodonto.persistencia.orm.Inheritance;
-import br.ueg.openodonto.persistencia.orm.Table;
+import br.com.simple.jdbc.annotation.Column;
+import br.com.simple.jdbc.annotation.ForwardKey;
+import br.com.simple.jdbc.annotation.Inheritance;
+import br.com.simple.jdbc.annotation.Table;
 import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name = "usuarios")

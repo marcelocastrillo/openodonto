@@ -1,10 +1,10 @@
 package br.ueg.openodonto.dominio;
 
-import br.ueg.openodonto.persistencia.orm.Column;
-import br.ueg.openodonto.persistencia.orm.Entity;
-import br.ueg.openodonto.persistencia.orm.ForwardKey;
-import br.ueg.openodonto.persistencia.orm.Id;
-import br.ueg.openodonto.persistencia.orm.Table;
+import br.com.simple.jdbc.Entity;
+import br.com.simple.jdbc.annotation.Column;
+import br.com.simple.jdbc.annotation.ForwardKey;
+import br.com.simple.jdbc.annotation.Id;
+import br.com.simple.jdbc.annotation.Table;
 
 @Table(name="questao_questionario_anamnese")
 public class QuestaoQuestionarioAnamnese  implements Entity,Comparable<QuestaoQuestionarioAnamnese>{

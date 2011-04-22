@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.orm.OrmFormat;
+import br.com.simple.jdbc.sql.CrudQuery;
+import br.com.simple.jdbc.sql.IQuery;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.Searchable;
@@ -19,10 +19,12 @@ import br.ueg.openodonto.servico.busca.event.SearchEvent;
 public abstract class CommonSearchBeanHandler<E> extends AbstractSearchListener{
 	
 	private Class<E>          classe;
-	@SuppressWarnings("unchecked")
+	
+	@SuppressWarnings("rawtypes")
 	private EntityManager     dao;
 	
-	@SuppressWarnings("unchecked")
+	
+	@SuppressWarnings("rawtypes")
 	public CommonSearchBeanHandler(Class<E> classe,EntityManager dao) {
 		this.dao = dao;
 		this.classe = classe;
@@ -78,7 +80,8 @@ public abstract class CommonSearchBeanHandler<E> extends AbstractSearchListener{
 		return ((AbstractSearchable<E>)searchable).buildExample();
 	}
 	
-	@SuppressWarnings("unchecked")
+	
+	@SuppressWarnings("rawtypes")
 	public EntityManager getDao() {
 		return dao;
 	}

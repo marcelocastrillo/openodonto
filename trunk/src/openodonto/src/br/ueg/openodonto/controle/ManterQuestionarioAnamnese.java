@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.controle.busca.CommonSearchAssociateHandler;
 import br.ueg.openodonto.controle.busca.CommonSearchQuestaoAnamneseHandler;
 import br.ueg.openodonto.controle.busca.CommonSearchQuestionarioAnamneseHandler;
@@ -21,7 +22,6 @@ import br.ueg.openodonto.controle.servico.ManageQuestaoQuestionario;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.QuestaoAnamnese;
 import br.ueg.openodonto.dominio.QuestionarioAnamnese;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.SelectableSearch;

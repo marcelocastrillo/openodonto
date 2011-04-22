@@ -3,12 +3,12 @@ package br.ueg.openodonto.dominio;
 import java.util.Map;
 import java.util.TreeMap;
 
-import br.ueg.openodonto.persistencia.orm.Column;
-import br.ueg.openodonto.persistencia.orm.Entity;
-import br.ueg.openodonto.persistencia.orm.Id;
-import br.ueg.openodonto.persistencia.orm.Relationship;
-import br.ueg.openodonto.persistencia.orm.Table;
-import br.ueg.openodonto.persistencia.orm.value.IdIncrementType;
+import br.com.simple.jdbc.Entity;
+import br.com.simple.jdbc.annotation.Column;
+import br.com.simple.jdbc.annotation.Id;
+import br.com.simple.jdbc.annotation.Relationship;
+import br.com.simple.jdbc.annotation.Table;
+import br.com.simple.jdbc.annotation.type.IdIncrementType;
 import br.ueg.openodonto.util.WordFormatter;
 
 @Table(name="questionario_anamnese")

@@ -3,10 +3,12 @@ package br.ueg.openodonto.persistencia.dao;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.dao.DaoCrud;
+import br.com.simple.jdbc.dao.DaoFactory;
+import br.com.simple.jdbc.sql.CrudQuery;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Telefone;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
 
 public abstract class DaoAbstractPessoa<T extends Pessoa> extends DaoCrud<T>{
 

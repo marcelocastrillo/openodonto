@@ -2,7 +2,7 @@ package br.ueg.openodonto.controle.busca;
 
 import java.util.Map;
 
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.com.simple.jdbc.orm.OrmFormat;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 
 public class ResultFacadeBean implements ResultFacade {

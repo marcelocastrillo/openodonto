@@ -4,12 +4,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.dao.DaoFactory;
+import br.com.simple.jdbc.orm.OrmFormat;
+import br.com.simple.jdbc.sql.CrudQuery;
+import br.com.simple.jdbc.sql.IQuery;
 import br.ueg.openodonto.dominio.Pessoa;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
 import br.ueg.openodonto.servico.busca.Search;
 
 public class CommonSearchPessoaHandler extends CommonSearchBeanHandler<Pessoa>{

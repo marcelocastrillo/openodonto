@@ -7,15 +7,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.Entity;
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.dao.DaoFactory;
+import br.com.simple.jdbc.orm.OrmFormat;
+import br.com.simple.jdbc.orm.OrmResolver;
+import br.com.simple.jdbc.orm.OrmTranslator;
+import br.com.simple.jdbc.sql.CrudQuery;
+import br.com.simple.jdbc.sql.IQuery;
 import br.ueg.openodonto.dominio.constante.PessoaFisica;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.Entity;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
-import br.ueg.openodonto.persistencia.orm.OrmResolver;
-import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.util.WordFormatter;
 import br.ueg.openodonto.validator.tipo.ObjectValidatorType;
 

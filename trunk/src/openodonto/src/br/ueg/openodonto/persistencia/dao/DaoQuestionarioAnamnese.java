@@ -5,20 +5,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.annotation.Dao;
+import br.com.simple.jdbc.dao.DaoCrud;
+import br.com.simple.jdbc.dao.DaoFactory;
+import br.com.simple.jdbc.orm.OrmFormat;
+import br.com.simple.jdbc.sql.CrudQuery;
+import br.com.simple.jdbc.sql.IQuery;
 import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestaoAnamnese;
 import br.ueg.openodonto.dominio.QuestaoQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestionarioAnamnese;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.Dao;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
 @Dao(classe=QuestionarioAnamnese.class)
 public class DaoQuestionarioAnamnese extends DaoCrud<QuestionarioAnamnese> {

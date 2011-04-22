@@ -1,9 +1,9 @@
 package br.ueg.openodonto.controle.busca;
 
+import br.com.simple.jdbc.Entity;
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.dominio.Pessoa;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
-import br.ueg.openodonto.persistencia.orm.Entity;
 
 public abstract class CommonSearchPessoaSelectedHandler<T extends Entity> extends CommonSearchSelectedHandler<Pessoa>{
 	

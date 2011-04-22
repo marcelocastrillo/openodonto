@@ -4,14 +4,14 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.simple.jdbc.orm.OrmResolver;
+import br.com.simple.jdbc.orm.OrmTranslator;
 import br.ueg.openodonto.controle.servico.ExampleRequest;
 import br.ueg.openodonto.controle.servico.ManageListagem;
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
-import br.ueg.openodonto.persistencia.orm.OrmResolver;
-import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.FieldFacade;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.validator.EmptyValidator;
