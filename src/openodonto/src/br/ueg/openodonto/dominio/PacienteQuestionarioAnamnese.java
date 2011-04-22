@@ -3,12 +3,12 @@ package br.ueg.openodonto.dominio;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.ueg.openodonto.persistencia.orm.Column;
-import br.ueg.openodonto.persistencia.orm.Entity;
-import br.ueg.openodonto.persistencia.orm.ForwardKey;
-import br.ueg.openodonto.persistencia.orm.Id;
-import br.ueg.openodonto.persistencia.orm.Relationship;
-import br.ueg.openodonto.persistencia.orm.Table;
+import br.com.simple.jdbc.Entity;
+import br.com.simple.jdbc.annotation.Column;
+import br.com.simple.jdbc.annotation.ForwardKey;
+import br.com.simple.jdbc.annotation.Id;
+import br.com.simple.jdbc.annotation.Relationship;
+import br.com.simple.jdbc.annotation.Table;
 
 @Table(name="paciente_anamnese")
 public class PacienteQuestionarioAnamnese implements Entity,Comparable<PacienteQuestionarioAnamnese>{

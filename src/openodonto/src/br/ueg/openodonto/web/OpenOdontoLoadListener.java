@@ -1,9 +1,13 @@
 package br.ueg.openodonto.web;
 
+import java.io.InputStream;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import br.ueg.openodonto.persistencia.scan.EntityManagerSetup;
+import br.com.simple.jdbc.config.StartupConfig;
+import br.com.simple.jdbc.setup.WebContainerSetup;
 
 public class OpenOdontoLoadListener implements ServletContextListener {
 
@@ -14,10 +18,12 @@ public class OpenOdontoLoadListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent contextEvent) {		
 		try {
-			String binPath = contextEvent.getServletContext().getRealPath("WEB-INF/classes");
-			String[] pacotes = contextEvent.getServletContext().getInitParameter("DaoScanPackages").split(";");
-			EntityManagerSetup setup = new EntityManagerSetup(binPath, pacotes);
-			setup.registerEntityManagers();
+			ServletContext context = contextEvent.getServletContext(); 
+			InputStream in = context.getResourceAsStream("META-INF/context.xml");
+			StartupConfig config = StartupConfig.getConfig(in);			
+			String[] pacotes = context.getInitParameter("DaoScanPackages").split(";");
+			WebContainerSetup setup = new WebContainerSetup(config);
+			setup.setup("openodonto", pacotes);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

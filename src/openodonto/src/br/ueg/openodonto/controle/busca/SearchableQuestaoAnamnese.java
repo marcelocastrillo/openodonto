@@ -3,11 +3,11 @@ package br.ueg.openodonto.controle.busca;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import br.com.simple.jdbc.orm.OrmResolver;
+import br.com.simple.jdbc.orm.OrmTranslator;
 import br.ueg.openodonto.controle.servico.ExampleRequest;
 import br.ueg.openodonto.dominio.QuestaoAnamnese;
 import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
-import br.ueg.openodonto.persistencia.orm.OrmResolver;
-import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.FieldFacade;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.validator.EmptyValidator;

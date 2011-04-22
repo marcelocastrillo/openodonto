@@ -3,11 +3,12 @@ package br.ueg.openodonto.persistencia.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import br.com.simple.jdbc.annotation.Dao;
+import br.com.simple.jdbc.dao.DaoCrud;
+import br.com.simple.jdbc.orm.OrmFormat;
+import br.com.simple.jdbc.sql.CrudQuery;
+import br.com.simple.jdbc.sql.IQuery;
 import br.ueg.openodonto.dominio.OdontogramaDenteAspecto;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.Dao;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
 @Dao(classe=OdontogramaDenteAspecto.class)
 public class DaoOdontogramaDenteAspecto extends DaoCrud<OdontogramaDenteAspecto>{

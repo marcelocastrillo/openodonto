@@ -3,10 +3,10 @@ package br.ueg.openodonto.controle.busca;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.DaoCrud;
-import br.ueg.openodonto.persistencia.orm.Entity;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
+import br.com.simple.jdbc.Entity;
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.dao.DaoCrud;
+import br.com.simple.jdbc.orm.OrmFormat;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.event.AbstractSearchListener;
 import br.ueg.openodonto.servico.busca.event.SearchAssociateEvent;

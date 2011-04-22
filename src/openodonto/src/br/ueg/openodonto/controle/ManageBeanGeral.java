@@ -10,15 +10,15 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.Entity;
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.controle.busca.CommonSearchPessoaSelectedHandler;
 import br.ueg.openodonto.controle.busca.CommonSearchSelectedHandler;
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Usuario;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
-import br.ueg.openodonto.persistencia.orm.Entity;
 import br.ueg.openodonto.util.PBUtil;
 import br.ueg.openodonto.util.WordFormatter;
 import br.ueg.openodonto.validator.Validator;

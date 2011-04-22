@@ -6,11 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.annotation.Dao;
+import br.com.simple.jdbc.dao.DaoCrud;
+import br.com.simple.jdbc.dao.DaoFactory;
+import br.com.simple.jdbc.orm.OrmFormat;
 import br.ueg.openodonto.dominio.OdontogramaDente;
 import br.ueg.openodonto.dominio.OdontogramaDenteProcedimento;
 import br.ueg.openodonto.dominio.Procedimento;
-import br.ueg.openodonto.persistencia.orm.Dao;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
 
 @Dao(classe=Procedimento.class)
 public class DaoProcedimento extends DaoCrud<Procedimento>{

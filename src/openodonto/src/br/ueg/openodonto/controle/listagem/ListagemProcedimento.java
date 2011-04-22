@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.dominio.Procedimento;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.servico.listagens.core.ListaDominio;
 
 public class ListagemProcedimento extends ListaDominio<Procedimento> {

@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.dominio.Procedimento;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.util.WordFormatter;
 

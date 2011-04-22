@@ -1,8 +1,8 @@
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.dominio.Colaborador;
 import br.ueg.openodonto.dominio.ColaboradorProduto;
 import br.ueg.openodonto.dominio.Produto;
 import br.ueg.openodonto.persistencia.dao.DaoColaboradorProduto;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
 
 
 

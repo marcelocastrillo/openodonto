@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 import javax.naming.NamingException;
 
+import br.com.simple.jdbc.dao.AbstractDao;
 import br.ueg.openodonto.controle.ManterPaciente;
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.dominio.Paciente;
@@ -18,7 +19,6 @@ import br.ueg.openodonto.dominio.Telefone;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.dominio.constante.TiposTelefone;
 import br.ueg.openodonto.dominio.constante.TiposUF;
-import br.ueg.openodonto.persistencia.dao.DaoBase;
 import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.SearchFilter;
@@ -140,7 +140,7 @@ public class ManterPacienteTest {
 		
 		System.out.format("%-30s","SQL : ");
 		System.out.format("%-30d",end - start);
-		System.out.format("%-30d",DaoBase.times).append("\n");	
+		System.out.format("%-30d",AbstractDao.times).append("\n");	
 	}
 	
 	private static Paciente generatePaciente(){

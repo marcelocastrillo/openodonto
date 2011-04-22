@@ -4,14 +4,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import br.ueg.openodonto.persistencia.EntityManager;
+import br.com.simple.jdbc.EntityManager;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.SelectableResult;
 import br.ueg.openodonto.servico.busca.SelectableSearch;
 
 public abstract class CommonSearchSelectableBeanHandler<E> extends CommonSearchBeanHandler<E>{
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public CommonSearchSelectableBeanHandler(Class<E> classe, EntityManager dao) {
 		super(classe, dao);
 	}

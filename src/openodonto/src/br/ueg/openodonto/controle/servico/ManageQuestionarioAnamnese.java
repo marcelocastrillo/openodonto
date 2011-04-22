@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestionarioAnamnese;
 import br.ueg.openodonto.dominio.constante.TiposRespostaAnamnese;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
 import br.ueg.openodonto.persistencia.dao.DaoQuestionarioAnamnese;
 import br.ueg.openodonto.util.bean.QuestionarioAnamneseAdapter;
 import br.ueg.openodonto.util.bean.QuestionarioQuestaoAdapter;

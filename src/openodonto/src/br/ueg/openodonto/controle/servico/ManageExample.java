@@ -8,10 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.orm.OrmFormat;
+import br.com.simple.jdbc.orm.OrmResolver;
+import br.com.simple.jdbc.orm.OrmTranslator;
 import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
-import br.ueg.openodonto.persistencia.orm.OrmResolver;
-import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.SearchFilter;
 import br.ueg.openodonto.util.WordFormatter;

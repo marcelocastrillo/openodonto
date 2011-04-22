@@ -4,14 +4,15 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.simple.jdbc.annotation.Column;
+import br.com.simple.jdbc.annotation.Enumerator;
+import br.com.simple.jdbc.annotation.ForwardKey;
+import br.com.simple.jdbc.annotation.Inheritance;
+import br.com.simple.jdbc.annotation.Relationship;
+import br.com.simple.jdbc.annotation.Table;
+import br.com.simple.jdbc.annotation.type.EnumValue;
 import br.ueg.openodonto.dominio.constante.CategoriaProduto;
-import br.ueg.openodonto.persistencia.orm.Column;
-import br.ueg.openodonto.persistencia.orm.Enumerator;
-import br.ueg.openodonto.persistencia.orm.ForwardKey;
-import br.ueg.openodonto.persistencia.orm.Inheritance;
-import br.ueg.openodonto.persistencia.orm.Relationship;
-import br.ueg.openodonto.persistencia.orm.Table;
-import br.ueg.openodonto.persistencia.orm.value.EnumValue;
+
 
 @Table(name = "colaboradores")
 @Inheritance(joinFields = { @ForwardKey(tableField = "id_pessoa", foreginField = "id") })

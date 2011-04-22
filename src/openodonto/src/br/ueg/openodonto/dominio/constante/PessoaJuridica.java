@@ -1,6 +1,6 @@
 package br.ueg.openodonto.dominio.constante;
 
-import br.ueg.openodonto.persistencia.orm.Entity;
+import br.com.simple.jdbc.Entity;
 
 public interface PessoaJuridica<T extends Entity> {
 	String getCnpj();

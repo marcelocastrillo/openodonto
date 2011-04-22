@@ -1,7 +1,7 @@
 package br.ueg.openodonto.persistencia.dao;
 
+import br.com.simple.jdbc.annotation.Dao;
 import br.ueg.openodonto.dominio.Pessoa;
-import br.ueg.openodonto.persistencia.orm.Dao;
 
 @Dao(classe=Pessoa.class)
 public class DaoPessoa extends DaoAbstractPessoa<Pessoa>{

@@ -3,12 +3,13 @@ package br.ueg.openodonto.persistencia.dao;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.annotation.Dao;
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestionarioAnamnese;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.orm.Dao;
 
 @Dao(classe=Paciente.class)
 public class DaoPaciente extends DaoAbstractPessoa<Paciente>{

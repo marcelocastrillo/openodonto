@@ -5,14 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.annotation.Dao;
+import br.com.simple.jdbc.dao.DaoCrud;
+import br.com.simple.jdbc.orm.OrmFormat;
+import br.com.simple.jdbc.orm.OrmTranslator;
+import br.com.simple.jdbc.sql.CrudQuery;
+import br.com.simple.jdbc.sql.IQuery;
 import br.ueg.openodonto.dominio.OdontogramaDente;
 import br.ueg.openodonto.dominio.OdontogramaDenteProcedimento;
 import br.ueg.openodonto.dominio.Procedimento;
-import br.ueg.openodonto.persistencia.dao.sql.CrudQuery;
-import br.ueg.openodonto.persistencia.dao.sql.IQuery;
-import br.ueg.openodonto.persistencia.orm.Dao;
-import br.ueg.openodonto.persistencia.orm.OrmFormat;
-import br.ueg.openodonto.persistencia.orm.OrmTranslator;
 
 @Dao(classe=OdontogramaDenteProcedimento.class)
 public class DaoOdontogramaDenteProcedimento extends DaoCrud<OdontogramaDenteProcedimento>{

@@ -1,5 +1,7 @@
 import java.sql.Date;
 
+import br.com.simple.jdbc.EntityManager;
+import br.com.simple.jdbc.dao.DaoFactory;
 import br.ueg.openodonto.dominio.OdontogramaDente;
 import br.ueg.openodonto.dominio.OdontogramaDenteProcedimento;
 import br.ueg.openodonto.dominio.Paciente;
@@ -7,8 +9,6 @@ import br.ueg.openodonto.dominio.Procedimento;
 import br.ueg.openodonto.dominio.constante.Dente;
 import br.ueg.openodonto.dominio.constante.FaceDente;
 import br.ueg.openodonto.dominio.constante.TipoStatusProcedimento;
-import br.ueg.openodonto.persistencia.EntityManager;
-import br.ueg.openodonto.persistencia.dao.DaoFactory;
 
 
 public class ManageOdontogramaTest {

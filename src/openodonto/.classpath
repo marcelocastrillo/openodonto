@@ -14,5 +14,6 @@
 			<attribute name="owner.project.facets" value="jst.java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/simple-jdbc-0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
