@@ -13,6 +13,9 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
+import br.com.simple.validator.EmptyValidator;
+import br.com.simple.validator.NullValidator;
+import br.com.simple.validator.Validator;
 import br.ueg.openodonto.controle.busca.ViewDisplayer;
 import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.dominio.OdontogramaDente;
@@ -28,9 +31,6 @@ import br.ueg.openodonto.util.bean.DenteMetaAdapter;
 import br.ueg.openodonto.util.bean.OdontogramaAdapter;
 import br.ueg.openodonto.util.bean.ProcedimentoDenteAdapter;
 import br.ueg.openodonto.util.bean.StatusOdontogramaFilter;
-import br.ueg.openodonto.validator.EmptyValidator;
-import br.ueg.openodonto.validator.NullValidator;
-import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 import br.ueg.openodonto.visao.ApplicationView;
 

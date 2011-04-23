@@ -4,6 +4,17 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import br.com.simple.validator.CnpjValidator;
+import br.com.simple.validator.CpfValidator;
+import br.com.simple.validator.DomainValidator;
+import br.com.simple.validator.EmptyValidator;
+import br.com.simple.validator.MaskValidator;
+import br.com.simple.validator.NullValidator;
+import br.com.simple.validator.NumberSizeValidator;
+import br.com.simple.validator.NumberValidator;
+import br.com.simple.validator.StringSizeValidator;
+import br.com.simple.validator.Validator;
+
 public class ValidatorFactory {
 
 	public static boolean checkInvalidPermiteds(Validator validator,Class<?>... invalidPermiteds){

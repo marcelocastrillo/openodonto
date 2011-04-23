@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.validator.EmptyValidator;
+import br.com.simple.validator.NullValidator;
 import br.ueg.openodonto.controle.busca.CommonSearchProcedimentoHandler;
 import br.ueg.openodonto.controle.busca.SearchBase;
 import br.ueg.openodonto.controle.busca.SearchableProcedimento;
@@ -14,8 +16,6 @@ import br.ueg.openodonto.controle.servico.ManageListagem;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Procedimento;
 import br.ueg.openodonto.servico.busca.Search;
-import br.ueg.openodonto.validator.EmptyValidator;
-import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterProcedimento extends ManageBeanGeral<Procedimento>{
