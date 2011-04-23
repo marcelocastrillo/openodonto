@@ -15,9 +15,11 @@ import br.com.simple.jdbc.orm.OrmResolver;
 import br.com.simple.jdbc.orm.OrmTranslator;
 import br.com.simple.jdbc.sql.CrudQuery;
 import br.com.simple.jdbc.sql.IQuery;
+import br.com.simple.validator.AbstractValidator;
+import br.com.simple.validator.CpfValidator;
+import br.com.simple.validator.tipo.ObjectValidatorType;
 import br.ueg.openodonto.dominio.constante.PessoaFisica;
 import br.ueg.openodonto.util.WordFormatter;
-import br.ueg.openodonto.validator.tipo.ObjectValidatorType;
 
 public class UniqueCpfValidator<T extends Entity & PessoaFisica<T>> extends AbstractValidator implements ObjectValidatorType{	
 	

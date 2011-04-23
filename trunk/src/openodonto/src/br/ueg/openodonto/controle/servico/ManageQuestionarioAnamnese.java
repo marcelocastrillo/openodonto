@@ -9,18 +9,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import br.com.simple.jdbc.dao.DaoFactory;
+import br.com.simple.validator.AbstractValidator;
+import br.com.simple.validator.EmptyValidator;
+import br.com.simple.validator.NullValidator;
+import br.com.simple.validator.Validator;
+import br.com.simple.validator.tipo.ObjectValidatorType;
 import br.ueg.openodonto.dominio.PacienteQuestionarioAnamnese;
 import br.ueg.openodonto.dominio.QuestionarioAnamnese;
 import br.ueg.openodonto.dominio.constante.TiposRespostaAnamnese;
 import br.ueg.openodonto.persistencia.dao.DaoQuestionarioAnamnese;
 import br.ueg.openodonto.util.bean.QuestionarioAnamneseAdapter;
 import br.ueg.openodonto.util.bean.QuestionarioQuestaoAdapter;
-import br.ueg.openodonto.validator.AbstractValidator;
-import br.ueg.openodonto.validator.EmptyValidator;
-import br.ueg.openodonto.validator.NullValidator;
-import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
-import br.ueg.openodonto.validator.tipo.ObjectValidatorType;
 import br.ueg.openodonto.visao.ApplicationView;
 
 public class ManageQuestionarioAnamnese {

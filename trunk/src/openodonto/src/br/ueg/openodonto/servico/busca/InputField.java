@@ -2,7 +2,7 @@ package br.ueg.openodonto.servico.busca;
 
 import java.util.List;
 
-import br.ueg.openodonto.validator.Validator;
+import br.com.simple.validator.Validator;
 
 public interface InputField<T>{
 

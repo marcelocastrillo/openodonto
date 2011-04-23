@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.validator.EmptyValidator;
+import br.com.simple.validator.NullValidator;
+import br.com.simple.validator.Validator;
 import br.ueg.openodonto.controle.busca.CommonSearchPacienteHandler;
 import br.ueg.openodonto.controle.busca.CommonSearchPessoaHandler;
 import br.ueg.openodonto.controle.busca.SearchBase;
@@ -19,10 +22,7 @@ import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Paciente;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.servico.busca.Search;
-import br.ueg.openodonto.validator.EmptyValidator;
-import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.UniqueCpfValidator;
-import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterPaciente extends ManageBeanGeral<Paciente> {

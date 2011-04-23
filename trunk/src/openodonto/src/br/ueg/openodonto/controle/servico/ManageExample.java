@@ -11,11 +11,11 @@ import java.util.Map;
 import br.com.simple.jdbc.orm.OrmFormat;
 import br.com.simple.jdbc.orm.OrmResolver;
 import br.com.simple.jdbc.orm.OrmTranslator;
+import br.com.simple.validator.Validator;
 import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
 import br.ueg.openodonto.servico.busca.InputField;
 import br.ueg.openodonto.servico.busca.SearchFilter;
 import br.ueg.openodonto.util.WordFormatter;
-import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManageExample<T> implements Serializable{

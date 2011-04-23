@@ -9,11 +9,11 @@ import br.com.simple.jdbc.orm.OrmFormat;
 import br.com.simple.jdbc.orm.OrmTranslator;
 import br.com.simple.jdbc.sql.CrudQuery;
 import br.com.simple.jdbc.sql.IQuery;
+import br.com.simple.validator.Validator;
 import br.ueg.openodonto.dominio.Usuario;
 import br.ueg.openodonto.persistencia.dao.DaoUsuario;
 import br.ueg.openodonto.util.ShaUtil;
 import br.ueg.openodonto.util.WordFormatter;
-import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 import br.ueg.openodonto.visao.ApplicationView;
 

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.simple.jdbc.dao.DaoFactory;
+import br.com.simple.validator.EmptyValidator;
+import br.com.simple.validator.NullValidator;
 import br.ueg.openodonto.controle.busca.CommonSearchAssociateHandler;
 import br.ueg.openodonto.controle.busca.CommonSearchQuestaoAnamneseHandler;
 import br.ueg.openodonto.controle.busca.CommonSearchQuestionarioAnamneseHandler;
@@ -25,8 +27,6 @@ import br.ueg.openodonto.dominio.QuestionarioAnamnese;
 import br.ueg.openodonto.servico.busca.ResultFacade;
 import br.ueg.openodonto.servico.busca.Search;
 import br.ueg.openodonto.servico.busca.SelectableSearch;
-import br.ueg.openodonto.validator.EmptyValidator;
-import br.ueg.openodonto.validator.NullValidator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class ManterQuestionarioAnamnese extends ManageBeanGeral<QuestionarioAnamnese>{

@@ -3,12 +3,12 @@ package br.ueg.openodonto.util.bean;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import br.com.simple.validator.EmptyValidator;
+import br.com.simple.validator.NullValidator;
+import br.com.simple.validator.Validator;
 import br.ueg.openodonto.dominio.Odontograma;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.util.WordFormatter;
-import br.ueg.openodonto.validator.EmptyValidator;
-import br.ueg.openodonto.validator.NullValidator;
-import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class OdontogramaAdapter {

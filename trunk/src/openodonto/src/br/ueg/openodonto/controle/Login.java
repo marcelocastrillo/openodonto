@@ -67,7 +67,7 @@ public class Login implements Serializable{
 		this.usuario = usuario;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void makeView(Map params) {
 		this.view = ApplicationViewFactory.getViewInstance(ViewHandler.JSF,	params);
 	}

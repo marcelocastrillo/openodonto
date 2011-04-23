@@ -10,18 +10,18 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.jdbc.BeanProperty;
 import br.com.simple.jdbc.Entity;
 import br.com.simple.jdbc.EntityManager;
 import br.com.simple.jdbc.dao.DaoFactory;
+import br.com.simple.validator.Validator;
 import br.ueg.openodonto.controle.busca.CommonSearchPessoaSelectedHandler;
 import br.ueg.openodonto.controle.busca.CommonSearchSelectedHandler;
 import br.ueg.openodonto.controle.context.ApplicationContext;
 import br.ueg.openodonto.controle.servico.ValidationRequest;
 import br.ueg.openodonto.dominio.Pessoa;
 import br.ueg.openodonto.dominio.Usuario;
-import br.ueg.openodonto.util.PBUtil;
 import br.ueg.openodonto.util.WordFormatter;
-import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 import br.ueg.openodonto.visao.ApplicationView;
 import br.ueg.openodonto.visao.ApplicationViewFactory;
@@ -106,7 +106,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		formatarCamposExtras();
 		List<String> camposFormatados = getCamposFormatados();
 		for (String path : camposFormatados) {
-			Object o = PBUtil.instance().getNestedProperty(getBackBean(), path);
+			Object o = BeanProperty.instance().getNestedProperty(getBackBean(), path);
 			String campoParaFormatar = null;
 			if (o != null){
 				campoParaFormatar = String.valueOf(o);
@@ -115,7 +115,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 			}
 			if (!campoParaFormatar.isEmpty()) {
 				String atributoFormatado = WordFormatter.clear(WordFormatter.remover(campoParaFormatar)).toUpperCase();
-				PBUtil.instance().setNestedProperty(getBackBean(), path, atributoFormatado);
+				BeanProperty.instance().setNestedProperty(getBackBean(), path, atributoFormatado);
 			}
 		}
 	}
@@ -125,7 +125,7 @@ public abstract class ManageBeanGeral<T extends Entity> implements Serializable{
 		for (ValidationRequest validation : validations) {
 			Validator validador = validation.getValidator();
 			if(validation.getPath() != null && !validation.getPath().isEmpty()){
-				validador.setValue(PBUtil.instance().getNestedProperty(getBackBean(), validation.getPath()));
+				validador.setValue(BeanProperty.instance().getNestedProperty(getBackBean(), validation.getPath()));
 			}
 			if (!validador.isValid() && ValidatorFactory.checkInvalidPermiteds(validation.getInvalidPermiteds(),validador)) {
 				for(String out : validation.getOut()){

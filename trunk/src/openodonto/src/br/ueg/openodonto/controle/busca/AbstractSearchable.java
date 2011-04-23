@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.simple.validator.Validator;
 import br.ueg.openodonto.controle.servico.ManageExample;
 import br.ueg.openodonto.servico.busca.FieldFacade;
 import br.ueg.openodonto.servico.busca.InputMask;
@@ -14,7 +15,6 @@ import br.ueg.openodonto.servico.busca.MessageDisplayer;
 import br.ueg.openodonto.servico.busca.SearchFilter;
 import br.ueg.openodonto.servico.busca.SearchFilterBase;
 import br.ueg.openodonto.servico.busca.Searchable;
-import br.ueg.openodonto.validator.Validator;
 
 public abstract class AbstractSearchable<T> implements Searchable<T>,Serializable {
 

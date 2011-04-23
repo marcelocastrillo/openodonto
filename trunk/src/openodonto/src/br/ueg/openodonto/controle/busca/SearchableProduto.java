@@ -6,6 +6,9 @@ import java.util.List;
 
 import br.com.simple.jdbc.orm.OrmResolver;
 import br.com.simple.jdbc.orm.OrmTranslator;
+import br.com.simple.validator.EmptyValidator;
+import br.com.simple.validator.NullValidator;
+import br.com.simple.validator.Validator;
 import br.ueg.openodonto.controle.servico.ExampleRequest;
 import br.ueg.openodonto.controle.servico.ManageListagem;
 import br.ueg.openodonto.dominio.Colaborador;
@@ -14,9 +17,6 @@ import br.ueg.openodonto.dominio.constante.CategoriaProduto;
 import br.ueg.openodonto.persistencia.dao.sql.SqlWhereOperatorType;
 import br.ueg.openodonto.servico.busca.FieldFacade;
 import br.ueg.openodonto.servico.busca.MessageDisplayer;
-import br.ueg.openodonto.validator.EmptyValidator;
-import br.ueg.openodonto.validator.NullValidator;
-import br.ueg.openodonto.validator.Validator;
 import br.ueg.openodonto.validator.ValidatorFactory;
 
 public class SearchableProduto extends AbstractSearchable<Produto>{

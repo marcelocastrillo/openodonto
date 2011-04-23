@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import br.ueg.openodonto.validator.Validator;
+import br.com.simple.validator.Validator;
 
 public class ValidationRequest {
 
