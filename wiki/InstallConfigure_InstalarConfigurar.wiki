@@ -1,6 +1,6 @@
 #labels Phase-Implementation,Phase-Deploy
-#Como instalar e configurar a aplicação.
-#How to install and configure the application
+#Como instalar e configurar a aplicação. How to install and configure the application.
+
 
 = Instalação / Install =
 
