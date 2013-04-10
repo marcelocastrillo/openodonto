@@ -1,7 +1,7 @@
 #labels Featured,Phase-Design
 #snapshots of system screen.
 
-= OpenOdonto =
+= Software Resources/Recursos =
 
 imagem
 recurso
