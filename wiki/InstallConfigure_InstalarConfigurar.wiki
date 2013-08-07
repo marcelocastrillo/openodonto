@@ -27,8 +27,8 @@
 
   * Entrar no mysql e criar uma pessoa e um usuário :
    **{{{mysql -u root -p openodonto}}}
-   **{{{insert into pessoas("nome") values ("Administrador")}}},
-   **{{{insert into usuarios("id_pessoa","user","senha") values ("1","admin","21232f297a57a5a743894a0e4a801fc3")}}}
+   **{{{insert into pessoas(nome) values ("Administrador")}}},
+   **{{{insert into usuarios(id_pessoa,user,senha) values ("1","admin","21232f297a57a5a743894a0e4a801fc3")}}}
 
   * Criar o arquivo 'C:\tomcat\conf\Catalina\localhost\openodonto.xml' com o conteúdo:
 
