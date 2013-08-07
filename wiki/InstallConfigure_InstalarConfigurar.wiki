@@ -9,7 +9,7 @@
 
   * Baixar o tomcat6 ( versão zip ) e extrair em ( por exemplo ) : c\tomcat6\.
 
-  * Copiar o arquivo que veio no download do openp2m 'mysql-connector-java-5.1.7-bin.jar' para : c:\tomcat6\lib
+  * Copiar o arquivo que veio no download do openodonto 'mysql-connector-java-5.1.7-bin.jar' para : c:\tomcat6\lib
 
   * Copiar o arquivo openodonto.war dentro de 'c:\tomcat6\webapps'
 
